@@ -43,7 +43,7 @@
     "@angular/platform-browser-dynamic": "^11.0.0",
     "@angular/platform-server": "11.0.0",
     "@angular/router": "^11.0.0",
-    "@simonwep/pickr": "^1.7.4",
+    "@jaames/iro": "^5.2.3",
     "@types/serialport": "^6.0.3",
     "bootstrap": "^4.1.2",
     "core-js": "^2.6.5",

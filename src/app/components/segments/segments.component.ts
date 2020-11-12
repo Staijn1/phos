@@ -71,7 +71,8 @@ export class SegmentsComponent implements OnInit {
     getModeName(indexToLookFor: number): string {
         let name = '404 mode not found';
         for (const mode of this.modes) {
-            if (mode.modeNumber === indexToLookFor) {
+            // tslint:disable-next-line:triple-equals
+            if (mode.modeNumber == indexToLookFor) {
                 name = mode.modeName;
                 break;
             }
@@ -198,9 +199,9 @@ export class SegmentsComponent implements OnInit {
                 // parseInt(colorPicker.colors[0].hexString.replace('#', ''), 16) + ',' +
                 // parseInt(colorPicker.colors[1].hexString.replace('#', ''), 16) + ',' +
                 // parseInt(colorPicker.colors[2].hexString.replace('#', ''), 16) + ']';
-                parseInt(this.colorService.pickerOne._color.toHEXA().toString().replace('#', ''), 16) + ',' +
-                parseInt(this.colorService.pickerTwo._color.toHEXA().toString().replace('#', ''), 16) + ',' +
-                parseInt(this.colorService.pickerThree._color.toHEXA().toString().replace('#', ''), 16) + ']';
+                parseInt(this.colorService.getFirstColorString.replace('#', ''), 16) + ',' +
+                parseInt(this.colorService.getSecondColorString.replace('#', ''), 16) + ',' +
+                parseInt(this.colorService.getThirdColorString.replace('#', ''), 16) + ']';
             json += '}';
         });
         json += ']}';
