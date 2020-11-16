@@ -1,6 +1,5 @@
 import {Inject, Injectable} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
-import Pickr from '@simonwep/pickr/dist/pickr.es5.min';
 import iro from '@jaames/iro';
 
 @Injectable({

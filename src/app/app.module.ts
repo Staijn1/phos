@@ -12,13 +12,15 @@ import {FormsModule} from '@angular/forms';
 import {NgModule} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NouisliderModule} from 'ng2-nouislider';
+import { VisualizerComponent } from './components/visualizer/visualizer.component';
 
 @NgModule({
     imports: [BrowserModule, CommonModule, AppRoutingModule, FormsModule, NouisliderModule],
     declarations: [
         AppComponent,
         SerialportronComponent,
-        SegmentsComponent],
+        SegmentsComponent,
+        VisualizerComponent],
     bootstrap: [AppComponent],
     providers: [ElectronService],
 })

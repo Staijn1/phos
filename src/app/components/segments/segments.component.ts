@@ -26,7 +26,7 @@ export class SegmentsComponent implements OnInit {
         limit: this.numPixels,
         range: {
             min: 0,
-            max: this.numPixels
+            max: this.numPixels - 1
         },
         step: 1,
     };

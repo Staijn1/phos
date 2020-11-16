@@ -113,4 +113,12 @@ export class SerialConnectionService {
         console.log(toSend)
         this.send(toSend)
     }
+
+    setLeds(number: number) {
+        this.send(`setLeds ${number}`);
+    }
+
+    setMode(mode: number) {
+        this.send(`setMode ${mode}`);
+    }
 }

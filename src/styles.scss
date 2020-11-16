@@ -59,9 +59,8 @@ p {
   font-size: $super-large-font;
 }
 
-
-body {
-  //overflow: hidden;
+.input-group-text{
+  min-width: 100px;
 }
 
 .margin-right-25 {
@@ -69,9 +68,23 @@ body {
 }
 
 .dropdown-menu {
-  border-radius: 0;
-  border: none;
+  border-radius: 0 !important;
+  border: none !important;
 }
+
+.dropdown-item {
+  &:focus{
+    outline: none !important;
+    background: $light !important;
+    color: $dark !important;
+  }
+
+  &:hover{
+    background: $light !important;
+    color: $dark !important;
+  }
+}
+
 
 /* ============ desktop view ============ */
 @media all and (min-width: 992px) {
@@ -95,4 +108,3 @@ body {
 }
 
 @import "~bootstrap/scss/bootstrap";
-@import '~@simonwep/pickr/dist/themes/nano.min.css';
