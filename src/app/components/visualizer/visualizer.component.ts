@@ -1,7 +1,7 @@
-import {Component, OnInit} from '@angular/core';
-import * as p5 from 'p5';
 import 'assets/p5/addons/p5.sound.min';
+import * as p5 from 'p5';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
+import {Component, OnInit} from '@angular/core';
 
 @Component({
     selector: 'app-visualizer',
@@ -251,7 +251,7 @@ class SendProgram {
         try {
             this.counter++;
             // todo check if counter can be removed when over serial
-            if (this.counter % 5 === 0) {
+            if (this.counter % 3 === 0) {
                 this.serialService.setLeds(this.s.floor(this.value));
                 // tslint:disable-next-line:max-line-length
                 // allEffects.createVisualizer(this.value, calculateBGRInteger(colorpicker.color.rgb.b, colorpicker.color.rgb.g, colorpicker.color.rgb.r), this.amountOfLeds, 0);

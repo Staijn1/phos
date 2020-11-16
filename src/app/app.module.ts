@@ -25,19 +25,5 @@ import { VisualizerComponent } from './components/visualizer/visualizer.componen
     providers: [ElectronService],
 })
 export class AppModule {
-    constructor() {
-        // const colorpicker = iro.ColorPicker('#picker', {
-        //     width: 200,
-        //     layoutDirection: 'horizontal',
-        //     handleRadius: 6,
-        //     borderWidth: 2,
-        //     borderColor: '#fff',
-        //     wheelAngle: 90,
-        //     colors: [
-        //         'rgb(100%, 0, 0)', // pure red
-        //         'rgb(0, 100%, 0)', // pure green
-        //         'rgb(0, 0, 100%)', // pure blue
-        //     ],
-        // });
-    }
+    constructor() {}
 }

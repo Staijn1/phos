@@ -116,3 +116,4 @@ dist
 
 # Visual Studio Code files
 .vscode
+/release-builds

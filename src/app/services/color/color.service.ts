@@ -1,6 +1,7 @@
 import {Inject, Injectable} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import iro from '@jaames/iro';
+import {SerialConnectionService} from '../serial/serial-connection.service';
 
 @Injectable({
     providedIn: 'root'
@@ -8,7 +9,7 @@ import iro from '@jaames/iro';
 export class ColorService {
     picker: any;
 
-    constructor(@Inject(DOCUMENT) private document: HTMLDocument) {
+    constructor(@Inject(DOCUMENT) private document: HTMLDocument, private serialService: SerialConnectionService) {
         setTimeout(() => {
             this.picker = iro.ColorPicker('#picker', {
                 width: 200,
@@ -23,7 +24,12 @@ export class ColorService {
                     'rgb(0, 0, 100%)', // pure blue
                 ],
             });
+            this.picker.on('change', () => {
+                console.log('Hoi')
+            })
         }, 1);
+
+
     }
 
     get getFirstColorString(): string {

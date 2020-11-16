@@ -1,12 +1,12 @@
 {
-  "name": "serialportron",
-  "productName": "Serialportron",
-  "author": "Sung Hah Hwang",
-  "version": "2.0.0",
+  "name": "angulon",
+  "productName": "Angulon",
+  "author": "Stein Jonker",
+  "version": "1.0.0",
   "license": "",
   "repository": {
     "type": "git",
-    "url": "https://github.com/sunghah/serialportron.git"
+    "url": "https://github.com/Staijn1/angulon.git"
   },
   "main": "main.js",
   "scripts": {
@@ -25,8 +25,8 @@
     "electron:serve": "wait-on http-get://localhost:4200/ && npm run electron:tsc && electron . --serve",
     "electron:local": "npm run build:prod && electron .",
     "electron:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds",
-    "electron:windows": "electron-packager . serialportron --overwrite --asar=true --platform=win32 --arch=all --prune=true --out=release-builds",
-    "electron:linux": "electron-packager . serialportron --overwrite --asar=true --platform=linux --arch=x64 --prune=true --out=release-builds",
+    "electron:windows": "electron-packager . angulon --overwrite --asar --platform=win32 --arch=all --prune=true --out=release-builds",
+    "electron:linux": "electron-packager . angulon --overwrite --asar --platform=linux --arch=x64 --prune=true --out=release-builds",
     "test": "npm run postinstall:web && ng test",
     "e2e": "npm run postinstall:web && ng e2e"
   },
@@ -54,8 +54,6 @@
     "rxjs": "^6.5.2",
     "rxjs-compat": "^6.4.0",
     "serialport": "^6.2.1",
-    "spotify-web-api-js": "^1.5.1",
-    "stream-http": "github:node-influx/stream-http",
     "tslib": "^2.0.0",
     "uglify-js": "^3.3.26",
     "zone.js": "~0.10.2"
@@ -76,6 +74,7 @@
     "codelyzer": "^5.1.2",
     "electron": "2.0.4",
     "electron-builder": "20.14.7",
+    "electron-packager": "^15.1.0",
     "electron-rebuild": "^1.8.1",
     "electron-reload": "^1.2.2",
     "jasmine-core": "~3.5.0",
