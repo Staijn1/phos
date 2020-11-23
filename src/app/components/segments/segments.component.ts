@@ -56,8 +56,6 @@ export class SegmentsComponent implements OnInit {
 
     constructor(public serialService: SerialConnectionService, private colorService: ColorService) {
         this.loadModes();
-
-        this.serialService.openPort();
     }
 
     ngOnInit(): void {

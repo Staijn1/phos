@@ -1,0 +1,45 @@
+<!--<div class="container">-->
+<!--    <div class="row">-->
+<!--        <div class="col-3 offset-1">-->
+<!--            <ul id="modesList" class="list-group mt-2 row">-->
+<!--                <li-->
+<!--                        *ngFor="let mode of modes| slice:0:this.modes.length/2; let indexOfelement=index"-->
+<!--                        (click)="onChangeSegment($event)"-->
+<!--                        [ngClass]="{'active': modeIndex === indexOfelement}"-->
+<!--                        class="list-group-item col-6"-->
+<!--                        id="{{mode.mode}}">-->
+<!--                    <div>{{mode.name}}</div>-->
+<!--                </li>-->
+<!--            </ul>-->
+<!--        </div>-->
+<!--    </div>-->
+<!--</div>-->
+<div class="container-fluid">
+    <div class="rectangle"></div>
+    <div class="row no-gutters">
+        <div class="col-3 offset-1">
+            <div class="d-flex flex-row flex-wrap mt-3">
+                <div
+                        class="list-group-item list-group-item-action text-white py-2"
+                        *ngFor="let mode of modes| slice:0:this.modes.length/2; let indexOfelement=index"
+                        (click)="onChangeSegment($event)"
+                        id="{{mode.mode}}"
+                >
+                    {{mode.name}}
+                </div>
+            </div>
+        </div>
+        <div class="col-3 offset-2">
+            <div class="d-flex flex-row flex-wrap mt-3">
+                <div
+                        class="list-group-item list-group-item-action text-white py-2"
+                        *ngFor="let mode of modes| slice:this.modes.length/2:this.modes.length; let indexOfelement=index"
+                        (click)="onChangeSegment($event)"
+                        id="{{mode.mode}}"
+                >
+                    {{mode.name}}
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

@@ -9,16 +9,15 @@ import {Component, OnInit} from '@angular/core';
     styleUrls: ['./visualizer.component.scss']
 })
 export class VisualizerComponent implements OnInit {
-    private canvasHeight = 800;
-    private canvasWidth = 800;
-    private fftprogram: FFTProgram;
-    private simplisticRectangleProgram: SimplisticRectangleProgram;
-    private sendProgram: SendProgram;
+      private canvasHeight = 800;
+      private canvasWidth = 800;
+      private fftprogram: FFTProgram;
+      private simplisticRectangleProgram: SimplisticRectangleProgram;
+      private sendProgram: SendProgram;
 
     constructor(private serialService: SerialConnectionService) {
-        this.serialService.openPort();
-
     }
+
 
     ngOnInit() {
 
@@ -62,6 +61,7 @@ export class VisualizerComponent implements OnInit {
         this.sendProgram.run();
     }
 }
+
 
 class Rectangle {
     private s: any;
@@ -251,7 +251,7 @@ class SendProgram {
         try {
             this.counter++;
             // todo check if counter can be removed when over serial
-            if (this.counter % 3 === 0) {
+            if (this.counter % 5 === 0) {
                 this.serialService.setLeds(this.s.floor(this.value));
                 // tslint:disable-next-line:max-line-length
                 // allEffects.createVisualizer(this.value, calculateBGRInteger(colorpicker.color.rgb.b, colorpicker.color.rgb.g, colorpicker.color.rgb.r), this.amountOfLeds, 0);
@@ -267,3 +267,4 @@ class SendProgram {
         return this;
     }
 }
+

@@ -24,12 +24,10 @@ export class ColorService {
                     'rgb(0, 0, 100%)', // pure blue
                 ],
             });
-            this.picker.on('change', () => {
-                console.log('Hoi')
-            })
+            this.picker.on('color:change', (color) => {
+               this.serialService.setColor(color.hexString);
+            });
         }, 1);
-
-
     }
 
     get getFirstColorString(): string {

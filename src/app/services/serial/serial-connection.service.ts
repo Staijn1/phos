@@ -1,4 +1,3 @@
-
 import {ElectronService} from '../electron/electron.service';
 import {Injectable} from '@angular/core';
 
@@ -11,29 +10,16 @@ export class SerialConnectionService {
     public selectedPortId: string;
     public portOpts = {baudRate: 19200, autoOpen: true};
     private receivedMessage: string;
+    public readonly amountOfLeds = 30;
 
     constructor(public electronService: ElectronService) {
         this.selectedPortId = 'COM3';
+        this.openPort();
     }
 
-    scan() {
+    scan(): Promise<any> {
         this.selectedPortId = '';
-        let index = 1;
-        let portDetails: any;
-        this.electronService.serialPort.list().then(ports => {
-            console.log('[LOG] List of ports: ', ports)
-            ports.forEach(port => {
-                portDetails = {
-                    id: index,
-                    comName: port.comName,
-                    manufacturer: port.manufacturer,
-                    vendorId: port.vendorId,
-                    productId: port.productId,
-                };
-                console.log('List in table');
-                index++;
-            });
-        });
+        return this.electronService.serialPort.list();
     }
 
     getPort($event) {
@@ -42,7 +28,9 @@ export class SerialConnectionService {
     }
 
     openPort() {
+        console.log(this.selectedPortId)
         if (this.port === undefined) {
+            console.log(this.selectedPortId)
             this.port = new this.electronService.serialPort(
                 this.selectedPortId,
                 this.portOpts,
@@ -62,6 +50,8 @@ export class SerialConnectionService {
             if (err) {
                 console.log('[ERR] Error: ', err.message)
             }
+
+            console.log('Connection closed')
         });
 
         if (!this.port.isOpen) {
@@ -121,5 +111,16 @@ export class SerialConnectionService {
 
     setMode(mode: number) {
         this.send(`setMode ${mode}`);
+    }
+
+    setColor(hexString: string) {
+        hexString = hexString.replace('#', '');
+        this.send(`setColor 0x${hexString}`)
+    }
+
+    update() {
+        this.selectedPortId = localStorage.getItem('com') != null ? localStorage.getItem('com') : 'COM3';
+        this.closePort();
+        this.openPort();
     }
 }
