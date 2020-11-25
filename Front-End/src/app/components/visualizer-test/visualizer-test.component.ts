@@ -338,7 +338,7 @@ export class VisualizerTestComponent implements OnInit {
         }, 2000);
     }
 
-    private changeLedstripMode() {
+     changeLedstripMode() {
         this.serialService.setMode(55);
     }
 
