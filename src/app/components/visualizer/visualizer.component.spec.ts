@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { VisualizerComponent } from './visualizer.component';
+import {VisualizerComponent} from './visualizer.component';
 
 describe('VisualizerComponent', () => {
   let component: VisualizerComponent;

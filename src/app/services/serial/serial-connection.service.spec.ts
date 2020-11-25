@@ -1,6 +1,6 @@
-import { TestBed } from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing';
 
-import { SerialConnectionService } from './serial-connection.service';
+import {SerialConnectionService} from './serial-connection.service';
 
 describe('SerialConnectionService', () => {
   beforeEach(() => TestBed.configureTestingModule({}));

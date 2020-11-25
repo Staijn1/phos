@@ -4,7 +4,10 @@ import {SerialConnectionService} from '../../services/serial/serial-connection.s
 import {ColorService} from '../../services/color/color.service';
 import {faWrench} from '@fortawesome/free-solid-svg-icons/faWrench';
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand';
-import {faArrowUp} from '@fortawesome/free-solid-svg-icons/faArrowUp';
+import {FileService} from '../../services/file/file.service';
+import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
+import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload';
+import {faLightbulb} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-visualizer-test',
@@ -12,8 +15,6 @@ import {faArrowUp} from '@fortawesome/free-solid-svg-icons/faArrowUp';
     styleUrls: ['./visualizer-test.component.scss']
 })
 export class VisualizerTestComponent implements OnInit {
-
-    private sourceMic: MediaStreamAudioSourceNode;
     private audioMotion: AudioMotionAnalyzer;
 
 
@@ -38,16 +39,17 @@ export class VisualizerTestComponent implements OnInit {
         reflexAlpha: 0.15,
         reflexBright: 1,
         reflexFit: true,
-        reflexRatio: 0,
+        reflexRatio: 0.5,
         showBgColor: true,
         showFPS: false,
         showLeds: false,
         showPeaks: true,
-        showScale: false,
+        showScaleX: false,
         showScaleY: false,
         smoothing: 0.7,
         spinSpeed: 0,
         start: true,
+        volume: 0,
     }
 
     presets = {
@@ -314,45 +316,52 @@ export class VisualizerTestComponent implements OnInit {
             'max': 1
         },
     };
+    save = faSave;
+    load = faFileDownload;
+    modeIcon = faLightbulb;
 
-    constructor(private serialService: SerialConnectionService, private colorService: ColorService) {}
+    constructor(private serialService: SerialConnectionService, private colorService: ColorService, private fileService: FileService) {
+    }
 
     ngOnInit(): void {
         const elem = document.getElementById('visualizer');
+
         this.audioMotion = new AudioMotionAnalyzer(
             elem,
             this.options
-        )
+        );
         this.setSource();
         this.registerGradients();
+        this.loadOptions();
         setTimeout(() => {
-            this.serialService.setMode(55);
+            this.changeLedstripMode()
         }, 2000);
     }
 
-    setSource() {
+    private changeLedstripMode() {
+        this.serialService.setMode(55);
+    }
+
+    private setSource() {
         navigator.mediaDevices.getUserMedia({audio: true, video: false})
             .then(stream => {
-                this.sourceMic = this.audioMotion.audioCtx.createMediaStreamSource(stream);
-                console.log('Audio source set to microphone');
-                this.audioMotion.analyzer.disconnect(this.audioMotion.audioCtx.destination); // avoid feedback loop
-                this.sourceMic.connect(this.audioMotion.analyzer)
+                const audioCtx = this.audioMotion.audioCtx;
+                const micInput = audioCtx.createMediaStreamSource(stream);
+                this.audioMotion.disconnectInput();
+                this.audioMotion.connectInput(micInput);
+                console.log(this.audioMotion)
             })
             .catch(err => {
-                console.log(`Could not change audio source - ${err}`, err);
+                console.error(`Could not change audio source - ${err}`, err);
             });
-
-        console.log('In setSource', this.serialService)
     }
 
     drawCallback(instance: AudioMotionAnalyzer) {
-        // console.log(instance.dataarray[instance.freqToBin(155)])
-        this.serialService.setLeds(this.map(instance._dataArray[instance.freqToBin(155)], 0, 255, 0, this.serialService.amountOfLeds))
+        this.serialService.setLeds(this.map(instance._dataArray[26], 0, 255, 0, this.serialService.amountOfLeds))
     }
 
-    public updateOptions() {
+    updateOptions() {
         this.audioMotion.setOptions(this.options)
-        console.log(this.options)
     }
 
     private registerGradients() {
@@ -368,7 +377,6 @@ export class VisualizerTestComponent implements OnInit {
 
     changeReflex(value: string) {
         console.log(typeof value)
-        throw new Error('Not implemented!');
         switch (+value) {
             case 1:
                 this.options.reflexRatio = .4;
@@ -391,7 +399,7 @@ export class VisualizerTestComponent implements OnInit {
     }
 
     changeShowScale(value: string) {
-        this.options.showScale = !!(+value & 1);
+        this.options.showScaleX = !!(+value & 1);
         this.options.showScaleY = !!(+value & 2);
         this.updateOptions();
     }
@@ -458,5 +466,14 @@ export class VisualizerTestComponent implements OnInit {
 
         this.options.mode = value;
         this.updateOptions();
+    }
+
+    loadOptions() {
+        this.options = this.fileService.readVisualizerOptions();
+        console.log('read config', this.options)
+    }
+
+    saveOptions() {
+        this.fileService.saveVisualizerOptions(this.options)
     }
 }

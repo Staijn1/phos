@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {ElectronService} from '../../services/electron/electron.service';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 
 declare interface DataRow {

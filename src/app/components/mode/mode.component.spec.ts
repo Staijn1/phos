@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { ModeComponent } from './mode.component';
+import {ModeComponent} from './mode.component';
 
 describe('ModeComponent', () => {
   let component: ModeComponent;

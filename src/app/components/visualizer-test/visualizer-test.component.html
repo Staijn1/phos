@@ -1,16 +1,25 @@
 <div class="vh-100" id="wrapper">
-    <div id="visualizer" class="h-50"></div>
+    <div id="visualizer" class="h-75"></div>
     <div class="container mt-5">
         <div class="card">
             <div class="card-header d-flex justify-content-between bg-primary text-light align-content-center">
                 Settings
                 <div>
+                    <a class="btn btn-primary" (click)="changeLedstripMode()">
+                        <fa-icon [icon]="modeIcon" size="1x"></fa-icon>
+                    </a>
                     <a class="btn btn-primary" data-toggle="collapse" href="#settingsCollapse" role="button"
                        aria-expanded="false" aria-controls="collapseExample">
                         <fa-icon [icon]="settingIcon"></fa-icon>
                     </a>
                     <a class="btn btn-primary">
                         <fa-icon [icon]="fullscreenIcon" size="1x" (click)="fullscreen()"></fa-icon>
+                    </a>
+                    <a class="btn btn-primary">
+                        <fa-icon [icon]="save" size="1x" (click)="saveOptions()"></fa-icon>
+                    </a>
+                    <a class="btn btn-primary">
+                        <fa-icon [icon]="load" size="1x" (click)="loadOptions()"></fa-icon>
                     </a>
                 </div>
             </div>
@@ -80,8 +89,7 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="reflex">reflex</label>
                             </div>
-                            <select class="custom-select" id="reflex" (change)="changeReflex($event.target.value)"
-                                    disabled>
+                            <select class="custom-select" id="reflex" (change)="changeReflex($event.target.value)">
                                 <option value="0">Off</option>
                                 <option value="1">On</option>
                                 <option value="2">Mirrored</option>

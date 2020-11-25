@@ -1,4 +1,4 @@
-import { app, BrowserWindow, screen } from 'electron';
+import {app, BrowserWindow, screen} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -17,11 +17,14 @@ function createWindow() {
     x: 0,
     y: 0,
     width: size.width,
-    height: size.height
+    height: size.height,
+    webPreferences: {
+      devTools: false
+    }
   });
 
   // Open the DevTools.
-  win.webContents.openDevTools()
+  // win.webContents.openDevTools()
 
   if (serve) {
     require('electron-reload')(__dirname, {

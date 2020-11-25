@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { NavigationbarComponent } from './navigationbar.component';
+import {NavigationbarComponent} from './navigationbar.component';
 
 describe('NavigationbarComponent', () => {
   let component: NavigationbarComponent;
