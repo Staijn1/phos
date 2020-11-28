@@ -7,15 +7,25 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="coms">com</label>
                     </div>
-                    <select id="coms" class="custom-select">
+                    <select id="coms" class="custom-select" [(ngModel)]="selectedCom">
                         <option *ngFor="let com of coms" value="{{com.comName}}">{{com.comName}}</option>
                     </select>
+                </div>
+            </div>
+            <div class="col">
+                <div class="input-group mb-3">
+                    <div class="input-group-prepend">
+                        <label class="input-group-text" for="numLeds">number of leds</label>
+                    </div>
+                    <input id="numLeds" class="form-control" [(ngModel)]="numLeds" type="number" [placeholder]="numLeds">
                 </div>
             </div>
         </div>
         <div class="row mt-5">
             <div class="col text-right">
-                <button class="btn btn-dark w-25" (click)="saveSettings()"><i class="fas fa-save fa-lg"></i></button>
+                <button class="btn btn-dark w-25" (click)="saveSettings()">
+                    <fa-icon [icon]="saveIcon"></fa-icon>
+                </button>
             </div>
         </div>
     </div>

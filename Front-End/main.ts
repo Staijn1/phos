@@ -16,16 +16,15 @@ function createWindow() {
   win = new BrowserWindow({
     x: 0,
     y: 0,
-    width: size.width,
-    height: size.height,
+    width: size.width / 2,
+    height: size.height / 2,
     webPreferences: {
-      devTools: false
+      nodeIntegration: true,
     }
   });
 
   // Open the DevTools.
   // win.webContents.openDevTools()
-
   if (serve) {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`),
@@ -35,7 +34,6 @@ function createWindow() {
     win.loadURL(
       url.format({
         pathname: path.join(__dirname, 'dist/index.html'),
-        // pathname: path.join(__dirname, 'src/index.html'),
         protocol: 'file:',
         slashes: true,
       })
@@ -73,6 +71,8 @@ try {
       createWindow();
     }
   });
+
+  app.allowRendererProcessReuse = false;
 } catch (e) {
   // Catch Error
   // throw e;

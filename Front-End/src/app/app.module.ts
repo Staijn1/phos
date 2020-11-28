@@ -3,7 +3,6 @@ import {NouisliderModule} from 'ng2-nouislider';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 
 import {AppComponent} from './app.component';
-import {SerialportronComponent} from './components/serialportron/serialportron.component';
 import {SegmentsComponent} from './components/segments/segments.component';
 import {VisualizerComponent} from './components/visualizer/visualizer.component';
 import {SettingsComponent} from './components/settings/settings.component';
@@ -22,7 +21,6 @@ import {FormsModule} from '@angular/forms';
     imports: [BrowserModule, CommonModule, FormsModule, AppRoutingModule, NouisliderModule, FontAwesomeModule],
     declarations: [
         AppComponent,
-        SerialportronComponent,
         SegmentsComponent,
         VisualizerComponent,
         SettingsComponent,

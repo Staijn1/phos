@@ -2,6 +2,8 @@ import {Component, OnInit} from '@angular/core';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 import * as $ from 'jquery';
 import {FileService} from '../../services/file/file.service';
+import {faSave} from '@fortawesome/free-solid-svg-icons';
+import {ColorService} from '../../services/color/color.service';
 
 @Component({
     selector: 'app-settings',
@@ -10,14 +12,12 @@ import {FileService} from '../../services/file/file.service';
     providers: []
 })
 export class SettingsComponent implements OnInit {
-    productId: number;
-    productName: string;
-    price: number;
-    url: string;
-
     coms = [];
+    saveIcon = faSave;
+    selectedCom: string;
+    numLeds: number;
 
-    constructor(private fileService: FileService, private serialService: SerialConnectionService) {
+    constructor(private fileService: FileService, private serialService: SerialConnectionService, private colorService: ColorService) {
     }
 
     ngOnInit(): void {
@@ -31,13 +31,16 @@ export class SettingsComponent implements OnInit {
                 this.coms.push(details)
                 index++;
             })
-        })
+        });
+        // @ts-ignore
+        this.selectedCom = this.fileService.readGeneralSettings().com;
+
+        // @ts-ignore
+        this.numLeds = this.fileService.readGeneralSettings().leds;
     }
 
     saveSettings(): void {
-        const selectedCom = <string>$('#coms').val();
-        this.fileService.saveCom(selectedCom);
-        console.log('selected:', selectedCom)
-        // this.serialService.update();
+        this.fileService.saveGeneralSettings(this.selectedCom, this.numLeds);
+        this.serialService.update();
     }
 }

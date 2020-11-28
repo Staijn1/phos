@@ -1,5 +1,6 @@
 import {ElectronService} from '../electron/electron.service';
 import {Injectable} from '@angular/core';
+import {FileService} from '../file/file.service';
 
 
 @Injectable({
@@ -9,11 +10,11 @@ export class SerialConnectionService {
     public port: any;
     public selectedPortId: string;
     public portOpts = {baudRate: 19200, autoOpen: true};
-    private receivedMessage: string;
-    public readonly amountOfLeds = 30;
+    public amountOfLeds = 30;
+    serialConnectionError: string;
 
-    constructor(public electronService: ElectronService) {
-        this.selectedPortId = 'COM3';
+    constructor(public electronService: ElectronService, private fileService: FileService) {
+        this.readSettings();
         this.openPort();
     }
 
@@ -28,72 +29,51 @@ export class SerialConnectionService {
     }
 
     openPort() {
-        console.log(this.selectedPortId)
         if (this.port === undefined) {
-            console.log(this.selectedPortId)
             this.port = new this.electronService.serialPort(
                 this.selectedPortId,
                 this.portOpts,
                 err => {
                     if (err) {
-                        return console.log('[ERR] Error opening port: ' + err.message);
+                        this.handleError(err);
                     }
                 }
             );
         }
 
-        this.port.on('open', () => {
-            console.log('[LOG] Port opened: ', this.selectedPortId)
-        });
-
         this.port.on('error', err => {
             if (err) {
-                console.log('[ERR] Error: ', err.message)
+                this.handleError(err)
             }
-
-            console.log('Connection closed')
         });
 
         if (!this.port.isOpen) {
             this.port.open(err => {
                 if (err) {
-                    console.log('[ERR] Error opening port: ', this.selectedPortId)
+                    this.handleError(err)
                 }
             });
         }
         let buffer = '';
-        this.port.on('data', function (data) {
+        this.port.on('data', (data) => {
             buffer += data.toString();
-            const self = this;
             console.log(data.toString())
-            if (buffer.indexOf('}') !== -1) {
-                try {
-                    self.receivedMessage = JSON.parse(buffer);
-                    console.log(buffer)
-                } catch (e) {
-                    console.log('Kan JSON niet inlezen\n' + e)
-                }
-                buffer = '';
-            }
         })
     }
 
     closePort() {
         this.port.close(err => {
             if (err) {
-                console.log('[ERR] Error: ', err.message);
+                this.handleError(err)
             }
         });
-        console.log('[LOG] Port closed: ', this.selectedPortId)
         this.selectedPortId = null;
-        this.port = null;
-        this.scan();
     }
 
     send(command: string) {
-        this.port.write(command + '\n', function (err) {
+        this.port.write(command + '\n', (err) => {
             if (err) {
-                console.error(err);
+                this.handleError(err)
             }
         })
     }
@@ -119,8 +99,21 @@ export class SerialConnectionService {
     }
 
     update() {
-        this.selectedPortId = localStorage.getItem('com') != null ? localStorage.getItem('com') : 'COM3';
         this.closePort();
-        this.openPort();
+        this.readSettings();
+        setTimeout(() => {
+            this.openPort();
+        }, 1000)
+    }
+
+    private handleError(err: Error) {
+        return console.log('[ERR] Error opening port: ' + err.message);
+    }
+
+    private readSettings() {
+        // @ts-ignore
+        this.selectedPortId = this.fileService.readGeneralSettings().com;
+        // @ts-ignore
+        this.amountOfLeds = this.fileService.readGeneralSettings().leds;
     }
 }

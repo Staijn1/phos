@@ -2,6 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import iro from '@jaames/iro';
 import {SerialConnectionService} from '../serial/serial-connection.service';
+import {FileService} from '../file/file.service';
 
 @Injectable({
     providedIn: 'root'
@@ -9,7 +10,10 @@ import {SerialConnectionService} from '../serial/serial-connection.service';
 export class ColorService {
     picker: any;
 
-    constructor(@Inject(DOCUMENT) private document: HTMLDocument, private serialService: SerialConnectionService) {
+    // tslint:disable-next-line:max-line-length
+    constructor(@Inject(DOCUMENT) private document: HTMLDocument, private serialService: SerialConnectionService, private fileService: FileService) {
+        // @ts-ignore
+        const colorsSaved = this.fileService.readGeneralSettings().colors;
         setTimeout(() => {
             this.picker = iro.ColorPicker('#picker', {
                 width: 200,
@@ -18,16 +22,17 @@ export class ColorService {
                 borderWidth: 2,
                 borderColor: '#fff',
                 wheelAngle: 90,
-                colors: [
-                    'rgb(100%, 0, 0)', // pure red
-                    'rgb(0, 100%, 0)', // pure green
-                    'rgb(0, 0, 100%)', // pure blue
-                ],
+                colors: colorsSaved,
+
             });
             this.picker.on('color:change', (color) => {
-               this.serialService.setColor(color.hexString);
+                this.serialService.setColor(color.hexString);
             });
-        }, 1);
+            this.picker.on('input:end', (color) => {
+                console.log('event', this.picker.colors)
+                this.fileService.saveColors(this.picker.colors)
+            });
+        }, 200);
     }
 
     get getFirstColorString(): string {

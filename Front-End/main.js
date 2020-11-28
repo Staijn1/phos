@@ -15,11 +15,15 @@ function createWindow() {
     win = new electron_1.BrowserWindow({
         x: 0,
         y: 0,
-        width: size.width,
-        height: size.height
+        width: size.width / 2,
+        height: size.height / 2,
+        webPreferences: {
+            nodeIntegration: true
+        }
     });
     // Open the DevTools.
-    win.webContents.openDevTools();
+    // win.webContents.openDevTools()
+    electron_1.app.allowRendererProcessReuse = false;
     if (serve) {
         require('electron-reload')(__dirname, {
             electron: require(__dirname + "/node_modules/electron")
