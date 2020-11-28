@@ -28,6 +28,7 @@ function createWindow() {
   if (serve) {
     require('electron-reload')(__dirname, {
       electron: require(`${__dirname}/node_modules/electron`),
+      ignored: 'src/assets/settings.ini'
     });
     win.loadURL('http://localhost:4200');
   } else {

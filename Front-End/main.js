@@ -23,17 +23,16 @@ function createWindow() {
     });
     // Open the DevTools.
     // win.webContents.openDevTools()
-    electron_1.app.allowRendererProcessReuse = false;
     if (serve) {
         require('electron-reload')(__dirname, {
-            electron: require(__dirname + "/node_modules/electron")
+            electron: require(__dirname + "/node_modules/electron"),
+            ignored: 'src/assets/settings.ini'
         });
         win.loadURL('http://localhost:4200');
     }
     else {
         win.loadURL(url.format({
             pathname: path.join(__dirname, 'dist/index.html'),
-            // pathname: path.join(__dirname, 'src/index.html'),
             protocol: 'file:',
             slashes: true
         }));
@@ -66,6 +65,7 @@ try {
             createWindow();
         }
     });
+    electron_1.app.allowRendererProcessReuse = false;
 }
 catch (e) {
     // Catch Error
