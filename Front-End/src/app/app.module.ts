@@ -15,6 +15,8 @@ import {VisualizerTestComponent} from './components/visualizer-test/visualizer-t
 import {BrowserModule} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
 import {FormsModule} from '@angular/forms';
+import { HomeComponent } from './components/home/home.component';
+import { PreloaderComponent } from './components/preloader/preloader.component';
 
 
 @NgModule({
@@ -26,7 +28,9 @@ import {FormsModule} from '@angular/forms';
         SettingsComponent,
         ModeComponent,
         NavigationbarComponent,
-        VisualizerTestComponent
+        VisualizerTestComponent,
+        HomeComponent,
+        PreloaderComponent
     ],
     bootstrap: [AppComponent],
     providers: [ElectronService],

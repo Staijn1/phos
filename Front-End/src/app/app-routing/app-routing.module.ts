@@ -2,10 +2,11 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SettingsComponent} from '../components/settings/settings.component';
 import {ModeComponent} from '../components/mode/mode.component';
-import {VisualizerTestComponent} from '../components/visualizer-test/visualizer-test.component'; // CLI imports router
+import {VisualizerTestComponent} from '../components/visualizer-test/visualizer-test.component';
+import {HomeComponent} from '../components/home/home.component'; // CLI imports router
 
 const routes: Routes = [
-    {path: '', component: ModeComponent},
+    {path: '', component: HomeComponent},
     // {path: 'segments', component: SegmentsComponent},
     // {path: 'visualizer', component: VisualizerComponent},
     {path: 'visualizer', component: VisualizerTestComponent},

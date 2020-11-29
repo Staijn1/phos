@@ -1,0 +1,9 @@
+@function getColor($key) {
+  @return map-get($theme-colors, $key);
+}
+
+$theme-colors: (
+  "primary": #0563bb,
+  "secondary": #45505b,
+);
+
