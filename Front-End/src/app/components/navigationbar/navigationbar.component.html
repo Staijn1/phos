@@ -1,31 +1,55 @@
 <!-- ======= Mobile nav toggle button ======= -->
-<button class="navbar-toggler d-none d-sm-block d-md-none" type="button" data-toggle="collapse" data-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+<!--<button type="button" class="mobile-nav-toggle d-xl-none" (click)="mobileNav()"><fa-icon [icon]="mobileMenu"></fa-icon></button>-->
+<!-- ======= Header ======= -->
+<!--<header id="header" class="d-flex flex-column justify-content-center">-->
+<!--    <nav class="nav-menu collapse" id="navbarNav">-->
+<!--        <ul>-->
+<!--            <li><a routerLink="">-->
+<!--                <fa-icon [icon]="home"></fa-icon>-->
+<!--                <span>Home</span></a></li>-->
+<!--            <li><a routerLink="/mode"><fa-icon [icon]="mode"></fa-icon> <span>Mode</span></a></li>-->
+<!--            <li><a routerLink="/visualizer"><fa-icon [icon]="visualizer"></fa-icon> <span>Visualizer</span></a></li>-->
+<!--            <li><a class="colorpicker"><fa-icon [icon]="colorpicker"></fa-icon> <span><div id="picker"></div></span></a></li>-->
+<!--        </ul>-->
+<!--    </nav>&lt;!&ndash; .nav-menu &ndash;&gt;-->
+<!--</header>&lt;!&ndash; End Header &ndash;&gt;-->
+
+
+<!-- ======= Mobile nav toggle button ======= -->
+<button type="button" class="mobile-nav-toggle d-xl-none" (click)="mobileNav()">
     <fa-icon [icon]="mobileMenu"></fa-icon>
 </button>
+
 <!-- ======= Header ======= -->
 <header id="header" class="d-flex flex-column justify-content-center">
+
     <nav class="nav-menu">
         <ul>
-            <li><a routerLink="">
-                <fa-icon [icon]="home"></fa-icon>
-                <span>Home</span></a></li>
-            <li><a routerLink="/mode"><fa-icon [icon]="mode"></fa-icon> <span>Mode</span></a></li>
-            <li><a routerLink="/visualizer"><fa-icon [icon]="visualizer"></fa-icon> <span>Visualizer</span></a></li>
-            <li><a class="colorpicker"><fa-icon [icon]="colorpicker"></fa-icon> <span>Dit<br>Is<br>Hele<br>Hoge<br>tekst</span><div id="picker"></div></a></li>
+            <li>
+                <a routerLink="">
+                    <fa-icon [icon]="home"></fa-icon>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/mode">
+                    <fa-icon [icon]="mode"></fa-icon>
+                    <span>Mode</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/visualizer">
+                    <fa-icon [icon]="visualizer"></fa-icon>
+                    <span>Visualizer</span>
+                </a>
+            </li>
+            <li>
+                <a class="colorpicker">
+                    <fa-icon [icon]="colorpicker"></fa-icon>
+                    <div id="picker"></div>
+                </a>
+            </li>
         </ul>
     </nav><!-- .nav-menu -->
+
 </header><!-- End Header -->
-
-
-<nav class="navbar">
-    <div class="collapse navbar-collapse" id="navbarNav">
-        <ul class="navbar-nav nav-menu">
-            <li><a routerLink="">
-                <fa-icon [icon]="home"></fa-icon>
-                <span>Home</span></a></li>
-            <li><a routerLink="/mode"><fa-icon [icon]="mode"></fa-icon> <span>Mode</span></a></li>
-            <li><a routerLink="/visualizer"><fa-icon [icon]="visualizer"></fa-icon> <span>Visualizer</span></a></li>
-            <li><a class="colorpicker"><fa-icon [icon]="colorpicker"></fa-icon> <span>Dit<br>Is<br>Hele<br>Hoge<br>tekst</span><div id="picker"></div></a></li>
-        </ul>
-    </div>
-</nav>

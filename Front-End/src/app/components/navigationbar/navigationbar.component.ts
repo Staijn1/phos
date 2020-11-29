@@ -1,5 +1,7 @@
 import {Component, OnInit} from '@angular/core';
-import {faBars, faChartBar, faCog, faHome, faList} from '@fortawesome/free-solid-svg-icons';
+import {faBars, faChartBar, faCog, faHome, faList, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {ColorService} from '../../services/color/color.service';
+import * as $ from 'jquery';
 
 @Component({
     selector: 'app-navigationbar',
@@ -13,14 +15,21 @@ export class NavigationbarComponent implements OnInit {
     visualizer = faChartBar;
     colorpicker = this.visualizer;
     mobileMenu = faBars;
+    isOpen = false;
 
-    constructor() {
+    constructor(private colorService: ColorService) {
     }
 
     ngOnInit(): void {
-        $(document).on('click', '.mobile-nav-toggle', function(e) {
-            $('body').toggleClass('mobile-nav-active');
-            $('.mobile-nav-toggle i').toggleClass('icofont-navigation-menu icofont-close');
-        });
+    }
+
+    mobileNav() {
+        if (!this.isOpen) {
+            this.mobileMenu = faTimes;
+        } else {
+            this.mobileMenu = faBars;
+        }
+        this.isOpen = !this.isOpen;
+        $('body').toggleClass('mobile-nav-active');
     }
 }

@@ -11,10 +11,10 @@ import {faLightbulb} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
     selector: 'app-visualizer-test',
-    templateUrl: './visualizer-test.component.html',
-    styleUrls: ['./visualizer-test.component.scss']
+    templateUrl: './visualizer.component.html',
+    styleUrls: ['./visualizer.component.scss']
 })
-export class VisualizerTestComponent implements OnInit {
+export class VisualizerComponent implements OnInit {
     private audioMotion: AudioMotionAnalyzer;
 
 
