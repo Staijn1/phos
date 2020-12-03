@@ -10,18 +10,18 @@ import {ModeComponent} from './components/mode/mode.component';
 
 import {ElectronService} from './services/electron/electron.service';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {VisualizerComponent} from './components/visualizer-test/visualizer.component';
+import {VisualizerComponent} from './components/visualizer/visualizer.component';
 
 import {FormsModule} from '@angular/forms';
 import { HomeComponent } from './components/home/home.component';
 import { PreloaderComponent } from './components/preloader/preloader.component';
 import {NavigationbarComponent} from './components/navigationbar/navigationbar.component';
-import {BrowserModule} from '@angular/platform-browser';
 import {CommonModule} from '@angular/common';
+import {BrowserModule} from '@angular/platform-browser';
 
 
 @NgModule({
-    imports: [BrowserModule, CommonModule, FormsModule, AppRoutingModule, NouisliderModule, FontAwesomeModule],
+    imports: [CommonModule, BrowserModule, FormsModule, AppRoutingModule, NouisliderModule, FontAwesomeModule],
     declarations: [
         AppComponent,
         NavigationbarComponent,

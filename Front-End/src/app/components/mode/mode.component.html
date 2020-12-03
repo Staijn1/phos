@@ -1,45 +1,71 @@
-<!--<div class="container">-->
-<!--    <div class="row">-->
-<!--        <div class="col-3 offset-1">-->
-<!--            <ul id="modesList" class="list-group mt-2 row">-->
-<!--                <li-->
-<!--                        *ngFor="let mode of modes| slice:0:this.modes.length/2; let indexOfelement=index"-->
-<!--                        (click)="onChangeSegment($event)"-->
-<!--                        [ngClass]="{'active': modeIndex === indexOfelement}"-->
-<!--                        class="list-group-item col-6"-->
-<!--                        id="{{mode.mode}}">-->
-<!--                    <div>{{mode.name}}</div>-->
-<!--                </li>-->
-<!--            </ul>-->
-<!--        </div>-->
-<!--    </div>-->
-<!--</div>-->
-<div class="container-fluid">
-    <div class="rectangle"></div>
-    <div class="row no-gutters">
-        <div class="col-3 offset-1">
-            <div class="d-flex flex-row flex-wrap mt-3">
-                <div
-                        class="list-group-item list-group-item-action text-white py-2"
-                        *ngFor="let mode of modes| slice:0:this.modes.length/2; let indexOfelement=index"
-                        (click)="onChangeSegment($event)"
-                        id="{{mode.mode}}"
-                >
-                    {{mode.name}}
-                </div>
-            </div>
+<section id="hero" class="d-flex flex-column justify-content-center">
+    <div class="container-fluid row">
+        <div class="col d-flex flex-column justify-content-center">
+            <h1 class="display-1">Modes</h1>
+            <h3 class="text-dark mt-4">Preset modes</h3>
         </div>
-        <div class="col-3 offset-2">
-            <div class="d-flex flex-row flex-wrap mt-3">
-                <div
-                        class="list-group-item list-group-item-action text-white py-2"
-                        *ngFor="let mode of modes| slice:this.modes.length/2:this.modes.length; let indexOfelement=index"
-                        (click)="onChangeSegment($event)"
-                        id="{{mode.mode}}"
-                >
-                    {{mode.name}}
+        <div class="col d-flex justify-content-end">
+            <svg width="512" height="512" viewBox="0 0 512 512" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <g id="keypad 1">
+                    <g id="Group">
+                        <path id="Vector" d="M464 72H48C25.944 72 8 89.944 8 112V400C8 422.056 25.944 440 48 440H464C486.056 440 504 422.056 504 400V112C504 89.944 486.056 72 464 72ZM488 400C488 413.232 477.232 424 464 424H48C34.768 424 24 413.232 24 400V112C24 98.768 34.768 88 48 88H464C477.232 88 488 98.768 488 112V400Z" fill="black"/>
+                        <path id="Wheel" d="M104 280C68.712 280 40 308.712 40 344C40 379.288 68.712 408 104 408C139.288 408 168 379.288 168 344C168 308.712 139.288 280 104 280ZM151.28 336H134.864C131.952 324.808 123.192 316.048 112 313.136V296.72C132.056 300.112 147.888 315.944 151.28 336ZM104 360C95.176 360 88 352.824 88 344C88 335.176 95.176 328 104 328C112.824 328 120 335.176 120 344C120 352.824 112.824 360 104 360ZM96 296.72V313.136C84.808 316.048 76.048 324.808 73.136 336H56.72C60.112 315.944 75.944 300.112 96 296.72ZM56.72 352H73.136C76.048 363.192 84.808 371.952 96 374.864V391.28C75.944 387.888 60.112 372.056 56.72 352ZM112 391.28V374.864C123.192 371.952 131.952 363.192 134.864 352H151.28C147.888 372.056 132.056 387.888 112 391.28Z" fill="black"/>
+                        <path id="Vector_2" d="M448 360C434.768 360 424 370.768 424 384C424 397.232 434.768 408 448 408C461.232 408 472 397.232 472 384C472 370.768 461.232 360 448 360ZM448 392C443.592 392 440 388.416 440 384C440 379.584 443.592 376 448 376C452.408 376 456 379.584 456 384C456 388.416 452.408 392 448 392Z" fill="black"/>
+                        <path id="Vector_3" d="M384 360C370.768 360 360 370.768 360 384C360 397.232 370.768 408 384 408C397.232 408 408 397.232 408 384C408 370.768 397.232 360 384 360ZM384 392C379.592 392 376 388.416 376 384C376 379.584 379.592 376 384 376C388.408 376 392 379.584 392 384C392 388.416 388.408 392 384 392Z" fill="black"/>
+                        <path id="Vector_4" d="M320 360C306.768 360 296 370.768 296 384C296 397.232 306.768 408 320 408C333.232 408 344 397.232 344 384C344 370.768 333.232 360 320 360ZM320 392C315.592 392 312 388.416 312 384C312 379.584 315.592 376 320 376C324.408 376 328 379.584 328 384C328 388.416 324.408 392 320 392Z" fill="black"/>
+                        <path id="Vector_5" d="M424 344H472V296H424V344ZM440 312H456V328H440V312Z" fill="black"/>
+                        <path id="Vector_6" d="M360 344H408V296H360V344ZM376 312H392V328H376V312Z" fill="black"/>
+                        <path id="Vector_7" d="M296 344H344V296H296V344ZM312 312H328V328H312V312Z" fill="black"/>
+                        <path id="Vector_8" d="M424 280H472V232H424V280ZM440 248H456V264H440V248Z" fill="black"/>
+                        <path id="Vector_9" d="M360 280H408V232H360V280ZM376 248H392V264H376V248Z" fill="black"/>
+                        <path id="Vector_10" d="M296 280H344V232H296V280ZM312 248H328V264H312V248Z" fill="black"/>
+                        <path id="Vector_11" d="M424 216H472V168H424V216ZM440 184H456V200H440V184Z" fill="black"/>
+                        <path id="Vector_12" d="M360 216H408V168H360V216ZM376 184H392V200H376V184Z" fill="black"/>
+                        <path id="Vector_13" d="M296 216H344V168H296V216ZM312 184H328V200H312V184Z" fill="black"/>
+                        <path id="Vector_14" d="M456 104H312C303.176 104 296 111.176 296 120V136C296 144.824 303.176 152 312 152H456C464.824 152 472 144.824 472 136V120C472 111.176 464.824 104 456 104ZM312 136V120H456L456.008 136H312Z" fill="black"/>
+                        <path id="Vector_15" d="M264 104H56C47.176 104 40 111.176 40 120V248C40 256.824 47.176 264 56 264H264C272.824 264 280 256.824 280 248V120C280 111.176 272.824 104 264 104Z" fill="black"/>
+                        <path id="Vector_16" d="M264 280H200C191.176 280 184 287.176 184 296V392C184 400.824 191.176 408 200 408H264C272.824 408 280 400.824 280 392V296C280 287.176 272.824 280 264 280ZM200 392V296H264L264.008 392H200Z" fill="black"/>
+                        <g id="Wifi">
+                            <path id="Vector_17" d="M137.376 209.168L148.688 220.48C154.736 214.432 165.264 214.432 171.312 220.48L182.624 209.168C170.536 197.08 149.464 197.08 137.376 209.168V209.168Z" fill="white"/>
+                            <path id="Vector_18" d="M114.744 186.544L126.056 197.856C135.12 188.784 147.176 183.792 160 183.792C172.824 183.792 184.872 188.784 193.944 197.856L205.256 186.544C193.168 174.448 177.096 167.792 160 167.792C142.904 167.792 126.832 174.456 114.744 186.544V186.544Z" fill="white"/>
+                            <path id="Vector_19" d="M92.12 163.912L103.432 175.224C134.624 144.04 185.376 144.04 216.576 175.224L227.888 163.912C190.456 126.496 129.544 126.496 92.12 163.912V163.912Z" fill="white"/>
+                        </g>
+                        <rect id="BL" x="312" y="312" width="16" height="16" fill="#B44C4C"/>
+                        <rect id="BM" x="376" y="312" width="16" height="16" fill="#A6E145"/>
+                        <rect id="BR" x="440" y="312" width="16" height="16" fill="#4583E1"/>
+                        <rect id="MM" x="376" y="248" width="16" height="16" fill="#CB45E1"/>
+                        <rect id="TM" x="376" y="184" width="16" height="16" fill="#21C04E"/>
+                        <rect id="TR" x="440" y="184" width="16" height="16" fill="#8817B0"/>
+                        <rect id="MR" x="440" y="248" width="16" height="16" fill="#E1BF45"/>
+                        <rect id="ML" x="312" y="248" width="16" height="16" fill="#45E1D8"/>
+                        <rect id="TL" x="312" y="184" width="16" height="16" fill="#FF5E84"/>
+                    </g>
+                    <circle id="Ellipse 1" cx="320" cy="384" r="9" fill="#3B476F"/>
+                    <circle id="Ellipse 2" cx="384" cy="384" r="9" fill="#466F3B"/>
+                    <circle id="Ellipse 3" cx="448" cy="384" r="9" fill="#6F3B3B"/>
+                </g>
+            </svg>
+        </div>
+    </div>
+</section>
+
+<section>
+    <div class="container" data-aos="fade-up">
+        <div class="row">
+            <div class="col-lg-3 col-md-4 d-flex align-items-stretch"
+                 *ngFor="let mode of modes; let indexOfelement=index"
+                 (click)="onChangeSegment($event)"
+                 id="{{mode.mode}}">
+                <div class="icon-box w-100 section-title"
+                     [ngClass]="classes[indexOfelement % classes.length]">
+                    <div class="icon">
+                        <svg width="100" height="100" viewBox="0 0 600 600" xmlns="http://www.w3.org/2000/svg">
+                            <path stroke="none" stroke-width="0" fill="#f5f5f5" d="M300,582.0697525312426C382.5290701553225,586.8405444964366,449.9789794690241,525.3245884688669,502.5850820975895,461.55621195738473C556.606425686781,396.0723002908107,615.8543463187945,314.28637112970534,586.6730223649479,234.56875336149918C558.9533121215079,158.8439757836574,454.9685369536778,164.00468322053177,381.49747125262974,130.76875717737553C312.15926192815925,99.40240125094834,248.97055460311594,18.661163978235184,179.8680185752513,50.54337015887873C110.5421016452524,82.52863877960104,119.82277516462835,180.83849132639028,109.12597500060166,256.43424936330496C100.08760227029461,320.3096726198365,92.17705696193138,384.0621239912766,124.79988738764834,439.7174275375508C164.83382741302287,508.01625554203684,220.96474134820875,577.5009287672846,300,582.0697525312426"></path>
+                        </svg>
+                    </div>
+                    <h6 class="mt-3">{{mode.name}}</h6>
                 </div>
             </div>
         </div>
     </div>
-</div>
+</section>

@@ -23,8 +23,8 @@ export class ModeComponent implements OnInit {
         {mode: 10, name: 'Multi Dynamic'},
         {mode: 11, name: 'Rainbow'},
         {mode: 12, name: 'Rainbow Cycle'},
-        {mode: 13, name: 'Moving dot'},
-        {mode: 14, name: 'Double moving dot'},
+        {mode: 13, name: 'Scan'},
+        {mode: 14, name: 'Dual scan'},
         {mode: 15, name: 'Fade in/out'},
         {mode: 16, name: 'Theater Chase'},
         {mode: 17, name: 'Theater Chase Rainbow'},
@@ -32,44 +32,47 @@ export class ModeComponent implements OnInit {
         {mode: 19, name: 'Twinkle'},
         {mode: 20, name: 'Twinkle Random'},
         {mode: 21, name: 'Twinkle Fade'},
-        {mode: 22, name: 'Thunder'},
-        {mode: 23, name: 'Thunderstorm Rainbow'},
-        {mode: 24, name: 'Thunderstorm Multi'},
-        // 25 is lelijk
-        {mode: 26, name: 'Short Blink'},
-        {mode: 28, name: 'Strobo'},
-        {mode: 29, name: 'Rainbow Strobo'},
-        {mode: 27, name: 'Rainbow Strobo 2'},
-        {mode: 30, name: 'Colored Dot'},
-        {mode: 31, name: 'Scroll Dot'},
-        {mode: 32, name: 'Scroll Dot Random'},
-        {mode: 33, name: 'Rainbow White Dot'},
-        {mode: 34, name: 'Flashing Dot'},
-        {mode: 35, name: 'Flashing Scroll Random'},
-        {mode: 36, name: 'Rainbow Dot'},
-        {mode: 37, name: 'Scroll'},
-        {mode: 38, name: 'Rainbow Wipe'},
-        {mode: 39, name: 'Wipe Back And Forth'},
-        {mode: 40, name: 'White Chase'},
-        {mode: 41, name: 'Purple/Pink Chase'},
-        {mode: 42, name: 'Rainbow Chase'},
-        {mode: 43, name: 'KITT'},
-        {mode: 44, name: 'Comet'},
+        {mode: 22, name: 'Twinkle Fade Random'},
+        {mode: 23, name: 'Sparkle'},
+        {mode: 24, name: 'Flash Sparkle'},
+        {mode: 25, name: 'Hyper Sparkle'},
+        {mode: 26, name: 'Strobe'},
+        {mode: 27, name: 'Strobe Rainbow'},
+        {mode: 28, name: 'Multi Strobe'},
+        {mode: 29, name: 'Blink Rainbow'},
+        {mode: 30, name: 'Chase White'},
+        {mode: 31, name: 'Chase Color'},
+        {mode: 32, name: 'Chase Random'},
+        {mode: 33, name: 'Chase Rainbow'},
+        {mode: 34, name: 'Chase Flash'},
+        {mode: 35, name: 'Chase Flash Random'},
+        {mode: 36, name: 'Chase Rainbow White'},
+        {mode: 37, name: 'Chase Blackout'},
+        {mode: 38, name: 'Chase Blackout Rainbow'},
+        {mode: 39, name: 'Color Sweep Random'},
+        {mode: 40, name: 'Running Color'},
+        {mode: 41, name: 'Running Red Blue'},
+        {mode: 42, name: 'Running Random'},
+        {mode: 43, name: 'Larson Scanner'},
+        {mode: 44, name: 'Comet '},
         {mode: 45, name: 'Fireworks'},
         {mode: 46, name: 'Fireworks Random'},
-        {mode: 47, name: 'Red/Green chase'},
+        {mode: 47, name: 'Merry Christmas'},
         {mode: 48, name: 'Fire Flicker'},
         {mode: 49, name: 'Fire Flicker (soft)'},
         {mode: 50, name: 'Fire Flicker (intense)'},
+        {mode: 51, name: 'Circus Combustus'},
     ];
 
-    modeIndex: number;
+    classes = ['iconbox-primary', 'iconbox-orange', 'iconbox-pink', 'iconbox-yellow', 'iconbox-red', 'iconbox-teal']
+    private modeIndex: number;
 
     constructor(public serialService: SerialConnectionService, private colorService: ColorService) {
     }
 
     ngOnInit(): void {
     }
+
 
     onChangeSegment($event: MouseEvent) {
 

@@ -204,8 +204,6 @@ export class SegmentsComponent implements OnInit {
         });
         json += ']}';
 
-        console.log(json)
-        console.log(JSON.stringify(json))
         this.serialService.setSegment(JSON.stringify(json));
     }
 

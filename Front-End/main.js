@@ -18,15 +18,16 @@ function createWindow() {
         width: size.width / 2,
         height: size.height / 2,
         webPreferences: {
-            nodeIntegration: true
-        }
+            nodeIntegration: true,
+            enableRemoteModule: true
+        },
+        frame: false
     });
     // Open the DevTools.
     // win.webContents.openDevTools()
     if (serve) {
         require('electron-reload')(__dirname, {
-            electron: require(__dirname + "/node_modules/electron"),
-            ignored: 'src/assets/settings.ini'
+            electron: require(__dirname + "/node_modules/electron")
         });
         win.loadURL('http://localhost:4200');
     }

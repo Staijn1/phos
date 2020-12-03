@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import AudioMotionAnalyzer from 'audiomotion-analyzer';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 import {ColorService} from '../../services/color/color.service';
@@ -8,13 +8,14 @@ import {FileService} from '../../services/file/file.service';
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload';
 import {faLightbulb} from '@fortawesome/free-solid-svg-icons';
+import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-visualizer-test',
     templateUrl: './visualizer.component.html',
     styleUrls: ['./visualizer.component.scss']
 })
-export class VisualizerComponent implements OnInit {
+export class VisualizerComponent implements OnInit, OnDestroy {
     private audioMotion: AudioMotionAnalyzer;
 
 
@@ -320,25 +321,21 @@ export class VisualizerComponent implements OnInit {
     load = faFileDownload;
     modeIcon = faLightbulb;
 
-    constructor(private serialService: SerialConnectionService, private colorService: ColorService, private fileService: FileService) {
+    // tslint:disable-next-line:max-line-length
+    constructor(private serialService: SerialConnectionService, private colorService: ColorService, private fileService: FileService, private router: Router) {
+
+    }
+
+    ngOnDestroy(): void {
+        this.audioMotion.toggleAnalyzer();
+        console.log(this.audioMotion.isOn)
     }
 
     ngOnInit(): void {
-        const elem = document.getElementById('visualizer');
-
-        this.audioMotion = new AudioMotionAnalyzer(
-            elem,
-            this.options
-        );
-        this.setSource();
-        this.registerGradients();
-        this.loadOptions();
-        setTimeout(() => {
-            this.changeLedstripMode()
-        }, 2000);
+        this.init();
     }
 
-     changeLedstripMode() {
+    changeLedstripMode() {
         this.serialService.setMode(55);
     }
 
@@ -349,7 +346,6 @@ export class VisualizerComponent implements OnInit {
                 const micInput = audioCtx.createMediaStreamSource(stream);
                 this.audioMotion.disconnectInput();
                 this.audioMotion.connectInput(micInput);
-                console.log(this.audioMotion)
             })
             .catch(err => {
                 console.error(`Could not change audio source - ${err}`, err);
@@ -376,7 +372,6 @@ export class VisualizerComponent implements OnInit {
     }
 
     changeReflex(value: string) {
-        console.log(typeof value)
         switch (+value) {
             case 1:
                 this.options.reflexRatio = .4;
@@ -470,10 +465,24 @@ export class VisualizerComponent implements OnInit {
 
     loadOptions() {
         this.options = this.fileService.readVisualizerOptions();
-        console.log('read config', this.options)
     }
 
     saveOptions() {
         this.fileService.saveVisualizerOptions(this.options)
+    }
+
+    private init() {
+        const elem = document.getElementById('visualizer');
+
+        this.audioMotion = new AudioMotionAnalyzer(
+            elem,
+            this.options
+        );          
+        this.setSource();
+        this.registerGradients();
+        this.loadOptions();
+        setTimeout(() => {
+            this.changeLedstripMode()
+        }, 2000);
     }
 }

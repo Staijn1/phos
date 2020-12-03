@@ -1,7 +1,20 @@
 import {Component, OnInit} from '@angular/core';
-import {faBars, faChartBar, faCog, faHome, faList, faTimes} from '@fortawesome/free-solid-svg-icons';
+import {
+    faBars,
+    faChartBar,
+    faCog,
+    faEyeDropper,
+    faHome,
+    faList, faMinus, faPlus, faRunning,
+    faSlidersH,
+    faTimes, faWalking,
+    faWindowMinimize
+} from '@fortawesome/free-solid-svg-icons';
 import {ColorService} from '../../services/color/color.service';
 import * as $ from 'jquery';
+import {faClone, faSquare, faWindowMaximize} from '@fortawesome/free-regular-svg-icons';
+import {ElectronService} from '../../services/electron/electron.service';
+import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 
 @Component({
     selector: 'app-navigationbar',
@@ -13,14 +26,28 @@ export class NavigationbarComponent implements OnInit {
     home = faHome;
     mode = faList;
     visualizer = faChartBar;
-    colorpicker = this.visualizer;
+    colorpicker = faEyeDropper;
     mobileMenu = faBars;
     isOpen = false;
+    minimize = faWindowMinimize;
+    maximize = faSquare;
+    exit = faTimes;
+    toprightMenu = faBars;
+    controls = faSlidersH;
+    settings = faCog;
+    decreaseBrightnessIcon = faMinus;
+    increaseBrightnessIcon = faPlus;
+    speedIncreaseIcon = faRunning;
+    speedDecreaseIcon = faWalking;
 
-    constructor(private colorService: ColorService) {
+    private window: Electron.BrowserWindow;
+
+    // tslint:disable-next-line:max-line-length
+    constructor(private colorService: ColorService, private electronService: ElectronService, private serialService: SerialConnectionService) {
     }
 
     ngOnInit(): void {
+        this.window = this.electronService.remote.getCurrentWindow();
     }
 
     mobileNav() {
@@ -31,5 +58,39 @@ export class NavigationbarComponent implements OnInit {
         }
         this.isOpen = !this.isOpen;
         $('body').toggleClass('mobile-nav-active');
+    }
+
+    exitButtonAction() {
+        this.window.close();
+    }
+
+    minimizeButtonAction() {
+        this.window.minimize();
+    }
+
+    maximizeButtonAction() {
+        if (this.window.isMaximized()) {
+            this.window.unmaximize();
+            this.maximize = faSquare;
+        } else {
+            this.window.maximize();
+            this.maximize = faClone;
+        }
+    }
+
+    decreaseBrightness() {
+        this.serialService.decreaseBrightness();
+    }
+
+    increaseBrightness() {
+        this.serialService.increaseBrightness();
+    }
+
+    decreaseSpeed() {
+        this.serialService.decreaseSpeed();
+    }
+
+    increaseSpeed() {
+        this.serialService.increaseSpeed();
     }
 }

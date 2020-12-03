@@ -81,7 +81,6 @@ export class SerialConnectionService {
     setSegment(json: string) {
         json = json.slice(1, -1)
         const toSend = 'setSegment ' + json.split('\\"').join('"');
-        console.log(toSend)
         this.send(toSend)
     }
 
@@ -115,5 +114,21 @@ export class SerialConnectionService {
         this.selectedPortId = this.fileService.readGeneralSettings().com;
         // @ts-ignore
         this.amountOfLeds = this.fileService.readGeneralSettings().leds;
+    }
+    decreaseBrightness() {
+        this.send('decreaseBrightness')
+    }
+
+    increaseBrightness() {
+        this.send('increaseBrightness')
+
+    }
+
+    decreaseSpeed() {
+        this.send('decreaseSpeed')
+    }
+
+    increaseSpeed() {
+        this.send('increaseSpeed')
     }
 }

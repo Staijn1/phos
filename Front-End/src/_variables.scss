@@ -2,8 +2,15 @@
   @return map-get($theme-colors, $key);
 }
 
+@font-face {
+  font-family: "Comfortaa";
+  src: url('./assets/fonts/Comfortaa-VariableFont_wght.ttf');
+}
+
+$font-family-base: "Comfortaa";
+
 $theme-colors: (
-  "primary": #0563bb,
+  "primary": #bb0505,
   "secondary": #45505b,
 );
 

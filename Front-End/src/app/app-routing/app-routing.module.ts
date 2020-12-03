@@ -2,7 +2,7 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SettingsComponent} from '../components/settings/settings.component';
 import {ModeComponent} from '../components/mode/mode.component';
-import {VisualizerComponent} from '../components/visualizer-test/visualizer.component';
+import {VisualizerComponent} from '../components/visualizer/visualizer.component';
 import {HomeComponent} from '../components/home/home.component'; // CLI imports router
 
 const routes: Routes = [
