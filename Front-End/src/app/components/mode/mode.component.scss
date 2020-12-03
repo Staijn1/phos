@@ -1,19 +1,19 @@
-@import "src/styles";
+@import "../../../variables";
 
-.rectangle {
-  clip-path: polygon(0 0, 45% 0, 75% 100%, 22% 100%);
-  background: $primary;
-  width: 100%;
-  height: 95%;
-  position: absolute;
-  top: 5%;
-  left: 0;
-}
-
-.active {
-  background: $secondary !important;
-}
-
-.list-group-item-action:hover{
-  color: #000 !important;
-}
+//.rectangle {
+//  clip-path: polygon(0 0, 45% 0, 75% 100%, 22% 100%);
+//  background: $primary;
+//  width: 100%;
+//  height: 95%;
+//  position: absolute;
+//  top: 5%;
+//  left: 0;
+//}
+//
+//.active {
+//  background: $secondary !important;
+//}
+//
+//.list-group-item-action:hover{
+//  color: #000 !important;
+//}
