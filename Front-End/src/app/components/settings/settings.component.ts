@@ -26,7 +26,7 @@ export class SettingsComponent implements OnInit {
             ports.forEach(port => {
                 const details = {
                     id: index,
-                    comName: port.comName,
+                    path: port.path,
                 };
                 this.coms.push(details)
                 index++;

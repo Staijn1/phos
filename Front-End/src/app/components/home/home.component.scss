@@ -1,0 +1,13 @@
+#Light path {
+  animation: colorChange ease 15s infinite alternate;
+}
+
+@keyframes colorChange {
+  0%   {fill: red;}
+  16.6%  {fill: orange; }
+  33.2%  {fill: #dddd1d;}
+  49.8%  {fill: #05b005;}
+  66.4% {fill: #1f1fea;}
+  83% {fill: #6a00b8;}
+  100% {fill: violet;}
+}

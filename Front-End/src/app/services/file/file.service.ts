@@ -9,6 +9,7 @@ const ini = require('ini');
 export class FileService {
     fs: any;
     private readonly fileUrl: string;
+    isDev: boolean;
 
     constructor(private electronService: ElectronService) {
         this.fs = electronService.fs;
@@ -18,15 +19,14 @@ export class FileService {
         if (root.includes('node_modules')) {
             root = root.split('node_modules')[0];
             pathToSettings = 'src/assets/settings.ini'
+            this.isDev = true;
         } else {
             pathToSettings = '/app/src/assets/settings.ini';
+            this.isDev = false;
         }
 
-        console.log('fileUrl', root + pathToSettings);
+
         this.fileUrl = root + pathToSettings;
-        // const path = this.electronService.path.resolve(__dirname);
-        // this.fileUrl = path.split('node_modules')[0] + '/assets/settings.ini';
-        console.log(this.electronService.path.join(process.resourcesPath))
 
     }
 
@@ -92,7 +92,9 @@ export class FileService {
     }
 
     private saveSections(visualizerSection, generalSection) {
-        this.fs.writeFileSync(this.fileUrl, ini.stringify(visualizerSection, {section: 'visualizer'}) + `${ini.stringify(generalSection, {section: 'general'})}`)
+        if (!this.isDev) {
+            this.fs.writeFileSync(this.fileUrl, ini.stringify(visualizerSection, {section: 'visualizer'}) + `${ini.stringify(generalSection, {section: 'general'})}`)
+        }
     }
 
     saveColors(colors: []) {

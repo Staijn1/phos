@@ -1,4 +1,4 @@
-<div id="settings" class="bg-danger w-100">
+<div id="settings" class="bg-info w-100">
     <div class="container p-4">
         <h1 class="text-dark">Settings</h1>
         <div class="row">
@@ -8,7 +8,7 @@
                         <label class="input-group-text" for="coms">com</label>
                     </div>
                     <select id="coms" class="custom-select" [(ngModel)]="selectedCom">
-                        <option *ngFor="let com of coms" value="{{com.comName}}">{{com.comName}}</option>
+                        <option *ngFor="let com of coms" value="{{com.path}}">{{com.path}}</option>
                     </select>
                 </div>
             </div>

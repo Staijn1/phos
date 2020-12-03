@@ -29,7 +29,6 @@ export class ColorService {
                 this.serialService.setColor(color.hexString);
             });
             this.picker.on('input:end', (color) => {
-                console.log('event', this.picker.colors)
                 this.fileService.saveColors(this.picker.colors)
             });
         }, 200);

@@ -1,25 +1,71 @@
-<nav class="navbar navbar-expand-lg navbar-dark mh-10">
-    <a class="navbar-brand" routerLink="">Ledcontrol</a>
-    <div class="expand bg-light w-25" id="navbarSupportedContent">
-
+<div id="menu-bar">
+    <div class="left"></div>
+    <div class="right">
+        <button class="menubar-btn" id="minimize-btn" (click)="minimizeButtonAction()">
+            <fa-icon [icon]="minimize"></fa-icon>
+        </button>
+        <button class="menubar-btn" id="max-unmax-btn" (click)="maximizeButtonAction()">
+            <fa-icon [icon]="maximize"></fa-icon>
+        </button>
+        <button class="menubar-btn" id="close-btn" (click)="exitButtonAction()">
+            <fa-icon [icon]="exit"></fa-icon>
+        </button>
     </div>
-    <ul class="navbar-nav w-25 floating">
-        <li class="nav-item dropdown w-75 bg-light">
-            <div class="nav-link d-flex justify-content-around" data-toggle="dropdown">
-                <a class="nav-link text-dark" routerLink="/visualizer">Visualizer</a>
-                <a class="nav-link text-dark" routerLink="/mode">Mode</a>
-            </div>
-            <ul class="dropdown-menu w-100">
-                <li class="d-flex justify-content-center">
-                    <div class="dropdown-item" id="picker"></div>
-                </li>
-                <li class="dropdown-item text-center mt-5">
-                    <fa-icon class="text-primary" [icon]="cog" routerLink="/settings"></fa-icon>
-                </li>
-                <li class="dropdown-item text-center">
-                    Change the mood quickly!
-                </li>
-            </ul>
-        </li>
-    </ul>
-</nav>
+</div>
+
+<!-- ======= Mobile nav toggle button ======= -->
+<button type="button" class="mobile-nav-toggle d-lg-none mt-4" (click)="mobileNav()">
+    <fa-icon [icon]="mobileMenu"></fa-icon>
+</button>
+
+<!-- ======= Header ======= -->
+<header id="header" class="d-flex flex-column justify-content-center">
+
+    <nav class="nav-menu">
+        <ul>
+            <li>
+                <a routerLink="">
+                    <fa-icon [icon]="home"></fa-icon>
+                    <span>Home</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/mode">
+                    <fa-icon [icon]="mode"></fa-icon>
+                    <span>Mode</span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/visualizer">
+                    <fa-icon [icon]="visualizer"></fa-icon>
+                    <span>Visualizer</span>
+                </a>
+            </li>
+            <li>
+                <a href="" (click)="$event.preventDefault()">
+                    <fa-icon [icon]="controls"></fa-icon>
+                    <span>
+                        <fa-icon [icon]="decreaseBrightnessIcon" class="ml-4 hover" (click)="decreaseBrightness()"></fa-icon>
+                        <fa-icon [icon]="increaseBrightnessIcon" class="ml-4 hover" (click)="increaseBrightness()"></fa-icon>
+                        <fa-icon [icon]="speedDecreaseIcon" class="ml-4 hover" (click)="decreaseSpeed()"></fa-icon>
+                        <fa-icon [icon]="speedIncreaseIcon" class="ml-4 hover" (click)="increaseSpeed()"></fa-icon>
+                    </span>
+                </a>
+            </li>
+            <li>
+                <a routerLink="/settings">
+                    <fa-icon [icon]="settings"></fa-icon>
+                    <span>Settings</span>
+                </a>
+            </li>
+            <li>
+                <a class="colorpicker h-100">
+                    <fa-icon [icon]="colorpicker"></fa-icon>
+                    <div id="picker" class="ml-4"></div>
+                </a>
+            </li>
+
+        </ul>
+    </nav><!-- .nav-menu -->
+
+</header><!-- End Header -->
