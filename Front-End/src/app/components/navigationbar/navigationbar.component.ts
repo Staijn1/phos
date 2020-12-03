@@ -1,12 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {
-    faBars, faChartBar, faClone,
+    faBars, faChartBar,
     faCog, faEyeDropper, faHome, faList,
     faMinus,
     faPlus,
     faRunning,
     faSlidersH,
-    faSquare,
     faTimes,
     faWalking,
     faWindowMinimize
@@ -14,6 +13,7 @@ import {
 import {ColorService} from '../../services/color/color.service';
 import {ElectronService} from '../../services/electron/electron.service';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
+import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons';
 
 @Component({
     selector: 'app-navigationbar',

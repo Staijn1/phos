@@ -3,10 +3,11 @@ import {RouterModule, Routes} from '@angular/router';
 import {SettingsComponent} from '../components/settings/settings.component';
 import {ModeComponent} from '../components/mode/mode.component';
 import {VisualizerComponent} from '../components/visualizer/visualizer.component';
+import {HomeComponent} from '../components/home/home.component';
 
 
 const routes: Routes = [
-    {path: '', component: ModeComponent},
+    {path: '', component: HomeComponent},
     // {path: 'segments', component: SegmentsComponent},
     // {path: 'visualizer', component: VisualizerComponent},
     {path: 'visualizer', component: VisualizerComponent},

@@ -121,7 +121,6 @@ export class SerialConnectionService {
 
     increaseBrightness() {
         this.send('increaseBrightness')
-
     }
 
     decreaseSpeed() {

@@ -13,6 +13,7 @@ import {SettingsComponent} from './components/settings/settings.component';
 import {ModeComponent} from './components/mode/mode.component';
 import {NavigationbarComponent} from './components/navigationbar/navigationbar.component';
 import {ElectronService} from './services/electron/electron.service';
+import { PreloaderComponent } from './components/preloader/preloader.component';
 
 @NgModule({
     imports: [CommonModule, BrowserModule, FormsModule, AppRoutingModule, NouisliderModule, FontAwesomeModule],
@@ -23,7 +24,7 @@ import {ElectronService} from './services/electron/electron.service';
         SettingsComponent,
         ModeComponent,
         NavigationbarComponent,
-        VisualizerTestComponent
+        PreloaderComponent,
     ],
     bootstrap: [AppComponent],
     providers: [ElectronService],

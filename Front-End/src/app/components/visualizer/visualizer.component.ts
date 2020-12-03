@@ -12,8 +12,8 @@ import {Router} from '@angular/router';
 
 @Component({
     selector: 'app-visualizer-test',
-    templateUrl: './visualizer-test.component.html',
-    styleUrls: ['./visualizer-test.component.scss']
+    templateUrl: './visualizer.component.html',
+    styleUrls: ['./visualizer.component.scss']
 })
 
 export class VisualizerComponent implements OnInit, OnDestroy {
