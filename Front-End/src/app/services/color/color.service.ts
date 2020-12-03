@@ -16,7 +16,7 @@ export class ColorService {
         const colorsSaved = this.fileService.readGeneralSettings().colors;
         setTimeout(() => {
             this.picker = iro.ColorPicker('#picker', {
-                width: 150,
+                width: 200,
                 layoutDirection: 'horizontal',
                 handleRadius: 6,
                 borderWidth: 2,

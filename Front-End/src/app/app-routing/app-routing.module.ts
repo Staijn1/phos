@@ -2,14 +2,13 @@ import {NgModule} from '@angular/core';
 import {RouterModule, Routes} from '@angular/router';
 import {SettingsComponent} from '../components/settings/settings.component';
 import {ModeComponent} from '../components/mode/mode.component';
-import {VisualizerComponent} from '../components/visualizer-test/visualizer.component';
-import {HomeComponent} from '../components/home/home.component'; // CLI imports router
+import {VisualizerTestComponent} from '../components/visualizer-test/visualizer-test.component'; // CLI imports router
 
 const routes: Routes = [
-    {path: '', component: HomeComponent},
+    {path: '', component: ModeComponent},
     // {path: 'segments', component: SegmentsComponent},
     // {path: 'visualizer', component: VisualizerComponent},
-    {path: 'visualizer', component: VisualizerComponent},
+    {path: 'visualizer', component: VisualizerTestComponent},
     {path: 'mode', component: ModeComponent},
     {path: 'settings', component: SettingsComponent}
 ]; // sets up routes constant where you define your routes
