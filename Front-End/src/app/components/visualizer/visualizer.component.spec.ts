@@ -2,7 +2,7 @@ import {ComponentFixture, TestBed} from '@angular/core/testing';
 
 import {VisualizerComponent} from './visualizer.component';
 
-describe('VisualizerTestComponent', () => {
+describe('VisualizerComponent', () => {
   let component: VisualizerComponent;
   let fixture: ComponentFixture<VisualizerComponent>;
 
