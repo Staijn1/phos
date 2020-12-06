@@ -7,13 +7,6 @@ import {ipcRenderer, remote, webFrame} from 'electron';
 import * as childProcess from 'child_process';
 import * as fs from 'fs';
 
-declare global {
-    interface Window {
-        require: any;
-        process: any;
-    }
-}
-
 @Injectable()
 export class ElectronService {
     serialPort: typeof SerialPort;
@@ -27,7 +20,6 @@ export class ElectronService {
 
     constructor() {
         // Conditional imports
-
         if (this.isElectron()) {
             this.serialPort = window.require('serialport');
 
@@ -43,5 +35,5 @@ export class ElectronService {
 
     isElectron = () => {
         return window && window.process && window.process.type;
-    };
+    }
 }

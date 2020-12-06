@@ -2,13 +2,14 @@ import {app, BrowserWindow, screen} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
-let win, serve;
+let win;
+let serve;
 const args = process.argv.slice(1);
 serve = args.some(val => val === '--serve');
 // bypassing certificate errors
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
-function createWindow() {
+function createWindow(): void {
     const electronScreen = screen;
     const size = electronScreen.getPrimaryDisplay().workAreaSize;
 

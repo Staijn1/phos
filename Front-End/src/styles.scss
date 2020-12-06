@@ -31,9 +31,6 @@
 //  color: $text-color;
 //}
 //
-//.noUi-connect {
-//  background-color: $secondary !important;
-//}
 //
 //.circle {
 //  clip-path: circle(45.2% at 11% 74%);
@@ -119,7 +116,7 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: getColor('primary') ;
+  background-color: getColor('primary');
   border-radius: 10px;
   border: 1px solid darken(getColor('primary'), 5%);
 }
@@ -279,6 +276,7 @@ section {
     .hover {
       padding: 0.75em;
       border-radius: 50%;
+
       &:hover {
         background: darken(getColor('primary'), 10%);
       }
@@ -443,4 +441,11 @@ section {
   }
 }
 
+
+/*--------------------------------------------------------------
+# No UI Slider
+--------------------------------------------------------------*/
+ .noUi-connect {
+   background-color: #ff5828 !important;
+ }
 @import "~bootstrap/scss/bootstrap";

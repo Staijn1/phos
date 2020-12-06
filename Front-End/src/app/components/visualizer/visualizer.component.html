@@ -1,25 +1,25 @@
 <div class="vh-100" id="wrapper">
-    <div id="visualizer" class="h-75"></div>
+    <div class="h-75" id="visualizer"></div>
     <div class="container mt-5">
         <div class="card">
             <div class="card-header d-flex justify-content-between bg-primary text-light align-content-center">
                 Settings
                 <div>
-                    <a class="btn btn-primary" (click)="changeLedstripMode()">
+                    <a (click)="changeLedstripMode()" class="btn btn-primary">
                         <fa-icon [icon]="modeIcon" size="1x"></fa-icon>
                     </a>
-                    <a class="btn btn-primary" data-toggle="collapse" href="#settingsCollapse" role="button"
-                       aria-expanded="false" aria-controls="collapseExample">
+                    <a aria-controls="collapseExample" aria-expanded="false" class="btn btn-primary" data-toggle="collapse"
+                       href="#settingsCollapse" role="button">
                         <fa-icon [icon]="settingIcon"></fa-icon>
                     </a>
                     <a class="btn btn-primary">
-                        <fa-icon [icon]="fullscreenIcon" size="1x" (click)="fullscreen()"></fa-icon>
+                        <fa-icon (click)="fullscreen()" [icon]="fullscreenIcon" size="1x"></fa-icon>
                     </a>
                     <a class="btn btn-primary">
-                        <fa-icon [icon]="save" size="1x" (click)="saveOptions()"></fa-icon>
+                        <fa-icon (click)="saveOptions()" [icon]="save" size="1x"></fa-icon>
                     </a>
                     <a class="btn btn-primary">
-                        <fa-icon [icon]="load" size="1x" (click)="loadOptions()"></fa-icon>
+                        <fa-icon (click)="loadOptions()" [icon]="load" size="1x"></fa-icon>
                     </a>
                 </div>
             </div>
@@ -31,8 +31,8 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="gradientSelect">gradient</label>
                             </div>
-                            <select class="custom-select" id="gradientSelect"
-                                    (change)="changeGradient($event.target.value)">
+                            <select (change)="changeGradient($event.target.value)" class="custom-select"
+                                    id="gradientSelect">
                                 <option *ngFor="let gradient of gradients; let gradientIndex = index"
                                         [value]="gradientIndex">
                                     {{gradient.name}}
@@ -46,13 +46,13 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="fftSize">fft size</label>
                             </div>
-                            <select class="custom-select" id="fftSize" [(ngModel)]="options.fftSize"
-                                    (change)="updateOptions()">
+                            <select (change)="updateOptions()" [(ngModel)]="options.fftSize" class="custom-select"
+                                    id="fftSize">
                                 <option value="512">512</option>
                                 <option value="1024">1024</option>
                                 <option value="2048">2048</option>
                                 <option value="4096">4096</option>
-                                <option value="8192" selected>8192</option>
+                                <option selected value="8192">8192</option>
                                 <option value="16384">16384</option>
                                 <option value="32768">32768</option>
                             </select>
@@ -60,8 +60,8 @@
                     </div>
                     <!--                Smooth slider-->
                     <div class="col d-flex flex-column">
-                        <nouislider [(ngModel)]="options.smoothing" [config]="smoothingConfig"
-                                    (update)="updateOptions()"></nouislider>
+                        <nouislider (update)="updateOptions()" [(ngModel)]="options.smoothing"
+                                    [config]="smoothingConfig"></nouislider>
                         <p class="small text-dark">Smoothing: {{options.smoothing}}</p>
                     </div>
                 </div>
@@ -72,11 +72,11 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="gradientSelect">mode</label>
                             </div>
-                            <select class="custom-select" id="modeSelect" #modeSelect
-                                    (change)="updateMode($event.target.value)">
+                            <select #modeSelect (change)="updateMode($event.target.value)" class="custom-select"
+                                    id="modeSelect">
                                 <option *ngFor="let mode of modes;"
-                                        [value]="mode.value"
                                         [selected]="mode.value == options.mode"
+                                        [value]="mode.value"
                                 >
                                     {{mode.text}}
                                 </option>
@@ -89,7 +89,7 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="reflex">reflex</label>
                             </div>
-                            <select class="custom-select" id="reflex" (change)="changeReflex($event.target.value)">
+                            <select (change)="changeReflex($event.target.value)" class="custom-select" id="reflex">
                                 <option value="0">Off</option>
                                 <option value="1">On</option>
                                 <option value="2">Mirrored</option>
@@ -98,8 +98,8 @@
                     </div>
                     <!--                Frequency slider-->
                     <div class="col flex-column">
-                        <nouislider [(ngModel)]="frequencyLimits" [config]="frequencyLimitsConfig"
-                                    (slide)="changeFrequencyLimit()"></nouislider>
+                        <nouislider (slide)="changeFrequencyLimit()" [(ngModel)]="frequencyLimits"
+                                    [config]="frequencyLimitsConfig"></nouislider>
                         <p class="small text-dark">Minimum: {{frequencyLimits[0]}}</p>
                         <p class="small text-dark">Maximum: {{frequencyLimits[1]}}</p>
                     </div>
@@ -107,24 +107,24 @@
                 <div class="row">
                     <!--                    Spin speed if radial is active-->
                     <div class="col-4 offset-8">
-                        <nouislider *ngIf="this.options.radial" [(ngModel)]="this.options.spinSpeed"
-                                    [config]="spinSpeedConfig" (slide)="updateOptions()"></nouislider>
-                        <p class="small text-dark" *ngIf="this.options.radial">Spin
+                        <nouislider (slide)="updateOptions()" *ngIf="this.options.radial"
+                                    [(ngModel)]="this.options.spinSpeed" [config]="spinSpeedConfig"></nouislider>
+                        <p *ngIf="this.options.radial" class="small text-dark">Spin
                             speed: {{this.options.spinSpeed}}</p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-4 offset-8" *ngIf="modeSelect.value == 11">
-                        <nouislider  [(ngModel)]="this.options.lineWidth"
-                                    [config]="lineWidthConfig" (slide)="updateOptions()"></nouislider>
+                    <div *ngIf="modeSelect.value == 11" class="col-4 offset-8">
+                        <nouislider (slide)="updateOptions()"
+                                    [(ngModel)]="this.options.lineWidth" [config]="lineWidthConfig"></nouislider>
                         <p class="small text-dark">
                             Line width: {{this.options.lineWidth}}</p>
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col-4 offset-8" *ngIf="modeSelect.value == 11">
-                        <nouislider [(ngModel)]="this.options.fillAlpha"
-                                    [config]="bgAlphaConfig" (slide)="updateOptions()"></nouislider>
+                    <div *ngIf="modeSelect.value == 11" class="col-4 offset-8">
+                        <nouislider (slide)="updateOptions()"
+                                    [(ngModel)]="this.options.fillAlpha" [config]="bgAlphaConfig"></nouislider>
                         <p class="small text-dark">
                             Fill opacity: {{this.options.fillAlpha}}</p>
                     </div>
@@ -136,9 +136,9 @@
                             <div class="input-group-prepend">
                                 <label class="input-group-text" for="scaleSelect">scale</label>
                             </div>
-                            <select class="custom-select" id="scaleSelect"
-                                    (change)="changeShowScale($event.target.value)">
-                                <option value="0" selected>None</option>
+                            <select (change)="changeShowScale($event.target.value)" class="custom-select"
+                                    id="scaleSelect">
+                                <option selected value="0">None</option>
                                 <option value="1">Frequency</option>
                                 <option value="2">Level (dB)</option>
                                 <option value="3">Both</option>
@@ -150,20 +150,20 @@
                     <div class="col d-flex justify-content-center py-2">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="leds" autocomplete="off"
-                                       (change)="changeDisplay($event)"> Leds
+                                <input (change)="changeDisplay($event)" autocomplete="off" id="leds" name="options"
+                                       type="radio"> Leds
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="lumi" autocomplete="off"
-                                       (change)="changeDisplay($event)"> Lumi
+                                <input (change)="changeDisplay($event)" autocomplete="off" id="lumi" name="options"
+                                       type="radio"> Lumi
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="radial" autocomplete="off"
-                                       (change)="changeDisplay($event)"> Radial
+                                <input (change)="changeDisplay($event)" autocomplete="off" id="radial" name="options"
+                                       type="radio"> Radial
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="radio" name="options" id="normal" autocomplete="off"
-                                       (change)="changeDisplay($event)"> Normal
+                                <input (change)="changeDisplay($event)" autocomplete="off" id="normal" name="options"
+                                       type="radio"> Normal
                             </label>
                         </div>
                     </div>
@@ -177,16 +177,16 @@
                     <div class="col d-flex justify-content-center py-2">
                         <div class="btn-group btn-group-toggle" data-toggle="buttons">
                             <label class="btn btn-secondary">
-                                <input type="checkbox" name="generalOptions" id="peaks" autocomplete="off"
-                                       (click)="changeGeneralSettings($event)" checked> Peaks
+                                <input (click)="changeGeneralSettings($event)" autocomplete="off" checked id="peaks"
+                                       name="generalOptions" type="checkbox"> Peaks
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="checkbox" name="generalOptions" id="lores" autocomplete="off"
-                                       (change)="changeGeneralSettings($event)"> Lo-res
+                                <input (change)="changeGeneralSettings($event)" autocomplete="off" id="lores" name="generalOptions"
+                                       type="checkbox"> Lo-res
                             </label>
                             <label class="btn btn-secondary">
-                                <input type="checkbox" name="generalOptions" id="fps" autocomplete="off"
-                                       (change)="changeGeneralSettings($event)"> FPS
+                                <input (change)="changeGeneralSettings($event)" autocomplete="off" id="fps" name="generalOptions"
+                                       type="checkbox"> FPS
                             </label>
                         </div>
                     </div>

@@ -1,13 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 
-import {FileService} from './file.service';
+import {ChromaSDKService} from './chromaSDK.service';
 
-describe('FileService', () => {
-    let service: FileService;
+describe('ChromaSDKService', () => {
+    let service: ChromaSDKService;
 
     beforeEach(() => {
         TestBed.configureTestingModule({});
-        service = TestBed.inject(FileService);
+        service = TestBed.inject(ChromaSDKService);
     });
 
     it('should be created', () => {

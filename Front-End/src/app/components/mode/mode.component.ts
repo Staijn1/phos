@@ -1,12 +1,13 @@
 import {Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
-import {ColorService} from '../../services/color/color.service';
+import {ChromaSDKService} from '../../services/chromaSDK/chromaSDK.service';
+
 
 @Component({
     selector: 'app-mode',
     templateUrl: './mode.component.html',
-    styleUrls: ['./mode.component.scss']
+    styleUrls: ['./mode.component.scss'],
 })
 export class ModeComponent implements OnInit {
     modes = [
@@ -64,22 +65,20 @@ export class ModeComponent implements OnInit {
         {mode: 51, name: 'Circus Combustus'},
     ];
 
-    classes = ['iconbox-primary', 'iconbox-orange', 'iconbox-pink', 'iconbox-yellow', 'iconbox-red', 'iconbox-teal']
+    classes = ['iconbox-primary', 'iconbox-orange', 'iconbox-pink', 'iconbox-yellow', 'iconbox-red', 'iconbox-teal'];
     private modeIndex: number;
 
-    constructor(public serialService: SerialConnectionService, private colorService: ColorService) {
+    constructor(public serialService: SerialConnectionService, private chromaService: ChromaSDKService) {
     }
 
     ngOnInit(): void {
     }
 
 
-    onChangeSegment($event: MouseEvent) {
-
+    onChangeSegment($event: MouseEvent): void {
         const element = $($event.currentTarget);
         element.addClass('active').siblings().removeClass('active');
         this.modeIndex = element.index();
-
         const mode = element.attr('id');
         this.serialService.setMode(+mode);
     }

@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
-import * as $ from 'jquery';
 import {FileService} from '../../services/file/file.service';
 import {faSave} from '@fortawesome/free-solid-svg-icons';
 import {ColorService} from '../../services/color/color.service';
@@ -9,7 +8,6 @@ import {ColorService} from '../../services/color/color.service';
     selector: 'app-settings',
     templateUrl: './settings.component.html',
     styleUrls: ['./settings.component.scss'],
-    providers: []
 })
 export class SettingsComponent implements OnInit {
     coms = [];
@@ -28,9 +26,9 @@ export class SettingsComponent implements OnInit {
                     id: index,
                     path: port.path,
                 };
-                this.coms.push(details)
+                this.coms.push(details);
                 index++;
-            })
+            });
         });
         // @ts-ignore
         this.selectedCom = this.fileService.readGeneralSettings().com;

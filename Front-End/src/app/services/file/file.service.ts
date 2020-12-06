@@ -8,8 +8,8 @@ const ini = require('ini');
 })
 export class FileService {
     fs: any;
-    private readonly fileUrl: string;
     isDev: boolean;
+    private readonly fileUrl: string;
 
     constructor(private electronService: ElectronService) {
         this.fs = electronService.fs;
@@ -18,7 +18,7 @@ export class FileService {
         let pathToSettings;
         if (root.includes('node_modules')) {
             root = root.split('node_modules')[0];
-            pathToSettings = 'src/assets/settings.ini'
+            pathToSettings = 'src/assets/settings.ini';
             this.isDev = true;
         } else {
             pathToSettings = '/app/src/assets/settings.ini';
@@ -76,7 +76,7 @@ export class FileService {
             showScaleY: false,
             smoothing: 0.7,
             spinSpeed: 0,
-        }
+        };
     }
 
     readGeneralSettings(): object {
@@ -88,16 +88,10 @@ export class FileService {
             com: 'COM3',
             colors: ['#FF0', '#FFF', '#00FF00'],
             leds: 30
-        }
+        };
     }
 
-    private saveSections(visualizerSection, generalSection) {
-        if (!this.isDev) {
-            this.fs.writeFileSync(this.fileUrl, ini.stringify(visualizerSection, {section: 'visualizer'}) + `${ini.stringify(generalSection, {section: 'general'})}`)
-        }
-    }
-
-    saveColors(colors: []) {
+    saveColors(colors: []): void {
         const readData = ini.parse(this.fs.readFileSync(this.fileUrl, 'utf-8'));
         const visualizerSection = readData.visualizer;
         const comPort = readData.general.com;
@@ -105,18 +99,18 @@ export class FileService {
 
         const formattedColors = [];
         colors.forEach((color: any) => {
-            formattedColors.push(color.hexString)
-        })
+            formattedColors.push(color.hexString);
+        });
         const toWrite = {
             com: comPort,
             colors: formattedColors,
             leds: amountOfLeds,
-        }
+        };
 
         this.saveSections(visualizerSection, toWrite);
     }
 
-    saveGeneralSettings(selectedCom: string, numLeds: number) {
+    saveGeneralSettings(selectedCom: string, numLeds: number): void {
         const readData = ini.parse(this.fs.readFileSync(this.fileUrl, 'utf-8'));
         const visualizerSection = readData.visualizer;
 
@@ -125,6 +119,12 @@ export class FileService {
             colors: readData.general.colors,
             leds: numLeds,
         };
-        this.saveSections(visualizerSection, toWrite)
+        this.saveSections(visualizerSection, toWrite);
+    }
+
+    private saveSections(visualizerSection, generalSection): void {
+        if (!this.isDev) {
+            this.fs.writeFileSync(this.fileUrl, ini.stringify(visualizerSection, {section: 'visualizer'}) + `${ini.stringify(generalSection, {section: 'general'})}`);
+        }
     }
 }

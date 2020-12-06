@@ -1,4 +1,4 @@
-<div id="settings" class="bg-info w-100">
+<div class="bg-info w-100" id="settings">
     <div class="container p-4">
         <h1 class="text-dark">Settings</h1>
         <div class="row">
@@ -7,7 +7,7 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="coms">com</label>
                     </div>
-                    <select id="coms" class="custom-select" [(ngModel)]="selectedCom">
+                    <select [(ngModel)]="selectedCom" class="custom-select" id="coms">
                         <option *ngFor="let com of coms" value="{{com.path}}">{{com.path}}</option>
                     </select>
                 </div>
@@ -17,13 +17,14 @@
                     <div class="input-group-prepend">
                         <label class="input-group-text" for="numLeds">number of leds</label>
                     </div>
-                    <input id="numLeds" class="form-control" [(ngModel)]="numLeds" type="number" [placeholder]="numLeds">
+                    <input [(ngModel)]="numLeds" [placeholder]="numLeds" class="form-control" id="numLeds"
+                           type="number">
                 </div>
             </div>
         </div>
         <div class="row mt-5">
             <div class="col text-right">
-                <button class="btn btn-dark w-25" (click)="saveSettings()">
+                <button (click)="saveSettings()" class="btn btn-dark w-25">
                     <fa-icon [icon]="saveIcon"></fa-icon>
                 </button>
             </div>

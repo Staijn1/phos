@@ -37,187 +37,190 @@
 }
 
 
-  .icon-box {
-    text-align: center;
-    padding: 20px;
-    margin-bottom: 1em;
-    transition: all ease-in-out 0.3s;
-    background: #fff;
-    box-shadow: 0px 5px 90px 0px rgba(84, 95, 100, 0.05);
-    cursor: pointer;
+.icon-box {
+  text-align: center;
+  padding: 20px;
+  margin-bottom: 1em;
+  transition: all ease-in-out 0.3s;
+  background: #fff;
+  box-shadow: 0 5px 90px 0 rgba(84, 95, 100, 0.05);
+  cursor: pointer;
 
-    .icon {
-      margin: 0 auto;
-      width: 100px;
-      height: 100px;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      transition: ease-in-out 0.3s;
+  .icon {
+    margin: 0 auto;
+    width: 100px;
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: ease-in-out 0.3s;
+    position: relative;
+
+    fa-icon {
+      font-size: 36px;
+      transition: 0.5s;
       position: relative;
+    }
 
-      fa-icon {
-        font-size: 36px;
+    svg {
+      position: absolute;
+      top: 0;
+      left: 0;
+
+      path {
         transition: 0.5s;
-        position: relative;
+        //fill: #f5f5f5;
       }
-
-      svg {
-        position: absolute;
-        top: 0;
-        left: 0;
-
-        path {
-          transition: 0.5s;
-          //fill: #f5f5f5;
-        }
-      }
-    }
-
-    h4 {
-      font-weight: 600;
-      margin: 10px 0 15px 0;
-      font-size: 22px;
-
-      a {
-        color: getColor("secondary");
-        transition: ease-in-out 0.3s;
-      }
-    }
-
-    p {
-      line-height: 24px;
-      font-size: 14px;
-      margin-bottom: 0;
-    }
-
-    &:hover {
-      border-color: #fff;
-      box-shadow: 0px 0 35px 0 rgba(0, 0, 0, 0.08);
     }
   }
 
-  .iconbox-primary {
+  h4 {
+    font-weight: 600;
+    margin: 10px 0 15px 0;
+    font-size: 22px;
 
-    &:hover .icon {
-      fa-icon {
-        color: #fff;
-      }
-
-      path {
-        fill: darken(getColor("primary"), 10%);
-      }
+    a {
+      color: getColor("secondary");
+      transition: ease-in-out 0.3s;
     }
-    h6:after {
-      background: getColor("primary");
+  }
+
+  p {
+    line-height: 24px;
+    font-size: 14px;
+    margin-bottom: 0;
+  }
+
+  &:hover {
+    border-color: #fff;
+    box-shadow: 0 0 35px 0 rgba(0, 0, 0, 0.08);
+  }
+}
+
+.iconbox-primary {
+
+  &:hover .icon {
+    fa-icon {
+      color: #fff;
     }
 
     path {
-      fill: getColor("primary");
+      fill: darken(getColor("primary"), 10%);
     }
   }
 
-  .iconbox-orange {
+  h6:after {
+    background: getColor("primary");
+  }
 
-    &:hover .icon {
-      fa-icon {
-        color: #fff;
-      }
+  path {
+    fill: getColor("primary");
+  }
+}
 
-      path {
-        fill: darken(#ffa76e, 10%);
-      }
-    }
+//noinspection CssUnusedSymbol
+.iconbox-orange {
 
-    h6:after {
-      background: #ffa76e;
+  &:hover .icon {
+    fa-icon {
+      color: #fff;
     }
 
     path {
-      fill: #ffa76e;
+      fill: darken(#ffa76e, 10%);
     }
   }
 
-  .iconbox-pink {
+  h6:after {
+    background: #ffa76e;
+  }
 
-    &:hover .icon {
-      fa-icon {
-        color: #fff;
-      }
+  path {
+    fill: #ffa76e;
+  }
+}
 
-      path {
-        fill: darken(#e80368, 10%);
-      }
-    }
+.iconbox-pink {
 
-    h6:after {
-      background: #e80368;
+  &:hover .icon {
+    fa-icon {
+      color: #fff;
     }
 
     path {
-      fill: #e80368;
+      fill: darken(#e80368, 10%);
     }
   }
 
-  .iconbox-yellow {
+  h6:after {
+    background: #e80368;
+  }
 
-    &:hover .icon {
-      fa-icon {
-        color: #fff;
-      }
+  path {
+    fill: #e80368;
+  }
+}
 
-      path {
-        fill: darken(#ffbb2c, 10%);
-      }
-    }
+.iconbox-yellow {
 
-    h6:after {
-      background: #ffbb2c;
+  &:hover .icon {
+    fa-icon {
+      color: #fff;
     }
 
     path {
-      fill: #ffbb2c;
+      fill: darken(#ffbb2c, 10%);
     }
   }
 
-  .iconbox-red {
+  h6:after {
+    background: #ffbb2c;
+  }
 
-    &:hover .icon {
-      fa-icon {
-        color: #fff;
-      }
+  path {
+    fill: #ffbb2c;
+  }
+}
 
-      path {
-        fill: darken(#ff5828, 10%);
-      }
-    }
+.iconbox-red {
 
-    h6:after {
-      background: #ff5828;
+  &:hover .icon {
+    fa-icon {
+      color: #fff;
     }
 
     path {
-      fill: #ff5828;
+      fill: darken(#ff5828, 10%);
     }
-
   }
 
-  .iconbox-teal {
-    &:hover .icon {
-      fa-icon {
-        color: #fff;
-      }
+  h6:after {
+    background: #ff5828;
+  }
 
-      path {
-        fill: darken(#11dbcf, 10%);
-      }
-    }
+  path {
+    fill: #ff5828;
+  }
 
-    h6:after {
-      background: #11dbcf;
+}
+
+//noinspection CssUnusedSymbol
+.iconbox-teal {
+  &:hover .icon {
+    fa-icon {
+      color: #fff;
     }
 
     path {
-      fill: #11dbcf;
+      fill: darken(#11dbcf, 10%);
     }
   }
+
+  h6:after {
+    background: #11dbcf;
+  }
+
+  path {
+    fill: #11dbcf;
+  }
+}

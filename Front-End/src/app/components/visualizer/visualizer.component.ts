@@ -8,7 +8,8 @@ import {FileService} from '../../services/file/file.service';
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload';
 import {faLightbulb} from '@fortawesome/free-solid-svg-icons';
-import {Router} from '@angular/router';
+import {map} from '../../shared/functions';
+import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 
 @Component({
     selector: 'app-visualizer-test',
@@ -17,9 +18,6 @@ import {Router} from '@angular/router';
 })
 
 export class VisualizerComponent implements OnInit, OnDestroy {
-    private audioMotion: AudioMotionAnalyzer;
-
-
     options = {
         barSpace: 0.1,
         bgAlpha: 0.7,
@@ -52,8 +50,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         spinSpeed: 0,
         start: true,
         volume: 0,
-    }
-
+    };
     presets = {
         default: {
             mode: 0,	// discrete frequencies
@@ -122,7 +119,6 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             randomMode: 6    // 15 seconds
         }
     };
-
     // Gradient definitions
     gradients = [
         {
@@ -235,8 +231,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
                 'rgb(34,3,34)'
             ], disabled: false
         }
-    ]
-
+    ];
     // Visualization modes
     modes = [
         {value: 0, text: 'Discrete frequencies', disabled: false},
@@ -251,7 +246,6 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         {value: 7, text: 'Half octave bands', disabled: false},
         {value: 8, text: 'Full octave bands', disabled: false},
     ];
-
     // Properties that may be changed by Random Mode
     randomProperties = [
         {value: 'nobg', text: 'Background', disabled: false},
@@ -271,12 +265,11 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         start: this.options.smoothing,
         step: 0.1,
         range: {
-            'min': 0,
-            'max': 0.9
+            min: 0,
+            max: 0.9
         },
     };
-
-    frequencyLimits = [this.options.minFreq, this.options.maxFreq]
+    frequencyLimits = [this.options.minFreq, this.options.maxFreq];
     frequencyLimitsConfig = {
         behaviour: 'drag',
         connect: true,
@@ -287,17 +280,15 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         },
         step: 10,
     };
-
     spinSpeedConfig = {
         connect: 'lower',
         start: this.options.spinSpeed,
         step: 1,
         range: {
-            'min': 0,
-            'max': 50
+            min: 0,
+            max: 50
         },
     };
-
     settingIcon = faWrench;
     fullscreenIcon = faExpand;
     lineWidthConfig = {
@@ -305,8 +296,8 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         start: this.options.lineWidth,
         step: 1,
         range: {
-            'min': 1,
-            'max': 5
+            min: 1,
+            max: 5
         },
     };
     bgAlphaConfig = {
@@ -314,65 +305,53 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         start: this.options.fillAlpha,
         step: 0.1,
         range: {
-            'min': 0,
-            'max': 1
+            min: 0,
+            max: 1
         },
     };
     save = faSave;
     load = faFileDownload;
     modeIcon = faLightbulb;
+    private audioMotion: AudioMotionAnalyzer;
 
-    // tslint:disable-next-line:max-line-length
-    constructor(private serialService: SerialConnectionService, private colorService: ColorService, private fileService: FileService, private router: Router) {
-
+    constructor(
+        private serialService: SerialConnectionService,
+        private colorService: ColorService,
+        private fileService: FileService,
+        private chromaEffect: ChromaEffectService) {
     }
 
     ngOnDestroy(): void {
         this.audioMotion.toggleAnalyzer();
-        console.log(this.audioMotion.isOn)
+        console.log(this.audioMotion.isOn);
     }
 
     ngOnInit(): void {
         this.init();
     }
 
-    changeLedstripMode() {
+    changeLedstripMode(): void {
         this.serialService.setMode(55);
     }
 
-    private setSource() {
-        navigator.mediaDevices.getUserMedia({audio: true, video: false})
-            .then(stream => {
-                const audioCtx = this.audioMotion.audioCtx;
-                const micInput = audioCtx.createMediaStreamSource(stream);
-                this.audioMotion.disconnectInput();
-                this.audioMotion.connectInput(micInput);
-            })
-            .catch(err => {
-                console.error(`Could not change audio source - ${err}`, err);
-            });
+    drawCallback(instance: AudioMotionAnalyzer): void {
+        this.serialService.setLeds(map(instance._dataArray[26], 0, 255, 0, this.serialService.amountOfLeds));
+        this.chromaEffect.createVisualizer(
+            instance._dataArray[26],
+            this.colorService.getFirstColorObject
+        );
     }
 
-    drawCallback(instance: AudioMotionAnalyzer) {
-        this.serialService.setLeds(this.map(instance._dataArray[26], 0, 255, 0, this.serialService.amountOfLeds))
+    updateOptions(): void {
+        this.audioMotion.setOptions(this.options);
     }
 
-    updateOptions() {
-        this.audioMotion.setOptions(this.options)
-    }
-
-    private registerGradients() {
-        this.gradients.forEach((gradient, index: number) => {
-            this.audioMotion.registerGradient(gradient.name, {bgColor: gradient.bgColor, colorStops: gradient.colorStops})
-        })
-    }
-
-    changeGradient(gradientIndex: number) {
+    changeGradient(gradientIndex: number): void {
         this.options.gradient = this.gradients[gradientIndex].name;
         this.updateOptions();
     }
 
-    changeReflex(value: string) {
+    changeReflex(value: string): void {
         switch (+value) {
             case 1:
                 this.options.reflexRatio = .4;
@@ -387,31 +366,27 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             default:
                 this.options.reflexRatio = 0;
         }
-        this.updateOptions()
+        this.updateOptions();
     }
 
-    fullscreen() {
+    fullscreen(): void {
         this.audioMotion.toggleFullscreen();
     }
 
-    changeShowScale(value: string) {
+    changeShowScale(value: string): void {
         this.options.showScaleX = !!(+value & 1);
         this.options.showScaleY = !!(+value & 2);
         this.updateOptions();
     }
 
-    map(input: number, in_min: number, in_max: number, out_min: number, out_max: number): number {
-        return (input - in_min) * (out_max - out_min) / (in_max - in_min) + out_min;
-    }
-
-    changeFrequencyLimit() {
+    changeFrequencyLimit(): void {
         this.options.minFreq = this.frequencyLimits[0];
         this.options.maxFreq = this.frequencyLimits[1];
         this.updateOptions();
     }
 
-    changeDisplay($event: Event) {
-        const element = <HTMLElement>$event.currentTarget;
+    changeDisplay($event: Event): void {
+        const element = $event.currentTarget as HTMLElement;
 
         this.options.showLeds = false;
         this.options.lumiBars = false;
@@ -425,13 +400,13 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             this.options.radial = true;
         } else if (element.id === 'normal') {
         } else {
-            throw Error('Unknown ID!')
+            throw Error('Unknown ID!');
         }
         this.updateOptions();
     }
 
-    changeGeneralSettings($event: Event) {
-        const element = <HTMLInputElement>$event.target;
+    changeGeneralSettings($event: Event): void {
+        const element = $event.target as HTMLInputElement;
 
         const value = element.checked;
 
@@ -442,12 +417,12 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         } else if (element.id === 'fps') {
             this.options.showFPS = value;
         } else {
-            throw Error('Unknown ID!')
+            throw Error('Unknown ID!');
         }
         this.updateOptions();
     }
 
-    updateMode(value: number) {
+    updateMode(value: number): void {
         switch (+value) {
             case 10:
                 this.options.lineWidth = 0;
@@ -464,15 +439,34 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         this.updateOptions();
     }
 
-    loadOptions() {
+    loadOptions(): void {
         this.options = this.fileService.readVisualizerOptions();
     }
 
-    saveOptions() {
-        this.fileService.saveVisualizerOptions(this.options)
+    saveOptions(): void {
+        this.fileService.saveVisualizerOptions(this.options);
     }
 
-    private init() {
+    private setSource(): void {
+        navigator.mediaDevices.getUserMedia({audio: true, video: false})
+            .then(stream => {
+                const audioCtx = this.audioMotion.audioCtx;
+                const micInput = audioCtx.createMediaStreamSource(stream);
+                this.audioMotion.disconnectInput();
+                this.audioMotion.connectInput(micInput);
+            })
+            .catch(err => {
+                console.error(`Could not change audio source - ${err}`, err);
+            });
+    }
+
+    private registerGradients(): void {
+        this.gradients.forEach((gradient, index: number) => {
+            this.audioMotion.registerGradient(gradient.name, {bgColor: gradient.bgColor, colorStops: gradient.colorStops});
+        });
+    }
+
+    private init(): void {
         const elem = document.getElementById('visualizer');
 
         this.audioMotion = new AudioMotionAnalyzer(
@@ -483,7 +477,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         this.registerGradients();
         this.loadOptions();
         setTimeout(() => {
-            this.changeLedstripMode()
+            this.changeLedstripMode();
         }, 2000);
     }
 }

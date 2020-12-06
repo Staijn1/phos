@@ -23,12 +23,12 @@ export class SerialConnectionService {
         return this.electronService.serialPort.list();
     }
 
-    getPort($event) {
+    getPort($event): void {
         console.log('[LOG] Selected port ID: ', $event.target.textContent);
         this.selectedPortId = $event.target.textContent;
     }
 
-    openPort() {
+    openPort(): void {
         if (this.port === undefined) {
             this.port = new this.electronService.serialPort(
                 this.selectedPortId,
@@ -41,93 +41,105 @@ export class SerialConnectionService {
             );
         }
 
+        this.port.on('open', err => {
+            if (err) {
+                this.handleError(err);
+            }
+
+            setTimeout(() => {
+                // @ts-ignore
+                this.setColor(this.fileService.readGeneralSettings().colors[0]);
+            }, 500);
+
+        });
         this.port.on('error', err => {
             if (err) {
-                this.handleError(err)
+                this.handleError(err);
             }
         });
 
         if (!this.port.isOpen) {
             this.port.open(err => {
                 if (err) {
-                    this.handleError(err)
+                    this.handleError(err);
                 }
             });
         }
         let buffer = '';
         this.port.on('data', (data) => {
             buffer += data.toString();
-            console.log(data.toString())
-        })
+            console.log(data.toString());
+        });
     }
 
-    closePort() {
+    closePort(): void {
         this.port.close(err => {
             if (err) {
-                this.handleError(err)
+                this.handleError(err);
             }
         });
         this.selectedPortId = null;
     }
 
-    send(command: string) {
+    send(command: string): void {
         this.port.write(command + '\n', (err) => {
             if (err) {
-                this.handleError(err)
+                this.handleError(err);
             }
-        })
+        });
     }
 
-    setSegment(json: string) {
-        json = json.slice(1, -1)
+    setSegment(json: string): void {
+        json = json.slice(1, -1);
         const toSend = 'setSegment ' + json.split('\\"').join('"');
-        this.send(toSend)
+        this.send(toSend);
     }
 
-    setLeds(number: number) {
-        this.send(`setLeds ${number}`);
+    setLeds(amount: number): void {
+        this.send(`setLeds ${amount}`);
     }
 
-    setMode(mode: number) {
+    setMode(mode: number): void {
         this.send(`setMode ${mode}`);
     }
 
-    setColor(hexString: string) {
+    setColor(hexString: string): void {
         hexString = hexString.replace('#', '');
-        this.send(`setColor 0x${hexString}`)
+        this.send(`setColor 0x${hexString}`);
     }
 
-    update() {
+    update(): void {
         this.closePort();
         this.readSettings();
         setTimeout(() => {
             this.openPort();
-        }, 1000)
+        }, 1000);
     }
 
-    private handleError(err: Error) {
-        return console.log('[ERR] Error opening port: ' + err.message);
+    decreaseBrightness(): void {
+        this.send('decreaseBrightness');
     }
 
-    private readSettings() {
+    increaseBrightness(): void {
+        this.send('increaseBrightness');
+    }
+
+    decreaseSpeed(): void {
+        this.send('decreaseSpeed');
+    }
+
+    increaseSpeed(): void {
+        this.send('increaseSpeed');
+    }
+
+    private handleError(err: Error): Error {
+        return new Error('[ERR] Error opening port: ' + err.message);
+    }
+
+    private readSettings(): void {
         // @ts-ignore
         this.selectedPortId = this.fileService.readGeneralSettings().com;
         // @ts-ignore
         this.amountOfLeds = this.fileService.readGeneralSettings().leds;
-    }
-    decreaseBrightness() {
-        this.send('decreaseBrightness')
-    }
-
-    increaseBrightness() {
-        this.send('increaseBrightness')
-    }
-
-    decreaseSpeed() {
-        this.send('decreaseSpeed')
-    }
-
-    increaseSpeed() {
-        this.send('increaseSpeed')
     }
 }

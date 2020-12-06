@@ -1,7 +1,11 @@
 import {Component, OnInit} from '@angular/core';
 import {
-    faBars, faChartBar,
-    faCog, faEyeDropper, faHome, faList,
+    faBars,
+    faChartBar,
+    faCog,
+    faEyeDropper,
+    faHome,
+    faList,
     faMinus,
     faPlus,
     faRunning,
@@ -49,7 +53,7 @@ export class NavigationbarComponent implements OnInit {
         this.window = this.electronService.remote.getCurrentWindow();
     }
 
-    mobileNav() {
+    mobileNav(): void {
         if (!this.isOpen) {
             this.mobileMenu = faTimes;
         } else {
@@ -59,15 +63,15 @@ export class NavigationbarComponent implements OnInit {
         $('body').toggleClass('mobile-nav-active');
     }
 
-    exitButtonAction() {
+    exitButtonAction(): void {
         this.window.close();
     }
 
-    minimizeButtonAction() {
+    minimizeButtonAction(): void {
         this.window.minimize();
     }
 
-    maximizeButtonAction() {
+    maximizeButtonAction(): void {
         if (this.window.isMaximized()) {
             this.window.unmaximize();
             this.maximize = faSquare;
@@ -77,19 +81,19 @@ export class NavigationbarComponent implements OnInit {
         }
     }
 
-    decreaseBrightness() {
+    decreaseBrightness(): void {
         this.serialService.decreaseBrightness();
     }
 
-    increaseBrightness() {
+    increaseBrightness(): void {
         this.serialService.increaseBrightness();
     }
 
-    decreaseSpeed() {
+    decreaseSpeed(): void {
         this.serialService.decreaseSpeed();
     }
 
-    increaseSpeed() {
+    increaseSpeed(): void {
         this.serialService.increaseSpeed();
     }
 }

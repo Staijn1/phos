@@ -1,25 +1,25 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {VisualizerTestComponent} from './visualizer.component';
+import {VisualizerComponent} from './visualizer.component';
 
-describe('VisualizerTestComponent', () => {
-  let component: VisualizerTestComponent;
-  let fixture: ComponentFixture<VisualizerTestComponent>;
+describe('VisualizerComponent', () => {
+    let component: VisualizerComponent;
+    let fixture: ComponentFixture<VisualizerComponent>;
 
-  beforeEach(async () => {
-    await TestBed.configureTestingModule({
-      declarations: [ VisualizerTestComponent ]
-    })
-    .compileComponents();
-  });
+    beforeEach(async () => {
+        await TestBed.configureTestingModule({
+            declarations: [VisualizerComponent]
+        })
+            .compileComponents();
+    });
 
-  beforeEach(() => {
-    fixture = TestBed.createComponent(VisualizerTestComponent);
-    component = fixture.componentInstance;
-    fixture.detectChanges();
-  });
+    beforeEach(() => {
+        fixture = TestBed.createComponent(VisualizerComponent);
+        component = fixture.componentInstance;
+        fixture.detectChanges();
+    });
 
-  it('should create', () => {
-    expect(component).toBeTruthy();
-  });
+    it('should create', () => {
+        expect(component).toBeTruthy();
+    });
 });
