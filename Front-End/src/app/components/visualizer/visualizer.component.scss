@@ -1,6 +1,8 @@
-//#visualizer {
-// min-width:100%;
-//  canvas{
-//    min-width: 100000px;
-//  }
-//}
+#visualizer {
+  display: flex;
+  justify-content: center;
+
+  canvas {
+    width: 100% !important;
+  }
+}

@@ -1,105 +1,4 @@
-///* You can add global styles to this file, and also import other style files */
-//$body-bg: #1c1c1c;
-//$text-color: #fff;
-//
-//$headings-color: $text-color;
-//$link-color: $text-color;
-//
-////Color palette overrides
-//$primary: #86897E;
-//$secondary: #244441;
-//$dark: $body-bg;
-//$light: #FFF;
-//$warning: #BB9236;
-//
-////Navbar overrides
-//$navbar-default-link-color: #FFF;
-//
-////List group overrides
-//$list-group-bg: $dark;
-//$list-group-border: $primary;
-//
-//
-//$super-large-font: 100px;
-//
-//.list-group-item {
-//  border-color: $primary;
-//  color: #FFF;
-//}
-//
-//p {
-//  color: $text-color;
-//}
-//
-//
-//.circle {
-//  clip-path: circle(45.2% at 11% 74%);
-//  height: 95%;
-//  width: 100%;
-//  background-color: $warning;
-//  position: absolute;
-//  top: 5%;
-//  left: 0;
-//  transition: background-color 250ms ease-in;
-//
-//  &:hover {
-//    background-color: lighten($warning, 10%);
-//  }
-//}
-//
-//.superLarge {
-//  font-size: $super-large-font;
-//}
-//
-//.input-group-text{
-//  min-width: 100px;
-//}
-//
-//.margin-right-25 {
-//  margin-right: 25%;
-//}
-//
-//.dropdown-menu {
-//  border-radius: 0 !important;
-//  border: none !important;
-//}
-//
-//.dropdown-item {
-//  &:focus{
-//    outline: none !important;
-//    background: $light !important;
-//    color: $dark !important;
-//  }
-//
-//  &:hover{
-//    background: $light !important;
-//    color: $dark !important;
-//  }
-//}
-//
-//
-///* ============ desktop view ============ */
-//@media all and (min-width: 992px) {
-//  .navbar .nav-item .dropdown-menu {
-//    display: none;
-//  }
-//  .navbar .nav-item:hover .nav-link {
-//    color: #fff;
-//  }
-//  .navbar .nav-item:hover .dropdown-menu {
-//    display: block;
-//  }
-//  .navbar .nav-item .dropdown-menu {
-//    margin-top: 0;
-//  }
-//}
-//
-//.floating {
-//  position: absolute;
-//  right: 5%;
-//}
-//
-
+/* You can add global styles to this file, and also import other style files */
 @import '_variables.scss';
 
 /*--------------------------------------------------------------
@@ -445,7 +344,8 @@ section {
 /*--------------------------------------------------------------
 # No UI Slider
 --------------------------------------------------------------*/
- .noUi-connect {
-   background-color: #ff5828 !important;
- }
+.noUi-connect {
+  background-color: getColor('secondary') !important;
+}
+
 @import "~bootstrap/scss/bootstrap";

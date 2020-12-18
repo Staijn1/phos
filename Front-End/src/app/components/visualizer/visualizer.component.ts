@@ -4,12 +4,13 @@ import {SerialConnectionService} from '../../services/serial/serial-connection.s
 import {ColorService} from '../../services/color/color.service';
 import {faWrench} from '@fortawesome/free-solid-svg-icons/faWrench';
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand';
-import {FileService} from '../../services/file/file.service';
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload';
 import {faLightbulb} from '@fortawesome/free-solid-svg-icons';
 import {map} from '../../shared/functions';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
+import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state';
+import {SettingsService} from '../../services/settings/settings.service';
 
 @Component({
     selector: 'app-visualizer-test',
@@ -317,17 +318,17 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     constructor(
         private serialService: SerialConnectionService,
         private colorService: ColorService,
-        private fileService: FileService,
+        private settingsService: SettingsService,
         private chromaEffect: ChromaEffectService) {
     }
 
     ngOnDestroy(): void {
         this.audioMotion.toggleAnalyzer();
-        console.log(this.audioMotion.isOn);
     }
 
     ngOnInit(): void {
         this.init();
+        this.chromaEffect.state = new VisualizerState();
     }
 
     changeLedstripMode(): void {
@@ -336,10 +337,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
     drawCallback(instance: AudioMotionAnalyzer): void {
         this.serialService.setLeds(map(instance._dataArray[26], 0, 255, 0, this.serialService.amountOfLeds));
-        this.chromaEffect.createVisualizer(
-            instance._dataArray[26],
-            this.colorService.getFirstColorObject
-        );
+        this.chromaEffect.intensity = instance._dataArray[26];
     }
 
     updateOptions(): void {
@@ -351,7 +349,8 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         this.updateOptions();
     }
 
-    changeReflex(value: string): void {
+    changeReflex(event: Event): void {
+        const value = (event.target as HTMLInputElement).value;
         switch (+value) {
             case 1:
                 this.options.reflexRatio = .4;
@@ -373,7 +372,8 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         this.audioMotion.toggleFullscreen();
     }
 
-    changeShowScale(value: string): void {
+    changeShowScale(event: Event): void {
+        const value = (event.target as HTMLInputElement).value;
         this.options.showScaleX = !!(+value & 1);
         this.options.showScaleY = !!(+value & 2);
         this.updateOptions();
@@ -422,7 +422,8 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         this.updateOptions();
     }
 
-    updateMode(value: number): void {
+    updateMode(event: Event): void {
+        let value = +(event.target as HTMLInputElement).value;
         switch (+value) {
             case 10:
                 this.options.lineWidth = 0;
@@ -440,11 +441,11 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     }
 
     loadOptions(): void {
-        this.options = this.fileService.readVisualizerOptions();
+        this.options = this.settingsService.readVisualizerOptions();
     }
 
     saveOptions(): void {
-        this.fileService.saveVisualizerOptions(this.options);
+        this.settingsService.saveVisualizerOptions(this.options);
     }
 
     private setSource(): void {

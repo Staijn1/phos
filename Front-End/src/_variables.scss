@@ -4,13 +4,22 @@
 
 @font-face {
   font-family: "Comfortaa";
-  src: url('./assets/fonts/Comfortaa-VariableFont_wght.ttf');
+  src: url('assets/fonts/comfortaa/Comfortaa-VariableFont_wght.ttf');
+}
+
+@font-face {
+  font-family: "RajdhaniMedium";
+  src: url('assets/fonts/Rajdhani/Rajdhani-Medium.ttf');
 }
 
 $font-family-base: "Comfortaa";
 
+
 $theme-colors: (
-        "primary": #bb0505,
-        "secondary": #45505b,
+        "primary": #3e92cc,
+        "secondary": #3A4454,
+        "danger": #D8315B,
+        "dark" : #1E1B18
 );
 
+$menu-bar-height: 30px;

@@ -1,4 +1,5 @@
 import {Injectable} from '@angular/core';
+import {SettingsService} from '../settings/settings.service';
 
 // BGR
 @Injectable({
@@ -7,6 +8,21 @@ import {Injectable} from '@angular/core';
 export class ChromaSDKService {
     readonly API_PORT = 54235;
     readonly API_URL = `http://localhost:${this.API_PORT}/razer/chromasdk/`;
+
+    readonly mouse = {
+        rows: 9,
+        columns: 7,
+    };
+
+    readonly keyboard = {
+        rows: 6,
+        columns: 22,
+    };
+
+    readonly headset = {
+        amount: 5,
+    };
+
     private readonly options = {
         title: 'Razer Chroma implemented with WS2812B ledstrip in Electron!',
         description: 'The ledstrip and Razer peripherals will share some effects, controlled through a nice UI.',
@@ -26,7 +42,7 @@ export class ChromaSDKService {
     };
     private timerId: NodeJS.Timeout;
 
-    constructor() {
+    constructor(private settingsService: SettingsService) {
         this.init()
             .then((init) => {
                 this.initializedApiURL = init.uri;
@@ -34,6 +50,7 @@ export class ChromaSDKService {
             .catch((err) => {
                 console.log('Error! ', err);
             });
+
     }
 
     private initializedApiURL;
@@ -43,19 +60,21 @@ export class ChromaSDKService {
     }
 
     public async init(): Promise<any> {
-        const response = await fetch(`${this.API_URL}/`, {
-            method: 'POST',
-            body: JSON.stringify(this.options),
-            headers: {'Content-type': 'application/json; charset=UTF-8'}
-        });
+        if (this.isChromaSupport()) {
+            const response = await fetch(`${this.API_URL}/`, {
+                method: 'POST',
+                body: JSON.stringify(this.options),
+                headers: {'Content-type': 'application/json; charset=UTF-8'}
+            });
 
-        const data = response.json();
-        if (response.ok) {
-            this.timerId = setInterval(() => {
-                this.onTimer();
-            }, 5000);
+            const data = response.json();
+            if (response.ok) {
+                this.timerId = setInterval(() => {
+                    this.onTimer();
+                }, 5000);
+            }
+            return data;
         }
-        return data;
     }
 
     onTimer(): void {
@@ -65,6 +84,9 @@ export class ChromaSDKService {
     }
 
     async heartbeat(): Promise<any> {
+        if (this.initializedApiURL === undefined || this.initializedApiURL === null || !this.isChromaSupport()) {
+            return;
+        }
         return await fetch(`${this.initializedApiURL}/heartbeat`, {
             method: 'OPTIONS',
             body: null,
@@ -73,6 +95,9 @@ export class ChromaSDKService {
     }
 
     async createKeyboardEffect(effect, data): Promise<any> {
+        if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
+            return;
+        }
         let jsonObj;
 
         if (effect === 'CHROMA_NONE') {
@@ -99,6 +124,9 @@ export class ChromaSDKService {
     }
 
     async createMouseEffect(effect, data): Promise<any> {
+        if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
+            return;
+        }
         let jsonObj;
 
         if (effect === 'CHROMA_NONE') {
@@ -137,11 +165,10 @@ export class ChromaSDKService {
         return response.json();
     }
 
-    private uninit(): void {
-        console.log('err');
-    }
-
     async createHeadsetEffect(effect, data): Promise<any> {
+        if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
+            return;
+        }
         let jsonObj;
 
         if (effect === 'CHROMA_NONE') {
@@ -165,5 +192,14 @@ export class ChromaSDKService {
             throw new Error('error! ' + response.status);
         }
         return await response.json();
+    }
+
+    uninit(): void {
+        this.initializedApiURL = undefined;
+        throw new Error('Not implemented!');
+    }
+
+    private isChromaSupport(): boolean {
+        return this.settingsService.readGeneralSettings().chroma;
     }
 }

@@ -3,7 +3,8 @@ exports.__esModule = true;
 var electron_1 = require("electron");
 var path = require("path");
 var url = require("url");
-var win, serve;
+var win;
+var serve;
 var args = process.argv.slice(1);
 serve = args.some(function (val) { return val === '--serve'; });
 // bypassing certificate errors
@@ -21,7 +22,13 @@ function createWindow() {
             nodeIntegration: true,
             enableRemoteModule: true
         },
-        frame: false
+        frame: false,
+        show: false,
+        minWidth: 200,
+        icon: __dirname + '/favicon.ico'
+    });
+    win.once('ready-to-show', function () {
+        win.show();
     });
     // Open the DevTools.
     // win.webContents.openDevTools()

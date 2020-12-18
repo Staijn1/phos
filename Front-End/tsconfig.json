@@ -1,24 +1,50 @@
+//{
+//  "compileOnSave": false,
+//  "compilerOptions": {
+//    "baseUrl": "./",
+//    "outDir": "./dist/out-tsc",
+//    "downlevelIteration": true,
+//    "module": "es6",
+//    "sourceMap": true,
+//    "declaration": false,
+//    "moduleResolution": "node",
+//    "emitDecoratorMetadata": true,
+//    "experimentalDecorators": true,
+//    "target": "es5",
+//    "typeRoots": [
+//      "node_modules/@types"
+//    ],
+//    "lib": [
+//      "dom"
+//    ]
+//  },
+//  "include": [
+//    "main.ts",
+//    "src/**/*",
+//    "test/**/*"
+//  ]
+//}
+
+/* To learn more about this file see: https://angular.io/config/tsconfig. */
 {
   "compileOnSave": false,
   "compilerOptions": {
-    "downlevelIteration": true,
-    "module": "es6",
+    "baseUrl": "./",
     "outDir": "./dist/out-tsc",
-    "baseUrl": "src",
     "sourceMap": true,
     "declaration": false,
-    "moduleResolution": "node",
-    "emitDecoratorMetadata": true,
+    "downlevelIteration": true,
     "experimentalDecorators": true,
-    "target": "es5",
-    "typeRoots": [
-      "node_modules/@types"
-    ],
+    "moduleResolution": "node",
+    "importHelpers": true,
+    "target": "es2015",
+    "module": "es2020",
     "lib": [
+      "es2018",
       "dom"
     ]
   },
-  "include": [
-    "main.ts"
+  "exclude": [
+    "./release-builds",
   ]
 }

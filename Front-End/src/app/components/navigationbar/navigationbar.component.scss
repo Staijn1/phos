@@ -4,11 +4,11 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  height: 30px;
+  height: $menu-bar-height;
   background: getColor('primary');
   -webkit-app-region: drag;
   position: fixed;
-  z-index: 1;
+  z-index: 9999;
   right: 0;
   width: 100%;
 
@@ -46,4 +46,46 @@
 
 #close-btn:hover {
   background: rgb(255, 0, 0);
+}
+
+.transition-container {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index: 10;
+  pointer-events: none;
+
+  span {
+    position: relative;
+  }
+
+  &.from-left {
+    flex-direction: column;
+
+    span {
+      background: rgb(79, 91, 255);
+      height: 100%;
+      width: 0;
+    }
+  }
+
+  &.from-top {
+    span {
+      background: rgb(170, 79, 255);
+      height: 0;
+      width: 100%;
+    }
+  }
+}
+
+#cover {
+  background: white;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 9;
 }

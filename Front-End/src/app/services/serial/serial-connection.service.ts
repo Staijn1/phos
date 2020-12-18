@@ -1,7 +1,7 @@
 import {ElectronService} from '../electron/electron.service';
 import {Injectable} from '@angular/core';
-import {FileService} from '../file/file.service';
-
+import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
+import {SettingsService} from '../settings/settings.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,9 +11,10 @@ export class SerialConnectionService {
     public selectedPortId: string;
     public portOpts = {baudRate: 19200, autoOpen: true};
     public amountOfLeds = 30;
+    private _previousVisualizerLeds = 0;
     serialConnectionError: string;
 
-    constructor(public electronService: ElectronService, private fileService: FileService) {
+    constructor(public electronService: ElectronService, private settingsService: SettingsService, private chromaService: ChromaEffectService) {
         this.readSettings();
         this.openPort();
     }
@@ -48,7 +49,7 @@ export class SerialConnectionService {
 
             setTimeout(() => {
                 // @ts-ignore
-                this.setColor(this.fileService.readGeneralSettings().colors[0]);
+                this.setColor(this.settingsService.readGeneralSettings().colors[0]);
             }, 500);
 
         });
@@ -68,7 +69,15 @@ export class SerialConnectionService {
         let buffer = '';
         this.port.on('data', (data) => {
             buffer += data.toString();
-            console.log(data.toString());
+            if (buffer.indexOf('}') !== -1) {
+                try {
+                    this.handleJson(buffer);
+                } catch (err) {
+                    // self._errorMessage = self.setErrorMessage('Kan JSON niet inlezen\n' + e);
+                    this.handleError(err);
+                }
+                buffer = '';
+            }
         });
     }
 
@@ -96,6 +105,10 @@ export class SerialConnectionService {
     }
 
     setLeds(amount: number): void {
+        if (this._previousVisualizerLeds === amount) {
+            return;
+        }
+        this._previousVisualizerLeds = amount;
         this.send(`setLeds ${amount}`);
     }
 
@@ -103,9 +116,13 @@ export class SerialConnectionService {
         this.send(`setMode ${mode}`);
     }
 
-    setColor(hexString: string): void {
-        hexString = hexString.replace('#', '');
-        this.send(`setColor 0x${hexString}`);
+    setColor(hexStrings: string[]): void {
+        const converted: string[] = [];
+        for (const hex of hexStrings) {
+            converted.push(hex.replace('#', ''));
+        }
+
+        this.send(`setColor 0x${converted[0]},0x${converted[1]},0x${converted[2]}`);
     }
 
     update(): void {
@@ -137,9 +154,14 @@ export class SerialConnectionService {
     }
 
     private readSettings(): void {
-        // @ts-ignore
-        this.selectedPortId = this.fileService.readGeneralSettings().com;
-        // @ts-ignore
-        this.amountOfLeds = this.fileService.readGeneralSettings().leds;
+        this.selectedPortId = this.settingsService.readGeneralSettings().com;
+        this.amountOfLeds = this.settingsService.readGeneralSettings().leds;
+    }
+
+    private handleJson(buffer: string): void {
+        const json = JSON.parse(buffer);
+        if (json.hasOwnProperty('speed')) {
+            this.chromaService.speed = json.speed;
+        }
     }
 }

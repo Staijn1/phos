@@ -2,8 +2,9 @@ import {Inject, Injectable} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import iro from '@jaames/iro';
 import {SerialConnectionService} from '../serial/serial-connection.service';
-import {FileService} from '../file/file.service';
 import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
+import {iroColorObject} from '../../types/types';
+import {SettingsService} from '../settings/settings.service';
 
 @Injectable({
     providedIn: 'root'
@@ -11,10 +12,13 @@ import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
 export class ColorService {
     picker: any;
 
-    // tslint:disable-next-line:max-line-length
-    constructor(@Inject(DOCUMENT) private document: HTMLDocument, private serialService: SerialConnectionService, private fileService: FileService, private chromaEffect: ChromaEffectService) {
+    constructor(
+        @Inject(DOCUMENT) private document: HTMLDocument,
+        private serialService: SerialConnectionService,
+        private settingsService: SettingsService,
+        private chromaEffect: ChromaEffectService) {
         // @ts-ignore
-        const colorsSaved = this.fileService.readGeneralSettings().colors;
+        const colorsSaved = this.settingsService.readGeneralSettings().colors;
         setTimeout(() => {
             this.picker = iro.ColorPicker('#picker', {
                 width: 150,
@@ -26,16 +30,16 @@ export class ColorService {
                 colors: colorsSaved,
             });
 
-            this.picker.on('color:init', (iroColor) => {
-                console.log(' init');
-                serialService.setColor(iroColor.hexString);
+            this.picker.on('color:init', (iroColor: iroColorObject) => {
+                this.serialService.setColor([this.picker.colors[0].hexString, this.picker.colors[1].hexString, this.picker.colors[2].hexString]);
+                this.chromaEffect.setColors = this.picker.colors;
             });
-            this.picker.on('color:change', (iroColor) => {
-                this.serialService.setColor(iroColor.hexString);
-                this.chromaEffect.setStatic(iroColor);
+            this.picker.on('color:change', (iroColor: iroColorObject) => {
+                this.serialService.setColor([this.picker.colors[0].hexString, this.picker.colors[1].hexString, this.picker.colors[2].hexString]);
+                this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('input:end', (iroColor) => {
-                this.fileService.saveColors(this.picker.colors);
+                 this.settingsService.saveGeneralSettings(this.picker.colors, undefined, undefined, undefined);
             });
         }, 1);
     }
@@ -52,7 +56,7 @@ export class ColorService {
         return this.picker.colors[2].hexString;
     }
 
-    get getFirstColorObject(): any {
+    get getFirstColorObject(): iroColorObject {
         try {
             return this.picker.colors[0];
         } catch (e) {
@@ -60,7 +64,23 @@ export class ColorService {
                 red: 0,
                 green: 0,
                 blue: 0,
-                hexString: '#000000'
+                hexString: '#000000',
+                alpha: 0,
+                hex8String: '',
+                hsl: undefined,
+                hslString: '',
+                hsla: undefined,
+                hslaString: '',
+                hsv: undefined,
+                hsva: undefined,
+                hue: 0,
+                kelvin: 0,
+                rgb: undefined,
+                rgbString: '',
+                rgba: undefined,
+                rgbaString: '',
+                saturation: 0,
+                value: 0
             };
 
         }

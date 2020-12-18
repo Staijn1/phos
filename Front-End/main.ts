@@ -24,8 +24,14 @@ function createWindow(): void {
             enableRemoteModule: true,
         },
         frame: false,
+        show: false,
+        minWidth: 200,
+        icon: __dirname + '/favicon.ico'
     });
 
+    win.once('ready-to-show', () => {
+        win.show();
+    });
     // Open the DevTools.
     // win.webContents.openDevTools()
     if (serve) {

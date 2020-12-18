@@ -1,8 +1,8 @@
 import {Component, OnInit} from '@angular/core';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
-import {FileService} from '../../services/file/file.service';
 import {faSave} from '@fortawesome/free-solid-svg-icons';
 import {ColorService} from '../../services/color/color.service';
+import {SettingsService} from '../../services/settings/settings.service';
 
 @Component({
     selector: 'app-settings',
@@ -14,8 +14,9 @@ export class SettingsComponent implements OnInit {
     saveIcon = faSave;
     selectedCom: string;
     numLeds: number;
+    chroma: boolean;
 
-    constructor(private fileService: FileService, private serialService: SerialConnectionService, private colorService: ColorService) {
+    constructor(private settingsService: SettingsService, private serialService: SerialConnectionService, private colorService: ColorService) {
     }
 
     ngOnInit(): void {
@@ -30,15 +31,14 @@ export class SettingsComponent implements OnInit {
                 index++;
             });
         });
-        // @ts-ignore
-        this.selectedCom = this.fileService.readGeneralSettings().com;
 
-        // @ts-ignore
-        this.numLeds = this.fileService.readGeneralSettings().leds;
+        this.selectedCom = this.settingsService.readGeneralSettings().com;
+        this.numLeds = this.settingsService.readGeneralSettings().leds;
+        this.chroma = this.settingsService.readGeneralSettings().chroma;
     }
 
     saveSettings(): void {
-        this.fileService.saveGeneralSettings(this.selectedCom, this.numLeds);
+        this.settingsService.saveGeneralSettings(undefined, this.selectedCom, this.numLeds, this.chroma);
         this.serialService.update();
     }
 }
