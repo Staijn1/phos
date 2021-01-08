@@ -37,31 +37,24 @@
 #include <WS2812FX.h>
 
 #ifndef NUM_BANDS
-  #define NUM_BANDS 1
+#define NUM_BANDS 1
 #endif
 
 extern WS2812FX ws2812fx;
 
-uint8_t vuMeterBands[NUM_BANDS]; // global VU meter band amplitude data (range 0-255)
-
 uint16_t vuMeter(void) {
-  WS2812FX::Segment* seg = ws2812fx.getSegment();
-  uint16_t seglen = seg->stop - seg->start + 1;
-  uint16_t bandSize = seglen / NUM_BANDS;
-  for(uint8_t i=0; i<NUM_BANDS; i++) {
-    vuMeterBands[i] = visualizerLeds;
-    uint8_t scaledBand = vuMeterBands[i];
-    for(uint16_t j=0; j<bandSize; j++) {
-      uint16_t index = seg->start + (i * bandSize) + j;
-      if(j <= scaledBand) {
-        ws2812fx.setPixelColor(index, ws2812fx.getColor());
-      } else {
-        ws2812fx.setPixelColor(index, BLACK);
-      }
+    WS2812FX::Segment *seg = ws2812fx.getSegment();
+    uint16_t seglen = seg->stop - seg->start + 1;
+    for (uint16_t j = 0; j < seglen; j++) {
+        uint16_t index = seg->start + j;
+        if (j <= visualizerLeds) {
+            ws2812fx.setPixelColor(index, ws2812fx.getColors(0)[0]);
+        } else {
+            ws2812fx.setPixelColor(index, ws2812fx.getColors(0)[1]);
+        }
     }
-  }
 
-  return seg->speed;
+    return seg->speed;
 }
 
 #endif

@@ -1,7 +1,8 @@
 #include <WS2812FX.h>
+#include "FastLED.h"
 #include "lilParser.h"
 #include <ArduinoJson.h>
-
+#include "customEffects/TwinkleFox.h"
 
 #define LED_COUNT 30
 #define LED_PIN 7
@@ -9,7 +10,7 @@
 int visualizerLeds = 0;
 #include "customEffects/VUMeter.h"
 enum commands {   noCommand,  // ALWAYS start with noCommand. Or something simlar.
-                  setcolor,
+                  setcolors,
                   setmode,
                   _pause,
                   _resume,
@@ -19,9 +20,8 @@ enum commands {   noCommand,  // ALWAYS start with noCommand. Or something simla
                   decreasebrightness,
                   increasespeed,
                   decreasespeed,
-//                  setsegment,
+                  //                  setsegment,
                   setleds,
-                  startjson,
                   //                  setspeed,
               };          // Our list of commands.
 
@@ -29,20 +29,23 @@ lilParser   ourParser;        // The parser object.
 
 WS2812FX ws2812fx = WS2812FX(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 
-boolean jsonMode = false;
+const size_t capacity = JSON_OBJECT_SIZE(1);
 void setup() {
 
   Serial.begin(19200);
   ws2812fx.init();
   ws2812fx.setBrightness(200);
   ws2812fx.setSpeed(1000);
-  ws2812fx.setColor(0x000000);
+  uint32_t _colors[] = {0, 0, 0};
+  ws2812fx.setColors(0, _colors);
   ws2812fx.setMode(FX_MODE_STATIC);
   ws2812fx.start();
 
   ws2812fx.setCustomMode(F("VuMeter"), vuMeter);
-
-  ourParser.addCmd(setcolor, "setColor");
+  ws2812fx.setCustomMode(F("Twinkle Fox"), twinkleFox);
+  ws2812fx.setCustomMode(F("Fire2012"), fire2012Effect);
+  ws2812fx.setCustomMode(F("Waterfall"), waterfallEffect);
+  ourParser.addCmd(setcolors, "setColor");
   ourParser.addCmd(setmode, "setMode");
   ourParser.addCmd(_pause, "pause");
   ourParser.addCmd(_resume, "resume");
@@ -52,9 +55,8 @@ void setup() {
   ourParser.addCmd(decreasebrightness, "decreaseBrightness");
   ourParser.addCmd(increasespeed, "increaseSpeed");
   ourParser.addCmd(decreasespeed, "decreaseSpeed");
-//  ourParser.addCmd(setsegment, "setSegment");
+  //  ourParser.addCmd(setsegment, "setSegment");
   ourParser.addCmd(setleds, "setLeds");
-  ourParser.addCmd(startjson, "startJSON");
 }
 
 void loop(void) {
@@ -64,11 +66,10 @@ void loop(void) {
 
   if (Serial.available()) {                                 // If serial has some data...
     inChar = Serial.read();
-    //    Serial.print(inChar);
     command = ourParser.addChar(inChar);
     switch (command) {
       case noCommand                : break;                               // Nothing to report, move along.
-      case setcolor                 : handleColor();              break;
+      case setcolors                : handleColors();             break;
       case setmode                  : handleMode();               break;
       case _pause                   : handlePause();              break;
       case _resume                  : handleResume();             break;
@@ -78,19 +79,30 @@ void loop(void) {
       case decreasebrightness       : handleDecreaseBrightness(); break;
       case increasespeed            : handleIncreaseSpeed();      break;
       case decreasespeed            : handleDecreaseSpeed();      break;
-//      case setsegment               : handleSetSegment();         break;
+      //      case setsegment               : handleSetSegment();         break;
       case setleds                  : handleSetLeds();            break;
-      case startjson                : handleStartJson();          break;
-      default                       : Serial.println("What?");    break;    // No idea. Try again?
+
+      default                       : Serial.println("Unknown command");    break;    // No idea. Try again?
     }
   }
 }
 
-void handleColor() {
+void handleColors() {
   if (ourParser.numParams()) {                    // If they typed in somethng past the command.
     char* charBuff = ourParser.getParamBuff();
-    uint32_t c = (uint32_t)strtoul(charBuff, NULL, 16);         // We get the first parameter, assume its the new folder's name.
-    ws2812fx.setColor(c);
+    char * strtokIndx; // this is used by strtok() as an index
+
+    strtokIndx = strtok(charBuff, ",");     // get the first color
+    uint32_t firstColor = (uint32_t)strtoul(strtokIndx, NULL, 16);
+
+    strtokIndx = strtok(NULL, ","); // this continues where the previous call left off, to get second color
+    uint32_t secondColor = (uint32_t)strtoul(strtokIndx, NULL, 16);
+
+    strtokIndx = strtok(NULL, ","); //Repeat to get third color
+    uint32_t thirdColor = (uint32_t)strtoul(strtokIndx, NULL, 16);
+
+    uint32_t _colors[] = {firstColor, secondColor, thirdColor};
+    ws2812fx.setColors(0, _colors);
     free(charBuff);
   }
 }
@@ -120,11 +132,17 @@ void handleDecreaseBrightness() {
 }
 
 void handleIncreaseSpeed() {
-  ws2812fx.setSpeed(ws2812fx.getSpeed() * 0.8);
+  ws2812fx.setSpeed(ws2812fx.getSpeed() * 0.6);
+  StaticJsonDocument<capacity>doc;
+  doc["speed"] = ws2812fx.getSpeed();
+  serializeJson(doc, Serial);
 }
 
 void handleDecreaseSpeed() {
-  ws2812fx.setSpeed(ws2812fx.getSpeed() * 1.2);
+  ws2812fx.setSpeed(ws2812fx.getSpeed() * 1.4);
+  StaticJsonDocument<capacity>doc;
+  doc["speed"] = ws2812fx.getSpeed();
+  serializeJson(doc, Serial);
 }
 
 void handleSetSegment() {
@@ -156,8 +174,4 @@ void handleMode() {
 
     free(charBuff);
   }
-}
-
-void handleStartJson() {
-  jsonMode = true;
 }
