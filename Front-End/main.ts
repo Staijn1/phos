@@ -1,4 +1,4 @@
-import {app, BrowserWindow, screen} from 'electron';
+import {app, BrowserWindow} from 'electron';
 import * as path from 'path';
 import * as url from 'url';
 
@@ -10,15 +10,12 @@ serve = args.some(val => val === '--serve');
 app.commandLine.appendSwitch('ignore-certificate-errors');
 
 function createWindow(): void {
-    const electronScreen = screen;
-    const size = electronScreen.getPrimaryDisplay().workAreaSize;
-
     // Create the browser window.
     win = new BrowserWindow({
         x: 0,
         y: 0,
-        width: size.width / 2,
-        height: size.height / 2,
+        width: 1100,
+        height: 600,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true,

@@ -10,7 +10,6 @@ export class SerialConnectionService {
     public port: any;
     public selectedPortId: string;
     public portOpts = {baudRate: 19200, autoOpen: true};
-    public amountOfLeds = 30;
     private _previousVisualizerLeds = 0;
     serialConnectionError: string;
 
@@ -116,13 +115,8 @@ export class SerialConnectionService {
         this.send(`setMode ${mode}`);
     }
 
-    setColor(hexStrings: string[]): void {
-        const converted: string[] = [];
-        for (const hex of hexStrings) {
-            converted.push(hex.replace('#', ''));
-        }
-
-        this.send(`setColor 0x${converted[0]},0x${converted[1]},0x${converted[2]}`);
+    setColor(colorJson: string): void {
+        this.send(`setColor ${colorJson}`);
     }
 
     update(): void {
@@ -155,7 +149,6 @@ export class SerialConnectionService {
 
     private readSettings(): void {
         this.selectedPortId = this.settingsService.readGeneralSettings().com;
-        this.amountOfLeds = this.settingsService.readGeneralSettings().leds;
     }
 
     private handleJson(buffer: string): void {

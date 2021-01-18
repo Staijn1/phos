@@ -71,9 +71,9 @@ export class ModeComponent implements OnInit {
         {mode: 49, name: 'Fire Flicker (soft)'},
         {mode: 50, name: 'Fire Flicker (intense)'},
         {mode: 51, name: 'Circus Combustus'},
-        {mode: 56, name: 'Twinkle Fox'},
-        {mode: 57, name: 'Fire2012', state: new Fire2012State()},
-        {mode: 58, name: 'Waterfall', state: new WaterfallState()},
+        {mode: 57, name: 'Twinkle Fox'},
+        {mode: 58, name: 'Fire2012', state: new Fire2012State()},
+        {mode: 59, name: 'Waterfall', state: new WaterfallState()},
     ];
 
     classes = ['iconbox-primary', 'iconbox-orange', 'iconbox-pink', 'iconbox-yellow', 'iconbox-red', 'iconbox-teal'];

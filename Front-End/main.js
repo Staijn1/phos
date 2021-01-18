@@ -16,8 +16,8 @@ function createWindow() {
     win = new electron_1.BrowserWindow({
         x: 0,
         y: 0,
-        width: size.width / 2,
-        height: size.height / 2,
+        width: 1100,
+        height: 600,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true

@@ -1,25 +1,6 @@
 // in the custom effect run the Fire2012 algorithm
 #define G_REVERSE_DIRECTION false
 
-
-uint16_t fire2012Effect() {
-  Fire2012();
-
-  // return the animation speed based on the ws2812fx speed setting
-  return (ws2812fx.getSpeed() / LED_COUNT);
-}
-
-uint16_t waterfallEffect() {
-  waterfall();
-
-  // return the animation speed based on the ws2812fx speed setting
-  return (ws2812fx.getSpeed() / LED_COUNT);
-}
-/*
-   paste in the Fire2012 code with a small edit at the end which uses the
-   setPixelColor() function to copy the color data to the ws2812fx instance.
-*/
-
 // Fire2012 by Mark Kriegsman, July 2012
 // as part of "Five Elements" shown here: http://youtu.be/knWiGsmgycY
 ////
@@ -35,7 +16,7 @@ uint16_t waterfallEffect() {
 //
 // Temperature is in arbitrary units from 0 (cold black) to 255 (white hot).
 //
-// This simulation scales it self a bit depending on LED_COUNT; it should look
+// This simulation scales it self a bit depending on NUM_LEDS; it should look
 // "OK" on anywhere from 20 to 100 LEDs without too much tweaking.
 //
 // I recommend running this simulation at anywhere from 30-100 frames per second,
@@ -61,15 +42,15 @@ uint16_t waterfallEffect() {
 void Fire2012()
 {
   // Array of temperature readings at each simulation cell
-  static byte heat[LED_COUNT];
+  static byte heat[NUM_LEDS];
 
   // Step 1.  Cool down every cell a little
-  for ( int i = 0; i < LED_COUNT; i++) {
-    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / LED_COUNT) + 2));
+  for ( int i = 0; i < NUM_LEDS; i++) {
+    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / NUM_LEDS) + 2));
   }
 
   // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-  for ( int k = LED_COUNT - 1; k >= 2; k--) {
+  for ( int k = NUM_LEDS - 1; k >= 2; k--) {
     heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
   }
 
@@ -80,32 +61,31 @@ void Fire2012()
   }
 
   // Step 4.  Map from heat cells to LED colors
-  for ( int j = 0; j < LED_COUNT; j++) {
+  for ( int j = 0; j < NUM_LEDS; j++) {
     CRGB color = HeatColor( heat[j]);
     int pixelnumber;
     if ( G_REVERSE_DIRECTION ) {
-      pixelnumber = (LED_COUNT - 1) - j;
+      pixelnumber = (NUM_LEDS - 1) - j;
     } else {
       pixelnumber = j;
     }
 
-
-    ws2812fx.setPixelColor(pixelnumber, color.red, color.green, color.blue);
+    leds[pixelnumber] = color; 
   }
 }
 
 void waterfall()
 {
   // Array of temperature readings at each simulation cell
-  static byte heat[LED_COUNT];
+  static byte heat[NUM_LEDS];
 
   // Step 1.  Cool down every cell a little
-  for ( int i = 0; i < LED_COUNT; i++) {
-    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / LED_COUNT) + 2));
+  for ( int i = 0; i < NUM_LEDS; i++) {
+    heat[i] = qsub8( heat[i],  random8(0, ((COOLING * 10) / NUM_LEDS) + 2));
   }
 
   // Step 2.  Heat from each cell drifts 'up' and diffuses a little
-  for ( int k = LED_COUNT - 1; k >= 2; k--) {
+  for ( int k = NUM_LEDS - 1; k >= 2; k--) {
     heat[k] = (heat[k - 1] + heat[k - 2] + heat[k - 2] ) / 3;
   }
 
@@ -116,16 +96,16 @@ void waterfall()
   }
 
   // Step 4.  Map from heat cells to LED colors
-  for ( int j = 0; j < LED_COUNT; j++) {
+  for ( int j = 0; j < NUM_LEDS; j++) {
     CRGB color = ColdColor( heat[j]);
     int pixelnumber;
     if ( G_REVERSE_DIRECTION ) {
-      pixelnumber = (LED_COUNT - 1) - j;
+      pixelnumber = (NUM_LEDS - 1) - j;
     } else {
       pixelnumber = j;
     }
 
-    ws2812fx.setPixelColor(pixelnumber, color.red, color.green, color.blue);
+    leds[pixelnumber] = color; 
   }
 }
 

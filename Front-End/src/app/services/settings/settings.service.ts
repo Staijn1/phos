@@ -120,7 +120,6 @@ export class SettingsService {
             }
         }
         currentSettings.com = (typeof selectedCom === 'undefined') ? currentSettings.com : selectedCom;
-        currentSettings.leds = (typeof numLeds === 'undefined') ? currentSettings.leds : numLeds;
         currentSettings.chroma = (typeof chroma === 'undefined') ? currentSettings.chroma : chroma;
         this.saveSettings(this.readSettings().visualizer, currentSettings);
     }
@@ -130,7 +129,7 @@ export class SettingsService {
         if (settings !== undefined) {
             return settings;
         } else {
-            return {chroma: false, colors: ['#FFF', '#00FF00', '#FF0000'], com: 'COM3', leds: 30};
+            return {chroma: false, colors: ['#FFF', '#00FF00', '#FF0000'], com: 'COM3'};
         }
     }
 
@@ -142,6 +141,8 @@ export class SettingsService {
         const iniFiedVisualizerSection = ini.stringify(visualizerSection, {section: 'visualizer'});
         const iniFiedGeneralSection = ini.stringify(generalSection, {section: 'general'});
 
-        this.fs.writeFileSync(this.fileUrl, `${iniFiedVisualizerSection}${iniFiedGeneralSection}`);
+        if (environment.saveSettings) {
+            this.fs.writeFileSync(this.fileUrl, `${iniFiedVisualizerSection}${iniFiedGeneralSection}`);
+        }
     }
 }

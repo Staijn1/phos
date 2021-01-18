@@ -109,14 +109,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
         this.serialService.increaseBrightness();
     }
 
-    decreaseSpeed(): void {
-        this.serialService.decreaseSpeed();
-    }
-
-    increaseSpeed(): void {
-        this.serialService.increaseSpeed();
-    }
-
     private animationFromLeft(anime: TimelineMax): TimelineMax {
         anime.to('.from-left .tile', {
             duration: 0.4,
