@@ -336,7 +336,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     }
 
     drawCallback(instance: AudioMotionAnalyzer): void {
-        this.serialService.setLeds(map(instance._dataArray[26], 0, 255, 0, this.serialService.amountOfLeds));
+        this.serialService.setLeds(instance._dataArray[26]);
         this.chromaEffect.intensity = instance._dataArray[26];
     }
 

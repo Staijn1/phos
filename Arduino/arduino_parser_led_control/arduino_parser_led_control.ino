@@ -156,7 +156,7 @@ void handleSetSegment() {
 void handleSetLeds() {
   if (ourParser.numParams()) {
     char* charBuff = ourParser.getParamBuff();
-    visualizerLeds = (uint8_t)atoi(charBuff);
+    visualizerLeds = constrain((uint8_t)atoi(charBuff), 0, 255);
     free(charBuff);
   }
 }

@@ -46,7 +46,6 @@ interface AllSettings {
 })
 export class SettingsService {
     fs: any;
-    private isDev: boolean;
     private readonly fileUrl: string;
 
     constructor(private electronService: ElectronService) {
@@ -58,10 +57,8 @@ export class SettingsService {
         if (root.includes('node_modules')) {
             root = root.split('node_modules')[0];
             pathToSettings = 'src/assets/settings.ini';
-            this.isDev = true;
         } else {
             pathToSettings = '/app/src/assets/settings.ini';
-            this.isDev = false;
         }
 
 
@@ -142,6 +139,8 @@ export class SettingsService {
         const iniFiedVisualizerSection = ini.stringify(visualizerSection, {section: 'visualizer'});
         const iniFiedGeneralSection = ini.stringify(generalSection, {section: 'general'});
 
-        this.fs.writeFileSync(this.fileUrl, `${iniFiedVisualizerSection}${iniFiedGeneralSection}`);
+        if (environment.saveSettings) {
+            this.fs.writeFileSync(this.fileUrl, `${iniFiedVisualizerSection}${iniFiedGeneralSection}`);
+        }
     }
 }

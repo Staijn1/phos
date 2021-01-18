@@ -44,10 +44,11 @@ extern WS2812FX ws2812fx;
 
 uint16_t vuMeter(void) {
     WS2812FX::Segment *seg = ws2812fx.getSegment();
+    const int amountOfLedsToShow = map(visualizerLeds, 0, 255, 0, LED_COUNT);
     uint16_t seglen = seg->stop - seg->start + 1;
     for (uint16_t j = 0; j < seglen; j++) {
         uint16_t index = seg->start + j;
-        if (j <= visualizerLeds) {
+        if (j <= amountOfLedsToShow) {
             ws2812fx.setPixelColor(index, ws2812fx.getColors(0)[0]);
         } else {
             ws2812fx.setPixelColor(index, ws2812fx.getColors(0)[1]);

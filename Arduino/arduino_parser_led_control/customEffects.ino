@@ -170,10 +170,3 @@ CRGB ColdColor( uint8_t temperature)
 
     return coldcolor;
 }
-
-uint16_t reactiveEffect() {
-  
-
-  // return the animation speed based on the ws2812fx speed setting
-  return (ws2812fx.getSpeed() / LED_COUNT);
-}
