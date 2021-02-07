@@ -46,7 +46,9 @@
                     <fa-icon [icon]="controls"></fa-icon>
                     <span>
                         <fa-icon (click)="decreaseBrightness()" [icon]="decreaseBrightnessIcon" class="ml-2 ml-lg-4 hover"></fa-icon>
-                        <fa-icon (click)="increaseBrightness()" [icon]="increaseBrightnessIcon" class="ml-2 ml-lg-4 hover"></fa-icon>
+                        <fa-icon (click)="increaseBrightness()" [icon]="increaseBrightnessIcon" class="ml-2 ml-lg-4 hover" (click)="increaseBrightness()"></fa-icon>
+                        <fa-icon (click)="decreaseSpeed()" [icon]="speedDecreaseIcon" class="ml-2 ml-lg-4 hover"></fa-icon>
+                        <fa-icon (click)="increaseSpeed()" [icon]="speedIncreaseIcon" class="ml-2 ml-lg-4 hover"></fa-icon>
                     </span>
                 </a>
             </li>

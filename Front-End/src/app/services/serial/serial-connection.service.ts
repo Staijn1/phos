@@ -2,6 +2,7 @@ import {ElectronService} from '../electron/electron.service';
 import {Injectable} from '@angular/core';
 import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
 import {SettingsService} from '../settings/settings.service';
+import {iroColorObject} from '../../types/types';
 
 @Injectable({
     providedIn: 'root'
@@ -21,11 +22,6 @@ export class SerialConnectionService {
     scan(): Promise<any> {
         this.selectedPortId = '';
         return this.electronService.serialPort.list();
-    }
-
-    getPort($event): void {
-        console.log('[LOG] Selected port ID: ', $event.target.textContent);
-        this.selectedPortId = $event.target.textContent;
     }
 
     openPort(): void {
@@ -65,17 +61,17 @@ export class SerialConnectionService {
                 }
             });
         }
-        let buffer = '';
+        let Buffer = '';
         this.port.on('data', (data) => {
-            buffer += data.toString();
-            if (buffer.indexOf('}') !== -1) {
+            Buffer += data.toString();
+            if (Buffer.indexOf('}') !== -1) {
                 try {
-                    this.handleJson(buffer);
+                    this.handleJson(Buffer);
                 } catch (err) {
                     // self._errorMessage = self.setErrorMessage('Kan JSON niet inlezen\n' + e);
                     this.handleError(err);
                 }
-                buffer = '';
+                Buffer = '';
             }
         });
     }
@@ -97,12 +93,6 @@ export class SerialConnectionService {
         });
     }
 
-    setSegment(json: string): void {
-        json = json.slice(1, -1);
-        const toSend = 'setSegment ' + json.split('\\"').join('"');
-        this.send(toSend);
-    }
-
     setLeds(amount: number): void {
         if (this._previousVisualizerLeds === amount) {
             return;
@@ -115,8 +105,13 @@ export class SerialConnectionService {
         this.send(`setMode ${mode}`);
     }
 
-    setColor(colorJson: string): void {
-        this.send(`setColor ${colorJson}`);
+    setColor(colors: iroColorObject[]): void {
+        const formattedColors = [];
+        for (const color of colors) {
+            formattedColors.push(color.hexString.substring(1, color.hexString.length));
+        }
+        console.log(formattedColors, colors);
+        this.send(`setColor ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
     }
 
     update(): void {

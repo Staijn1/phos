@@ -10,8 +10,6 @@ serve = args.some(function (val) { return val === '--serve'; });
 // bypassing certificate errors
 electron_1.app.commandLine.appendSwitch('ignore-certificate-errors');
 function createWindow() {
-    var electronScreen = electron_1.screen;
-    var size = electronScreen.getPrimaryDisplay().workAreaSize;
     // Create the browser window.
     win = new electron_1.BrowserWindow({
         x: 0,
@@ -25,7 +23,7 @@ function createWindow() {
         frame: false,
         show: false,
         minWidth: 200,
-        icon: __dirname + '/favicon.ico'
+        icon: path.join(__dirname, '/favicon.ico')
     });
     win.once('ready-to-show', function () {
         win.show();

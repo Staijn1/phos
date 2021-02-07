@@ -15,7 +15,7 @@ void setupLedstrip() {
 void handleColors() {
   if (ourParser.numParams()) {                    // If they typed in somethng past the command.
     const char* charBuff = ourParser.getParamBuff();
-
+    Serial.println("Hello");
     //    char * strtokIndx; // this is used by strtok() as an index
     //
     //    strtokIndx = strtok(charBuff, ",");     // get the first color
@@ -31,13 +31,19 @@ void handleColors() {
     //    colorPalette[1] = secondColor;
     //    colorPalette[2] = thirdColor;
 
-    DynamicJsonDocument doc(30);
-    deserializeJson(doc, charBuff);
-
-    int r = doc["r"];
-    int g = doc["g"];
-    int b = doc["b"];
-    color = CRGB(r, g, b);
+//    StaticJsonDocument<96> doc;
+//    deserializeJson(doc, charBuff);
+//    int index = 0;
+//    Serial.println(index);
+//    for (JsonObject elem : doc.as<JsonArray>()) {
+//      int r = elem["r"]; // 255, 255
+//      int g = elem["g"]; // 255, 255
+//      int b = elem["b"]; // 255, 255
+//      colorPalette[index] = CRGB(r,g,b);
+//      index++; 
+//      Serial.println(index);
+//    }
+    Serial.println(color);
     free(charBuff);
   }
 

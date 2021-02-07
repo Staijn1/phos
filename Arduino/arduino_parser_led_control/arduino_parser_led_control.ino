@@ -2,7 +2,7 @@
 #include "FastLED.h"
 #include "lilParser.h"
 #include <ArduinoJson.h>
-//#include "customEffects/TwinkleFox.h"
+#include "customEffects/TwinkleFox.h"
 
 #define LED_COUNT 30
 #define LED_PIN 7
@@ -27,7 +27,7 @@ const size_t capacity = JSON_OBJECT_SIZE(1);
 void setup() {
   Serial.begin(19200);
   ws2812fx.init();
-  ws2812fx.setBrightness(200);
+  ws2812fx.setBrightness(185);
   ws2812fx.setSpeed(1000);
   uint32_t _colors[] = {0, 0, 0};
   ws2812fx.setColors(0, _colors);
@@ -35,7 +35,7 @@ void setup() {
   ws2812fx.start();
 
   ws2812fx.setCustomMode(F("VuMeter"), vuMeter);
-//  ws2812fx.setCustomMode(F("Twinkle Fox"), twinkleFox);
+  ws2812fx.setCustomMode(F("Twinkle Fox"), twinkleFox);
   ws2812fx.setCustomMode(F("Fire2012"), fire2012Effect);
   ws2812fx.setCustomMode(F("Waterfall"), waterfallEffect);
 
@@ -45,7 +45,6 @@ void setup() {
   ourParser.addCmd(decreasebrightness, "decreaseBrightness");
   ourParser.addCmd(increasespeed, "increaseSpeed");
   ourParser.addCmd(decreasespeed, "decreaseSpeed");
-  //  ourParser.addCmd(setsegment, "setSegment");
   ourParser.addCmd(setleds, "setLeds");
 }
 
@@ -65,7 +64,6 @@ void loop(void) {
       case decreasebrightness       : handleDecreaseBrightness(); break;
       case increasespeed            : handleIncreaseSpeed();      break;
       case decreasespeed            : handleDecreaseSpeed();      break;
-      //      case setsegment               : handleSetSegment();         break;
       case setleds                  : handleSetLeds();            break;
 
       default                       : Serial.println("Unknown command");    break;    // No idea. Try again?

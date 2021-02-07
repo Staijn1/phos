@@ -31,12 +31,11 @@ export class ColorService {
             });
 
             this.picker.on('color:init', (iroColor: iroColorObject) => {
-                this.serialService.setColor(JSON.stringify(this.picker.colors[0].rgb));
+                this.serialService.setColor(this.picker.colors);
                 this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('color:change', (iroColor: iroColorObject) => {
-                console.log(JSON.stringify([this.picker.colors[0].rgb, this.picker.colors[1].rgb]));
-                this.serialService.setColor(JSON.stringify(this.picker.colors[0].rgb));
+                this.serialService.setColor(this.picker.colors);
                 this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('input:end', (iroColor) => {

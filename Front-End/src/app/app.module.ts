@@ -7,7 +7,6 @@ import {CommonModule} from '@angular/common';
 import {BrowserModule} from '@angular/platform-browser';
 import {FormsModule} from '@angular/forms';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {SegmentsComponent} from './components/segments/segments.component';
 import {VisualizerComponent} from './components/visualizer/visualizer.component';
 import {SettingsComponent} from './components/settings/settings.component';
 import {ModeComponent} from './components/mode/mode.component';
@@ -20,7 +19,6 @@ import {HomeComponent} from './components/home/home.component';
     imports: [CommonModule, BrowserModule, FormsModule, AppRoutingModule, NouisliderModule, FontAwesomeModule],
     declarations: [
         AppComponent,
-        SegmentsComponent,
         VisualizerComponent,
         SettingsComponent,
         ModeComponent,

@@ -180,4 +180,12 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
         });
         this.animationEnd.emit();
     }
+
+    decreaseSpeed(): void {
+        this.serialService.decreaseSpeed();
+    }
+
+    increaseSpeed(): void {
+        this.serialService.increaseSpeed();
+    }
 }
