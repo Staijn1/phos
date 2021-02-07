@@ -71,6 +71,8 @@ export class ModeComponent implements OnInit {
         {mode: 49, name: 'Fire Flicker (soft)'},
         {mode: 50, name: 'Fire Flicker (intense)'},
         {mode: 51, name: 'Circus Combustus'},
+        {mode: 52, name: 'Orange/Purple Running'},
+        {mode: 54, name: 'Theater Chase With Gap'},
         {mode: 56, name: 'Twinkle Fox'},
         {mode: 57, name: 'Fire2012', state: new Fire2012State()},
         {mode: 58, name: 'Waterfall', state: new WaterfallState()},

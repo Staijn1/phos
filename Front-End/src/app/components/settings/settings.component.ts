@@ -33,7 +33,6 @@ export class SettingsComponent implements OnInit {
         });
 
         this.selectedCom = this.settingsService.readGeneralSettings().com;
-        this.numLeds = this.settingsService.readGeneralSettings().leds;
         this.chroma = this.settingsService.readGeneralSettings().chroma;
     }
 

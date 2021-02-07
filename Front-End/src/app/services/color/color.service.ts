@@ -31,15 +31,15 @@ export class ColorService {
             });
 
             this.picker.on('color:init', (iroColor: iroColorObject) => {
-                this.serialService.setColor([this.picker.colors[0].hexString, this.picker.colors[1].hexString, this.picker.colors[2].hexString]);
+                this.serialService.setColor(this.picker.colors);
                 this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('color:change', (iroColor: iroColorObject) => {
-                this.serialService.setColor([this.picker.colors[0].hexString, this.picker.colors[1].hexString, this.picker.colors[2].hexString]);
+                this.serialService.setColor(this.picker.colors);
                 this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('input:end', (iroColor) => {
-                 this.settingsService.saveGeneralSettings(this.picker.colors, undefined, undefined, undefined);
+                this.settingsService.saveGeneralSettings(this.picker.colors, undefined, undefined, undefined);
             });
         }, 1);
     }

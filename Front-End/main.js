@@ -23,7 +23,7 @@ function createWindow() {
         frame: false,
         show: false,
         minWidth: 200,
-        icon: __dirname + '/favicon.ico'
+        icon: path.join(__dirname, '/favicon.ico')
     });
     win.once('ready-to-show', function () {
         win.show();

@@ -20,7 +20,7 @@ export class VisualizerState extends State {
 
     createVisualizer(backgroundColor = 0): void {
         this.visualizerCounter++;
-        if (this.visualizerCounter % 5 !== 0 || this._BGRIntegerForeground === 0 || this._intensity === this._previousIntensity) {
+        if (this.visualizerCounter % 5 !== 0 || this._intensity === this._previousIntensity) {
             return;
         } else {
             this.visualizerCounter = 0;
