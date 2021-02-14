@@ -4,22 +4,26 @@ import {calculateBGRInteger} from '../../../../shared/functions';
 
 export class BlinkState extends State {
     blinkEffect;
+    counter = 0;
 
     handle(colors: iroColorObject[]): void {
-        this.blinkEffect = clearInterval();
+        clearInterval(this.blinkEffect);
         this.blinkEffect = undefined;
         this.setBlink(colors[0], colors[1]);
     }
 
     setBlink(color: iroColorObject, backgroundColor: iroColorObject): void {
-        if (this.blinkEffect === undefined) {
+        if (!this.blinkEffect) {
             this.blinkEffect = setInterval(
                 () => {
-                    this.setStatic(color);
-                    setTimeout(() => {
-                        this.setBGRStatic(calculateBGRInteger(backgroundColor.red, backgroundColor.blue, backgroundColor.green));
-                    }, this._context.speed / 2);
-                }, this._context.speed);
+                    this.counter++;
+                    this.counter = this.counter % 2;
+                    if (this.counter === 0) {
+                        this.setStatic(color);
+                    } else {
+                        this.setStatic(backgroundColor);
+                    }
+                }, this._context.speed / 2);
         }
     }
 
@@ -37,7 +41,7 @@ export class BlinkState extends State {
     }
 
     onEntry(): void {
-        this.blinkEffect = clearInterval();
+        clearInterval(this.blinkEffect);
         this.blinkEffect = undefined;
     }
 

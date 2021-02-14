@@ -11,6 +11,7 @@ import {gsap} from 'gsap';
 import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fire2012-state';
 import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state';
+import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state';
 
 @Component({
     selector: 'app-mode',
@@ -35,7 +36,7 @@ export class ModeComponent implements OnInit {
         {mode: 13, name: 'Scan'},
         {mode: 14, name: 'Dual scan'},
         {mode: 15, name: 'Fade in/out'},
-        {mode: 16, name: 'Theater Chase'},
+        {mode: 16, name: 'Theater Chase', state: new TheaterChaseState()},
         {mode: 17, name: 'Theater Chase Rainbow'},
         {mode: 18, name: 'Running Lights'},
         {mode: 19, name: 'Twinkle'},
