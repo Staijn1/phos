@@ -12,6 +12,7 @@ import {ScrollTrigger} from 'gsap/ScrollTrigger';
 import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fire2012-state';
 import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state';
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state';
+import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state';
 
 @Component({
     selector: 'app-mode',
@@ -32,7 +33,7 @@ export class ModeComponent implements OnInit {
         {mode: 9, name: 'Single Dynamic', state: new SingleDynamicState()},
         {mode: 10, name: 'Multi Dynamic', state: new MultiDynamicState()},
         {mode: 11, name: 'Rainbow', state: new RainbowState()},
-        {mode: 12, name: 'Rainbow Cycle'},
+        {mode: 12, name: 'Rainbow Cycle', state: new RainbowCycleState()},
         {mode: 13, name: 'Scan'},
         {mode: 14, name: 'Dual scan'},
         {mode: 15, name: 'Fade in/out'},
