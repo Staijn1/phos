@@ -11,7 +11,6 @@ import {SettingsComponent} from './components/settings/settings.component';
 import {ModeComponent} from './components/mode/mode.component';
 import {NavigationbarComponent} from './components/navigationbar/navigationbar.component';
 import {ElectronService} from './services/electron/electron.service';
-import {PreloaderComponent} from './components/preloader/preloader.component';
 import {HomeComponent} from './components/home/home.component';
 import {NouisliderModule} from 'ng2-nouislider';
 
@@ -23,7 +22,6 @@ import {NouisliderModule} from 'ng2-nouislider';
         SettingsComponent,
         ModeComponent,
         NavigationbarComponent,
-        PreloaderComponent,
         HomeComponent
     ],
     bootstrap: [AppComponent],
