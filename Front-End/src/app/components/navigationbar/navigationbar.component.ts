@@ -134,7 +134,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     }
 
     private animate(): void {
-        let timeline: TimelineMax = new TimelineMax({
+        const timeline: TimelineMax = new TimelineMax({
             defaults: {
                 ease: 'power4.inOut'
             },
@@ -145,10 +145,10 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
         switch (this.animationMode) {
             case 0:
-                timeline = this.animateFromTop(timeline);
+                this.animateFromTop(timeline);
                 break;
             case 1:
-                timeline = this.animationFromLeft(timeline);
+                this.animationFromLeft(timeline);
                 break;
         }
         this.animationMode++;

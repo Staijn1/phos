@@ -70,7 +70,6 @@ export class SerialConnectionService {
                 try {
                     this.handleJson(buffer);
                 } catch (err) {
-                    // self._errorMessage = self.setErrorMessage('Kan JSON niet inlezen\n' + e);
                     this.handleError(err);
                 }
                 buffer = '';
@@ -113,11 +112,7 @@ export class SerialConnectionService {
         for (const color of colors) {
             formattedColors.push(color.hexString.substring(1, color.hexString.length));
         }
-        // const colorsObject = {
-        //     colors: formattedColors
-        // };
         this.send(`setColor ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
-        // this.send(`setColor ${JSON.stringify(colorsObject)}`);
     }
 
     update(): void {

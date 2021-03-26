@@ -102,13 +102,13 @@ export class ModeComponent implements OnInit {
             paused: true
         });
 
-        const playST = ScrollTrigger.create({
+        ScrollTrigger.create({
             trigger: '.fade-up',
             start: 'top bottom',
             onEnter: () => anim.play()
         });
 
-        const resetST = ScrollTrigger.create({
+        ScrollTrigger.create({
             trigger: '.fade-up',
             start: 'top bottom',
             onLeaveBack: () => anim.pause(0)

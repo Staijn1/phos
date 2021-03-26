@@ -1,13 +1,13 @@
 import {SerialConnectionService} from './serial-connection.service';
+import {TestBed} from '@angular/core/testing';
 
 describe('SerialConnectionService', () => {
-    // let sut;
-    // beforeEach(() => {
-    //     TestBed.configureTestingModule({})
-    // });
-    //
-    // it('should be created', () => {
-    //     const service: SerialConnectionService = TestBed.get(SerialConnectionService);
-    //     expect(service).toBeTruthy();
-    // });
+    beforeEach(() => {
+        TestBed.configureTestingModule({});
+    });
+
+    it('should be created', () => {
+        const service: SerialConnectionService = TestBed.get(SerialConnectionService);
+        expect(service).toBeTruthy();
+    });
 });
