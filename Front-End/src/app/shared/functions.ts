@@ -1,3 +1,5 @@
+import {GlobalVars} from './constants';
+
 export function map(value, start1, stop1, start2, stop2, withinBounds = false): number {
     const newval = (value - start1) / (stop1 - start1) * (stop2 - start2) + start2;
     if (!withinBounds) {
@@ -152,4 +154,29 @@ export function ColdColor(temperature: number): any {
     }
 
     return heatcolor;
+}
+
+/*
+ * Returns a new, random wheel index with a minimum distance of 42 from pos.
+ */
+export function get_random_wheel_index(pos: number): number {
+    let r = 0;
+    let x = 0;
+    let y = 0;
+    let d = 0;
+
+    while (d < 42) {
+        r = random8();
+        x = Math.abs(pos - r);
+        y = 255 - x;
+        d = Math.min(x, y);
+    }
+
+    return r;
+}
+
+// fast 8-bit random number generator shamelessly borrowed from FastLED
+export function random8(): number {
+    GlobalVars.rand16seed = (GlobalVars.rand16seed * 2053) + 13849;
+    return ((GlobalVars.rand16seed + (GlobalVars.rand16seed >> 8)) & 0xFF);
 }

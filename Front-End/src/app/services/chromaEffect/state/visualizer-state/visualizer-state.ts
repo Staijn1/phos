@@ -43,7 +43,7 @@ export class VisualizerState extends State {
             }
         }
 
-        const amountOfColumns = map(this._intensity, 255, 0, 21, 0, true);
+        const amountOfColumns = map(this._intensity, 1, 0, 21, 0, true);
         for (let r = 0; r < 6; r++) {
             for (let c = 0; c < amountOfColumns; c++) {
                 key[r][c] = 0x01000000 | this._BGRIntegerForeground;
@@ -66,7 +66,7 @@ export class VisualizerState extends State {
         // Column 0 is left side
         // Column 6 is right side
         // Razer mamba only has 7 visible.
-        const amountOfRows = map(this._intensity, 0, 255, 0, 7, true);
+        const amountOfRows = map(this._intensity, 0, 1, 0, 7, true);
         for (let r = 0; r < amountOfRows; r++) {
             mouseLed[r][0] = this._BGRIntegerForeground;
             mouseLed[r][6] = this._BGRIntegerForeground;

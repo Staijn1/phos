@@ -4,7 +4,7 @@
 #include <ArduinoJson.h>
 #include "customEffects/TwinkleFox.h"
 
-#define LED_COUNT 30
+#define LED_COUNT 60
 #define LED_PIN 7
 int fftValue = 0;
 #include "customEffects/VUMeter.h"
@@ -25,7 +25,7 @@ WS2812FX ws2812fx = WS2812FX(LED_COUNT, LED_PIN, NEO_GRB + NEO_KHZ800);
 const size_t capacity = JSON_OBJECT_SIZE(1);
 
 void setup() {
-  Serial.begin(19200);
+  Serial.begin(9600);
   ws2812fx.init();
   ws2812fx.setBrightness(185);
   ws2812fx.setSpeed(1000);
@@ -74,16 +74,19 @@ void loop(void) {
 void handleColors() {
   if (ourParser.numParams()) {                    // If they typed in somethng past the command.
     char* charBuff = ourParser.getParamBuff();
-    char * strtokIndx; // this is used by strtok() as an index
+    char* strtokIndx; // this is used by strtok() as an index
 
     strtokIndx = strtok(charBuff, ",");     // get the first color
     uint32_t firstColor = (uint32_t)strtoul(strtokIndx, NULL, 16);
+    Serial.println(firstColor);
 
     strtokIndx = strtok(NULL, ","); // this continues where the previous call left off, to get second color
     uint32_t secondColor = (uint32_t)strtoul(strtokIndx, NULL, 16);
+    Serial.println(secondColor);
 
     strtokIndx = strtok(NULL, ","); //Repeat to get third color
     uint32_t thirdColor = (uint32_t)strtoul(strtokIndx, NULL, 16);
+    Serial.println(thirdColor);
 
     uint32_t _colors[] = {firstColor, secondColor, thirdColor};
     ws2812fx.setColors(0, _colors);
@@ -145,7 +148,7 @@ void handleMode() {
     free(ourParser.getParamBuff());
     switch (m) {
       case 55:
-        ws2812fx.setSegment(0, 0, LED_COUNT - 1, vuMeter, ws2812fx.getColor(), 0, NO_OPTIONS);
+        ws2812fx.setSegment(0, 0, LED_COUNT - 1, vuMeter, ws2812fx.getColors(0)[0], 0, NO_OPTIONS);
         break;
 
       default: break;//Do nothing

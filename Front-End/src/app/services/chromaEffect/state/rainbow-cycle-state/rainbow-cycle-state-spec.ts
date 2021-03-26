@@ -1,4 +1,4 @@
-import { RainbowCycleState } from './rainbow-cycle-state';
+import {RainbowCycleState} from './rainbow-cycle-state';
 
 describe('Rainbow cycle', () => {
   it('should create an instance', () => {

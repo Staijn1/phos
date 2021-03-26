@@ -1,5 +1,4 @@
 import {NgModule} from '@angular/core';
-import {NouisliderModule} from 'ng2-nouislider';
 import {AppRoutingModule} from './app-routing/app-routing.module';
 
 import {AppComponent} from './app.component';
@@ -14,6 +13,7 @@ import {NavigationbarComponent} from './components/navigationbar/navigationbar.c
 import {ElectronService} from './services/electron/electron.service';
 import {PreloaderComponent} from './components/preloader/preloader.component';
 import {HomeComponent} from './components/home/home.component';
+import {NouisliderModule} from 'ng2-nouislider';
 
 @NgModule({
     imports: [CommonModule, BrowserModule, FormsModule, AppRoutingModule, NouisliderModule, FontAwesomeModule],
@@ -30,6 +30,4 @@ import {HomeComponent} from './components/home/home.component';
     providers: [ElectronService],
 })
 export class AppModule {
-    constructor() {
-    }
 }

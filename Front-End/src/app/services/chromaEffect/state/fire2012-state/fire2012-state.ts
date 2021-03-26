@@ -1,28 +1,8 @@
 import {State} from '../abstract/state';
 import {iroColorObject} from '../../../../types/types';
-import {calculateBGRInteger, WarmColor, map, qadd8, qsub8, randomInteger} from '../../../../shared/functions';
+import {calculateBGRInteger, map, qadd8, qsub8, randomInteger, WarmColor} from '../../../../shared/functions';
 
 export class Fire2012State extends State {
-    private keyboardColors = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ];
-
-    private mouseColors = [
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-    ];
     private interval: NodeJS.Timeout;
     readonly COOLING = 55;
     readonly SPARKING = 120;
@@ -40,7 +20,7 @@ export class Fire2012State extends State {
                 this.fire2012Keyboard();
                 this.fire2012Mouse();
 
-                const headsetColors = this.keyboardColors[0].splice(0, this._context.headset.amount);
+                const headsetColors = this._context.keyboardColors[0].splice(0, this._context.headset.amount);
                 this._context.createHeadsetEffect('CHROMA_CUSTOM', headsetColors);
             }, this._context.speed / this._context.keyboard.columns);
         }
@@ -118,12 +98,12 @@ export class Fire2012State extends State {
                 //    leds[pixelnumber] = color;
                 // ws2812fx.setPixelColor(pixelnumber, color.red, color.green, color.blue);
                 // console.log(typeof color.red);
-                this.keyboardColors[i][pixelnumber] = calculateBGRInteger(color.r, color.g, color.b);
+                this._context.keyboardColors[i][pixelnumber] = calculateBGRInteger(color.r, color.g, color.b);
                 // **** modified for use with WS2812FX ****
             }
         }
 
-        this._context.createKeyboardEffect('CHROMA_CUSTOM', this.keyboardColors).then();
+        this._context.createKeyboardEffect('CHROMA_CUSTOM', this._context.keyboardColors).then();
     }
 
     private fire2012Mouse(): void {
@@ -142,11 +122,11 @@ export class Fire2012State extends State {
                     pixelnumber = i;
                 }
 
-                this.mouseColors[pixelnumber][j] = calculateBGRInteger(color.r, color.g, color.b);
+                this._context.mouseColors[pixelnumber][j] = calculateBGRInteger(color.r, color.g, color.b);
             }
         }
 
-        this._context.createMouseEffect('CHROMA_CUSTOM2', this.mouseColors).then();
+        this._context.createMouseEffect('CHROMA_CUSTOM2', this._context.mouseColors).then();
     }
 
     private ignite(arrayToManipulate: number[], maxLeds: number, bottom: number): void {

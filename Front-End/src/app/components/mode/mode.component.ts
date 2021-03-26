@@ -13,6 +13,8 @@ import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fi
 import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state';
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state';
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state';
+import {RandomColorState} from '../../services/chromaEffect/state/random-color-state/random-color-state';
+import {WebsocketService} from '../../services/websocket/websocket.service';
 
 @Component({
     selector: 'app-mode',
@@ -29,7 +31,7 @@ export class ModeComponent implements OnInit {
         {mode: 5, name: 'Color Wipe Reverse'},
         {mode: 6, name: 'Color Wipe Reverse Inverse'},
         {mode: 7, name: 'Color Wipe Random'},
-        {mode: 8, name: 'Random Color'},
+        {mode: 8, name: 'Random Color', state: new RandomColorState()},
         {mode: 9, name: 'Single Dynamic', state: new SingleDynamicState()},
         {mode: 10, name: 'Multi Dynamic', state: new MultiDynamicState()},
         {mode: 11, name: 'Rainbow', state: new RainbowState()},
@@ -73,8 +75,9 @@ export class ModeComponent implements OnInit {
         {mode: 49, name: 'Fire Flicker (soft)'},
         {mode: 50, name: 'Fire Flicker (intense)'},
         {mode: 51, name: 'Circus Combustus'},
-        {mode: 52, name: 'Orange/Purple Running'},
-        {mode: 54, name: 'Theater Chase With Gap'},
+        {mode: 52, name: 'Halloween'},
+        {mode: 54, name: 'Tricolor Chase'},
+        {mode: 55, name: 'VUMeter'},
         {mode: 56, name: 'Twinkle Fox'},
         {mode: 57, name: 'Fire2012', state: new Fire2012State()},
         {mode: 58, name: 'Waterfall', state: new WaterfallState()},
@@ -83,7 +86,10 @@ export class ModeComponent implements OnInit {
     classes = ['iconbox-primary', 'iconbox-orange', 'iconbox-pink', 'iconbox-yellow', 'iconbox-red', 'iconbox-teal'];
     private modeIndex: number;
 
-    constructor(private readonly serialService: SerialConnectionService, private readonly chromaService: ChromaEffectService) {
+    constructor(
+        private readonly serialService: SerialConnectionService,
+        private readonly chromaService: ChromaEffectService,
+        private readonly websocketService: WebsocketService) {
         gsap.registerPlugin(ScrollTrigger);
     }
 
@@ -116,6 +122,7 @@ export class ModeComponent implements OnInit {
         this.modeIndex = element.index();
         const mode = element.attr('id');
         this.serialService.setMode(+mode);
+        this.websocketService.setMode(+mode);
         this.chromaService.state = this.modes[this.modeIndex].state === undefined ? new StaticState() : this.modes[this.modeIndex].state;
     }
 }

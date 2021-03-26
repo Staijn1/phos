@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import AudioMotionAnalyzer from 'audiomotion-analyzer';
+import AudioMotionAnalyzer, {GradientOptions} from 'audiomotion-analyzer';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 import {ColorService} from '../../services/color/color.service';
 import {faWrench} from '@fortawesome/free-solid-svg-icons/faWrench';
@@ -7,17 +7,21 @@ import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand';
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload';
 import {faLightbulb} from '@fortawesome/free-solid-svg-icons';
-import {map} from '../../shared/functions';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state';
 import {SettingsService} from '../../services/settings/settings.service';
+import {WebsocketService} from '../../services/websocket/websocket.service';
+
+interface Gradients extends GradientOptions {
+    name: string;
+    disabled: boolean;
+}
 
 @Component({
     selector: 'app-visualizer-test',
     templateUrl: './visualizer.component.html',
     styleUrls: ['./visualizer.component.scss']
 })
-
 export class VisualizerComponent implements OnInit, OnDestroy {
     options = {
         barSpace: 0.1,
@@ -121,16 +125,19 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         }
     };
     // Gradient definitions
-    gradients = [
+    gradients: Gradients[] = [
         {
-            name: 'Apple', bgColor: '#111', colorStops: [
+            name: 'Apple',
+            bgColor: '#111',
+            colorStops: [
                 {pos: .1667, color: '#61bb46'},
                 {pos: .3333, color: '#fdb827'},
                 {pos: .5, color: '#f5821f'},
                 {pos: .6667, color: '#e03a3e'},
                 {pos: .8333, color: '#963d97'},
                 {pos: 1, color: '#009ddc'}
-            ], disabled: false
+            ],
+            disabled: false
         },
         {
             name: 'Aurora', bgColor: '#0e172a', colorStops: [
@@ -227,9 +234,10 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             ], disabled: false
         },
         {
-            name: 'Lissa', bgColor: '#08051f', colorStops: [
-                'rgb( 230, 13, 202 )',
-                'rgb(34,3,34)'
+            name: 'Clouds', bgColor: '#212224', colorStops: [
+                {pos: 0.731, color: '#2b4051'},
+                {pos: 0.519, color: '#3F5567'},
+                {pos: 0.208, color: '#A7B8BE'}
             ], disabled: false
         }
     ];
@@ -317,6 +325,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
     constructor(
         private serialService: SerialConnectionService,
+        private websocketService: WebsocketService,
         private colorService: ColorService,
         private settingsService: SettingsService,
         private chromaEffect: ChromaEffectService) {
@@ -333,11 +342,14 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
     changeLedstripMode(): void {
         this.serialService.setMode(55);
+        this.websocketService.setMode(55);
     }
 
     drawCallback(instance: AudioMotionAnalyzer): void {
-        this.serialService.setLeds(instance._dataArray[26]);
-        this.chromaEffect.intensity = instance._dataArray[26];
+        const value = instance.getEnergy('bass');
+        this.serialService.setLeds(value);
+        this.chromaEffect.intensity = value;
+        this.websocketService.setFFTValue(value);
     }
 
     updateOptions(): void {
@@ -398,7 +410,6 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             this.options.lumiBars = true;
         } else if (element.id === 'radial') {
             this.options.radial = true;
-        } else if (element.id === 'normal') {
         } else {
             throw Error('Unknown ID!');
         }
@@ -463,7 +474,10 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
     private registerGradients(): void {
         this.gradients.forEach((gradient, index: number) => {
-            this.audioMotion.registerGradient(gradient.name, {bgColor: gradient.bgColor, colorStops: gradient.colorStops});
+            this.audioMotion.registerGradient(gradient.name, {
+                bgColor: gradient.bgColor,
+                colorStops: gradient.colorStops
+            } as GradientOptions);
         });
     }
 

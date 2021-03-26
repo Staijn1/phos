@@ -1,5 +1,6 @@
 @import '../../../variables';
 
+//noinspection CssUnknownProperty
 #menu-bar {
   display: flex;
   justify-content: space-between;
@@ -37,6 +38,7 @@
 }
 
 .menubar-btn {
+  //noinspection CssUnknownProperty
   -webkit-app-region: no-drag;
 }
 

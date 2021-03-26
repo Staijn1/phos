@@ -1,4 +1,4 @@
-import { SingleDynamicState } from './single-dynamic-state';
+import {SingleDynamicState} from './single-dynamic-state';
 
 describe('SingleDynamicState', () => {
   it('should create an instance', () => {

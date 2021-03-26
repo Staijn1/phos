@@ -1,4 +1,4 @@
-import { VisualizerState } from './visualizer-state';
+import {VisualizerState} from './visualizer-state';
 
 describe('VisualizerState', () => {
   it('should create an instance', () => {

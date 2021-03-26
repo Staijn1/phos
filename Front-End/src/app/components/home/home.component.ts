@@ -9,9 +9,6 @@ import {TimelineMax} from 'gsap';
 export class HomeComponent implements OnInit {
     timeline: TimelineMax;
 
-    constructor() {
-    }
-
     ngOnInit(): void {
         this.timeline = new TimelineMax();
 

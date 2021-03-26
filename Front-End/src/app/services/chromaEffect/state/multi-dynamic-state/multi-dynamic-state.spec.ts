@@ -1,4 +1,4 @@
-import { MultiDynamicState } from './multi-dynamic-state';
+import {MultiDynamicState} from './multi-dynamic-state';
 
 describe('MultiDynamicState', () => {
   it('should create an instance', () => {

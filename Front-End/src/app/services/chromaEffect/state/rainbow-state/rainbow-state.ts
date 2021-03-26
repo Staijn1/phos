@@ -11,7 +11,6 @@ export class RainbowState extends State {
     }
 
     onEntry(): void {
-        // todo make init where all the 255 effects are precreated and then called in handle in interval might improve performance
         this.reset();
     }
 

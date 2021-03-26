@@ -3,6 +3,7 @@ import {Injectable} from '@angular/core';
 import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
 import {SettingsService} from '../settings/settings.service';
 import {iroColorObject} from '../../types/types';
+import {map} from '../../shared/functions';
 
 @Injectable({
     providedIn: 'root'
@@ -10,7 +11,7 @@ import {iroColorObject} from '../../types/types';
 export class SerialConnectionService {
     public port: any;
     public selectedPortId: string;
-    public portOpts = {baudRate: 19200, autoOpen: true};
+    public portOpts = {baudRate: 9600, autoOpen: true};
     private _previousVisualizerLeds = 0;
     serialConnectionError: string;
 
@@ -61,17 +62,18 @@ export class SerialConnectionService {
                 }
             });
         }
-        let Buffer = '';
+        let buffer = '';
         this.port.on('data', (data) => {
-            Buffer += data.toString();
-            if (Buffer.indexOf('}') !== -1) {
+            buffer += data.toString();
+
+            if (buffer.indexOf('}') !== -1) {
                 try {
-                    this.handleJson(Buffer);
+                    this.handleJson(buffer);
                 } catch (err) {
                     // self._errorMessage = self.setErrorMessage('Kan JSON niet inlezen\n' + e);
                     this.handleError(err);
                 }
-                Buffer = '';
+                buffer = '';
             }
         });
     }
@@ -94,11 +96,12 @@ export class SerialConnectionService {
     }
 
     setLeds(amount: number): void {
-        if (this._previousVisualizerLeds === amount) {
+        const mappedAmount = Math.floor(map(amount, 0, 1, 0, 255));
+        if (this._previousVisualizerLeds === mappedAmount) {
             return;
         }
-        this._previousVisualizerLeds = amount;
-        this.send(`setLeds ${amount}`);
+        this._previousVisualizerLeds = mappedAmount;
+        this.send(`setLeds ${mappedAmount}`);
     }
 
     setMode(mode: number): void {
@@ -110,8 +113,11 @@ export class SerialConnectionService {
         for (const color of colors) {
             formattedColors.push(color.hexString.substring(1, color.hexString.length));
         }
-        console.log(formattedColors, colors);
+        // const colorsObject = {
+        //     colors: formattedColors
+        // };
         this.send(`setColor ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
+        // this.send(`setColor ${JSON.stringify(colorsObject)}`);
     }
 
     update(): void {

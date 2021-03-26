@@ -21,6 +21,7 @@ import {
     faWalking,
     faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons';
+import {WebsocketService} from '../../services/websocket/websocket.service';
 
 @Component({
     selector: 'app-navigationbar',
@@ -56,6 +57,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
         private colorService: ColorService,
         private electronService: ElectronService,
         private serialService: SerialConnectionService,
+        private websocketService: WebsocketService,
         private router: Router,
     ) {
     }
@@ -102,10 +104,12 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     }
 
     decreaseBrightness(): void {
+        this.websocketService.decreaseBrightness();
         this.serialService.decreaseBrightness();
     }
 
     increaseBrightness(): void {
+        this.websocketService.increaseBrightness();
         this.serialService.increaseBrightness();
     }
 
@@ -182,10 +186,12 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     }
 
     decreaseSpeed(): void {
+        this.websocketService.decreaseSpeed();
         this.serialService.decreaseSpeed();
     }
 
     increaseSpeed(): void {
+        this.websocketService.increaseSpeed();
         this.serialService.increaseSpeed();
     }
 }

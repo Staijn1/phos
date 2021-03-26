@@ -1,13 +1,13 @@
 import {TestBed} from '@angular/core/testing';
 
-import {ChromaEffectService} from './chroma-effect.service';
+import {WebsocketService} from './websocket.service';
 
-describe('ChromaEffectService', () => {
-  let service: ChromaEffectService;
+describe('WebsocketService', () => {
+  let service: WebsocketService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ChromaEffectService);
+    service = TestBed.inject(WebsocketService);
   });
 
   it('should be created', () => {

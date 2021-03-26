@@ -1,4 +1,4 @@
-import { StaticState } from './static-state';
+import {StaticState} from './static-state';
 
 describe('StaticState', () => {
   it('should create an instance', () => {

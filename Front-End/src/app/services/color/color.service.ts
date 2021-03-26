@@ -5,6 +5,7 @@ import {SerialConnectionService} from '../serial/serial-connection.service';
 import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
 import {iroColorObject} from '../../types/types';
 import {SettingsService} from '../settings/settings.service';
+import {WebsocketService} from '../websocket/websocket.service';
 
 @Injectable({
     providedIn: 'root'
@@ -16,7 +17,8 @@ export class ColorService {
         @Inject(DOCUMENT) private document: HTMLDocument,
         private serialService: SerialConnectionService,
         private settingsService: SettingsService,
-        private chromaEffect: ChromaEffectService) {
+        private chromaEffect: ChromaEffectService,
+        private websocketService: WebsocketService) {
         // @ts-ignore
         const colorsSaved = this.settingsService.readGeneralSettings().colors;
         setTimeout(() => {
@@ -36,6 +38,7 @@ export class ColorService {
             });
             this.picker.on('color:change', (iroColor: iroColorObject) => {
                 this.serialService.setColor(this.picker.colors);
+                this.websocketService.setColor(this.picker.colors);
                 this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('input:end', (iroColor) => {

@@ -2,25 +2,6 @@ import {State} from '../abstract/state';
 import {color_wheel, randomInteger} from '../../../../shared/functions';
 
 export class MultiDynamicState extends State {
-    private keyboardColors = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ];
-    private mouseColors = [
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-    ];
     private headsetColors = [0, 0, 0, 0, 0];
     private interval;
 
@@ -55,20 +36,20 @@ export class MultiDynamicState extends State {
     private keyboardEffect(): void {
         for (let row = 0; row < this._context.keyboard.rows; row++) {
             for (let column = 0; column < this._context.keyboard.columns; column++) {
-                this.keyboardColors[row][column] = color_wheel(randomInteger(0, 255));
+                this._context.keyboardColors[row][column] = color_wheel(randomInteger(0, 255));
             }
         }
-        this._context.createKeyboardEffect('CHROMA_CUSTOM', this.keyboardColors).then();
+        this._context.createKeyboardEffect('CHROMA_CUSTOM', this._context.keyboardColors).then();
     }
 
 
     private mouseEffect(): void {
         for (let row = 0; row < this._context.mouse.rows; row++) {
             for (let column = 0; column < this._context.mouse.columns; column++) {
-                this.mouseColors[row][column] = color_wheel(randomInteger(0, 255));
+                this._context.mouseColors[row][column] = color_wheel(randomInteger(0, 255));
             }
         }
-        this._context.createMouseEffect('CHROMA_CUSTOM2', this.mouseColors).then();
+        this._context.createMouseEffect('CHROMA_CUSTOM2', this._context.mouseColors).then();
     }
 
     private headsetEffect(): void {

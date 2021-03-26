@@ -1,31 +1,8 @@
 import {State} from '../abstract/state';
 import {iroColorObject} from '../../../../types/types';
-import {calculateBGRInteger, color_wheel, constrain} from '../../../../shared/functions';
-import {delay} from 'rxjs/operators';
-import {NUM_LEDS} from '../../../../shared/constants';
+import {calculateBGRInteger, color_wheel} from '../../../../shared/functions';
 
 export class RainbowCycleState extends State {
-    private keyboardColors = [
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    ];
-
-    private mouseColors = [
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-        [0, 0, 0, 0, 0, 0, 0],
-    ];
-
     effect;
     private counter = 0;
 
@@ -40,13 +17,13 @@ export class RainbowCycleState extends State {
 
 
     setEffect(color: number, backgroundColor: number): void {
-        this.setColor(this.keyboardColors);
-        this.setColor(this.mouseColors);
+        this.setColor(this._context.keyboardColors);
+        this.setColor(this._context.mouseColors);
 
 
         this.counter = (this.counter + 1) & 0xFF;
-        this._context.createKeyboardEffect('CHROMA_CUSTOM', this.keyboardColors).then();
-        this._context.createMouseEffect('CHROMA_CUSTOM2', this.mouseColors).then();
+        this._context.createKeyboardEffect('CHROMA_CUSTOM', this._context.keyboardColors).then();
+        this._context.createMouseEffect('CHROMA_CUSTOM2', this._context.mouseColors).then();
     }
 
     private setColor(colors: number[][]): void {
