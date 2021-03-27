@@ -73,18 +73,14 @@ export class SerialConnectionService extends Connection {
 
     closePort(): void {
         this.port.close(err => {
-            if (err) {
-                this.handleError(err);
-            }
+            this.handleError(err);
         });
         this.selectedPortId = null;
     }
 
     send(command: string): void {
         this.port.write(command + '\n', (err) => {
-            if (err) {
-                this.handleError(err);
-            }
+            this.handleError(err);
         });
     }
 

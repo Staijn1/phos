@@ -108,7 +108,7 @@ export class ChromaSDKService {
         if (this.initializedApiURL === undefined || this.initializedApiURL === null || !this.isChromaSupport()) {
             return;
         }
-        return await fetch(`${this.initializedApiURL}/heartbeat`, {
+        return fetch(`${this.initializedApiURL}/heartbeat`, {
             method: 'OPTIONS',
             body: null,
             headers: {'Content-type': 'application/json; charset=UTF-8'}
@@ -141,7 +141,7 @@ export class ChromaSDKService {
         if (!response.ok) {
             throw new Error('error! ' + response.status);
         }
-        return await response.json();
+        return response.json();
     }
 
     async createMouseEffect(effect, data): Promise<any> {
@@ -168,7 +168,7 @@ export class ChromaSDKService {
         if (!response.ok) {
             throw new Error('error! ' + response.status);
         }
-        return await response.json();
+        return response.json();
     }
 
     async setEffect(id: any): Promise<any> {
@@ -212,7 +212,7 @@ export class ChromaSDKService {
         if (!response.ok) {
             throw new Error('error! ' + response.status);
         }
-        return await response.json();
+        return response.json();
     }
 
     uninit(): void {
