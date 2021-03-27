@@ -1,7 +1,6 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, ViewChild} from '@angular/core';
 import {ColorService} from '../../services/color/color.service';
 import {ElectronService} from '../../services/electron/electron.service';
-import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons';
 import {TimelineMax} from 'gsap';
 import {NavigationEnd, Router} from '@angular/router';
@@ -21,6 +20,7 @@ import {
     faWalking,
     faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons';
+import {ConnectionService} from '../../services/connection/connection.service';
 
 @Component({
     selector: 'app-navigationbar',
@@ -55,7 +55,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     constructor(
         private colorService: ColorService,
         private electronService: ElectronService,
-        public connection: SerialConnectionService,
+        public connection: ConnectionService,
         private router: Router,
     ) {
     }
