@@ -24,44 +24,36 @@ export class SerialConnectionService extends Connection {
 
     scan(): Promise<any> {
         this.selectedPortId = '';
-        return this.electronService.serialPort.list();
+        return this.electronService.serialport.list();
     }
 
     openPort(): void {
-        if (this.port === undefined) {
-            this.port = new this.electronService.serialPort(
+        if (!this.port) {
+            this.port = new this.electronService.serialport(
                 this.selectedPortId,
                 this.portOpts,
-                err => {
-                    if (err) {
-                        this.handleError(err);
-                    }
+                (err) => {
+                    this.handleError(err);
                 }
             );
         }
 
         this.port.on('open', err => {
-            if (err) {
-                this.handleError(err);
-            }
+            this.handleError(err);
 
             setTimeout(() => {
                 // @ts-ignore
                 this.setColor(this.settingsService.readGeneralSettings().colors[0]);
-            }, 500);
+            }, 1000);
 
         });
         this.port.on('error', err => {
-            if (err) {
-                this.handleError(err);
-            }
+            this.handleError(err);
         });
 
         if (!this.port.isOpen) {
             this.port.open(err => {
-                if (err) {
-                    this.handleError(err);
-                }
+                this.handleError(err);
             });
         }
         let buffer = '';
@@ -141,8 +133,10 @@ export class SerialConnectionService extends Connection {
         this.send('increaseSpeed');
     }
 
-    private handleError(err: Error): Error {
-        return new Error('[ERR] Error opening port: ' + err.message);
+    private handleError(err: Error): Error | undefined {
+        if (err) {
+            return new Error('[ERR] Error opening port: ' + err.message);
+        }
     }
 
     private readSettings(): void {

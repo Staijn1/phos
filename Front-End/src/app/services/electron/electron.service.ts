@@ -9,7 +9,7 @@ import * as fs from 'fs';
 
 @Injectable()
 export class ElectronService {
-    serialPort: typeof SerialPort;
+    serialport: typeof SerialPort;
 
     ipcRenderer: typeof ipcRenderer;
     webFrame: typeof webFrame;
@@ -21,7 +21,7 @@ export class ElectronService {
     constructor() {
         // Conditional imports
         if (this.isElectron()) {
-            this.serialPort = window.require('serialport');
+            this.serialport = window.require('serialport');
 
             this.ipcRenderer = window.require('electron').ipcRenderer;
             this.webFrame = window.require('electron').webFrame;

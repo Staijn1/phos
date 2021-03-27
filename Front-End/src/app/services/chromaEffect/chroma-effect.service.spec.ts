@@ -1,16 +1,14 @@
-import {TestBed} from '@angular/core/testing';
-
 import {ChromaEffectService} from './chroma-effect.service';
 
 describe('ChromaEffectService', () => {
-  let service: ChromaEffectService;
+    let sut: ChromaEffectService;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ChromaEffectService);
-  });
+    beforeEach(() => {
+        const settingsServiceMock = jasmine.createSpyObj('SettingsService', ['readGeneralSettings', 'saveGeneralSettings']);
+        sut = new ChromaEffectService(settingsServiceMock);
+    });
 
-  // it('should be created', () => {
-  //   expect(service).toBeTruthy();
-  // });
+    it('should be created', () => {
+        expect(sut).toBeTruthy();
+    });
 });
