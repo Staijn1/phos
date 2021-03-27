@@ -25,7 +25,7 @@
     "electron:linux": "electron-packager . angulon --overwrite --asar --platform=linux --arch=x64 --prune=true --out=release-builds --icon=\"favicon.ico\"",
     "compile-watch": "tsc -w",
     "test": "npm run postinstall && npm run electron:tsc && mocha",
-    "test-karma": "karma start --no-single-run"
+    "test-karma": "ng test --code-coverage"
   },
   "private": false,
   "dependencies": {
@@ -81,7 +81,6 @@
     "karma": "^5.2.3",
     "karma-chrome-launcher": "~3.1.0",
     "karma-coverage": "^2.0.3",
-    "karma-coverage-istanbul-reporter": "~3.0.2",
     "karma-jasmine": "~4.0.0",
     "karma-jasmine-html-reporter": "^1.5.0",
     "karma-phantomjs-launcher": "^1.0.4",
