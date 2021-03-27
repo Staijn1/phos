@@ -13,9 +13,9 @@ describe('SettingsService', () => {
         sut = TestBed.inject(SettingsService);
     });
 
-    it('should be created', () => {
-        expect(sut).toBeTruthy();
-    });
+    // it('should be created', () => {
+    //     expect(sut).toBeTruthy();
+    // });
 
 
 });

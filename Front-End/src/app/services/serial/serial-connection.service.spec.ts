@@ -6,8 +6,8 @@ describe('SerialConnectionService', () => {
         TestBed.configureTestingModule({});
     });
 
-    it('should be created', () => {
-        const service: SerialConnectionService = TestBed.get(SerialConnectionService);
-        expect(service).toBeTruthy();
-    });
+    // it('should be created', () => {
+    //     const service: SerialConnectionService = TestBed.get(SerialConnectionService);
+    //     expect(service).toBeTruthy();
+    // });
 });
