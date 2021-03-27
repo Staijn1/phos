@@ -36,15 +36,22 @@
 
 }
 
+.active > div {
+  background-color: darken(getColor("secondary"), 20%);
+
+  h6{
+    color: white;
+  }
+}
 
 .icon-box {
   text-align: center;
   padding: 20px;
   margin-bottom: 1em;
   transition: all ease-in-out 0.3s;
-  background: #fff;
   box-shadow: 0 5px 90px 0 rgba(84, 95, 100, 0.05);
   cursor: pointer;
+  border-radius: 10px;
 
   .icon {
     margin: 0 auto;
@@ -69,7 +76,6 @@
 
       path {
         transition: 0.5s;
-        //fill: #f5f5f5;
       }
     }
   }
@@ -114,7 +120,7 @@
   }
 
   path {
-    fill: getColor("primary");
+    fill: lighten(getColor("primary"), 10%);
   }
 }
 
