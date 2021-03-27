@@ -1,5 +1,4 @@
 import {SettingsComponent} from './settings.component';
-import {SettingsService} from '../../services/settings/settings.service';
 
 describe('SettingsComponent', () => {
     let sut: SettingsComponent;

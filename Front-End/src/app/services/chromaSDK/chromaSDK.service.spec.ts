@@ -8,9 +8,7 @@ describe('ChromaSDKService', () => {
         sut = new ChromaSDKService(settingsServiceMock);
     });
 
-    /*
     it('should be created', () => {
         expect(sut).toBeTruthy();
     });
-    */
 });

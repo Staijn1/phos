@@ -1,13 +1,16 @@
 import {SerialConnectionService} from './serial-connection.service';
-import {TestBed} from '@angular/core/testing';
 
 describe('SerialConnectionService', () => {
+    let sut: SerialConnectionService;
     beforeEach(() => {
-        TestBed.configureTestingModule({});
+        const electronServiceMock = jasmine.createSpyObj('ElectronService', ['isElectron']);
+        const settingsServiceMock = jasmine.createSpyObj('SettingsService', ['readGeneralSettings', 'saveGeneralSettings']);
+        const chromaMock = jasmine.createSpyObj('ChromaEffectService', ['setColors']);
+
+        sut = new SerialConnectionService(electronServiceMock, settingsServiceMock, chromaMock);
     });
 
-    // it('should be created', () => {
-    //     const service: SerialConnectionService = TestBed.get(SerialConnectionService);
-    //     expect(service).toBeTruthy();
-    // });
+    it('should be created', () => {
+        expect(sut).toBeTruthy();
+    });
 });

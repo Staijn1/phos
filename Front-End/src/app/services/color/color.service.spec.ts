@@ -10,7 +10,9 @@ describe('ColorService', () => {
         sut = new ColorService(documentMock, connectionmock, colorServiceMock, chromaEffectMock);
     });
 
+    /*
     it('should create', () => {
         expect(sut).toBeTruthy();
     });
+    */
 });
