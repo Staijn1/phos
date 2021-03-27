@@ -87,7 +87,7 @@ export class ModeComponent implements OnInit {
 
     constructor(
         private readonly connection: ConnectionService,
-        private readonly chromaService: ChromaEffectService,) {
+        private readonly chromaService: ChromaEffectService) {
         gsap.registerPlugin(ScrollTrigger);
     }
 

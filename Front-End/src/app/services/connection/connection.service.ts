@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core';
 import {Connection} from '../../interfaces/Connection';
 import {iroColorObject} from '../../types/types';
-import {WebsocketService} from '../websocket/websocket.service';
-import {SerialConnectionService} from '../serial/serial-connection.service';
+import {WebsocketService} from '../websocketconnection/websocket.service';
+import {SerialConnectionService} from '../serialconnection/serial-connection.service';
 
 @Injectable({
     providedIn: 'root'
@@ -39,7 +39,7 @@ export class ConnectionService extends Connection {
 
     setColor(colors: iroColorObject[]): void {
         this.serialConnectionService.setColor(colors);
-        this.serialConnectionService.setColor(colors);
+        this.websocketService.setColor(colors);
     }
 
     setLeds(amount: number): void {

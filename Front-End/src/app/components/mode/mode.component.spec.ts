@@ -1,29 +1,15 @@
 import {ModeComponent} from './mode.component';
-import {ComponentFixture, ComponentFixtureAutoDetect, TestBed} from '@angular/core/testing';
-import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 
 describe('ModeComponent', () => {
-    let component: ModeComponent;
-    let fixture: ComponentFixture<ModeComponent>;
-    let serialConnectionServiceStub: Partial<SerialConnectionService>;
-    let h1: HTMLElement;
-
+    let sut: ModeComponent;
     beforeEach(() => {
-        serialConnectionServiceStub = {};
-        TestBed.configureTestingModule({
-            declarations: [ModeComponent],
-            providers: [{provide: ComponentFixtureAutoDetect, useValue: true},
-                {provide: SerialConnectionService, useValue: serialConnectionServiceStub}]
-        });
-        fixture = TestBed.createComponent(ModeComponent);
-        component = fixture.componentInstance;
+        const connectionMock = jasmine.createSpyObj('ConnectionService', ['setMode']);
+        const chromaMock = jasmine.createSpyObj('ChromaEffectService', ['setColors']);
 
-        const serialConnectionService = TestBed.inject(SerialConnectionService);
-
-        h1 = fixture.nativeElement.querySelector('#hero');
+        sut = new ModeComponent(connectionMock, chromaMock);
     });
 
-    it('should display original title', () => {
-        expect(h1).toBeTruthy();
+    it('should create the component', () => {
+        expect(sut).toBeTruthy();
     });
 });

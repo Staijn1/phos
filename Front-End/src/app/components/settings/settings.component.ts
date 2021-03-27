@@ -1,5 +1,5 @@
 import {Component, OnInit} from '@angular/core';
-import {SerialConnectionService} from '../../services/serial/serial-connection.service';
+import {SerialConnectionService} from '../../services/serialconnection/serial-connection.service';
 import {faSave} from '@fortawesome/free-solid-svg-icons';
 import {SettingsService} from '../../services/settings/settings.service';
 

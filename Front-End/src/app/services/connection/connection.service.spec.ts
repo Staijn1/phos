@@ -1,16 +1,18 @@
-import {TestBed} from '@angular/core/testing';
-
 import {ConnectionService} from './connection.service';
 
 describe('ConnectionService', () => {
-  let service: ConnectionService;
+    let sut;
+    let serialConnectionServiceMock;
+    let websocketServiceMock;
 
-  beforeEach(() => {
-    TestBed.configureTestingModule({});
-    service = TestBed.inject(ConnectionService);
-  });
 
-  it('should be created', () => {
-    expect(service).toBeTruthy();
-  });
+    beforeEach(() => {
+        serialConnectionServiceMock = jasmine.createSpyObj('SerialConnectionService', ['setMode']);
+        websocketServiceMock = jasmine.createSpyObj('WebsocketService', ['setMode']);
+        sut = new ConnectionService(serialConnectionServiceMock, websocketServiceMock);
+    });
+
+    it('should create', () => {
+        expect(sut).toBeTruthy();
+    });
 });

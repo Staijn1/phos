@@ -1,10 +1,16 @@
-import {TestBed} from '@angular/core/testing';
+import {ColorService} from './color.service';
 
-describe('ColorServiceService', () => {
-    beforeEach(() => TestBed.configureTestingModule({}));
+describe('ColorService', () => {
+    let sut: ColorService;
+    beforeEach(() => {
+        const documentMock = jasmine.createSpyObj('HTMLDocument', ['addEventListener']);
+        const connectionmock = jasmine.createSpyObj('ConnectionService', ['decreaseBrightness']);
+        const colorServiceMock = jasmine.createSpyObj('ColorService', ['readGeneralSettings']);
+        const chromaEffectMock = jasmine.createSpyObj('ChromaEffectService', ['setColors']);
+        sut = new ColorService(documentMock, connectionmock, colorServiceMock, chromaEffectMock);
+    });
 
-    // it('should be created', () => {
-    //     const service: ColorService = TestBed.get(ColorService);
-    //     expect(service).toBeTruthy();
-    // });
+    it('should create', () => {
+        expect(sut).toBeTruthy();
+    });
 });

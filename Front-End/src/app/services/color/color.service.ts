@@ -16,7 +16,7 @@ export class ColorService {
         @Inject(DOCUMENT) private document: HTMLDocument,
         private connection: ConnectionService,
         private settingsService: SettingsService,
-        private chromaEffect: ChromaEffectService,) {
+        private chromaEffect: ChromaEffectService) {
         // @ts-ignore
         const colorsSaved = this.settingsService.readGeneralSettings().colors;
         setTimeout(() => {

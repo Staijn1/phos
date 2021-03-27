@@ -1,25 +1,17 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
-
 import {SettingsComponent} from './settings.component';
+import {SettingsService} from '../../services/settings/settings.service';
 
 describe('SettingsComponent', () => {
-    let component: SettingsComponent;
-    let fixture: ComponentFixture<SettingsComponent>;
-
-    beforeEach(async () => {
-        await TestBed.configureTestingModule({
-            declarations: [SettingsComponent]
-        })
-            .compileComponents();
-    });
+    let sut: SettingsComponent;
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(SettingsComponent);
-        component = fixture.componentInstance;
-        fixture.detectChanges();
+        const settingsServiceMock = jasmine.createSpyObj('SettingsService', ['readGeneralSettings', 'saveGeneralSettings']);
+        const serialServiceMock = jasmine.createSpyObj('SerialConnectionService', ['scan']);
+
+        sut = new SettingsComponent(settingsServiceMock, serialServiceMock);
     });
 
-    // it('should create', () => {
-    //     expect(component).toBeTruthy();
-    // });
+    it('should create', () => {
+        expect(sut).toBeTruthy();
+    });
 });

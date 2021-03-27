@@ -1,16 +1,16 @@
-import {TestBed} from '@angular/core/testing';
-
 import {ChromaSDKService} from './chromaSDK.service';
 
 describe('ChromaSDKService', () => {
-    let service: ChromaSDKService;
+    let sut: ChromaSDKService;
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
-        service = TestBed.inject(ChromaSDKService);
+        const settingsServiceMock = jasmine.createSpyObj('SettingsService', ['readGeneralSettings', 'saveGeneralSettings']);
+        sut = new ChromaSDKService(settingsServiceMock);
     });
 
-    // it('should be created', () => {
-    //     expect(service).toBeTruthy();
-    // });
+    /*
+    it('should be created', () => {
+        expect(sut).toBeTruthy();
+    });
+    */
 });
