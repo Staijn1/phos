@@ -1,11 +1,10 @@
 import {Inject, Injectable} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import iro from '@jaames/iro';
-import {SerialConnectionService} from '../serial/serial-connection.service';
 import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
 import {iroColorObject} from '../../types/types';
 import {SettingsService} from '../settings/settings.service';
-import {WebsocketService} from '../websocket/websocket.service';
+import {ConnectionService} from '../connection/connection.service';
 
 @Injectable({
     providedIn: 'root'
@@ -15,10 +14,9 @@ export class ColorService {
 
     constructor(
         @Inject(DOCUMENT) private document: HTMLDocument,
-        private serialService: SerialConnectionService,
+        private connection: ConnectionService,
         private settingsService: SettingsService,
-        private chromaEffect: ChromaEffectService,
-        private websocketService: WebsocketService) {
+        private chromaEffect: ChromaEffectService,) {
         // @ts-ignore
         const colorsSaved = this.settingsService.readGeneralSettings().colors;
         setTimeout(() => {
@@ -33,12 +31,11 @@ export class ColorService {
             });
 
             this.picker.on('color:init', (iroColor: iroColorObject) => {
-                this.serialService.setColor(this.picker.colors);
+                this.connection.setColor(this.picker.colors);
                 this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('color:change', (iroColor: iroColorObject) => {
-                this.serialService.setColor(this.picker.colors);
-                this.websocketService.setColor(this.picker.colors);
+                this.connection.setColor(this.picker.colors);
                 this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('input:end', (iroColor) => {

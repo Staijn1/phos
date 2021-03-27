@@ -21,7 +21,6 @@ import {
     faWalking,
     faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons';
-import {WebsocketService} from '../../services/websocket/websocket.service';
 
 @Component({
     selector: 'app-navigationbar',
@@ -56,8 +55,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     constructor(
         private colorService: ColorService,
         private electronService: ElectronService,
-        private serialService: SerialConnectionService,
-        private websocketService: WebsocketService,
+        public connection: SerialConnectionService,
         private router: Router,
     ) {
     }
@@ -101,16 +99,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
             this.window.maximize();
             this.maximize = faClone;
         }
-    }
-
-    decreaseBrightness(): void {
-        this.websocketService.decreaseBrightness();
-        this.serialService.decreaseBrightness();
-    }
-
-    increaseBrightness(): void {
-        this.websocketService.increaseBrightness();
-        this.serialService.increaseBrightness();
     }
 
     private animationFromLeft(anime: TimelineMax): TimelineMax {
@@ -183,15 +171,5 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
             autoAlpha: 0
         });
         this.animationEnd.emit();
-    }
-
-    decreaseSpeed(): void {
-        this.websocketService.decreaseSpeed();
-        this.serialService.decreaseSpeed();
-    }
-
-    increaseSpeed(): void {
-        this.websocketService.increaseSpeed();
-        this.serialService.increaseSpeed();
     }
 }

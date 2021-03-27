@@ -1,16 +1,18 @@
 import {Injectable} from '@angular/core';
 import {iroColorObject} from '../../types/types';
 import {map} from '../../shared/functions';
+import {Connection} from '../../interfaces/Connection';
 
 @Injectable({
     providedIn: 'root'
 })
-export class WebsocketService {
+export class WebsocketService extends Connection {
     websocketUrls = ['ws://bed.local:81'];
     sockets: WebSocket[] = [];
     private retryTimeout: NodeJS.Timeout;
 
     constructor() {
+        super();
         this.websocketUrls.forEach((value, index) => {
             const socket = new WebSocket(value);
             socket.onopen = (event: any) => {
@@ -29,10 +31,10 @@ export class WebsocketService {
         for (const color of colors) {
             formattedColors.push(color.hexString.substring(1, color.hexString.length));
         }
-        this.sendAll(`c ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
+        this.send(`c ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
     }
 
-    private sendAll(payload: string): void {
+    protected send(payload: string): void {
         this.sockets.forEach((socket, index) => {
             if (this.isOpen(socket)) {
                 socket.send(payload);
@@ -53,7 +55,7 @@ export class WebsocketService {
     }
 
     setMode(modeNumber: number): void {
-        this.sendAll(`m ${modeNumber}`);
+        this.send(`m ${modeNumber}`);
     }
 
     isOpen(websocket: WebSocket): boolean {
@@ -61,23 +63,23 @@ export class WebsocketService {
     }
 
     decreaseBrightness(): void {
-        this.sendAll('b');
+        this.send('b');
     }
 
     increaseBrightness(): void {
-        this.sendAll('B');
+        this.send('B');
     }
 
     increaseSpeed(): void {
-        this.sendAll('S');
+        this.send('S');
     }
 
     decreaseSpeed(): void {
-        this.sendAll('s');
+        this.send('s');
     }
 
-    setFFTValue(value: number): void {
+    setLeds(value: number): void {
         const mappedValue = map(value, 0, 1, 0, 255);
-        this.sendAll(`v ${mappedValue}`);
+        this.send(`v ${mappedValue}`);
     }
 }

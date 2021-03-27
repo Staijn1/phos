@@ -1,7 +1,6 @@
 import {Component, OnInit} from '@angular/core';
 import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 import {faSave} from '@fortawesome/free-solid-svg-icons';
-import {ColorService} from '../../services/color/color.service';
 import {SettingsService} from '../../services/settings/settings.service';
 
 @Component({
@@ -16,7 +15,7 @@ export class SettingsComponent implements OnInit {
     numLeds: number;
     chroma: boolean;
 
-    constructor(private settingsService: SettingsService, private serialService: SerialConnectionService, private colorService: ColorService) {
+    constructor(private settingsService: SettingsService, private serialService: SerialConnectionService) {
     }
 
     ngOnInit(): void {

@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import AudioMotionAnalyzer, {GradientOptions} from 'audiomotion-analyzer';
-import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 import {ColorService} from '../../services/color/color.service';
 import {faWrench} from '@fortawesome/free-solid-svg-icons/faWrench';
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand';
@@ -10,7 +9,7 @@ import {faLightbulb} from '@fortawesome/free-solid-svg-icons';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state';
 import {SettingsService} from '../../services/settings/settings.service';
-import {WebsocketService} from '../../services/websocket/websocket.service';
+import {ConnectionService} from '../../services/connection/connection.service';
 
 interface Gradients extends GradientOptions {
     name: string;
@@ -324,8 +323,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     private audioMotion: AudioMotionAnalyzer;
 
     constructor(
-        private serialService: SerialConnectionService,
-        private websocketService: WebsocketService,
+        private connection: ConnectionService,
         private colorService: ColorService,
         private settingsService: SettingsService,
         private chromaEffect: ChromaEffectService) {
@@ -341,15 +339,13 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     }
 
     changeLedstripMode(): void {
-        this.serialService.setMode(55);
-        this.websocketService.setMode(55);
+        this.connection.setMode(55);
     }
 
     drawCallback(instance: AudioMotionAnalyzer): void {
         const value = instance.getEnergy('bass');
-        this.serialService.setLeds(value);
+        this.connection.setLeds(value);
         this.chromaEffect.intensity = value;
-        this.websocketService.setFFTValue(value);
     }
 
     updateOptions(): void {

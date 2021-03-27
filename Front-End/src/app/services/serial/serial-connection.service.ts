@@ -4,11 +4,12 @@ import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
 import {SettingsService} from '../settings/settings.service';
 import {iroColorObject} from '../../types/types';
 import {map} from '../../shared/functions';
+import {Connection} from '../../interfaces/Connection';
 
 @Injectable({
     providedIn: 'root'
 })
-export class SerialConnectionService {
+export class SerialConnectionService extends Connection {
     public port: any;
     public selectedPortId: string;
     public portOpts = {baudRate: 9600, autoOpen: true};
@@ -16,6 +17,7 @@ export class SerialConnectionService {
     serialConnectionError: string;
 
     constructor(public electronService: ElectronService, private settingsService: SettingsService, private chromaService: ChromaEffectService) {
+        super();
         this.readSettings();
         this.openPort();
     }

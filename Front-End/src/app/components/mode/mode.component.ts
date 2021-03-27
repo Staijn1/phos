@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core';
 import * as $ from 'jquery';
-import {SerialConnectionService} from '../../services/serial/serial-connection.service';
 import {StaticState} from '../../services/chromaEffect/state/static-state/static-state';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 import {BlinkState} from '../../services/chromaEffect/state/blink-state/blink-state';
@@ -14,7 +13,7 @@ import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state';
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state';
 import {RandomColorState} from '../../services/chromaEffect/state/random-color-state/random-color-state';
-import {WebsocketService} from '../../services/websocket/websocket.service';
+import {ConnectionService} from '../../services/connection/connection.service';
 
 @Component({
     selector: 'app-mode',
@@ -87,9 +86,8 @@ export class ModeComponent implements OnInit {
     private modeIndex: number;
 
     constructor(
-        private readonly serialService: SerialConnectionService,
-        private readonly chromaService: ChromaEffectService,
-        private readonly websocketService: WebsocketService) {
+        private readonly connection: ConnectionService,
+        private readonly chromaService: ChromaEffectService,) {
         gsap.registerPlugin(ScrollTrigger);
     }
 
@@ -121,8 +119,7 @@ export class ModeComponent implements OnInit {
         element.addClass('active').siblings().removeClass('active');
         this.modeIndex = element.index();
         const mode = element.attr('id');
-        this.serialService.setMode(+mode);
-        this.websocketService.setMode(+mode);
+        this.connection.setMode(+mode);
         this.chromaService.state = this.modes[this.modeIndex].state === undefined ? new StaticState() : this.modes[this.modeIndex].state;
     }
 }
