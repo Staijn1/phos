@@ -15,7 +15,7 @@ function createWindow() {
         x: 0,
         y: 0,
         width: 1100,
-        height: 600,
+        height: 700,
         webPreferences: {
             nodeIntegration: true,
             enableRemoteModule: true
@@ -23,7 +23,7 @@ function createWindow() {
         frame: false,
         show: false,
         minWidth: 200,
-        icon: path.join(__dirname, '/favicon.ico')
+        icon: path.join(__dirname, 'favicon.ico')
     });
     win.once('ready-to-show', function () {
         win.show();
