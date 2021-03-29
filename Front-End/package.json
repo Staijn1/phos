@@ -24,8 +24,9 @@
     "electron:windows": "npm run build:prod && electron-packager . angulon --overwrite  --platform=win32 --arch=all --prune=true --out=release-builds --icon=\"favicon.ico\"",
     "electron:linux": "electron-packager . angulon --overwrite --asar --platform=linux --arch=x64 --prune=true --out=release-builds --icon=\"favicon.ico\"",
     "compile-watch": "tsc -w",
-    "test": "npm run postinstall && npm run electron:tsc && mocha",
-    "test-karma": "ng test --code-coverage"
+    "e2e": "npm run postinstall && npm run electron:tsc && mocha",
+    "test": "ng test --code-coverage",
+    "test:watch": "ng test --code-coverage --watch"
   },
   "private": false,
   "dependencies": {
