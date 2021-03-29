@@ -68,7 +68,12 @@
                     <div class="ml-2 ml-lg-4" id="picker"></div>
                 </a>
             </li>
-
+            <li>
+                <a (click)="$event.preventDefault()" href="">
+                    <fa-icon (click)="this.connection.setColor(['#000000', '#000000', '#000000'])" [icon]="powerOff"></fa-icon>
+                    <span>Power Off</span>
+                </a>
+            </li>
         </ul>
     </nav><!-- .nav-menu -->
 

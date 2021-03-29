@@ -25,8 +25,8 @@
     "electron:linux": "electron-packager . angulon --overwrite --asar --platform=linux --arch=x64 --prune=true --out=release-builds --icon=\"favicon.ico\"",
     "compile-watch": "tsc -w",
     "e2e": "npm run postinstall && npm run electron:tsc && mocha",
-    "test": "ng test --code-coverage",
-    "test:watch": "ng test --code-coverage --watch"
+    "test": "ng test --code-coverage --watch false",
+    "test:watch": "ng test --code-coverage --watch true"
   },
   "private": false,
   "dependencies": {

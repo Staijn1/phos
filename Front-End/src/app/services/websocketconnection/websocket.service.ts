@@ -26,10 +26,11 @@ export class WebsocketService extends Connection {
         });
     }
 
-    setColor(colors: iroColorObject[]): void {
+    setColor(colors: iroColorObject[] | string[]): void {
         const formattedColors = [];
         for (const color of colors) {
-            formattedColors.push(color.hexString.substring(1, color.hexString.length));
+            const colorstring: string = ((color as iroColorObject).hexString ? (color as iroColorObject).hexString : color) as string;
+            formattedColors.push(colorstring.substring(1, colorstring.length));
         }
         this.send(`c ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
     }

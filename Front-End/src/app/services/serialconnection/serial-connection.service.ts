@@ -42,8 +42,7 @@ export class SerialConnectionService extends Connection {
             this.handleError(err);
 
             setTimeout(() => {
-                // @ts-ignore
-                this.setColor(this.settingsService.readGeneralSettings().colors[0]);
+                this.setColor(this.settingsService.readGeneralSettings().colors);
             }, 1000);
 
         });
@@ -97,10 +96,12 @@ export class SerialConnectionService extends Connection {
         this.send(`setMode ${mode}`);
     }
 
-    setColor(colors: iroColorObject[]): void {
+    setColor(colors: iroColorObject[] | string[]): void {
         const formattedColors = [];
         for (const color of colors) {
-            formattedColors.push(color.hexString.substring(1, color.hexString.length));
+            const colorstring: string = ((color as iroColorObject).hexString ? (color as iroColorObject).hexString : color) as string;
+            formattedColors.push(colorstring.substring(1, colorstring.length));
+
         }
         this.send(`setColor ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
     }

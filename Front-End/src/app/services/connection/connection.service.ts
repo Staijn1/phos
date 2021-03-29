@@ -37,7 +37,7 @@ export class ConnectionService extends Connection {
         throw Error('Not implemented');
     }
 
-    setColor(colors: iroColorObject[]): void {
+    setColor(colors: iroColorObject[] | string[]): void {
         this.serialConnectionService.setColor(colors);
         this.websocketService.setColor(colors);
     }

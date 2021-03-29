@@ -7,7 +7,7 @@ export abstract class Connection {
 
     abstract setLeds(amount: number): void;
 
-    abstract setColor(colors: iroColorObject[]): void;
+    abstract setColor(colors: iroColorObject[] | string[]): void;
 
     abstract decreaseBrightness(): void;
 

@@ -17,7 +17,8 @@ import {
     faSlidersH,
     faTimes,
     faWalking,
-    faWindowMinimize
+    faWindowMinimize,
+    faPowerOff
 } from '@fortawesome/free-solid-svg-icons';
 import {ConnectionService} from '../../services/connection/connection.service';
 import {ColorService} from '../../services/color/color.service';
@@ -38,7 +39,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     minimize = faWindowMinimize;
     maximize = faSquare;
     exit = faTimes;
-    toprightMenu = faBars;
+    powerOff = faPowerOff;
     controls = faSlidersH;
     settings = faCog;
     decreaseBrightnessIcon = faMinus;
