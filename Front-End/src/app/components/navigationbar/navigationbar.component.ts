@@ -173,4 +173,9 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
         });
         this.animationEnd.emit();
     }
+
+    turnOff(): void {
+        this.connection.setColor(['#000000', '#000000', '#000000']);
+        this.connection.setMode(0);
+    }
 }
