@@ -15,8 +15,5 @@
   ],
   "exclude": [
     "src/**/*.worker.ts"
-  ],
-  "angularCompilerOptions": {
-    "enableIvy": false
-  }
+  ]
 }
