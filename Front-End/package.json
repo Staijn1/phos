@@ -52,6 +52,7 @@
     "jquery": "3.5.1",
     "ng2-nouislider": "^1.8.2",
     "nouislider": "^14.6.3",
+    "reconnecting-websocket": "^4.4.0",
     "rxjs": "^6.5.2",
     "serialport": "^9.0.2",
     "zone.js": "0.11.3"

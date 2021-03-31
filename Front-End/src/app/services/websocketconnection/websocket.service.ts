@@ -2,28 +2,26 @@ import {Injectable} from '@angular/core';
 import {iroColorObject} from '../../types/types';
 import {map} from '../../shared/functions';
 import {Connection} from '../../interfaces/Connection';
+import ReconnectingWebSocket from 'reconnecting-websocket';
 
 @Injectable({
     providedIn: 'root'
 })
 export class WebsocketService extends Connection {
     websocketUrls = ['ws://bed.local:81'];
-    sockets: WebSocket[] = [];
-    private retryTimeout: NodeJS.Timeout;
+    sockets: ReconnectingWebSocket[] = [];
 
     constructor() {
         super();
-        this.websocketUrls.forEach((value, index) => {
-            const socket = new WebSocket(value);
-            socket.onopen = (event: any) => {
-                console.log(`Opened websocket at ${event.currentTarget.url}`);
-            };
-
-            socket.onerror = (event: any) => {
-                console.log('ws error', event);
-            };
-            this.sockets.push(socket);
-        });
+        setTimeout(() => {
+            this.websocketUrls.forEach((value, index) => {
+                const socket = new ReconnectingWebSocket(value);
+                socket.onopen = (ev: Event) => {
+                    console.log(`Opened websocket at`, (ev.currentTarget as WebSocket).url);
+                };
+                this.sockets.push(socket);
+            });
+        }, 1000);
     }
 
     setColor(colors: iroColorObject[] | string[]): void {
@@ -39,18 +37,6 @@ export class WebsocketService extends Connection {
         this.sockets.forEach((socket, index) => {
             if (this.isOpen(socket)) {
                 socket.send(payload);
-            } else {
-                clearTimeout(this.retryTimeout);
-                this.retryTimeout = setTimeout(() => {
-                    const newWebsocket = new WebSocket(this.websocketUrls[index]);
-                    newWebsocket.onerror = (event: any) => {
-                        console.log('ws error', event);
-                    };
-                    newWebsocket.onopen = (event: any) => {
-                        console.log(`Reopened websocket at ${event.currentTarget.url}`);
-                    };
-                    this.sockets[index] = newWebsocket;
-                }, 7500);
             }
         });
     }
@@ -59,7 +45,7 @@ export class WebsocketService extends Connection {
         this.send(`m ${modeNumber}`);
     }
 
-    isOpen(websocket: WebSocket): boolean {
+    isOpen(websocket: ReconnectingWebSocket): boolean {
         return websocket.readyState === websocket.OPEN;
     }
 
