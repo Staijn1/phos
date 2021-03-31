@@ -84,6 +84,9 @@ export class ColorService {
             };
 
         }
+    }
 
+    get getColors(): iroColorObject[] {
+        return this.picker.colors;
     }
 }

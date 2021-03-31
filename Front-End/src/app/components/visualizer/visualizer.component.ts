@@ -338,8 +338,9 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         this.chromaEffect.state = new VisualizerState();
     }
 
-    changeLedstripMode(): void {
+    updateLedstrip(): void {
         this.connection.setMode(55);
+        this.connection.setColor(this.colorService.getColors);
     }
 
     drawCallback(instance: AudioMotionAnalyzer): void {
@@ -488,7 +489,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         this.registerGradients();
         this.loadOptions();
         setTimeout(() => {
-            this.changeLedstripMode();
+            this.updateLedstrip();
         }, 2000);
     }
 }
