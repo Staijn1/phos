@@ -1,5 +1,5 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
-import AudioMotionAnalyzer, {GradientOptions} from 'audiomotion-analyzer';
+import AudioMotionAnalyzer, {GradientOptions, Options} from 'audiomotion-analyzer';
 import {ColorService} from '../../services/color/color.service';
 import {faWrench} from '@fortawesome/free-solid-svg-icons/faWrench';
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand';
@@ -10,6 +10,7 @@ import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.ser
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state';
 import {SettingsService} from '../../services/settings/settings.service';
 import {ConnectionService} from '../../services/connection/connection.service';
+import {TimelineMax} from 'gsap';
 
 interface Gradients extends GradientOptions {
     name: string;
@@ -22,7 +23,7 @@ interface Gradients extends GradientOptions {
     styleUrls: ['./visualizer.component.scss']
 })
 export class VisualizerComponent implements OnInit, OnDestroy {
-    options = {
+    options: Options = {
         barSpace: 0.1,
         bgAlpha: 0.7,
         fftSize: 8192,
@@ -31,7 +32,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         lineWidth: 0,
         loRes: false,
         lumiBars: false,
-        maxDecibels: -25,
+        maxDecibels: -20,
         maxFreq: 22000,
         minDecibels: -85,
         minFreq: 20,
@@ -297,7 +298,6 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             max: 50
         },
     };
-    settingIcon = faWrench;
     fullscreenIcon = faExpand;
     lineWidthConfig = {
         connect: 'lower',
@@ -321,6 +321,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     load = faFileDownload;
     modeIcon = faLightbulb;
     private audioMotion: AudioMotionAnalyzer;
+    private timeline: TimelineMax;
 
     constructor(
         private connection: ConnectionService,
@@ -336,6 +337,11 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     ngOnInit(): void {
         this.init();
         this.chromaEffect.state = new VisualizerState();
+
+        this.timeline = new TimelineMax();
+        if (localStorage.getItem('dismissedSettingsPopup') !== 'true') {
+            this.timeline.to('#overlay', {duration: 1, opacity: 1}, '+=1.8');
+        }
     }
 
     updateLedstrip(): void {
@@ -491,5 +497,15 @@ export class VisualizerComponent implements OnInit, OnDestroy {
         setTimeout(() => {
             this.updateLedstrip();
         }, 2000);
+    }
+
+    scroll(el: HTMLDivElement): void {
+        el.scrollIntoView({behavior: 'smooth'});
+    }
+
+    dismissOverlay(): void {
+        this.timeline.to('#overlay', {duration: 1, opacity: 0});
+        this.timeline.to('#overlay', {duration: 0.5, visibility: 'hidden'});
+        localStorage.setItem('dismissedSettingsPopup', 'true');
     }
 }
