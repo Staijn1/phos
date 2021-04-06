@@ -33,7 +33,7 @@ export class WebsocketService extends Connection {
         this.send(`c ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
     }
 
-    protected send(payload: string): void {
+    send(payload: string): void {
         this.sockets.forEach((socket, index) => {
             if (this.isOpen(socket)) {
                 socket.send(payload);

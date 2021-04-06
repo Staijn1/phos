@@ -2388,10 +2388,10 @@ atob@^2.1.2:
   resolved "https://registry.yarnpkg.com/atob/-/atob-2.1.2.tgz#6d9517eb9e030d2436666651e86bd9f6f13533c9"
   integrity sha512-Wm6ukoaOGJi/73p/cl2GvLjTI5JM1k/O14isD73YML8StrH/7/lRFgmg8nICZgD3bZZvjwCGxtMOD3wWNAu8cg==
 
-audiomotion-analyzer@^3.2.0-beta.1:
-  version "3.2.0-beta.1"
-  resolved "https://registry.yarnpkg.com/audiomotion-analyzer/-/audiomotion-analyzer-3.2.0-beta.1.tgz#32fa7e36f95d05fc0afc7f36740f75b8e77c23fc"
-  integrity sha512-6XrTLzVBtL5mejAC+5RDnf/AB05E1+dclegiHD10HLaGLra7FAtwAZdaITEAxeZy+klTkBtCmiKM4ndKHVrOqA==
+audiomotion-analyzer@^3.2.1:
+  version "3.2.1"
+  resolved "https://registry.yarnpkg.com/audiomotion-analyzer/-/audiomotion-analyzer-3.2.1.tgz#49993153278c0e0859a833fef58dbc6e41e3bf55"
+  integrity sha512-ZvNcrG/bIcybLoCMpyHsxGJ7jBKSMkUykiDZSEzuWiKfaMV7xm3bqfndorFqFkOmpUXhFOC2/gqZj3alV/xZYg==
 
 author-regex@^1.0.0:
   version "1.0.0"

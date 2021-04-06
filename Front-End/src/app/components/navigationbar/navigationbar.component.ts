@@ -13,12 +13,12 @@ import {
     faList,
     faMinus,
     faPlus,
+    faPowerOff,
     faRunning,
     faSlidersH,
     faTimes,
     faWalking,
-    faWindowMinimize,
-    faPowerOff
+    faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons';
 import {ConnectionService} from '../../services/connection/connection.service';
 import {ColorService} from '../../services/color/color.service';

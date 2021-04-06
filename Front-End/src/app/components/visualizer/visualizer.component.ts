@@ -1,7 +1,6 @@
 import {Component, OnDestroy, OnInit} from '@angular/core';
 import AudioMotionAnalyzer, {GradientOptions, Options} from 'audiomotion-analyzer';
 import {ColorService} from '../../services/color/color.service';
-import {faWrench} from '@fortawesome/free-solid-svg-icons/faWrench';
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand';
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload';
