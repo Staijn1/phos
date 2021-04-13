@@ -8,7 +8,7 @@ import ReconnectingWebSocket from 'reconnecting-websocket';
     providedIn: 'root'
 })
 export class WebsocketService extends Connection {
-    websocketUrls = ['ws://bed.local:81'];
+    websocketUrls = ['ws://bed.local:81', 'ws://bureau.local:81'];
     sockets: ReconnectingWebSocket[] = [];
 
     constructor() {
