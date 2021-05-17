@@ -5,9 +5,8 @@ describe('SettingsComponent', () => {
 
     beforeEach(() => {
         const settingsServiceMock = jasmine.createSpyObj('SettingsService', ['readGeneralSettings', 'saveGeneralSettings']);
-        const serialServiceMock = jasmine.createSpyObj('SerialConnectionService', ['scan']);
 
-        sut = new SettingsComponent(settingsServiceMock, serialServiceMock);
+        sut = new SettingsComponent(settingsServiceMock);
     });
 
     it('should create', () => {

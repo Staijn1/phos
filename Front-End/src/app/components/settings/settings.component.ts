@@ -1,5 +1,4 @@
 import {Component, OnInit} from '@angular/core';
-import {SerialConnectionService} from '../../services/serialconnection/serial-connection.service';
 import {faSave} from '@fortawesome/free-solid-svg-icons';
 import {SettingsService} from '../../services/settings/settings.service';
 
@@ -15,28 +14,14 @@ export class SettingsComponent implements OnInit {
     numLeds: number;
     chroma: boolean;
 
-    constructor(private settingsService: SettingsService, private serialService: SerialConnectionService) {
+    constructor(private settingsService: SettingsService) {
     }
 
     ngOnInit(): void {
-        let index = 0;
-        this.serialService.scan().then(ports => {
-            ports.forEach(port => {
-                const details = {
-                    id: index,
-                    path: port.path,
-                };
-                this.coms.push(details);
-                index++;
-            });
-        });
-
-        this.selectedCom = this.settingsService.readGeneralSettings().com;
         this.chroma = this.settingsService.readGeneralSettings().chroma;
     }
 
     saveSettings(): void {
         this.settingsService.saveGeneralSettings(undefined, this.selectedCom, this.numLeds, this.chroma);
-        this.serialService.update();
     }
 }

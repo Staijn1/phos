@@ -9,31 +9,31 @@ import * as fs from 'fs';
 
 @Injectable()
 export class ElectronService {
-    serialport: typeof SerialPort;
+  serialport: typeof SerialPort;
 
-    ipcRenderer: typeof ipcRenderer;
-    webFrame: typeof webFrame;
-    remote: typeof remote;
-    childProcess: typeof childProcess;
-    fs: typeof fs;
-    path: any;
+  ipcRenderer: typeof ipcRenderer;
+  webFrame: typeof webFrame;
+  remote: typeof remote;
+  childProcess: typeof childProcess;
+  fs: typeof fs;
+  path: any;
 
-    constructor() {
-        // Conditional imports
-        if (this.isElectron()) {
-            this.serialport = window.require('serialport');
+  constructor() {
+    // Conditional imports
+    if (this.isElectron()) {
+      this.serialport = window.require('serialport');
 
-            this.ipcRenderer = window.require('electron').ipcRenderer;
-            this.webFrame = window.require('electron').webFrame;
-            this.remote = window.require('electron').remote;
+      this.ipcRenderer = window.require('electron').ipcRenderer;
+      this.webFrame = window.require('electron').webFrame;
+      this.remote = window.require('electron').remote;
 
-            this.childProcess = window.require('child_process');
-            this.fs = window.require('fs');
-            this.path = window.require('path');
-        }
+      this.childProcess = window.require('child_process');
+      this.fs = window.require('fs');
+      this.path = window.require('path');
     }
+  }
 
-    isElectron = () => {
-        return window && window.process && window.process.type;
-    }
+  isElectron(): string {
+    return window && window.process && window.process.type;
+  }
 }

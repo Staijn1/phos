@@ -1,4 +1,4 @@
-<div id="menu-bar">
+<div id="menu-bar" *ngIf="this.electronService.isElectron()">
     <div class="left"></div>
     <div class="right">
         <button (click)="minimizeButtonAction()" class="menubar-btn" id="minimize-btn">

@@ -1,18 +1,16 @@
 import {ConnectionService} from './connection.service';
 
 describe('ConnectionService', () => {
-    let sut;
-    let serialConnectionServiceMock;
-    let websocketServiceMock;
+  let sut;
+  let websocketServiceMock;
 
 
-    beforeEach(() => {
-        serialConnectionServiceMock = jasmine.createSpyObj('SerialConnectionService', ['setMode']);
-        websocketServiceMock = jasmine.createSpyObj('WebsocketService', ['setMode']);
-        sut = new ConnectionService(serialConnectionServiceMock, websocketServiceMock);
-    });
+  beforeEach(() => {
+    websocketServiceMock = jasmine.createSpyObj('WebsocketService', ['setMode']);
+    sut = new ConnectionService(websocketServiceMock);
+  });
 
-    it('should create', () => {
-        expect(sut).toBeTruthy();
-    });
+  it('should create', () => {
+    expect(sut).toBeTruthy();
+  });
 });
