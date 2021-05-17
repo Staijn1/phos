@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "serialportron": {
+    "angulon": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -57,18 +57,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "serialportron:build"
+            "browserTarget": "angulon:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "serialportron:build:production"
+              "browserTarget": "angulon:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "serialportron:build"
+            "browserTarget": "angulon:build"
           }
         },
         "test": {
@@ -99,7 +99,7 @@
         }
       }
     },
-    "serialportron-e2e": {
+    "angulon-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -108,7 +108,7 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "serialportron:serve"
+            "devServerTarget": "angulon:serve"
           }
         },
         "lint": {
@@ -123,7 +123,7 @@
       }
     }
   },
-  "defaultProject": "serialportron",
+  "defaultProject": "angulon",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
