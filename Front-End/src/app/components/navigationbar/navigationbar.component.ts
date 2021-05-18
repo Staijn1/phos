@@ -54,7 +54,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     @Output() animationEnd = new EventEmitter<void>();
 
     constructor(
-        private electronService: ElectronService,
+        public electronService: ElectronService,
         private colorService: ColorService,
         public connection: ConnectionService,
         private router: Router,

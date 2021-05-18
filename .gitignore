@@ -116,6 +116,6 @@ dist
 
 # Visual Studio Code files
 .vscode
-/release-builds
+Front-End/release-builds
 Node-Backend/src/Certs/raspberry.crt
 Node-Backend/src/Certs/raspberry.key
