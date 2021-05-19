@@ -2,30 +2,31 @@ import {Injectable} from '@angular/core';
 import {Connection} from '../../interfaces/Connection';
 import {iroColorObject} from '../../types/types';
 import {WebsocketService} from '../websocketconnection/websocket.service';
+import {HTTPConnectionService} from '../httpconnection/httpconnection.service';
 
 @Injectable({
   providedIn: 'root'
 })
 export class ConnectionService extends Connection {
 
-  constructor(private websocketService: WebsocketService) {
+  constructor(private websocketService: WebsocketService, private apiService: HTTPConnectionService) {
     super();
   }
 
   decreaseBrightness(): void {
-    this.websocketService.decreaseBrightness();
+    this.apiService.decreaseBrightness();
   }
 
   decreaseSpeed(): void {
-    this.websocketService.decreaseSpeed();
+    this.apiService.decreaseSpeed();
   }
 
   increaseBrightness(): void {
-    this.websocketService.increaseBrightness();
+    this.apiService.increaseBrightness();
   }
 
   increaseSpeed(): void {
-    this.websocketService.increaseSpeed();
+    this.apiService.increaseSpeed();
   }
 
   protected send(command: string): void {
@@ -33,7 +34,7 @@ export class ConnectionService extends Connection {
   }
 
   setColor(colors: iroColorObject[] | string[]): void {
-    this.websocketService.setColor(colors);
+    this.apiService.setColor(colors);
   }
 
   setLeds(amount: number): void {

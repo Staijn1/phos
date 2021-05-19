@@ -1,0 +1,85 @@
+import {Injectable} from '@angular/core';
+import {Connection} from '../../interfaces/Connection';
+import {environment} from '../../../environments/environment';
+import {iroColorObject} from '../../types/types';
+
+@Injectable({
+  providedIn: 'root'
+})
+export class HTTPConnectionService extends Connection {
+  backendport = 5000;
+  readonly url = environment.production ? `${window.location.origin}:${this.backendport}` : `https://localhost:${this.backendport}`;
+
+  constructor() {
+    super();
+  }
+
+  decreaseBrightness(): void {
+    fetch(`${this.url}/brightness/decrease`, {
+      method: 'POST'
+    }).then(response => this.handleError(response));
+  }
+
+  decreaseSpeed(): void {
+    fetch(`${this.url}/speed/decrease`, {
+      method: 'POST'
+    }).then(response => this.handleError(response));
+  }
+
+  increaseBrightness(): void {
+    fetch(`${this.url}/brightness/increase`, {
+      method: 'POST'
+    }).then(response => this.handleError(response));
+  }
+
+  increaseSpeed(): void {
+    fetch(`${this.url}/speed/increase`, {
+      method: 'POST'
+    }).then(response => {
+      this.handleError(response);
+    });
+  }
+
+  protected send(command: string): void {
+    throw Error('Not implemented');
+  }
+
+  setColor(colors: iroColorObject[] | string[]): void {
+    const formattedColors = [];
+    for (const color of colors) {
+      let colorstring: string;
+      if (typeof color === 'object') {
+        colorstring = color.hexString;
+      } else {
+        colorstring = color;
+      }
+
+      formattedColors.push(colorstring.substring(1, colorstring.length));
+    }
+    fetch(`${this.url}/color`, {
+      method: 'POST',
+      body: JSON.stringify({color: formattedColors}),
+      headers: {'Content-Type': 'application/json'}
+    }).then(response => this.handleError(response));
+  }
+
+  setLeds(amount: number): void {
+    throw new Error('Not implemented');
+  }
+
+  setMode(mode: number): void {
+    fetch(`${this.url}/mode`, {
+      method: 'POST',
+      body: JSON.stringify(mode),
+      headers: {'Content-Type': 'application/json'}
+    }).then(response => {
+      this.handleError(response);
+    });
+  }
+
+  private handleError(response: Response): void {
+    if (!response.ok) {
+      throw new Error(response.statusText);
+    }
+  }
+}

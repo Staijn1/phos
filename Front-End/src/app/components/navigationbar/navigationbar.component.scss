@@ -91,3 +91,8 @@
   top: 0;
   z-index: 9;
 }
+
+.active {
+  background: getColor('primary');
+  color: white;
+}
