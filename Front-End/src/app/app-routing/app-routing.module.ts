@@ -7,18 +7,17 @@ import {HomeComponent} from '../components/home/home.component';
 
 
 const routes: Routes = [
-    {path: '', component: HomeComponent},
-    // {path: 'segments', component: SegmentsComponent},
-    // {path: 'visualizer', component: VisualizerComponent},
-    {path: 'visualizer', component: VisualizerComponent},
-    {path: 'mode', component: ModeComponent},
-    {path: 'settings', component: SettingsComponent}
+  {path: '', pathMatch: 'full', redirectTo: 'home'},
+  {path: 'home', component: HomeComponent},
+  {path: 'visualizer', component: VisualizerComponent},
+  {path: 'mode', component: ModeComponent},
+  {path: 'settings', component: SettingsComponent}
 ]; // sets up routes constant where you define your routes
 
 // configures NgModule imports and exports
 @NgModule({
-    imports: [RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'})],
-    exports: [RouterModule]
+  imports: [RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'})],
+  exports: [RouterModule]
 })
 export class AppRoutingModule {
 }
