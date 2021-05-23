@@ -2,13 +2,13 @@ import {Injectable} from '@angular/core';
 import {Connection} from '../../interfaces/Connection';
 import {environment} from '../../../environments/environment';
 import {iroColorObject} from '../../types/types';
+import {ModeInformation} from '../../types/ModeInformation';
 
 @Injectable({
   providedIn: 'root'
 })
 export class HTTPConnectionService extends Connection {
-  backendport = 5000;
-  readonly url = environment.production ? `${window.location.origin}:${this.backendport}` : `https://localhost:${this.backendport}`;
+  readonly url = environment.url;
 
   constructor() {
     super();
@@ -81,5 +81,16 @@ export class HTTPConnectionService extends Connection {
     if (!response.ok) {
       throw new Error(response.statusText);
     }
+  }
+
+  async getModes(): Promise<ModeInformation> {
+    const response = await fetch(`${this.url}/mode`, {
+      method: 'GET',
+      headers: {
+        'Content-Type': 'application/json'
+      }
+    });
+
+    return response.json()
   }
 }

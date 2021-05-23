@@ -78,7 +78,7 @@
                     *ngFor="let mode of modes; let indexOfelement=index"
                     [ngClass]="{'active': selectedMode === mode.mode}"
                     class="col-lg-3 col-md-4 d-flex align-items-stretch"
-                    [id]="mode.mode">
+                    [id]="indexOfelement">
                 <div [ngClass]="classes[indexOfelement % classes.length]"
                      class="icon-box w-100 section-title">
                     <div class="icon">

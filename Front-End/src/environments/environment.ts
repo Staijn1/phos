@@ -6,6 +6,7 @@
 export const environment = {
     production: false,
     saveSettings: false,
+    url: 'https://localhost:5000'
 };
 
 export const AppConfig = {

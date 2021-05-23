@@ -11,8 +11,8 @@ import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fi
 import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state';
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state';
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state';
-import {RandomColorState} from '../../services/chromaEffect/state/random-color-state/random-color-state';
 import {ConnectionService} from '../../services/connection/connection.service';
+import {ModeInformation} from '../../types/ModeInformation';
 
 @Component({
   selector: 'app-mode',
@@ -20,67 +20,17 @@ import {ConnectionService} from '../../services/connection/connection.service';
   styleUrls: ['./mode.component.scss'],
 })
 export class ModeComponent implements OnInit {
-  modes = [
-    {mode: 0, name: 'Static', state: new StaticState()},
-    {mode: 1, name: 'Blink', state: new BlinkState()},
-    {mode: 2, name: 'Breath'},
-    {mode: 3, name: 'Color Wipe'},
-    {mode: 4, name: 'Color Wipe Inverse'},
-    {mode: 5, name: 'Color Wipe Reverse'},
-    {mode: 6, name: 'Color Wipe Reverse Inverse'},
-    {mode: 7, name: 'Color Wipe Random'},
-    {mode: 8, name: 'Random Color', state: new RandomColorState()},
-    {mode: 9, name: 'Single Dynamic', state: new SingleDynamicState()},
-    {mode: 10, name: 'Multi Dynamic', state: new MultiDynamicState()},
-    {mode: 11, name: 'Rainbow', state: new RainbowState()},
-    {mode: 12, name: 'Rainbow Cycle', state: new RainbowCycleState()},
-    {mode: 13, name: 'Scan'},
-    {mode: 14, name: 'Dual scan'},
-    {mode: 15, name: 'Fade in/out'},
-    {mode: 16, name: 'Theater Chase', state: new TheaterChaseState()},
-    {mode: 17, name: 'Theater Chase Rainbow'},
-    {mode: 18, name: 'Running Lights'},
-    {mode: 19, name: 'Twinkle'},
-    {mode: 20, name: 'Twinkle Random'},
-    {mode: 21, name: 'Twinkle Fade'},
-    {mode: 22, name: 'Twinkle Fade Random'},
-    {mode: 23, name: 'Sparkle'},
-    {mode: 24, name: 'Flash Sparkle'},
-    {mode: 25, name: 'Hyper Sparkle'},
-    {mode: 26, name: 'Strobe'},
-    {mode: 27, name: 'Strobe Rainbow'},
-    {mode: 28, name: 'Multi Strobe'},
-    {mode: 29, name: 'Blink Rainbow'},
-    {mode: 30, name: 'Chase White'},
-    {mode: 31, name: 'Chase Color'},
-    {mode: 32, name: 'Chase Random'},
-    {mode: 33, name: 'Chase Rainbow'},
-    {mode: 34, name: 'Chase Flash'},
-    {mode: 35, name: 'Chase Flash Random'},
-    {mode: 36, name: 'Chase Rainbow White'},
-    {mode: 37, name: 'Chase Blackout'},
-    {mode: 38, name: 'Chase Blackout Rainbow'},
-    {mode: 39, name: 'Color Sweep Random'},
-    {mode: 40, name: 'Running Color'},
-    {mode: 41, name: 'Running Red Blue'},
-    {mode: 42, name: 'Running Random'},
-    {mode: 43, name: 'Larson Scanner'},
-    {mode: 44, name: 'Comet '},
-    {mode: 45, name: 'Fireworks'},
-    {mode: 46, name: 'Fireworks Random'},
-    {mode: 47, name: 'Merry Christmas'},
-    {mode: 48, name: 'Fire Flicker'},
-    {mode: 49, name: 'Fire Flicker (soft)'},
-    {mode: 50, name: 'Fire Flicker (intense)'},
-    {mode: 51, name: 'Circus Combustus'},
-    {mode: 52, name: 'Halloween'},
-    {mode: 54, name: 'Tricolor Chase'},
-    {mode: 55, name: 'VUMeter'},
-    {mode: 56, name: 'Twinkle Fox'},
-    {mode: 57, name: 'Fire2012', state: new Fire2012State()},
-    {mode: 58, name: 'Waterfall', state: new WaterfallState()},
+  modes: ModeInformation | undefined;
+  chromaEffects = [
+    {name: 'Rainbow', state: new RainbowState()},
+    {name: 'Rainbow Cycle', state: new RainbowCycleState()},
+    {name: 'Multi Dynamic', state: new MultiDynamicState()},
+    {name: 'Single Dynamic', state: new SingleDynamicState()},
+    {name: 'Blink', state: new BlinkState()},
+    {name: 'Theater chase', state: new TheaterChaseState()},
+    {name: 'Fire2012', state: new Fire2012State()},
+    {name: 'Waterfall', state: new WaterfallState()},
   ];
-
   classes = ['iconbox-primary', 'iconbox-orange', 'iconbox-pink', 'iconbox-yellow', 'iconbox-red', 'iconbox-teal'];
   selectedMode = 0;
 
@@ -110,14 +60,22 @@ export class ModeComponent implements OnInit {
       start: 'top bottom',
       onLeaveBack: () => anim.pause(0)
     });
+
+    this.connection.getModes().then(modes => {
+      this.modes = modes;
+    });
   }
 
 
   onChangeSegment($event: MouseEvent): void {
     const id = parseInt(($event.currentTarget as HTMLElement).id, 10);
-    this.selectedMode = id;
+    this.selectedMode = id + 1;
     this.connection.setMode(id);
-    this.chromaService.state =
-      this.modes[id].state === undefined ? new StaticState() : this.modes[id].state;
+
+    const state = this.chromaEffects.find(stateToCompare => {
+      return stateToCompare.name.toLowerCase() === this.modes[id].name.toLowerCase();
+    });
+
+    this.chromaService.state = state === undefined ? new StaticState() : state.state;
   }
 }
