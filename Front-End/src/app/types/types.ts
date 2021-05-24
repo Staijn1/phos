@@ -61,6 +61,6 @@ export type rgbaObject = {
 };
 
 export type GeneralSettings = {
-    colors: string[],
-    chroma: boolean
+    colors: string[];
+    chroma: boolean;
 };

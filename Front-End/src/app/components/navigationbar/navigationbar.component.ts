@@ -48,7 +48,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   speedDecreaseIcon = faWalking;
 
 
-  private window: Electron.BrowserWindow;
+  private window: Electron.BrowserWindow | undefined;
   @ViewChild('animationObject') animationObject: ElementRef;
   private animationMode = 0;
   @Output() animationEnd = new EventEmitter<void>();
@@ -63,7 +63,9 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    this.window = this.electronService.remote.getCurrentWindow();
+    if (this.electronService.isElectron()) {
+      this.window = this.electronService.remote.getCurrentWindow();
+    }
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.animate();
