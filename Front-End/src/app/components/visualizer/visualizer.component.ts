@@ -17,44 +17,12 @@ interface Gradients extends GradientOptions {
 }
 
 @Component({
-    selector: 'app-visualizer-test',
+    selector: 'app-visualizer',
     templateUrl: './visualizer.component.html',
     styleUrls: ['./visualizer.component.scss']
 })
 export class VisualizerComponent implements OnInit, OnDestroy {
-    options: Options = {
-        barSpace: 0.1,
-        bgAlpha: 0.7,
-        fftSize: 8192,
-        fillAlpha: 1,
-        gradient: 'classic',
-        lineWidth: 0,
-        loRes: false,
-        lumiBars: false,
-        maxDecibels: -20,
-        maxFreq: 22000,
-        minDecibels: -85,
-        minFreq: 20,
-        mode: 2,
-        // @ts-ignore
-        onCanvasDraw: this.drawCallback.bind(this),
-        overlay: false,
-        radial: false,
-        reflexAlpha: 0.15,
-        reflexBright: 1,
-        reflexFit: true,
-        reflexRatio: 0.5,
-        showBgColor: true,
-        showFPS: false,
-        showLeds: false,
-        showPeaks: true,
-        showScaleX: false,
-        showScaleY: false,
-        smoothing: 0.7,
-        spinSpeed: 0,
-        start: true,
-        volume: 0,
-    };
+    options: Options = {...this.settingsService.readVisualizerOptions(), ...{gradient: 'rainbow', volume: 0, onCanvasDraw: this.drawCallback.bind(this)}};
     presets = {
         default: {
             mode: 0,	// discrete frequencies
@@ -143,7 +111,6 @@ export class VisualizerComponent implements OnInit, OnDestroy {
                 {pos: .1, color: 'hsl( 120, 100%, 50% )'},
                 {pos: 1, color: 'hsl( 216, 100%, 50% )'}
             ], disabled: false
-
         },
         {
             name: 'Borealis', bgColor: '#0d1526', colorStops: [

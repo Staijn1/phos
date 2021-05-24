@@ -19,7 +19,6 @@
 
 $font-family-base: "Comfortaa";
 
-
 $theme-colors: (
         "primary": #3e92cc,
         "secondary": #3A4454,
@@ -28,3 +27,7 @@ $theme-colors: (
 );
 
 $menu-bar-height: 30px;
+
+.btn-primary{
+  color: white;
+}

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, OnDestroy, OnInit} from '@angular/core';
 import {StaticState} from '../../services/chromaEffect/state/static-state/static-state';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 import {BlinkState} from '../../services/chromaEffect/state/blink-state/blink-state';
@@ -19,7 +19,7 @@ import {ModeInformation} from '../../types/ModeInformation';
   templateUrl: './mode.component.html',
   styleUrls: ['./mode.component.scss'],
 })
-export class ModeComponent implements OnInit {
+export class ModeComponent implements OnInit, OnDestroy {
   modes: ModeInformation | undefined;
   chromaEffects = [
     {name: 'Rainbow', state: new RainbowState()},
@@ -38,6 +38,10 @@ export class ModeComponent implements OnInit {
     private readonly connection: ConnectionService,
     private readonly chromaService: ChromaEffectService) {
     gsap.registerPlugin(ScrollTrigger);
+  }
+
+  ngOnDestroy(): void {
+    this.modes = undefined;
   }
 
   ngOnInit(): void {
