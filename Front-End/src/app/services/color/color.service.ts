@@ -17,7 +17,6 @@ export class ColorService {
         private connection: ConnectionService,
         private settingsService: SettingsService,
         private chromaEffect: ChromaEffectService) {
-        // @ts-ignore
         const colorsSaved = this.settingsService.readGeneralSettings().colors;
         setTimeout(() => {
             this.picker = iro.ColorPicker('#picker', {
@@ -39,7 +38,7 @@ export class ColorService {
                 this.chromaEffect.setColors = this.picker.colors;
             });
             this.picker.on('input:end', (iroColor) => {
-                this.settingsService.saveGeneralSettings(this.picker.colors, undefined, undefined, undefined);
+                this.settingsService.saveGeneralSettings(this.picker.colors);
             });
         }, 1);
     }
@@ -54,36 +53,6 @@ export class ColorService {
 
     get getThirdColorString(): string {
         return this.picker.colors[2].hexString;
-    }
-
-    get getFirstColorObject(): iroColorObject {
-        try {
-            return this.picker.colors[0];
-        } catch (e) {
-            return {
-                red: 0,
-                green: 0,
-                blue: 0,
-                hexString: '#000000',
-                alpha: 0,
-                hex8String: '',
-                hsl: undefined,
-                hslString: '',
-                hsla: undefined,
-                hslaString: '',
-                hsv: undefined,
-                hsva: undefined,
-                hue: 0,
-                kelvin: 0,
-                rgb: undefined,
-                rgbString: '',
-                rgba: undefined,
-                rgbaString: '',
-                saturation: 0,
-                value: 0
-            };
-
-        }
     }
 
     get getColors(): iroColorObject[] {

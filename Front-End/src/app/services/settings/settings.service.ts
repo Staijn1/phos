@@ -14,7 +14,7 @@ export class SettingsService {
     fillAlpha: 1,
     gradient: 'classic',
     lineWidth: 0,
-    loRes: true,
+    loRes: false,
     lumiBars: false,
     maxDecibels: -25,
     maxFreq: 22000,
@@ -48,7 +48,7 @@ export class SettingsService {
     return this.readSettings('visualizerSettings');
   }
 
-  saveGeneralSettings(colors: iroColorObject[] | undefined, selectedCom: string | undefined, numLeds: number | undefined, chroma: boolean | undefined): void {
+  saveGeneralSettings(colors: iroColorObject[] | undefined,  chroma?: boolean): void {
     const currentSettings = this.readGeneralSettings();
     if (colors) {
       for (let i = 0; i < colors.length; i++) {
