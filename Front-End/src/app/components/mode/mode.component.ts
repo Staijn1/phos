@@ -72,8 +72,10 @@ export class ModeComponent implements OnInit, OnDestroy {
 
 
   onChangeSegment($event: MouseEvent): void {
+    console.log($event.currentTarget)
     const id = parseInt(($event.currentTarget as HTMLElement).id, 10);
-    this.selectedMode = id + 1;
+    this.selectedMode = id;
+    console.log(this.selectedMode, id)
     this.connection.setMode(id);
 
     const state = this.chromaEffects.find(stateToCompare => {

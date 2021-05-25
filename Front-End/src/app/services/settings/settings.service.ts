@@ -7,7 +7,7 @@ import {Options} from 'audiomotion-analyzer';
   providedIn: 'root'
 })
 export class SettingsService {
-  private readonly defaultVisualizerOptions: Options = {
+  readonly defaultVisualizerOptions: Options = {
     barSpace: 0.1,
     bgAlpha: 0.7,
     fftSize: 8192,
