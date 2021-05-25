@@ -1,5 +1,10 @@
-import { GradientOptions } from 'audiomotion-analyzer'
+import {GradientOptions} from 'audiomotion-analyzer'
 
 export interface GradientInformation extends GradientOptions {
-  name: string
+    name: string;
+}
+
+
+export interface GradientInformationExtended extends GradientInformation {
+    collapsed: boolean;
 }

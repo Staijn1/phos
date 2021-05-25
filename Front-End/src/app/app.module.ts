@@ -14,7 +14,6 @@ import {ElectronService} from './services/electron/electron.service';
 import {HomeComponent} from './components/home/home.component';
 import {NouisliderModule} from 'ng2-nouislider';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
-
 @NgModule({
     imports: [CommonModule, BrowserModule, FormsModule, AppRoutingModule, NouisliderModule, FontAwesomeModule, NgbModule],
     declarations: [

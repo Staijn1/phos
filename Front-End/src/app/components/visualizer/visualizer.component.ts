@@ -4,17 +4,14 @@ import {ColorService} from '../../services/color/color.service';
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand';
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload';
-import {faLightbulb} from '@fortawesome/free-solid-svg-icons';
+import {faEdit, faLightbulb, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state';
 import {SettingsService} from '../../services/settings/settings.service';
 import {ConnectionService} from '../../services/connection/connection.service';
 import {TimelineMax} from 'gsap';
+import {GradientInformation, GradientInformationExtended} from '../../types/GradientInformation';
 
-interface Gradients extends GradientOptions {
-    name: string;
-    disabled: boolean;
-}
 
 @Component({
     selector: 'app-visualizer',
@@ -22,191 +19,15 @@ interface Gradients extends GradientOptions {
     styleUrls: ['./visualizer.component.scss']
 })
 export class VisualizerComponent implements OnInit, OnDestroy {
-    options: Options = {...this.settingsService.readVisualizerOptions(), ...{gradient: 'rainbow', volume: 0, onCanvasDraw: this.drawCallback.bind(this)}};
-    presets = {
-        default: {
-            mode: 0,	// discrete frequencies
-            fftSize: 8192,
-            freqMin: 20,
-            freqMax: 22000,
-            smoothing: 0.5,
-            gradient: 'prism',
-            background: 0,	// gradient default
-            cycleGrad: 1,
-            randomMode: 0,
-            ledDisplay: 0,
-            lumiBars: 0,
-            sensitivity: 1,
-            showScale: 1,
-            showPeaks: 1,
-            showSong: 1,
-            repeat: 0,
-            noShadow: 1,
-            loRes: 0,
-            showFPS: 0,
-            lineWidth: 2,
-            fillAlpha: 0.1,
-            barSpace: 0.1,
-            reflex: 0,
-            bgImageDim: 0.3,
-            bgImageFit: 1, 	// center
-            radial: 0,
-            spin: 2
-        },
-
-        fullres: {
-            fftSize: 8192,
-            freqMin: 20,
-            freqMax: 22000,
-            mode: 0,
-            radial: 0,
-            randomMode: 0,
-            reflex: 0,
-            smoothing: 0.5
-        },
-
-        octave: {
-            barSpace: 0.1,
-            ledDisplay: 0,
-            lumiBars: 0,
-            mode: 3,	// 1/8th octave bands mode
-            radial: 0,
-            randomMode: 0,
-            reflex: 0
-        },
-
-        ledbars: {
-            background: 0,
-            barSpace: 0.5,
-            ledDisplay: 1,
-            lumiBars: 0,
-            mode: 3,
-            radial: 0,
-            randomMode: 0,
-            reflex: 0
-        },
-
-        demo: {
-            cycleGrad: 1,
-            randomMode: 6    // 15 seconds
+    options: Options = {
+        ...this.settingsService.readVisualizerOptions(), ...{
+            gradient: 'rainbow',
+            volume: 0,
+            onCanvasDraw: this.drawCallback.bind(this)
         }
     };
     // Gradient definitions
-    gradients: Gradients[] = [
-        {
-            name: 'Apple',
-            bgColor: '#111',
-            colorStops: [
-                {pos: .1667, color: '#61bb46'},
-                {pos: .3333, color: '#fdb827'},
-                {pos: .5, color: '#f5821f'},
-                {pos: .6667, color: '#e03a3e'},
-                {pos: .8333, color: '#963d97'},
-                {pos: 1, color: '#009ddc'}
-            ],
-            disabled: false
-        },
-        {
-            name: 'Aurora', bgColor: '#0e172a', colorStops: [
-                {pos: .1, color: 'hsl( 120, 100%, 50% )'},
-                {pos: 1, color: 'hsl( 216, 100%, 50% )'}
-            ], disabled: false
-        },
-        {
-            name: 'Borealis', bgColor: '#0d1526', colorStops: [
-                {pos: .1, color: 'hsl( 120, 100%, 50% )'},
-                {pos: .5, color: 'hsl( 189, 100%, 40% )'},
-                {pos: 1, color: 'hsl( 290, 60%, 40% )'}
-            ], disabled: false
-
-        },
-        {
-            name: 'Candy', bgColor: '#0d0619', colorStops: [
-                {pos: .1, color: '#ffaf7b'},
-                {pos: .5, color: '#d76d77'},
-                {pos: 1, color: '#3a1c71'}
-            ], disabled: false
-        },
-        {
-            name: 'Cool', bgColor: '#0b202b', colorStops: [
-                'hsl( 208, 0%, 100% )',
-                'hsl( 208, 100%, 35% )'
-            ], disabled: false
-        },
-        {
-            name: 'Dusk', bgColor: '#0e172a', colorStops: [
-                {pos: .2, color: 'hsl( 55, 100%, 50% )'},
-                {pos: 1, color: 'hsl( 16, 100%, 50% )'}
-            ], disabled: false
-
-        },
-        {
-            name: 'Miami', bgColor: '#110a11', colorStops: [
-                {pos: .024, color: 'rgb( 251, 198, 6 )'},
-                {pos: .283, color: 'rgb( 224, 82, 95 )'},
-                {pos: .462, color: 'rgb( 194, 78, 154 )'},
-                {pos: .794, color: 'rgb( 32, 173, 190 )'},
-                {pos: 1, color: 'rgb( 22, 158, 95 )'}
-            ], disabled: false
-
-        },
-        {
-            name: 'Orient', bgColor: '#100', colorStops: [
-                {pos: .1, color: '#f00'},
-                {pos: 1, color: '#600'}
-            ], disabled: false
-        },
-        {
-            name: 'Outrun', bgColor: '#101', colorStops: [
-                {pos: 0, color: 'rgb( 255, 223, 67 )'},
-                {pos: .182, color: 'rgb( 250, 84, 118 )'},
-                {pos: .364, color: 'rgb( 198, 59, 243 )'},
-                {pos: .525, color: 'rgb( 133, 80, 255 )'},
-                {pos: .688, color: 'rgb( 74, 104, 247 )'},
-                {pos: 1, color: 'rgb( 35, 210, 255 )'}
-            ], disabled: false
-        },
-        {
-            name: 'Pacific Dream', bgColor: '#051319', colorStops: [
-                {pos: .1, color: '#34e89e'},
-                {pos: 1, color: '#0f3443'}
-            ], disabled: false
-        },
-        {
-            name: 'Shahabi', bgColor: '#060613', colorStops: [
-                {pos: .1, color: '#66ff00'},
-                {pos: 1, color: '#a80077'}
-            ], disabled: false
-        },
-        {
-            name: 'Summer', bgColor: '#041919', colorStops: [
-                {pos: .1, color: '#fdbb2d'},
-                {pos: 1, color: '#22c1c3'}
-            ], disabled: false
-        },
-        {
-            name: 'Sunset', bgColor: '#021119', colorStops: [
-                {pos: .1, color: '#f56217'},
-                {pos: 1, color: '#0b486b'}
-            ], disabled: false
-        },
-        {
-            name: 'Tie Dye', bgColor: '#111', colorStops: [
-                {pos: .038, color: 'rgb( 15, 209, 165 )'},
-                {pos: .208, color: 'rgb( 15, 157, 209 )'},
-                {pos: .519, color: 'rgb( 133, 13, 230 )'},
-                {pos: .731, color: 'rgb( 230, 13, 202 )'},
-                {pos: .941, color: 'rgb( 242, 180, 107 )'}
-            ], disabled: false
-        },
-        {
-            name: 'Clouds', bgColor: '#212224', colorStops: [
-                {pos: 0.731, color: '#2b4051'},
-                {pos: 0.519, color: '#3F5567'},
-                {pos: 0.208, color: '#A7B8BE'}
-            ], disabled: false
-        }
-    ];
+    gradients: GradientInformationExtended[] = [];
     // Visualization modes
     modes = [
         {value: 0, text: 'Discrete frequencies', disabled: false},
@@ -283,9 +104,11 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             max: 1
         },
     };
-    save = faSave;
+    saveIcon = faSave;
     load = faFileDownload;
     modeIcon = faLightbulb;
+    deleteIcon = faTrash;
+    editIcon = faEdit;
     private audioMotion: AudioMotionAnalyzer;
     private timeline: TimelineMax;
 
@@ -441,7 +264,18 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             });
     }
 
-    private registerGradients(): void {
+    private async getGradients(): Promise<GradientInformationExtended[]> {
+        const gradients = await this.connection.getGradients() as GradientInformationExtended[];
+        for (const gradient of gradients) {
+            gradient.collapsed = true;
+        }
+
+        return gradients;
+    }
+
+    private async registerGradients(): Promise<void> {
+        this.gradients = await this.getGradients();
+        console.log(this.gradients);
         this.gradients.forEach((gradient, index: number) => {
             this.audioMotion.registerGradient(gradient.name, {
                 bgColor: gradient.bgColor,
@@ -458,7 +292,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
             this.options
         );
         this.setSource();
-        this.registerGradients();
+        this.registerGradients().then();
         this.loadOptions();
         setTimeout(() => {
             this.updateLedstrip();
