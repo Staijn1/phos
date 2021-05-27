@@ -14,6 +14,6 @@ EXPOSE 5001
 CMD ["npm", "start"]
 
 
-# Build image with:         docker build angulon-backend:<version_number>
+# Build image with:         docker build . --tag angulon-backend:latest
 # Tag image as latest       docker tag angulon-backend staijn/angulon:latest
 # push to repository        docker push staijn/angulon:latest
