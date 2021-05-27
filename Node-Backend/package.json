@@ -1,7 +1,7 @@
 {
-  "name": "strype_backend",
+  "name": "angulon_backend",
   "version": "1.0.0",
-  "description": "Node backend for Strype",
+  "description": "Node backend for Angulon",
   "main": "dist/src/Main/Main.js",
   "scripts": {
     "build": "tsoa spec-and-routes && tsc && copyfiles src/Certs/**/* dist",
