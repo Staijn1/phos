@@ -22,7 +22,6 @@ void handleEvent(uint8_t *payload, size_t length) {
       }
     case 'c':
       {
-        webSocket.broadcastTXT(arguments, length - 1);
         char * strtokIndx; // this is used by strtok() as an index
 
         strtokIndx = strtok(arguments, ",");     // get the first color
@@ -100,6 +99,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       //webSocket.broadcastTXT(payload, length);
       break;
     case WStype_ERROR:
+        Serial.println("Error");
+        webSocket.broadcastTXT(payload, length);
       break;
     case WStype_FRAGMENT_TEXT_START:
       break;
@@ -157,5 +158,5 @@ void MDNSSetup() {
   //set hostname
   mdns_hostname_set(DNS);
   //set default instance
-  mdns_instance_name_set("Bed van Stein");
+  mdns_instance_name_set("MDNS van Stein op een ESP32");
 }

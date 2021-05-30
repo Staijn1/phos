@@ -5,13 +5,16 @@ WORKDIR /app
 COPY package.json .
 
 RUN npm install
+RUN npm i typescript -g
 
 COPY . .
 
 EXPOSE 5000
 EXPOSE 5001
 
-CMD ["npm", "start"]
+RUN npm run build
+
+CMD ["npm","run", "start:prod"]
 
 
 # Build image with:         docker build . --tag angulon-backend:latest
