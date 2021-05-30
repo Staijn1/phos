@@ -47,7 +47,7 @@ export class ConnectionService extends Connection {
         this.websocketService.setMode(mode);
     }
 
-    async getModes(): Promise<ModeInformation> {
+    async getModes(): Promise<ModeInformation[]> {
         return this.apiService.getModes();
     }
 

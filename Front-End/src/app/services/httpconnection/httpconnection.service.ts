@@ -84,7 +84,7 @@ export class HTTPConnectionService extends Connection {
         }
     }
 
-    async getModes(): Promise<ModeInformation> {
+    async getModes(): Promise<ModeInformation[]> {
         const response = await fetch(`${this.url}/mode`, {
             method: 'GET',
             headers: {

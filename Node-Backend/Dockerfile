@@ -15,5 +15,5 @@ CMD ["npm", "start"]
 
 
 # Build image with:         docker build . --tag angulon-backend:latest
-# Tag image as latest       docker tag angulon-backend staijn/angulon:latest
-# push to repository        docker push staijn/angulon:latest
+# Tag image as latest       docker tag angulon-backend staijn/angulon-backend:latest
+# push to repository        docker push staijn/angulon-backend:latest
