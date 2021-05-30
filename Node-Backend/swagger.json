@@ -117,9 +117,9 @@
 		"securitySchemes": {}
 	},
 	"info": {
-		"title": "strype_backend",
+		"title": "angulon_backend",
 		"version": "1.0.0",
-		"description": "Node backend for Strype",
+		"description": "Node backend for Angulon",
 		"license": {
 			"name": "ISC"
 		},

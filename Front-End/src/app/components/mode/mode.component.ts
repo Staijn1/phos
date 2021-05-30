@@ -20,7 +20,7 @@ import {ModeInformation} from '../../types/ModeInformation';
   styleUrls: ['./mode.component.scss'],
 })
 export class ModeComponent implements OnInit, OnDestroy {
-  modes: ModeInformation | undefined;
+  modes: ModeInformation[] | undefined;
   chromaEffects = [
     {name: 'Rainbow', state: new RainbowState()},
     {name: 'Rainbow Cycle', state: new RainbowCycleState()},
@@ -72,14 +72,13 @@ export class ModeComponent implements OnInit, OnDestroy {
 
 
   onChangeSegment($event: MouseEvent): void {
-    console.log($event.currentTarget)
     const id = parseInt(($event.currentTarget as HTMLElement).id, 10);
     this.selectedMode = id;
-    console.log(this.selectedMode, id)
+
     this.connection.setMode(id);
 
     const state = this.chromaEffects.find(stateToCompare => {
-      return stateToCompare.name.toLowerCase() === this.modes[id].name.toLowerCase();
+      return stateToCompare.name.toLowerCase() === this.modes[id - 1].name.toLowerCase();
     });
 
     this.chromaService.state = state === undefined ? new StaticState() : state.state;
