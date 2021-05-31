@@ -1,0 +1,18 @@
+version: '3.9'
+services:
+  apache2:
+    build: Front-End/Dockerfile
+    hostname: local.steinjonker.nl
+    restart: always
+    volumes:
+      - etcletsencrypt:/etc/letsencrypt
+      - varletsencrypt:/var/lib/letsencrypt
+    ports:
+      - "80:80"
+      - "443:443"
+    environment:
+      LETS_ENCRYPT_EMAIL: "stein@jnkr.eu"
+      LETS_ENCRYPT_DOMAINS: "steinjonker.nl,www.steinjonker.nl,local.steinjonker.nl"
+  volumes:
+    varletsencrypt:
+    etcletsencrypt:

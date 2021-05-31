@@ -1,7 +1,9 @@
-FROM httpd:2.4
+FROM enoniccloud/apache2-letsencrypt
 
+COPY myvhost.conf /etc/apache2/sites-enabled/myvhost.conf
+COPY ./dist/ /var/www/html/
 
-COPY ./dist/ /usr/local/apache2/htdocs/
+RUN a2enmod headers
 
 # Build image with:         docker build . --tag angulon-frontend:latest
 # Tag image as latest       docker tag angulon-frontend staijn/angulon-frontend:latest
