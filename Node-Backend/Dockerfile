@@ -13,6 +13,7 @@ EXPOSE 5000
 EXPOSE 5001
 
 RUN npm run build
+RUN rm -r src
 
 CMD ["npm","run", "start:prod"]
 
