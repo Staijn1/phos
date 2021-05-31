@@ -117,3 +117,6 @@ dist
 # Visual Studio Code files
 .vscode
 Front-End/release-builds
+/Node-Backend/src/Certs/*.pem
+/Node-Backend/src/Certs/*.crt
+/Node-Backend/src/Certs/*.key
