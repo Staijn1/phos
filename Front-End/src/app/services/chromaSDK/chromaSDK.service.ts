@@ -220,6 +220,6 @@ export class ChromaSDKService {
   }
 
   private isChromaSupport(): boolean {
-    return this.settingsService.readGeneralSettings().chroma;
+    return this.settingsService.readGeneralSettings().chroma || false;
   }
 }
