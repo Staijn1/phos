@@ -20,5 +20,6 @@ export class SettingsComponent implements OnInit {
 
   saveSettings(): void {
     this.settingsService.saveGeneralSettings(undefined, this.chroma);
+    location.reload();
   }
 }

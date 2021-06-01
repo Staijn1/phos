@@ -13,8 +13,8 @@ export class WebsocketClient {
   client: W3CWebSocket
   url: string
   retryattempt = 0
-  private readonly SHORT_TIMEOUT = 15000
-  private readonly LONG_TIMEOUT = 60000
+  private readonly SHORT_TIMEOUT = 25000
+  private readonly LONG_TIMEOUT = 75000
 
   /**
    * Construct the websocket

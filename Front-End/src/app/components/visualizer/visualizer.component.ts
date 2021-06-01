@@ -302,8 +302,10 @@ export class VisualizerComponent implements OnInit, OnDestroy {
       this.options
     );
     this.setSource();
-    this.registerGradients(this.gradients).then();
-    this.loadOptions();
+    this.registerGradients(this.gradients).then(() => {
+      this.loadOptions();
+    });
+
     setTimeout(() => {
       this.updateLedstrip();
     }, 2000);

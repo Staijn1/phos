@@ -20,7 +20,6 @@ void setup()
   setupLed();
   initLeds();
   websocketSetup();
-  MDNSSetup();
   
   for (int i = 0; i < 15; i++) {
     blinkLed(250);
