@@ -16,7 +16,7 @@ describe('WebsocketService', () => {
     });
 
     it('should have a filled array of URLs', () => {
-        expect(service.websocketUrls).toBeTruthy();
+        expect(service.websocketUrl).toBeTruthy();
     });
 
     it('should call send', () => {

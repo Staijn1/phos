@@ -25,7 +25,7 @@ export class CommandHandler {
       S: this.increaseSpeed.bind(this),
       B: this.increaseBrightness.bind(this),
       b: this.decreaseBrightness.bind(this),
-      f: this.setFFTValue.bind(this),
+      v: this.setFFTValue.bind(this),
       c: this.setColor.bind(this),
     }
 
@@ -38,7 +38,7 @@ export class CommandHandler {
    */
   handleMessage(payload: IMessage): void {
     const received = payload.utf8Data.split(' ')
-    if (received[0] !== 'f') {
+    if (received[0] !== 'v') {
       logger.info(`Received command: ${received[0]} payload: ${received[1]}`)
     }
     this.commands[received[0]](received[1])
