@@ -1,8 +1,9 @@
-import { WebsocketClient } from '../Client/WebsocketClient'
-import { KeyFunction } from '../Types/KeyFunction'
-import { IMessage } from 'websocket'
-import { ledstripAdresses } from '../Config/Config'
-import { logger } from '../Config/Logger'
+import {WebsocketClient} from '../Client/WebsocketClient'
+import {KeyFunction} from '../Types/KeyFunction'
+import {IMessage} from 'websocket'
+import {ledstripAdresses} from '../Config/Config'
+import {logger} from '../Config/Logger'
+import {prettyPrint} from '../Utils/functions';
 
 /**
  * Handle incoming messages
@@ -41,7 +42,11 @@ export class CommandHandler {
     if (received[0] !== 'v') {
       logger.info(`Received command: ${received[0]} payload: ${received[1]}`)
     }
-    this.commands[received[0]](received[1])
+    try {
+      this.commands[received[0]](received[1])
+    } catch (e) {
+      logger.error(`Caught error: ${prettyPrint(e)}`)
+    }
   }
 
   /**
