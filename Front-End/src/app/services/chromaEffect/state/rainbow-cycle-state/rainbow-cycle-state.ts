@@ -27,7 +27,7 @@ export class RainbowCycleState extends State {
     }
 
     private setColor(colors: number[][]): void {
-        // tslint:disable-next-line:prefer-for-of
+        // eslint-disable-next-line @typescript-eslint/prefer-for-of
         for (let row = 0; row < colors.length; row++) {
             for (let column = 0; column < colors[0].length; column++) {
                 colors[row][column] = color_wheel(((column * 256 / this._context.keyboard.columns) + this.counter) & 0xFF);
