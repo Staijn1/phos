@@ -108,6 +108,8 @@
                                             <option value="0">Off</option>
                                             <option value="1">On</option>
                                             <option value="2">Mirrored</option>
+                                            <option value="3">Mirrored Horizontally Left</option>
+                                            <option value="4">Mirrored Horizontally Right</option>
                                         </select>
                                     </div>
                                 </div>
@@ -196,23 +198,11 @@
                                 </div>
                                 <div class="col"></div>
                                 <!-- General settingsPage (fps, lo res) -->
-                                <div class="col d-flex justify-content-center py-2">
-                                    <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
-                                        <input type="checkbox" class="btn-check" name="options" id="peaks"
-                                               (change)="changeGeneralSettings($event)" autocomplete="off"
-                                        >
-                                        <label class="btn btn-outline-primary" for="peaks">Peaks</label>
-
-                                        <input type="checkbox" class="btn-check" name="options" id="lo-res"
-                                               (change)="changeGeneralSettings($event)" autocomplete="off"
-                                        >
-                                        <label class="btn btn-outline-primary" for="lo-res">Lo-res</label>
-
-                                        <input type="checkbox" class="btn-check" name="options" id="FPS"
-                                               (change)="changeGeneralSettings($event)" autocomplete="off"
-                                        >
-                                        <label class="btn btn-outline-primary" for="FPS">FPS</label>
-                                    </div>
+                                <div class="col d-flex  py-2">
+                                    <input type="checkbox" class="form-check" name="options" id="peaks"
+                                           (change)="changeGeneralSettings($event)" autocomplete="off"
+                                    >
+                                    <label class="form-check-label ms-2" for="peaks">Peaks</label>
                                 </div>
                             </div>
                         </ng-template>

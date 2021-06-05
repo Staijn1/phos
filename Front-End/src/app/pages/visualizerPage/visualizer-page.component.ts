@@ -138,6 +138,8 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
 
   changeReflex(event: Event): void {
     const value = (event.target as HTMLInputElement).value
+    this.visualizerOptions.mirror = 0
+
     switch (+value) {
       case 1:
         this.visualizerOptions.reflexRatio = .4
@@ -147,9 +149,16 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
         this.visualizerOptions.reflexRatio = .5
         this.visualizerOptions.reflexAlpha = 1
         break
+      case 3:
+        this.visualizerOptions.mirror = -1
+        break
+      case 4:
+        this.visualizerOptions.mirror = 1
+        break
       default:
         this.visualizerOptions.reflexRatio = 0
     }
+
     this.updateOptions()
   }
 

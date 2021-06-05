@@ -1,6 +1,6 @@
 import {State} from '../abstract/state'
 import {iroColorObject} from '../../../../shared/types/types'
-import {calculateBGRInteger, color_wheel, RGBIntegerToArray} from '../../../../shared/functions'
+import {calculateBGRInteger, color_wheel, convertRGBIntegerToArray} from '../../../../shared/functions'
 
 export class RainbowState extends State {
     private counter = 0;
@@ -19,7 +19,7 @@ export class RainbowState extends State {
         this.reset()
         if (this.interval === undefined) {
             this.interval = setInterval(() => {
-                const rgbArray = RGBIntegerToArray(color_wheel(this.counter))
+                const rgbArray = convertRGBIntegerToArray(color_wheel(this.counter))
                 const BGRInteger = calculateBGRInteger(rgbArray[0], rgbArray[1], rgbArray[2])
                 this.counter++
                 this.counter = this.counter % 255
