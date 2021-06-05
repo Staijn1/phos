@@ -17,7 +17,7 @@
     "build": "npm run postinstall && npm run electron:tsc && ng build",
     "build:dev": "npm run build -- -c dev",
     "build:prod": "npm run build -- -c production",
-    "ng:serve": "ng serve --source-map=false",
+    "ng:serve": "ng serve",
     "electron:tsc": "tsc",
     "electron:serve": "npm run electron:tsc && electron . --serve",
     "electron:mac": "electron-packager . --overwrite --platform=darwin --arch=x64 --prune=true --out=release-builds --icon=\"favicon.ico\"",

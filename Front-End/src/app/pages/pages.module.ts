@@ -8,6 +8,7 @@ import {FormsModule} from '@angular/forms';
 import {NouisliderModule} from 'ng2-nouislider';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {SharedModule} from '../shared/shared.module';
 
 
 @NgModule({
@@ -17,7 +18,8 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
     NouisliderModule,
     FontAwesomeModule,
     NgbModule,
-    CommonModule
+    CommonModule,
+    SharedModule
   ],
    exports: []
 })

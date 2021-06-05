@@ -68,9 +68,9 @@
                     <div class="ms-2 ms-lg-4" id="picker"></div>
                 </a>
             </li>
-            <li>
-                <a (click)="$event.preventDefault()" href="">
-                    <fa-icon (click)="turnOff()" [icon]="powerOff"></fa-icon>
+            <li (click)="turnOff()">
+                <a (click)="$event.preventDefault()" href="" id="powerOff">
+                    <fa-icon [icon]="powerOff"></fa-icon>
                     <span>Power Off</span>
                 </a>
             </li>

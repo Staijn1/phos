@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
 import {ElectronService} from '../../../services/electron/electron.service';
 import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons';
-import {TimelineMax} from 'gsap';
+import {TimelineLite} from 'gsap';
 import {NavigationEnd, Router} from '@angular/router';
 
 import {
@@ -49,9 +49,11 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
 
   private window: Electron.BrowserWindow | undefined;
-  @ViewChild('animationObject') animationObject: ElementRef;
   private animationMode = 0;
+  private timeline: TimelineLite;
+
   @Output() animationEnd = new EventEmitter<void>();
+  @ViewChild('animationObject') animationObject: ElementRef;
 
   constructor(
     public electronService: ElectronService,
@@ -66,6 +68,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     if (this.electronService.isElectron()) {
       this.window = this.electronService.remote.getCurrentWindow();
     }
+
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.animate();
@@ -107,7 +110,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     }
   }
 
-  private animationFromLeft(anime: TimelineMax): TimelineMax {
+  private animationFromLeft(anime: TimelineLite): TimelineLite {
     anime.to('.from-left .tile', {
       duration: 0.4,
       width: '100%',
@@ -128,7 +131,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   }
 
   private animate(): void {
-    const timeline: TimelineMax = new TimelineMax({
+    this.timeline = new TimelineLite({
       defaults: {
         ease: 'power4.inOut'
       },
@@ -139,17 +142,17 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
     switch (this.animationMode) {
       case 0:
-        this.animateFromTop(timeline);
+        this.animateFromTop(this.timeline);
         break;
       case 1:
-        this.animationFromLeft(timeline);
+        this.animationFromLeft(this.timeline);
         break;
     }
-    this.animationMode++;
-    this.animationMode = this.animationMode % 2;
+
+    this.animationMode = ++this.animationMode % 2;
   }
 
-  private animateFromTop(anime: TimelineMax): TimelineMax {
+  private animateFromTop(anime: TimelineLite): TimelineLite {
     anime.to('.from-top .tile', {
       duration: 0.4,
       height: '100%',
@@ -167,19 +170,20 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   }
 
   private fireEvent(): void {
-    const anime: TimelineMax = new TimelineMax({
-      defaults: {
-        ease: 'power2.inOut'
-      },
-    });
+    const anime: TimelineLite = new TimelineLite();
     anime.to('#cover', {
       duration: 0.8,
-      autoAlpha: 0
+      autoAlpha: 0,
+      ease: 'power2.inOut'
     });
     this.animationEnd.emit();
   }
 
   turnOff(): void {
+    this.timeline
+      .to('#powerOff', 0.6, {color: 'white', background: 'var(--bs-danger)'})
+      .to('#powerOff', 1.2, {clearProps: 'background,color'});
+
     this.connection.setColor(['#000000', '#000000', '#000000']);
     this.connection.setMode(0);
   }

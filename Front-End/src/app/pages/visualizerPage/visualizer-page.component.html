@@ -1,5 +1,7 @@
 <div class="vh-100" id="wrapper">
-    <div class="h-50" id="visualizer"></div>
+    <div class="h-50">
+        <app-shared-visualizer [options]="visualizerOptions" [gradients]="gradients"></app-shared-visualizer>
+    </div>
     <div id="overlay" class="d-flex justify-content-center align-content-center">
         <section id="section05" class="w-100 d-flex flex-column justify-content-center align-items-center">
             <h3 (click)="scroll(settings)"><span></span>Settings</h3>
@@ -56,7 +58,7 @@
                                             <label class="input-group-text bg-secondary text-white" for="fftSize">fft
                                                 size</label>
                                         </div>
-                                        <select (change)="updateOptions()" [(ngModel)]="options.fftSize"
+                                        <select (change)="updateOptions()" [(ngModel)]="visualizerOptions.fftSize"
                                                 class="form-select"
                                                 id="fftSize">
                                             <option value="512">512</option>
@@ -71,9 +73,9 @@
                                 </div>
                                 <!--                Smooth slider-->
                                 <div class="col d-flex flex-column">
-                                    <nouislider (update)="updateOptions()" [(ngModel)]="options.smoothing"
+                                    <nouislider (update)="updateOptions()" [(ngModel)]="visualizerOptions.smoothing"
                                                 [config]="smoothingConfig"></nouislider>
-                                    <p class="small text-dark">Smoothing: {{options.smoothing}}</p>
+                                    <p class="small text-dark">Smoothing: {{visualizerOptions.smoothing}}</p>
                                 </div>
                             </div>
                             <div class="row">
@@ -87,7 +89,7 @@
                                         <select #modeSelect (change)="updateMode($event)" class="form-select"
                                                 id="modeSelect">
                                             <option *ngFor="let mode of modes;"
-                                                    [selected]="mode.value == options.mode"
+                                                    [selected]="mode.value == visualizerOptions.mode"
                                                     [value]="mode.value"
                                             >
                                                 {{mode.text}}
@@ -120,29 +122,29 @@
                             <div class="row">
                                 <!--                    Spin speed if radial is active-->
                                 <div class="col-4 offset-8">
-                                    <nouislider (slide)="updateOptions()" *ngIf="this.options.radial"
-                                                [(ngModel)]="this.options.spinSpeed"
+                                    <nouislider (slide)="updateOptions()" *ngIf="this.visualizerOptions.radial"
+                                                [(ngModel)]="this.visualizerOptions.spinSpeed"
                                                 [config]="spinSpeedConfig"></nouislider>
-                                    <p *ngIf="this.options.radial" class="small text-dark">Spin
-                                        speed: {{this.options.spinSpeed}}</p>
+                                    <p *ngIf="this.visualizerOptions.radial" class="small text-dark">Spin
+                                        speed: {{this.visualizerOptions.spinSpeed}}</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div *ngIf="modeSelect.value == 11" class="col-4 offset-8">
                                     <nouislider (slide)="updateOptions()"
-                                                [(ngModel)]="this.options.lineWidth"
+                                                [(ngModel)]="this.visualizerOptions.lineWidth"
                                                 [config]="lineWidthConfig"></nouislider>
                                     <p class="small text-dark">
-                                        Line width: {{this.options.lineWidth}}</p>
+                                        Line width: {{this.visualizerOptions.lineWidth}}</p>
                                 </div>
                             </div>
                             <div class="row">
                                 <div *ngIf="modeSelect.value == 11" class="col-4 offset-8">
                                     <nouislider (slide)="updateOptions()"
-                                                [(ngModel)]="this.options.fillAlpha"
+                                                [(ngModel)]="this.visualizerOptions.fillAlpha"
                                                 [config]="bgAlphaConfig"></nouislider>
                                     <p class="small text-dark">
-                                        Fill opacity: {{this.options.fillAlpha}}</p>
+                                        Fill opacity: {{this.visualizerOptions.fillAlpha}}</p>
                                 </div>
                             </div>
                             <div class="row">
