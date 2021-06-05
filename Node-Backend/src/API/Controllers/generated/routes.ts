@@ -122,7 +122,7 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.post('/mode',
+        app.post('/modePage',
             function ModeController_setMode(request: any, response: any, next: any) {
             const args = {
                     request: {"in":"body","name":"request","required":true,"ref":"ModeInformation"},
@@ -144,7 +144,7 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/mode',
+        app.get('/modePage',
             function ModeController_getModes(request: any, response: any, next: any) {
             const args = {
             };
@@ -207,7 +207,7 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/visualizer/gradients',
+        app.get('/visualizerPage/gradients',
             function VisualizerController_getGradients(request: any, response: any, next: any) {
             const args = {
             };
@@ -228,7 +228,7 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.get('/visualizer/modes',
+        app.get('/visualizerPage/modes',
             function VisualizerController_getVisualizerModes(request: any, response: any, next: any) {
             const args = {
             };

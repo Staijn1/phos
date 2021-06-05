@@ -1,5 +1,5 @@
 import {State} from '../abstract/state';
-import {iroColorObject} from '../../../../types/types';
+import {iroColorObject} from '../../../../shared/types/types';
 import {calculateBGRInteger, map} from '../../../../shared/functions';
 
 export class VisualizerState extends State {

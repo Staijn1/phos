@@ -1,6 +1,6 @@
 import {State} from '../abstract/state';
 import {calculateBGRInteger} from '../../../../shared/functions';
-import {iroColorObject} from '../../../../types/types';
+import {iroColorObject} from '../../../../shared/types/types';
 
 export class StaticState extends State {
     handle(colors: iroColorObject[]): void {

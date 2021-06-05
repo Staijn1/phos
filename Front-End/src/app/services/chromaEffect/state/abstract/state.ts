@@ -1,5 +1,5 @@
 import {ChromaEffectService} from '../../chroma-effect.service';
-import {iroColorObject} from '../../../../types/types';
+import {iroColorObject} from '../../../../shared/types/types';
 
 export abstract class State {
     protected _context: ChromaEffectService;

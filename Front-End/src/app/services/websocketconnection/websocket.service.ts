@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core';
-import {iroColorObject} from '../../types/types';
+import {iroColorObject} from '../../shared/types/types';
 import {map} from '../../shared/functions';
-import {Connection} from '../../interfaces/Connection';
+import {Connection} from '../../shared/interfaces/Connection';
 import ReconnectingWebSocket from 'reconnecting-websocket';
 import {environment} from '../../../environments/environment';
 

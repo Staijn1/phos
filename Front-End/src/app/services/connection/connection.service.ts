@@ -1,10 +1,10 @@
 import {Injectable} from '@angular/core';
-import {Connection} from '../../interfaces/Connection';
-import {iroColorObject} from '../../types/types';
+import {Connection} from '../../shared/interfaces/Connection';
+import {iroColorObject} from '../../shared/types/types';
 import {WebsocketService} from '../websocketconnection/websocket.service';
 import {HTTPConnectionService} from '../httpconnection/httpconnection.service';
-import {ModeInformation} from '../../types/ModeInformation';
-import {GradientInformation} from '../../types/GradientInformation';
+import {ModeInformation} from '../../shared/types/ModeInformation';
+import {GradientInformation} from '../../shared/types/GradientInformation';
 
 @Injectable({
     providedIn: 'root'

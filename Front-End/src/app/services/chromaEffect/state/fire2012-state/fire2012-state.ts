@@ -1,5 +1,5 @@
 import {State} from '../abstract/state';
-import {iroColorObject} from '../../../../types/types';
+import {iroColorObject} from '../../../../shared/types/types';
 import {calculateBGRInteger, map, qadd8, qsub8, randomInteger, WarmColor} from '../../../../shared/functions';
 
 export class Fire2012State extends State {

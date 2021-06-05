@@ -1,20 +1,20 @@
 import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import {VisualizerComponent} from './visualizer.component';
+import {VisualizerPageComponent} from './visualizer-page.component';
 
 describe('VisualizerComponent', () => {
-    let component: VisualizerComponent;
-    let fixture: ComponentFixture<VisualizerComponent>;
+    let component: VisualizerPageComponent;
+    let fixture: ComponentFixture<VisualizerPageComponent>;
 
     beforeEach(async () => {
         await TestBed.configureTestingModule({
-            declarations: [VisualizerComponent]
+            declarations: [VisualizerPageComponent]
         })
             .compileComponents();
     });
 
     beforeEach(() => {
-        fixture = TestBed.createComponent(VisualizerComponent);
+        fixture = TestBed.createComponent(VisualizerPageComponent);
         component = fixture.componentInstance;
         fixture.detectChanges();
     });

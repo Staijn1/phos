@@ -96,7 +96,7 @@ export class CommandHandler {
   }
 
   /**
-   * Change the mode of the ledstrips
+   * Change the modePage of the ledstrips
    * @param {string|number} payload
    */
   changeMode(payload: string | number) {

@@ -4,10 +4,10 @@ import {SettingsService} from '../../services/settings/settings.service';
 
 @Component({
   selector: 'app-settings',
-  templateUrl: './settings.component.html',
-  styleUrls: ['./settings.component.scss'],
+  templateUrl: './settings-page.component.html',
+  styleUrls: ['./settings-page.component.scss'],
 })
-export class SettingsComponent implements OnInit {
+export class SettingsPageComponent implements OnInit {
   saveIcon = faSave;
   chroma: boolean;
 

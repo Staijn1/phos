@@ -3,8 +3,8 @@ import { InformationService } from '../Services/InformationService'
 import { GradientInformation } from '../../Types/GradientInformation'
 import { ModeInformation } from '../../Types/ModeInformation'
 
-@Route('visualizer')
-@Tags('visualizer')
+@Route('visualizerPage')
+@Tags('visualizerPage')
 export class VisualizerController extends Controller {
   private readonly informationService: InformationService = new InformationService()
 

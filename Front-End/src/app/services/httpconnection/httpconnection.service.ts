@@ -1,9 +1,9 @@
 import {Injectable} from '@angular/core';
-import {Connection} from '../../interfaces/Connection';
+import {Connection} from '../../shared/interfaces/Connection';
 import {environment} from '../../../environments/environment';
-import {iroColorObject} from '../../types/types';
-import {ModeInformation} from '../../types/ModeInformation';
-import {GradientInformation} from '../../types/GradientInformation';
+import {iroColorObject} from '../../shared/types/types';
+import {ModeInformation} from '../../shared/types/ModeInformation';
+import {GradientInformation} from '../../shared/types/GradientInformation';
 
 @Injectable({
     providedIn: 'root'

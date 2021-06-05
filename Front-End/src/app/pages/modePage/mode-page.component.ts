@@ -12,14 +12,14 @@ import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state';
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state';
 import {ConnectionService} from '../../services/connection/connection.service';
-import {ModeInformation} from '../../types/ModeInformation';
+import {ModeInformation} from '../../shared/types/ModeInformation';
 
 @Component({
   selector: 'app-mode',
-  templateUrl: './mode.component.html',
-  styleUrls: ['./mode.component.scss'],
+  templateUrl: './mode-page.component.html',
+  styleUrls: ['./mode-page.component.scss'],
 })
-export class ModeComponent implements OnInit, OnDestroy {
+export class ModePageComponent implements OnInit, OnDestroy {
   modes: ModeInformation[] | undefined;
   chromaEffects = [
     {name: 'Rainbow', state: new RainbowState()},
@@ -78,7 +78,8 @@ export class ModeComponent implements OnInit, OnDestroy {
     this.connection.setMode(id);
 
     const state = this.chromaEffects.find(stateToCompare => {
-      return stateToCompare.name.toLowerCase() === this.modes[id - 1].name.toLowerCase();
+      const  index =  id - 1 > 0 ? id - 1 : 0;
+      return stateToCompare.name.toLowerCase() === this.modes[index].name.toLowerCase();
     });
 
     this.chromaService.state = state === undefined ? new StaticState() : state.state;

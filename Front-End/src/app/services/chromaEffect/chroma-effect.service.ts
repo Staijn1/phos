@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {ChromaSDKService} from '../chromaSDK/chromaSDK.service';
-import {iroColorObject} from '../../types/types';
+import {iroColorObject} from '../../shared/types/types';
 import {State} from './state/abstract/state';
 import {StaticState} from './state/static-state/static-state';
 import {VisualizerState} from './state/visualizer-state/visualizer-state';

@@ -2,7 +2,7 @@ import {Inject, Injectable} from '@angular/core';
 import {DOCUMENT} from '@angular/common';
 import iro from '@jaames/iro';
 import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
-import {iroColorObject} from '../../types/types';
+import {iroColorObject} from '../../shared/types/types';
 import {SettingsService} from '../settings/settings.service';
 import {ConnectionService} from '../connection/connection.service';
 

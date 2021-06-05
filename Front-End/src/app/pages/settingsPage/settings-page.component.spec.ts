@@ -1,12 +1,12 @@
-import {SettingsComponent} from './settings.component';
+import {SettingsPageComponent} from './settings-page.component';
 
 describe('SettingsComponent', () => {
-    let sut: SettingsComponent;
+    let sut: SettingsPageComponent;
 
     beforeEach(() => {
         const settingsServiceMock = jasmine.createSpyObj('SettingsService', ['readGeneralSettings', 'saveGeneralSettings']);
 
-        sut = new SettingsComponent(settingsServiceMock);
+        sut = new SettingsPageComponent(settingsServiceMock);
     });
 
     it('should create', () => {

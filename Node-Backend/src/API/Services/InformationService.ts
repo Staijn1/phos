@@ -30,7 +30,7 @@ export class InformationService {
   }
 
   /**
-   * Read all gradients present for the visualizer
+   * Read all gradients present for the visualizerPage
    */
   async getVisualizerGradients(): Promise<GradientInformation[]> {
     const gradients = await this.readJSON('gradients.json')
@@ -38,7 +38,7 @@ export class InformationService {
   }
 
   /**
-   * Read all visualizer modes present for the visualizer
+   * Read all visualizerPage modes present for the visualizerPage
    */
   async getVisualizerModes(): Promise<ModeInformation[]> {
     const modes = await this.readJSON('visualizermodes.json')

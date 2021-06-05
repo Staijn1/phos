@@ -1,7 +1,7 @@
 import {TestBed} from '@angular/core/testing';
 
 import {WebsocketService} from './websocket.service';
-import {iroColorObject} from '../../types/types';
+import {iroColorObject} from '../../shared/types/types';
 
 describe('WebsocketService', () => {
     let service: WebsocketService;

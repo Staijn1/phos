@@ -1,5 +1,5 @@
 import {State} from '../abstract/state';
-import {iroColorObject} from '../../../../types/types';
+import {iroColorObject} from '../../../../shared/types/types';
 import {calculateBGRInteger, ColdColor, map, qadd8, qsub8, randomInteger} from '../../../../shared/functions';
 
 export class WaterfallState extends State {

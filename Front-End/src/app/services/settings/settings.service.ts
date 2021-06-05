@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core';
-import {GeneralSettings, iroColorObject} from '../../types/types';
+import {GeneralSettings, iroColorObject} from '../../shared/types/types';
 import {Options} from 'audiomotion-analyzer';
 
 

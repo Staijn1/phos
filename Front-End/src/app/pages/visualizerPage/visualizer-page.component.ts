@@ -10,15 +10,15 @@ import {VisualizerState} from '../../services/chromaEffect/state/visualizer-stat
 import {SettingsService} from '../../services/settings/settings.service';
 import {ConnectionService} from '../../services/connection/connection.service';
 import {TimelineMax} from 'gsap';
-import {GradientInformationExtended} from '../../types/GradientInformation';
+import {GradientInformationExtended} from '../../shared/types/GradientInformation';
 
 
 @Component({
   selector: 'app-visualizer',
-  templateUrl: './visualizer.component.html',
-  styleUrls: ['./visualizer.component.scss']
+  templateUrl: './visualizer-page.component.html',
+  styleUrls: ['./visualizer-page.component.scss']
 })
-export class VisualizerComponent implements OnInit, OnDestroy {
+export class VisualizerPageComponent implements OnInit, OnDestroy {
   options: Options = {
     ...this.settingsService.readVisualizerOptions(), ...{
       volume: 0,
