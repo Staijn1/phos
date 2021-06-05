@@ -1,7 +1,7 @@
-import {RainbowState} from './rainbow-state';
+import {RainbowState} from './rainbow-state'
 
 describe('RainbowState', () => {
   it('should create an instance', () => {
-    expect(new RainbowState()).toBeTruthy();
-  });
-});
+    expect(new RainbowState()).toBeTruthy()
+  })
+})

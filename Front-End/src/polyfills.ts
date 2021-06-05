@@ -1,7 +1,7 @@
 /***************************************************************************************************
  * Load `$localize` onto the global scope - used if i18n tags appear in Angular templates.
  */
-import '@angular/localize/init';
+import '@angular/localize/init'
 /**
  * This file includes polyfills needed by Angular and is loaded before the app.
  * You can add your own extra polyfills to this file.
@@ -32,7 +32,7 @@ import '@angular/localize/init';
 /**
  * Evergreen browsers require these.
  */
-import 'core-js/es/reflect';
+import 'core-js/es/reflect'
 
 /**
  * ALL Firefox browsers require the following to support `@angular/animation`.
@@ -41,7 +41,7 @@ import 'core-js/es/reflect';
 /***************************************************************************************************
  * Zone JS is required by Angular itself.
  */
-import 'zone.js/dist/zone'; // Included with Angular CLI.
+import 'zone.js/dist/zone' // Included with Angular CLI.
 
 
 /***************************************************************************************************

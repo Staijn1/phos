@@ -1,4 +1,4 @@
-import {iroColorObject} from '../types/types';
+import {iroColorObject} from '../types/types'
 
 export abstract class Connection {
     abstract setMode(mode: number): void;

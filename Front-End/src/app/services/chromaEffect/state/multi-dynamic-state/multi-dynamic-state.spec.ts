@@ -1,7 +1,7 @@
-import {MultiDynamicState} from './multi-dynamic-state';
+import {MultiDynamicState} from './multi-dynamic-state'
 
 describe('MultiDynamicState', () => {
   it('should create an instance', () => {
-    expect(new MultiDynamicState()).toBeTruthy();
-  });
-});
+    expect(new MultiDynamicState()).toBeTruthy()
+  })
+})

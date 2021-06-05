@@ -1,16 +1,16 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer';
-import {ColorService} from '../../services/color/color.service';
-import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand';
-import {faSave} from '@fortawesome/free-solid-svg-icons/faSave';
-import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload';
-import {faEdit, faLightbulb, faTrash} from '@fortawesome/free-solid-svg-icons';
-import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
-import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state';
-import {SettingsService} from '../../services/settings/settings.service';
-import {ConnectionService} from '../../services/connection/connection.service';
-import {TimelineMax} from 'gsap';
-import {GradientInformationExtended} from '../../shared/types/GradientInformation';
+import {Component, OnDestroy, OnInit} from '@angular/core'
+import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
+import {ColorService} from '../../services/color/color.service'
+import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand'
+import {faSave} from '@fortawesome/free-solid-svg-icons/faSave'
+import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
+import {faEdit, faLightbulb, faTrash} from '@fortawesome/free-solid-svg-icons'
+import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
+import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
+import {SettingsService} from '../../services/settings/settings.service'
+import {ConnectionService} from '../../services/connection/connection.service'
+import {TimelineMax} from 'gsap'
+import {GradientInformationExtended} from '../../shared/types/GradientInformation'
 
 @Component({
   selector: 'app-visualizer',
@@ -104,53 +104,53 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService
   ) {
-    this.timeline = new TimelineMax();
-    this.init();
+    this.timeline = new TimelineMax()
+    this.init()
   }
 
   ngOnDestroy(): void {
-    this.gradients = undefined;
+    this.gradients = undefined
   }
 
   ngOnInit(): void {
     if (localStorage.getItem('dismissedSettingsPopup') !== 'true') {
-      this.timeline.to('#overlay', {duration: 1, opacity: 1}, '+=1.8');
+      this.timeline.to('#overlay', {duration: 1, opacity: 1}, '+=1.8')
     } else {
-      this.dismissOverlay();
+      this.dismissOverlay()
     }
   }
 
   updateLedstrip(): void {
-    this.connection.setMode(55);
-    this.connection.setColor(this.colorService.getColors);
+    this.connection.setMode(55)
+    this.connection.setColor(this.colorService.getColors)
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
-    const value = instance.getEnergy('bass');
-    this.connection.setLeds(value);
-    this.chromaEffect.intensity = value;
+    const value = instance.getEnergy('bass')
+    this.connection.setLeds(value)
+    this.chromaEffect.intensity = value
   }
 
   changeGradient(gradientIndex: number): void {
-    this.visualizerOptions.gradient = this.gradients[gradientIndex].name;
-    this.updateOptions();
+    this.visualizerOptions.gradient = this.gradients[gradientIndex].name
+    this.updateOptions()
   }
 
   changeReflex(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
+    const value = (event.target as HTMLInputElement).value
     switch (+value) {
       case 1:
-        this.visualizerOptions.reflexRatio = .4;
-        this.visualizerOptions.reflexAlpha = .2;
-        break;
+        this.visualizerOptions.reflexRatio = .4
+        this.visualizerOptions.reflexAlpha = .2
+        break
       case 2:
-        this.visualizerOptions.reflexRatio = .5;
-        this.visualizerOptions.reflexAlpha = 1;
-        break;
+        this.visualizerOptions.reflexRatio = .5
+        this.visualizerOptions.reflexAlpha = 1
+        break
       default:
-        this.visualizerOptions.reflexRatio = 0;
+        this.visualizerOptions.reflexRatio = 0
     }
-    this.updateOptions();
+    this.updateOptions()
   }
 
   fullscreen(): void {
@@ -158,71 +158,71 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
   }
 
   changeShowScale(event: Event): void {
-    const value = (event.target as HTMLInputElement).value;
-    this.visualizerOptions.showScaleX = !!(+value & 1);
-    this.visualizerOptions.showScaleY = !!(+value & 2);
-    this.updateOptions();
+    const value = (event.target as HTMLInputElement).value
+    this.visualizerOptions.showScaleX = !!(+value & 1)
+    this.visualizerOptions.showScaleY = !!(+value & 2)
+    this.updateOptions()
   }
 
   changeFrequencyLimit(): void {
-    this.visualizerOptions.minFreq = this.frequencyLimits[0];
-    this.visualizerOptions.maxFreq = this.frequencyLimits[1];
-    this.updateOptions();
+    this.visualizerOptions.minFreq = this.frequencyLimits[0]
+    this.visualizerOptions.maxFreq = this.frequencyLimits[1]
+    this.updateOptions()
   }
 
   changeDisplay($event: Event): void {
-    const element = $event.currentTarget as HTMLElement;
+    const element = $event.currentTarget as HTMLElement
 
-    this.visualizerOptions.showLeds = false;
-    this.visualizerOptions.lumiBars = false;
-    this.visualizerOptions.radial = false;
+    this.visualizerOptions.showLeds = false
+    this.visualizerOptions.lumiBars = false
+    this.visualizerOptions.radial = false
 
     if (element.id === 'leds') {
-      this.visualizerOptions.showLeds = true;
+      this.visualizerOptions.showLeds = true
     } else if (element.id === 'lumi') {
-      this.visualizerOptions.lumiBars = true;
+      this.visualizerOptions.lumiBars = true
     } else if (element.id === 'radial') {
-      this.visualizerOptions.radial = true;
+      this.visualizerOptions.radial = true
     } else if (element.id === 'normal') {
     } else {
-      throw Error(`Unknown ID: ${element.id}`);
+      throw Error(`Unknown ID: ${element.id}`)
     }
-    this.updateOptions();
+    this.updateOptions()
   }
 
   changeGeneralSettings($event: Event): void {
-    const element = $event.target as HTMLInputElement;
+    const element = $event.target as HTMLInputElement
 
-    const value = element.checked;
+    const value = element.checked
 
     if (element.id === 'peaks') {
-      this.visualizerOptions.showPeaks = value;
+      this.visualizerOptions.showPeaks = value
     } else if (element.id === 'lores') {
-      this.visualizerOptions.loRes = value;
+      this.visualizerOptions.loRes = value
     } else if (element.id === 'fps') {
-      this.visualizerOptions.showFPS = value;
+      this.visualizerOptions.showFPS = value
     } else {
-      throw Error('Unknown ID!');
+      throw Error('Unknown ID!')
     }
-    this.updateOptions();
+    this.updateOptions()
   }
 
   updateMode(event: Event): void {
-    let value = +(event.target as HTMLInputElement).value;
+    let value = +(event.target as HTMLInputElement).value
     switch (+value) {
       case 10:
-        this.visualizerOptions.lineWidth = 0;
-        this.visualizerOptions.fillAlpha = 1;
-        break;
+        this.visualizerOptions.lineWidth = 0
+        this.visualizerOptions.fillAlpha = 1
+        break
       case 11:
-        this.visualizerOptions.lineWidth = 5;
-        this.visualizerOptions.fillAlpha = 0.1;
-        value = 10;
-        break;
+        this.visualizerOptions.lineWidth = 5
+        this.visualizerOptions.fillAlpha = 0.1
+        value = 10
+        break
     }
 
-    this.visualizerOptions.mode = value;
-    this.updateOptions();
+    this.visualizerOptions.mode = value
+    this.updateOptions()
   }
 
   loadOptions(): void {
@@ -231,49 +231,49 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
       ...{
         onCanvasDraw: this.drawCallback.bind(this)
       }
-    };
+    }
   }
 
   saveOptions(): void {
-    this.settingsService.saveVisualizerOptions(this.visualizerOptions);
+    this.settingsService.saveVisualizerOptions(this.visualizerOptions)
   }
 
   private async getGradients(): Promise<void> {
-    const gradients = await this.connection.getGradients() as GradientInformationExtended[];
+    const gradients = await this.connection.getGradients() as GradientInformationExtended[]
     for (const gradient of gradients) {
-      gradient.collapsed = true;
-      gradient.sliderOptions = this.defaultSliderOptions;
+      gradient.collapsed = true
+      gradient.sliderOptions = this.defaultSliderOptions
     }
 
-    this.gradients = gradients;
+    this.gradients = gradients
   }
 
   private init(): void {
     this.getGradients().then(() => {
-      this.loadOptions();
-    });
-    this.chromaEffect.state = new VisualizerState();
+      this.loadOptions()
+    })
+    this.chromaEffect.state = new VisualizerState()
 
     setTimeout(() => {
-      this.updateLedstrip();
-    }, 2000);
+      this.updateLedstrip()
+    }, 2000)
   }
 
   scroll(el: HTMLDivElement): void {
-    el.scrollIntoView({behavior: 'smooth'});
+    el.scrollIntoView({behavior: 'smooth'})
   }
 
   dismissOverlay(): void {
-    this.timeline.to('#overlay', {duration: 1, opacity: 0});
-    this.timeline.to('#overlay', {duration: 0.5, visibility: 'hidden'});
-    localStorage.setItem('dismissedSettingsPopup', 'true');
+    this.timeline.to('#overlay', {duration: 1, opacity: 0})
+    this.timeline.to('#overlay', {duration: 0.5, visibility: 'hidden'})
+    localStorage.setItem('dismissedSettingsPopup', 'true')
   }
 
   submitGradient(gradient: GradientInformationExtended): void {
-    this.visualizerOptions.gradient = gradient.name;
+    this.visualizerOptions.gradient = gradient.name
   }
 
   updateOptions(): void {
-    this.visualizerOptions = Object.assign({}, this.visualizerOptions);
+    this.visualizerOptions = Object.assign({}, this.visualizerOptions)
   }
 }

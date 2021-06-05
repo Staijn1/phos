@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {Connection} from '../../shared/interfaces/Connection';
-import {environment} from '../../../environments/environment';
-import {iroColorObject} from '../../shared/types/types';
-import {ModeInformation} from '../../shared/types/ModeInformation';
-import {GradientInformation} from '../../shared/types/GradientInformation';
+import {Injectable} from '@angular/core'
+import {Connection} from '../../shared/interfaces/Connection'
+import {environment} from '../../../environments/environment'
+import {iroColorObject} from '../../shared/types/types'
+import {ModeInformation} from '../../shared/types/ModeInformation'
+import {GradientInformation} from '../../shared/types/GradientInformation'
 
 @Injectable({
     providedIn: 'root'
@@ -12,60 +12,60 @@ export class HTTPConnectionService extends Connection {
     readonly url = environment.url;
 
     constructor() {
-        super();
+        super()
     }
 
     decreaseBrightness(): void {
         fetch(`${this.url}/brightness/decrease`, {
             method: 'POST'
-        }).then(response => this.handleError(response));
+        }).then(response => this.handleError(response))
     }
 
     decreaseSpeed(): void {
         fetch(`${this.url}/speed/decrease`, {
             method: 'POST'
-        }).then(response => this.handleError(response));
+        }).then(response => this.handleError(response))
     }
 
     increaseBrightness(): void {
         fetch(`${this.url}/brightness/increase`, {
             method: 'POST'
-        }).then(response => this.handleError(response));
+        }).then(response => this.handleError(response))
     }
 
     increaseSpeed(): void {
         fetch(`${this.url}/speed/increase`, {
             method: 'POST'
         }).then(response => {
-            this.handleError(response);
-        });
+            this.handleError(response)
+        })
     }
 
     protected send(command: string): void {
-        throw Error('Not implemented');
+        throw Error('Not implemented')
     }
 
     setColor(colors: iroColorObject[] | string[]): void {
-        const formattedColors = [];
+        const formattedColors = []
         for (const color of colors) {
-            let colorstring: string;
+            let colorstring: string
             if (typeof color === 'object') {
-                colorstring = color.hexString;
+                colorstring = color.hexString
             } else {
-                colorstring = color;
+                colorstring = color
             }
 
-            formattedColors.push(colorstring.substring(1, colorstring.length));
+            formattedColors.push(colorstring.substring(1, colorstring.length))
         }
         fetch(`${this.url}/color`, {
             method: 'POST',
             body: JSON.stringify({color: formattedColors}),
             headers: {'Content-Type': 'application/json'}
-        }).then(response => this.handleError(response));
+        }).then(response => this.handleError(response))
     }
 
     setLeds(amount: number): void {
-        throw new Error('Not implemented');
+        throw new Error('Not implemented')
     }
 
     setMode(mode: number): void {
@@ -74,13 +74,13 @@ export class HTTPConnectionService extends Connection {
             body: JSON.stringify(mode),
             headers: {'Content-Type': 'application/json'}
         }).then(response => {
-            this.handleError(response);
-        });
+            this.handleError(response)
+        })
     }
 
     private handleError(response: Response): void {
         if (!response.ok) {
-            throw new Error(response.statusText);
+            throw new Error(response.statusText)
         }
     }
 
@@ -90,9 +90,9 @@ export class HTTPConnectionService extends Connection {
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
-        this.handleError(response);
-        return response.json();
+        })
+        this.handleError(response)
+        return response.json()
     }
 
     async getGradients(): Promise<GradientInformation[]> {
@@ -101,9 +101,9 @@ export class HTTPConnectionService extends Connection {
             headers: {
                 'Content-Type': 'application/json'
             }
-        });
+        })
 
-        this.handleError(response);
-        return response.json();
+        this.handleError(response)
+        return response.json()
     }
 }

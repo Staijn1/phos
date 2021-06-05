@@ -1,18 +1,18 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
-import {StaticState} from '../../services/chromaEffect/state/static-state/static-state';
-import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
-import {BlinkState} from '../../services/chromaEffect/state/blink-state/blink-state';
-import {SingleDynamicState} from '../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state';
-import {MultiDynamicState} from '../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state';
-import {RainbowState} from '../../services/chromaEffect/state/rainbow-state/rainbow-state';
-import {gsap} from 'gsap';
-import {ScrollTrigger} from 'gsap/ScrollTrigger';
-import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fire2012-state';
-import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state';
-import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state';
-import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state';
-import {ConnectionService} from '../../services/connection/connection.service';
-import {ModeInformation} from '../../shared/types/ModeInformation';
+import {Component, OnDestroy, OnInit} from '@angular/core'
+import {StaticState} from '../../services/chromaEffect/state/static-state/static-state'
+import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
+import {BlinkState} from '../../services/chromaEffect/state/blink-state/blink-state'
+import {SingleDynamicState} from '../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state'
+import {MultiDynamicState} from '../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state'
+import {RainbowState} from '../../services/chromaEffect/state/rainbow-state/rainbow-state'
+import {gsap} from 'gsap'
+import {ScrollTrigger} from 'gsap/ScrollTrigger'
+import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fire2012-state'
+import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state'
+import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state'
+import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
+import {ConnectionService} from '../../services/connection/connection.service'
+import {ModeInformation} from '../../shared/types/ModeInformation'
 
 @Component({
   selector: 'app-mode',
@@ -37,11 +37,11 @@ export class ModePageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly connection: ConnectionService,
     private readonly chromaService: ChromaEffectService) {
-    gsap.registerPlugin(ScrollTrigger);
+    gsap.registerPlugin(ScrollTrigger)
   }
 
   ngOnDestroy(): void {
-    this.modes = undefined;
+    this.modes = undefined
   }
 
   ngOnInit(): void {
@@ -51,37 +51,37 @@ export class ModePageComponent implements OnInit, OnDestroy {
       duration: 1,
       ease: 'power2.inOut',
       paused: true
-    });
+    })
 
     ScrollTrigger.create({
       trigger: '.fade-up',
       start: 'top bottom',
       onEnter: () => anim.play()
-    });
+    })
 
     ScrollTrigger.create({
       trigger: '.fade-up',
       start: 'top bottom',
       onLeaveBack: () => anim.pause(0)
-    });
+    })
 
     this.connection.getModes().then(modes => {
-      this.modes = modes;
-    });
+      this.modes = modes
+    })
   }
 
 
   onChangeSegment($event: MouseEvent): void {
-    const id = parseInt(($event.currentTarget as HTMLElement).id, 10);
-    this.selectedMode = id;
+    const id = parseInt(($event.currentTarget as HTMLElement).id, 10)
+    this.selectedMode = id
 
-    this.connection.setMode(id);
+    this.connection.setMode(id)
 
     const state = this.chromaEffects.find(stateToCompare => {
-      const  index =  id - 1 > 0 ? id - 1 : 0;
-      return stateToCompare.name.toLowerCase() === this.modes[index].name.toLowerCase();
-    });
+      const  index =  id - 1 > 0 ? id - 1 : 0
+      return stateToCompare.name.toLowerCase() === this.modes[index].name.toLowerCase()
+    })
 
-    this.chromaService.state = state === undefined ? new StaticState() : state.state;
+    this.chromaService.state = state === undefined ? new StaticState() : state.state
   }
 }

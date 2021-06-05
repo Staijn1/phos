@@ -36,7 +36,8 @@
             "type": "attribute"
           }
         ],
-        "semi": ["warn", "never"]
+        "semi": ["warn", "never"],
+        "require-jsdoc": "warn"
       }
     },
     {

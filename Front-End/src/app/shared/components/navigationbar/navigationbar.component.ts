@@ -1,8 +1,8 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
-import {ElectronService} from '../../../services/electron/electron.service';
-import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons';
-import {TimelineLite} from 'gsap';
-import {NavigationEnd, Router} from '@angular/router';
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild} from '@angular/core'
+import {ElectronService} from '../../../services/electron/electron.service'
+import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons'
+import {TimelineLite} from 'gsap'
+import {NavigationEnd, Router} from '@angular/router'
 
 import {
   faBars,
@@ -19,9 +19,9 @@ import {
   faTimes,
   faWalking,
   faWindowMinimize
-} from '@fortawesome/free-solid-svg-icons';
-import {ConnectionService} from '../../../services/connection/connection.service';
-import {ColorService} from '../../../services/color/color.service';
+} from '@fortawesome/free-solid-svg-icons'
+import {ConnectionService} from '../../../services/connection/connection.service'
+import {ColorService} from '../../../services/color/color.service'
 
 @Component({
   selector: 'app-navigationbar',
@@ -66,47 +66,47 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     if (this.electronService.isElectron()) {
-      this.window = this.electronService.remote.getCurrentWindow();
+      this.window = this.electronService.remote.getCurrentWindow()
     }
 
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
-        this.animate();
+        this.animate()
       }
-    });
+    })
   }
 
   ngAfterViewInit(): void {
-    this.animate();
+    this.animate()
   }
 
   mobileNav(): void {
     if (!this.isOpen) {
-      this.mobileMenu = faTimes;
-      this.renderer.addClass(document.body, 'mobile-nav-active');
+      this.mobileMenu = faTimes
+      this.renderer.addClass(document.body, 'mobile-nav-active')
     } else {
-      this.mobileMenu = faBars;
-      this.renderer.removeClass(document.body, 'mobile-nav-active');
+      this.mobileMenu = faBars
+      this.renderer.removeClass(document.body, 'mobile-nav-active')
     }
-    this.isOpen = !this.isOpen;
+    this.isOpen = !this.isOpen
 
   }
 
   exitButtonAction(): void {
-    this.window.close();
+    this.window.close()
   }
 
   minimizeButtonAction(): void {
-    this.window.minimize();
+    this.window.minimize()
   }
 
   maximizeButtonAction(): void {
     if (this.window.isMaximized()) {
-      this.window.unmaximize();
-      this.maximize = faSquare;
+      this.window.unmaximize()
+      this.maximize = faSquare
     } else {
-      this.window.maximize();
-      this.maximize = faClone;
+      this.window.maximize()
+      this.maximize = faClone
     }
   }
 
@@ -117,17 +117,17 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
       left: '0%',
       delay: 0.2,
       stagger: 0.05,
-    });
+    })
     anime.to('.from-left .tile', {
       duration: 0.4,
       width: '100%',
       left: '100%',
       delay: 0.2,
       stagger: -0.05,
-    });
-    anime.set('.from-left .tile', {left: '0', width: '0'});
+    })
+    anime.set('.from-left .tile', {left: '0', width: '0'})
 
-    return anime;
+    return anime
   }
 
   private animate(): void {
@@ -136,20 +136,20 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
         ease: 'power4.inOut'
       },
       onComplete: () => {
-        this.fireEvent();
+        this.fireEvent()
       }
-    }).set('#cover', {autoAlpha: 1});
+    }).set('#cover', {autoAlpha: 1})
 
     switch (this.animationMode) {
       case 0:
-        this.animateFromTop(this.timeline);
-        break;
+        this.animateFromTop(this.timeline)
+        break
       case 1:
-        this.animationFromLeft(this.timeline);
-        break;
+        this.animationFromLeft(this.timeline)
+        break
     }
 
-    this.animationMode = ++this.animationMode % 2;
+    this.animationMode = ++this.animationMode % 2
   }
 
   private animateFromTop(anime: TimelineLite): TimelineLite {
@@ -165,26 +165,26 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
       top: '100%',
       delay: 0,
       stagger: -0.05,
-    }).set('.from-top .tile', {top: '0', height: '0'});
-    return anime;
+    }).set('.from-top .tile', {top: '0', height: '0'})
+    return anime
   }
 
   private fireEvent(): void {
-    const anime: TimelineLite = new TimelineLite();
+    const anime: TimelineLite = new TimelineLite()
     anime.to('#cover', {
       duration: 0.8,
       autoAlpha: 0,
       ease: 'power2.inOut'
-    });
-    this.animationEnd.emit();
+    })
+    this.animationEnd.emit()
   }
 
   turnOff(): void {
     this.timeline
       .to('#powerOff', 0.6, {color: 'white', background: 'var(--bs-danger)'})
-      .to('#powerOff', 1.2, {clearProps: 'background,color'});
+      .to('#powerOff', 1.2, {clearProps: 'background,color'})
 
-    this.connection.setColor(['#000000', '#000000', '#000000']);
-    this.connection.setMode(0);
+    this.connection.setColor(['#000000', '#000000', '#000000'])
+    this.connection.setMode(0)
   }
 }

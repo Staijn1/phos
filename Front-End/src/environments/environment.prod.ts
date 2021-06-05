@@ -3,4 +3,4 @@ export const environment = {
     saveSettings: true,
     url: 'https://local.steinjonker.nl:5000',
     websockUrl: 'wss://local.steinjonker.nl:5001'
-};
+}

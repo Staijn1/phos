@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core';
-import {iroColorObject} from '../../shared/types/types';
-import {map} from '../../shared/functions';
-import {Connection} from '../../shared/interfaces/Connection';
-import ReconnectingWebSocket from 'reconnecting-websocket';
-import {environment} from '../../../environments/environment';
+import {Injectable} from '@angular/core'
+import {iroColorObject} from '../../shared/types/types'
+import {map} from '../../shared/functions'
+import {Connection} from '../../shared/interfaces/Connection'
+import ReconnectingWebSocket from 'reconnecting-websocket'
+import {environment} from '../../../environments/environment'
 
 @Injectable({
   providedIn: 'root'
@@ -13,55 +13,55 @@ export class WebsocketService extends Connection {
   private socket: ReconnectingWebSocket;
 
   constructor() {
-    super();
+    super()
 
-    this.socket = new ReconnectingWebSocket(this.websocketUrl);
+    this.socket = new ReconnectingWebSocket(this.websocketUrl)
     this.socket.onopen = (ev: Event) => {
-      console.log(`Opened websocket at`, (ev.currentTarget as WebSocket).url);
-    };
+      console.log(`Opened websocket at`, (ev.currentTarget as WebSocket).url)
+    }
   }
 
   setColor(colors: iroColorObject[] | string[]): void {
-    const formattedColors = [];
+    const formattedColors = []
     for (const color of colors) {
-      const colorstring: string = ((color as iroColorObject).hexString ? (color as iroColorObject).hexString : color) as string;
-      formattedColors.push(colorstring.substring(1, colorstring.length));
+      const colorstring: string = ((color as iroColorObject).hexString ? (color as iroColorObject).hexString : color) as string
+      formattedColors.push(colorstring.substring(1, colorstring.length))
     }
-    this.send(`c ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`);
+    this.send(`c ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`)
   }
 
   send(payload: string): void {
     if (this.isOpen()) {
-      this.socket.send(payload);
+      this.socket.send(payload)
     }
   }
 
   setMode(modeNumber: number): void {
-    this.send(`m ${modeNumber}`);
+    this.send(`m ${modeNumber}`)
   }
 
   isOpen(): boolean {
-    return this.socket.readyState === this.socket.OPEN;
+    return this.socket.readyState === this.socket.OPEN
   }
 
   decreaseBrightness(): void {
-    this.send('b');
+    this.send('b')
   }
 
   increaseBrightness(): void {
-    this.send('B');
+    this.send('B')
   }
 
   increaseSpeed(): void {
-    this.send('S');
+    this.send('S')
   }
 
   decreaseSpeed(): void {
-    this.send('s');
+    this.send('s')
   }
 
   setLeds(value: number): void {
-    const mappedValue = map(value, 0, 1, 0, 255);
-    this.send(`v ${mappedValue}`);
+    const mappedValue = map(value, 0, 1, 0, 255)
+    this.send(`v ${mappedValue}`)
   }
 }

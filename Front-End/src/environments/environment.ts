@@ -8,9 +8,9 @@ export const environment = {
     saveSettings: false,
     url: 'https://localhost:5000',
     websockUrl: 'wss://localhost:5001'
-};
+}
 
 export const AppConfig = {
     production: false,
     environment: 'LOCAL',
-};
+}

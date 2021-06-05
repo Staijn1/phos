@@ -1,26 +1,26 @@
-import {GlobalVars} from './constants';
+import {GlobalVars} from './constants'
 
 export function map(value, start1, stop1, start2, stop2, withinBounds = false): number {
-    const newval = (value - start1) / (stop1 - start1) * (stop2 - start2) + start2;
+    const newval = (value - start1) / (stop1 - start1) * (stop2 - start2) + start2
     if (!withinBounds) {
-        return newval;
+        return newval
     }
     if (start2 < stop2) {
-        return constrain(newval, start2, stop2);
+        return constrain(newval, start2, stop2)
     } else {
-        return constrain(newval, stop2, start2);
+        return constrain(newval, stop2, start2)
     }
 }
 
 export function constrain(value, low, high): number {
-    return Math.max(Math.min(value, high), low);
+    return Math.max(Math.min(value, high), low)
 }
 
 export function calculateBGRInteger(red: number, green: number, blue: number): number {
     if (red === undefined || red === null || green === undefined || green === null || blue === undefined || blue === null) {
-        throw new Error('Invalid parameters!');
+        throw new Error('Invalid parameters!')
     }
-    return 65536 * blue + 256 * green + red;
+    return 65536 * blue + 256 * green + red
 }
 
 
@@ -30,27 +30,27 @@ export function calculateBGRInteger(red: number, green: number, blue: number): n
  * Inspired by the Adafruit examples.
  */
 export function color_wheel(pos: number): number {
-    pos = 255 - pos;
+    pos = 255 - pos
     if (pos < 85) {
-        return ((255 - pos * 3) << 16) | ((0) << 8) | (pos * 3);
+        return ((255 - pos * 3) << 16) | ((0) << 8) | (pos * 3)
     } else if (pos < 170) {
-        pos -= 85;
-        return ((0) << 16) | ((pos * 3) << 8) | (255 - pos * 3);
+        pos -= 85
+        return ((0) << 16) | ((pos * 3) << 8) | (255 - pos * 3)
     } else {
-        pos -= 170;
-        return ((pos * 3) << 16) | ((255 - pos * 3) << 8) | (0);
+        pos -= 170
+        return ((pos * 3) << 16) | ((255 - pos * 3) << 8) | (0)
     }
 }
 
 export function RGBIntegerToArray(rgb: number): number[] {
-    const red = (rgb >> 16) & 0xFF;
-    const green = (rgb >> 8) & 0xFF;
-    const blue = rgb & 0xFF;
-    return [red, green, blue];
+    const red = (rgb >> 16) & 0xFF
+    const green = (rgb >> 8) & 0xFF
+    const blue = rgb & 0xFF
+    return [red, green, blue]
 }
 
 export function randomInteger(min: number, max: number | undefined): number {
-    return Math.floor(Math.random() * (max - min + 1)) + min;
+    return Math.floor(Math.random() * (max - min + 1)) + min
 }
 
 /**
@@ -60,11 +60,11 @@ export function randomInteger(min: number, max: number | undefined): number {
  *  * @returns the sum of i & j, capped at 0xFF
  */
 export function qadd8(i: number, j: number): number {
-    let t = i + j;
+    let t = i + j
     if (t > 255) {
-        t = 255;
+        t = 255
     }
-    return t;
+    return t
 }
 
 /**
@@ -72,11 +72,11 @@ export function qadd8(i: number, j: number): number {
  * @returns i - j with a floor of 0
  */
 export function qsub8(i: number, j: number): number {
-    let t = i - j;
+    let t = i - j
     if (t < 0) {
-        t = 0;
+        t = 0
     }
-    return t;
+    return t
 }
 
 export function WarmColor(temperature: number): any {
@@ -84,37 +84,37 @@ export function WarmColor(temperature: number): any {
         r: undefined,
         g: undefined,
         b: undefined,
-    };
+    }
 
     // Scale 'heat' down from 0-255 to 0-191,
     // which can then be easily divided into three
     // equal 'thirds' of 64 units each.
-    const t192 = map(temperature, 0, 255, 0, 191);
+    const t192 = map(temperature, 0, 255, 0, 191)
 
     // calculate a value that ramps up from
     // zero to 255 in each 'third' of the scale.
-    let heatramp = t192 & 0x3F; // 0..63
-    heatramp <<= 2; // scale up to 0..252
+    let heatramp = t192 & 0x3F // 0..63
+    heatramp <<= 2 // scale up to 0..252
     // now figure out which third of the spectrum we're in:
     if (t192 & 0x80) {
         // we're in the hottest third
-        heatcolor.r = 255; // full red
-        heatcolor.g = 255; // full green
-        heatcolor.b = heatramp; // ramp up blue
+        heatcolor.r = 255 // full red
+        heatcolor.g = 255 // full green
+        heatcolor.b = heatramp // ramp up blue
     } else if (t192 & 0x40) {
         // we're in the middle third
-        heatcolor.r = 255; // full red
-        heatcolor.g = heatramp; // ramp up green
-        heatcolor.b = 0; // no blue
+        heatcolor.r = 255 // full red
+        heatcolor.g = heatramp // ramp up green
+        heatcolor.b = 0 // no blue
 
     } else {
         // we're in the coolest third
-        heatcolor.r = heatramp; // ramp up red
-        heatcolor.g = 0; // no green
-        heatcolor.b = 0; // no blue
+        heatcolor.r = heatramp // ramp up red
+        heatcolor.g = 0 // no green
+        heatcolor.b = 0 // no blue
     }
 
-    return heatcolor;
+    return heatcolor
 }
 
 export function ColdColor(temperature: number): any {
@@ -122,61 +122,61 @@ export function ColdColor(temperature: number): any {
         r: undefined,
         g: undefined,
         b: undefined,
-    };
+    }
 
     // Scale 'heat' down from 0-255 to 0-191,
     // which can then be easily divided into three
     // equal 'thirds' of 64 units each.
-    const t192 = map(temperature, 0, 255, 0, 191);
+    const t192 = map(temperature, 0, 255, 0, 191)
 
     // calculate a value that ramps up from
     // zero to 255 in each 'third' of the scale.
-    let coldramp = t192 & 0x3F; // 0..63
-    coldramp <<= 2; // scale up to 0..252
+    let coldramp = t192 & 0x3F // 0..63
+    coldramp <<= 2 // scale up to 0..252
 
     // now figure out which third of the spectrum we're in:
     if (t192 & 0x80) {
         // we're in the hottest third
-        heatcolor.r = coldramp; // ramp up red
-        heatcolor.g = 255; // full green
-        heatcolor.b = 255; // full blue
+        heatcolor.r = coldramp // ramp up red
+        heatcolor.g = 255 // full green
+        heatcolor.b = 255 // full blue
     } else if (t192 & 0x40) {
         // we're in the middle third
-        heatcolor.r = 0; // no red
-        heatcolor.g = coldramp; // ramp up green
-        heatcolor.b = 255; // full blue
+        heatcolor.r = 0 // no red
+        heatcolor.g = coldramp // ramp up green
+        heatcolor.b = 255 // full blue
 
     } else {
         // we're in the coolest third
-        heatcolor.r = 0; // no blue
-        heatcolor.g = 0; // no green
-        heatcolor.b = coldramp; // ramp up blue
+        heatcolor.r = 0 // no blue
+        heatcolor.g = 0 // no green
+        heatcolor.b = coldramp // ramp up blue
     }
 
-    return heatcolor;
+    return heatcolor
 }
 
 /*
  * Returns a new, random wheel index with a minimum distance of 42 from pos.
  */
 export function get_random_wheel_index(pos: number): number {
-    let r = 0;
-    let x = 0;
-    let y = 0;
-    let d = 0;
+    let r = 0
+    let x = 0
+    let y = 0
+    let d = 0
 
     while (d < 42) {
-        r = random8();
-        x = Math.abs(pos - r);
-        y = 255 - x;
-        d = Math.min(x, y);
+        r = random8()
+        x = Math.abs(pos - r)
+        y = 255 - x
+        d = Math.min(x, y)
     }
 
-    return r;
+    return r
 }
 
 // fast 8-bit random number generator shamelessly borrowed from FastLED
 export function random8(): number {
-    GlobalVars.rand16seed = (GlobalVars.rand16seed * 2053) + 13849;
-    return ((GlobalVars.rand16seed + (GlobalVars.rand16seed >> 8)) & 0xFF);
+    GlobalVars.rand16seed = (GlobalVars.rand16seed * 2053) + 13849
+    return ((GlobalVars.rand16seed + (GlobalVars.rand16seed >> 8)) & 0xFF)
 }

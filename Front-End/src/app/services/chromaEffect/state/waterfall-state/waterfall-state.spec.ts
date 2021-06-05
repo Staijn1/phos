@@ -1,7 +1,7 @@
-import {WaterfallState} from './waterfall-state';
+import {WaterfallState} from './waterfall-state'
 
 describe('WaterfallState', () => {
   it('should create an instance', () => {
-    expect(new WaterfallState()).toBeTruthy();
-  });
-});
+    expect(new WaterfallState()).toBeTruthy()
+  })
+})
