@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {SettingsService} from '../settings/settings.service';
+import {Injectable} from '@angular/core'
+import {SettingsService} from '../settings/settings.service'
 
 // BGR
 @Injectable({
@@ -67,18 +67,18 @@ export class ChromaSDKService {
     if (this.isChromaSupport()) {
       this.init()
         .then((init) => {
-          this.initializedApiURL = init.uri;
+          this.initializedApiURL = init.uri
         })
         .catch((err) => {
-          console.log('Error! ', err);
-        });
+          console.log('Error! ', err)
+        })
     }
   }
 
   private initializedApiURL;
 
   set setInitializedApiURL(newApiUrl: string) {
-    this.initializedApiURL = newApiUrl;
+    this.initializedApiURL = newApiUrl
   }
 
   public async init(): Promise<any> {
@@ -86,140 +86,140 @@ export class ChromaSDKService {
       method: 'POST',
       body: JSON.stringify(this.options),
       headers: {'Content-type': 'application/json; charset=UTF-8'}
-    });
+    })
 
-    const data = response.json();
+    const data = response.json()
     if (response.ok) {
       this.timerId = setInterval(() => {
-        this.onTimer();
-      }, 5000);
+        this.onTimer()
+      }, 5000)
     }
-    return data;
+    return data
   }
 
   onTimer(): void {
     this.heartbeat().catch(err => {
-      this.uninit();
-    });
+      this.uninit()
+    })
   }
 
   async heartbeat(): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null || !this.isChromaSupport()) {
-      return;
+      return
     }
     return fetch(`${this.initializedApiURL}/heartbeat`, {
       method: 'OPTIONS',
       body: null,
       headers: {'Content-type': 'application/json; charset=UTF-8'}
-    });
+    })
   }
 
   async createKeyboardEffect(effect, data): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
-      return;
+      return
     }
-    let jsonObj;
+    let jsonObj
 
     if (effect === 'CHROMA_NONE') {
-      jsonObj = JSON.stringify({effect});
+      jsonObj = JSON.stringify({effect})
     } else if (effect === 'CHROMA_CUSTOM') {
-      jsonObj = JSON.stringify({effect, param: data});
+      jsonObj = JSON.stringify({effect, param: data})
     } else if (effect === 'CHROMA_STATIC') {
-      const color = {color: data};
-      jsonObj = JSON.stringify({effect, param: color});
+      const color = {color: data}
+      jsonObj = JSON.stringify({effect, param: color})
     } else if (effect === 'CHROMA_CUSTOM_KEY') {
-      jsonObj = JSON.stringify({effect, param: data});
+      jsonObj = JSON.stringify({effect, param: data})
     }
 
     const response = await fetch(`${this.initializedApiURL}/keyboard`, {
       method: 'PUT',
       body: jsonObj,
       headers: {'Content-type': 'application/json; charset=UTF-8'}
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('error! ' + response.status);
+      throw new Error('error! ' + response.status)
     }
-    return response.json();
+    return response.json()
   }
 
   async createMouseEffect(effect, data): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
-      return;
+      return
     }
-    let jsonObj;
+    let jsonObj
 
     if (effect === 'CHROMA_NONE') {
-      jsonObj = JSON.stringify({effect});
+      jsonObj = JSON.stringify({effect})
     } else if (effect === 'CHROMA_CUSTOM2') {
-      jsonObj = JSON.stringify({effect, param: data});
+      jsonObj = JSON.stringify({effect, param: data})
     } else if (effect === 'CHROMA_STATIC') {
-      const color = {color: data};
-      jsonObj = JSON.stringify({effect, param: color});
+      const color = {color: data}
+      jsonObj = JSON.stringify({effect, param: color})
     }
 
     const response = await fetch(`${this.initializedApiURL}/mouse`, {
       method: 'PUT',
       body: jsonObj,
       headers: {'Content-type': 'application/json; charset=UTF-8'}
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('error! ' + response.status);
+      throw new Error('error! ' + response.status)
     }
-    return response.json();
+    return response.json()
   }
 
   async setEffect(id: any): Promise<any> {
-    const jsonObj = JSON.stringify({id});
+    const jsonObj = JSON.stringify({id})
 
     const response = await fetch(`${this.initializedApiURL}/effect`, {
       method: 'PUT',
       body: jsonObj,
       headers: {'Content-type': 'application/json; charset=UTF-8'}
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('error! ' + response.status);
+      throw new Error('error! ' + response.status)
     }
-    return response.json();
+    return response.json()
   }
 
   async createHeadsetEffect(effect, data): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
-      return;
+      return
     }
-    let jsonObj;
+    let jsonObj
 
     if (effect === 'CHROMA_NONE') {
-      jsonObj = JSON.stringify({effect});
+      jsonObj = JSON.stringify({effect})
     } else if (effect === 'CHROMA_CUSTOM') {
-      jsonObj = JSON.stringify({effect, param: data});
+      jsonObj = JSON.stringify({effect, param: data})
     } else if (effect === 'CHROMA_STATIC') {
-      const color = {color: data};
-      jsonObj = JSON.stringify({effect, param: color});
+      const color = {color: data}
+      jsonObj = JSON.stringify({effect, param: color})
     } else if (effect === 'CHROMA_CUSTOM_KEY') {
-      jsonObj = JSON.stringify({effect, param: data});
+      jsonObj = JSON.stringify({effect, param: data})
     }
 
     const response = await fetch(`${this.initializedApiURL}/headset`, {
       method: 'PUT',
       body: jsonObj,
       headers: {'Content-type': 'application/json; charset=UTF-8'}
-    });
+    })
 
     if (!response.ok) {
-      throw new Error('error! ' + response.status);
+      throw new Error('error! ' + response.status)
     }
-    return response.json();
+    return response.json()
   }
 
   uninit(): void {
-    this.initializedApiURL = undefined;
-    throw new Error('Not implemented!');
+    this.initializedApiURL = undefined
+    throw new Error('Not implemented!')
   }
 
   private isChromaSupport(): boolean {
-    return this.settingsService.readGeneralSettings().chroma || false;
+    return this.settingsService.readGeneralSettings().chroma || false
   }
 }

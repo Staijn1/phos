@@ -1,28 +1,28 @@
-import {TestBed} from '@angular/core/testing';
+import {TestBed} from '@angular/core/testing'
 
-import {WebsocketService} from './websocket.service';
-import {iroColorObject} from '../../shared/types/types';
+import {WebsocketService} from './websocket.service'
+import {iroColorObject} from '../../shared/types/types'
 
 describe('WebsocketService', () => {
-    let service: WebsocketService;
+    let service: WebsocketService
 
     beforeEach(() => {
-        TestBed.configureTestingModule({});
-        service = TestBed.inject(WebsocketService);
-    });
+        TestBed.configureTestingModule({})
+        service = TestBed.inject(WebsocketService)
+    })
 
     it('should be created', () => {
-        expect(service).toBeTruthy();
-    });
+        expect(service).toBeTruthy()
+    })
 
     it('should have a filled array of URLs', () => {
-        expect(service.websocketUrl).toBeTruthy();
-    });
+        expect(service.websocketUrl).toBeTruthy()
+    })
 
     it('should call send', () => {
         // @ts-ignore
         spyOn(service, 'send').and.callFake(() => {
-        });
+        })
         const color: iroColorObject = {
             alpha: 0,
             blue: 0,
@@ -44,9 +44,9 @@ describe('WebsocketService', () => {
             rgbaString: '',
             saturation: 0,
             value: 0
-        };
-        const colors: iroColorObject[] = [color, color, color];
-        service.setColor(colors);
-        expect(service.send).toHaveBeenCalledOnceWith('c FF00FF,FF00FF,FF00FF');
-    });
-});
+        }
+        const colors: iroColorObject[] = [color, color, color]
+        service.setColor(colors)
+        expect(service.send).toHaveBeenCalledOnceWith('c FF00FF,FF00FF,FF00FF')
+    })
+})
