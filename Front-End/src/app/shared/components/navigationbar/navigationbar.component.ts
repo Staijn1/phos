@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild} from '@angular/core';
-import {ElectronService} from '../../services/electron/electron.service';
+import {ElectronService} from '../../../services/electron/electron.service';
 import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons';
 import {TimelineMax} from 'gsap';
 import {NavigationEnd, Router} from '@angular/router';
@@ -20,8 +20,8 @@ import {
   faWalking,
   faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons';
-import {ConnectionService} from '../../services/connection/connection.service';
-import {ColorService} from '../../services/color/color.service';
+import {ConnectionService} from '../../../services/connection/connection.service';
+import {ColorService} from '../../../services/color/color.service';
 
 @Component({
   selector: 'app-navigationbar',

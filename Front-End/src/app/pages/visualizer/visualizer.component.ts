@@ -21,7 +21,6 @@ import {GradientInformationExtended} from '../../types/GradientInformation';
 export class VisualizerComponent implements OnInit, OnDestroy {
   options: Options = {
     ...this.settingsService.readVisualizerOptions(), ...{
-      gradient: 'rainbow',
       volume: 0,
       onCanvasDraw: this.drawCallback.bind(this)
     }
@@ -42,20 +41,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     {value: 7, text: 'Half octave bands', disabled: false},
     {value: 8, text: 'Full octave bands', disabled: false},
   ];
-  // Properties that may be changed by Random Mode
-  randomProperties = [
-    {value: 'nobg', text: 'Background', disabled: false},
-    {value: 'imgfit', text: 'Image Fit', disabled: false},
-    {value: 'reflex', text: 'Reflex', disabled: false},
-    {value: 'peaks', text: 'PEAKS', disabled: false},
-    {value: 'leds', text: 'LEDS', disabled: false},
-    {value: 'lumi', text: 'LUMI', disabled: false},
-    {value: 'barSp', text: 'Bar Spacing', disabled: false},
-    {value: 'line', text: 'Line Width', disabled: false},
-    {value: 'fill', text: 'Fill Opacity', disabled: false},
-    {value: 'radial', text: 'Radial', disabled: false},
-    {value: 'spin', text: 'Spin', disabled: false}
-  ];
+
   smoothingConfig = {
     connect: 'lower',
     start: this.options.smoothing,
@@ -123,19 +109,22 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     private colorService: ColorService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService) {
+    this.timeline = new TimelineMax();
   }
 
   ngOnDestroy(): void {
     this.audioMotion.toggleAnalyzer();
+    this.audioMotion = undefined;
+    this.gradients = undefined;
   }
 
   ngOnInit(): void {
     this.init();
     this.chromaEffect.state = new VisualizerState();
-
-    this.timeline = new TimelineMax();
     if (localStorage.getItem('dismissedSettingsPopup') !== 'true') {
       this.timeline.to('#overlay', {duration: 1, opacity: 1}, '+=1.8');
+    } else{
+      this.dismissOverlay();
     }
   }
 
@@ -152,7 +141,6 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
   updateOptions(): void {
     this.audioMotion.setOptions(this.options);
-    this.registerGradients(this.gradients).then();
   }
 
   changeGradient(gradientIndex: number): void {
@@ -272,6 +260,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   }
 
   private async getGradients(): Promise<GradientInformationExtended[]> {
+    console.log('getGradients');
     const gradients = await this.connection.getGradients() as GradientInformationExtended[];
     for (const gradient of gradients) {
       gradient.collapsed = true;
@@ -282,10 +271,10 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   }
 
   private async registerGradients(gradients: GradientInformationExtended[]): Promise<void> {
+    console.log('Registergradients');
     if (!gradients) {
       this.gradients = await this.getGradients();
     }
-
     this.gradients.forEach((gradient, index: number) => {
       this.audioMotion.registerGradient(gradient.name, {
         bgColor: gradient.bgColor,
