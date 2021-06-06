@@ -40,7 +40,7 @@
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <label class="input-group-text bg-secondary text-white"
-                                                   for="gradientSelect">gradient</label>
+                                                   for="gradientSelect">Gradient</label>
                                         </div>
                                         <select (change)="changeGradient($event.target.value)" class="form-select"
                                                 id="gradientSelect">
@@ -55,8 +55,7 @@
                                 <div class="col">
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
-                                            <label class="input-group-text bg-secondary text-white" for="fftSize">fft
-                                                size</label>
+                                            <label class="input-group-text bg-secondary text-white" for="fftSize">FFT Size</label>
                                         </div>
                                         <select (change)="updateOptions()" [(ngModel)]="visualizerOptions.fftSize"
                                                 class="form-select"
@@ -84,7 +83,7 @@
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <label class="input-group-text bg-secondary text-white"
-                                                   for="gradientSelect">mode</label>
+                                                   for="gradientSelect">Mode</label>
                                         </div>
                                         <select #modeSelect (change)="updateMode($event)" class="form-select"
                                                 id="modeSelect">
@@ -102,14 +101,12 @@
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <label class="input-group-text bg-secondary text-white"
-                                                   for="reflex">reflex</label>
+                                                   for="reflex">Reflex</label>
                                         </div>
                                         <select (change)="changeReflex($event)" class="form-select" id="reflex">
                                             <option value="0">Off</option>
                                             <option value="1">On</option>
-                                            <option value="2">Mirrored</option>
-                                            <option value="3">Mirrored Horizontally Left</option>
-                                            <option value="4">Mirrored Horizontally Right</option>
+                                            <option value="2">Mirrored Vertically</option>
                                         </select>
                                     </div>
                                 </div>
@@ -155,7 +152,7 @@
                                     <div class="input-group mb-3">
                                         <div class="input-group-prepend">
                                             <label class="input-group-text bg-secondary text-white"
-                                                   for="scaleSelect">scale</label>
+                                                   for="scaleSelect">Scale</label>
                                         </div>
                                         <select (change)="changeShowScale($event)" class="form-select"
                                                 id="scaleSelect">
@@ -166,7 +163,19 @@
                                         </select>
                                     </div>
                                 </div>
-                                <div class="col"></div>
+                                <div class="col">
+                                    <div class="input-group mb-3">
+                                        <div class="input-group-prepend">
+                                            <label class="input-group-text bg-secondary text-white"
+                                                   for="mirrorSelect">Mirror</label>
+                                        </div>
+                                        <select class="form-select" id="mirrorSelect" [(ngModel)]='visualizerOptions.mirror' (ngModelChange)='updateOptions()'>
+                                            <option selected [value]="0">None</option>
+                                            <option [value]="-1">Mirror left</option>
+                                            <option [value]="1">Mirror Right</option>
+                                        </select>
+                                    </div>
+                                </div>
                                 <!-- Display modePage (leds, radial) -->
                                 <div class="col d-flex justify-content-center py-2">
                                     <div class="btn-group" role="group" aria-label="Basic radio toggle button group">
@@ -227,7 +236,7 @@
                                             >
                                                 <fa-icon [icon]="editIcon"></fa-icon>
                                             </button>
-                                            <button class="btn mx-1 btn-danger text-dark">
+                                            <button class="btn mx-1 btn-danger">
                                                 <fa-icon [icon]="deleteIcon"></fa-icon>
                                             </button>
                                         </div>
@@ -241,7 +250,7 @@
                                                     <th scope="col">#</th>
                                                     <th scope="col">Position</th>
                                                     <th scope="col">Color</th>
-                                                    <th scope="col"></th>
+                                                    <th scope="col">Action</th>
                                                 </tr>
                                                 </thead>
                                                 <tbody>
@@ -258,7 +267,7 @@
                                                         <div class="small">{{stop.pos}}</div>
                                                     </td>
                                                     <td>{{stop.color}}</td>
-                                                    <td>
+                                                    <td class="">
                                                         <div class="d-flex justify-content-end">
                                                             <button class="btn btn-danger">
                                                                 <fa-icon [icon]="deleteIcon"></fa-icon>

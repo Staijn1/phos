@@ -1,25 +1,25 @@
-<div id="menu-bar" *ngIf="this.electronService.isElectron()">
-    <div class="left"></div>
-    <div class="right">
-        <button (click)="minimizeButtonAction()" class="menubar-btn" id="minimize-btn">
-            <fa-icon [icon]="minimize"></fa-icon>
-        </button>
-        <button (click)="maximizeButtonAction()" class="menubar-btn" id="max-unmax-btn">
-            <fa-icon [icon]="maximize"></fa-icon>
-        </button>
-        <button (click)="exitButtonAction()" class="menubar-btn" id="close-btn">
-            <fa-icon [icon]="exit"></fa-icon>
-        </button>
-    </div>
+<div id='menu-bar' *ngIf='this.electronService.isElectron()'>
+  <div class='left'></div>
+  <div class='right'>
+    <button (click)='minimizeButtonAction()' class='menubar-btn' id='minimize-btn'>
+      <fa-icon [icon]='minimize'></fa-icon>
+    </button>
+    <button (click)='maximizeButtonAction()' class='menubar-btn' id='max-unmax-btn'>
+      <fa-icon [icon]='maximize'></fa-icon>
+    </button>
+    <button (click)='exitButtonAction()' class='menubar-btn' id='close-btn'>
+      <fa-icon [icon]='exit'></fa-icon>
+    </button>
+  </div>
 </div>
 
 <!-- ======= Mobile nav toggle button ======= -->
-<button (click)="mobileNav()" class="mobile-nav-toggle d-lg-none mt-4" type="button">
-    <fa-icon [icon]="mobileMenu"></fa-icon>
+<button (click)='mobileNav()' class='mobile-nav-toggle d-lg-none mt-4' type='button'>
+  <fa-icon [icon]='mobileMenu'></fa-icon>
 </button>
 
 <!-- ======= Header ======= -->
-<header class="d-flex flex-column justify-content-center" id="header">
+<header class='d-flex flex-column justify-content-center' id='header'>
 
     <nav class="nav-menu">
         <ul>
@@ -42,6 +42,12 @@
                 </a>
             </li>
             <li>
+            <a routerLink="/gradients-editor" routerLinkActive="active">
+              <fa-icon [icon]="editor"></fa-icon>
+              <span>Gradients editor</span>
+            </a>
+          </li>
+            <li>
                 <a routerLink="/settings" routerLinkActive="active">
                     <fa-icon [icon]="settings"></fa-icon>
                     <span>Settings</span>
@@ -60,42 +66,42 @@
                         <fa-icon (click)="this.connection.increaseSpeed()" [icon]="speedIncreaseIcon"
                                  class="ms-2 ms-lg-4 hover"></fa-icon>
                     </span>
-                </a>
-            </li>
-            <li>
-                <a class="colorpicker h-100">
-                    <fa-icon [icon]="colorpicker"></fa-icon>
-                    <div class="ms-2 ms-lg-4" id="picker"></div>
-                </a>
-            </li>
-            <li (click)="turnOff()">
-                <a (click)="$event.preventDefault()" href="" id="powerOff">
-                    <fa-icon [icon]="powerOff"></fa-icon>
-                    <span>Power Off</span>
-                </a>
-            </li>
-        </ul>
-    </nav><!-- .nav-menu -->
+        </a>
+      </li>
+      <li>
+        <a class='colorpicker h-100'>
+          <fa-icon [icon]='colorpicker'></fa-icon>
+          <div class='ms-2 ms-lg-4' id='picker'></div>
+        </a>
+      </li>
+      <li (click)='turnOff()'>
+        <a (click)='$event.preventDefault()' href='' id='powerOff'>
+          <fa-icon [icon]='powerOff'></fa-icon>
+          <span>Power Off</span>
+        </a>
+      </li>
+    </ul>
+  </nav><!-- .nav-menu -->
 
 </header><!-- End Header -->
 
 
-<div id="cover"></div>
+<div id='cover'></div>
 
-<div class="transition-container from-left">
-    <span class="tile"></span>
-    <span class="tile"></span>
-    <span class="tile"></span>
-    <span class="tile"></span>
-    <span class="tile"></span>
-    <span class="tile"></span>
+<div class='transition-container from-left'>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
 </div>
 
-<div class="transition-container from-top">
-    <span class="tile"></span>
-    <span class="tile"></span>
-    <span class="tile"></span>
-    <span class="tile"></span>
-    <span class="tile"></span>
-    <span class="tile"></span>
+<div class='transition-container from-top'>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
 </div>

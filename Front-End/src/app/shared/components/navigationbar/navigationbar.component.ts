@@ -7,7 +7,7 @@ import {NavigationEnd, Router} from '@angular/router'
 import {
   faBars,
   faChartBar,
-  faCog,
+  faCog, faEdit,
   faEyeDropper,
   faHome,
   faList,
@@ -18,7 +18,7 @@ import {
   faSlidersH,
   faTimes,
   faWalking,
-  faWindowMinimize
+  faWindowMinimize,
 } from '@fortawesome/free-solid-svg-icons'
 import {ConnectionService} from '../../../services/connection/connection.service'
 import {ColorService} from '../../../services/color/color.service'
@@ -46,7 +46,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   increaseBrightnessIcon = faPlus;
   speedIncreaseIcon = faRunning;
   speedDecreaseIcon = faWalking;
-
+  editor = faEdit
 
   private window: Electron.BrowserWindow | undefined;
   private animationMode = 0;
@@ -54,6 +54,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
   @Output() animationEnd = new EventEmitter<void>();
   @ViewChild('animationObject') animationObject: ElementRef;
+
 
   constructor(
     public electronService: ElectronService,

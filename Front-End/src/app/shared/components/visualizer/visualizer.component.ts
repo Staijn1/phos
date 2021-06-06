@@ -1,27 +1,28 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core'
-import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
-import {GradientInformation} from '../../types/GradientInformation'
+import { Component, Input, OnDestroy, OnInit } from '@angular/core'
+import AudioMotionAnalyzer, { Options } from 'audiomotion-analyzer'
+import { GradientInformation } from '../../types/GradientInformation'
 
 @Component({
   selector: 'app-shared-visualizer',
   templateUrl: './visualizer.component.html',
-  styleUrls: ['./visualizer.component.scss']
+  styleUrls: ['./visualizer.component.scss'],
 })
 export class VisualizerComponent implements OnInit, OnDestroy {
-  private audioMotion: AudioMotionAnalyzer;
-  private _options: Options;
-  private _gradients: GradientInformation[];
+  private audioMotion: AudioMotionAnalyzer
+  private _options: Options
+  private _gradients: GradientInformation[]
+
   @Input() set options(options: Options) {
     this._options = {
       ...options,
-      ...{volume: 0}
+      ...{ volume: 0 },
     }
     this.updateOptions()
-    console.log('Changed options in setter')
   }
 
 
   @Input() set gradients(gradients: GradientInformation[]) {
+    console.log("Gradients changed in setter")
     this._gradients = gradients
     this.registerGradients()
   }
@@ -39,13 +40,12 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
   private init(): void {
     const elem = document.getElementById('visualizer')
-    this.audioMotion = new AudioMotionAnalyzer(elem, this.options)
+    this.audioMotion = new AudioMotionAnalyzer(elem, this._options)
     this.setSource()
-    this.updateOptions()
   }
 
   private setSource(): void {
-    navigator.mediaDevices.getUserMedia({audio: true, video: false})
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
       .then(stream => {
         const audioCtx = this.audioMotion.audioCtx
         const micInput = audioCtx.createMediaStreamSource(stream)
@@ -59,19 +59,22 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
   updateOptions(): void {
     if (this.audioMotion) {
-      // this._options = {...this._options, ...this.defaultOptions};
-      console.log(this._options)
       this.audioMotion.setOptions(this._options)
     }
   }
 
   private registerGradients(): void {
+    console.log("Registering gradients")
     if (!this._gradients) {
       throw Error('No gradients!')
     }
 
     for (const gradient of this._gradients) {
-      this.audioMotion.registerGradient(gradient.name, {bgColor: gradient.bgColor, colorStops: gradient.colorStops})
+      this.audioMotion.registerGradient(gradient.name, { bgColor: gradient.bgColor, colorStops: gradient.colorStops })
     }
+  }
+
+  toggleFullscreen() {
+    this.audioMotion.toggleFullscreen()
   }
 }

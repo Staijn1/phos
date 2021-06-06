@@ -1,0 +1,86 @@
+<div class='vh-100 px-5' id='wrapper'>
+  <div class='row h-100 mx-0 ps-5'>
+    <div class='col-12 col-md-6 mt-5'>
+      <div class='card'>
+        <div class='card-header d-flex justify-content-between bg-primary text-white align-content-center'
+             #overview>
+          <h5 class='text-white'>Overview</h5>
+        </div>
+        <div class='card-body text-dark'>
+          <div class='my-3' *ngFor='let gradient of gradients; let gradientIndex = index'>
+            <div class='card'>
+              <div class='card-header d-flex justify-content-between'>
+                <h3>{{gradient.name}}</h3>
+                <div class='d-flex'>
+                  <button class='btn mx-1 btn-success text-dark'
+                          (click)='submitGradient(gradient)'>
+                    <fa-icon [icon]='saveIcon'></fa-icon>
+                  </button>
+                  <button class='btn mx-1 btn-warning text-dark'
+                          (click)='gradient.collapsed = !gradient.collapsed'
+                          [attr.aria-expanded]='!gradient.collapsed'
+                  >
+                    <fa-icon [icon]='editIcon'></fa-icon>
+                  </button>
+                  <button class='btn mx-1 btn-danger'>
+                    <fa-icon [icon]='deleteIcon'></fa-icon>
+                  </button>
+                </div>
+              </div>
+              <div class='card-body'>
+                <p>Aantal kleuren: {{gradient.colorStops.length}}</p>
+                <div [ngbCollapse]='gradient.collapsed'>
+                  <table class='table'>
+                    <thead>
+                    <tr>
+                      <th scope='col'>#</th>
+                      <th scope='col'>Position</th>
+                      <th scope='col'>Color</th>
+                      <th scope='col'>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor='let stop of gradient.colorStops;let stopIndex = index'>
+                      <th scope='row'>{{stopIndex + 1}}</th>
+                      <td colspan='1'>
+                        <nouislider
+                          [name]="'sliderinput' + stopIndex"
+                          [config]='gradient.sliderOptions'
+                          [(ngModel)]='stop.pos'
+                          (slide)='submitGradient(gradient)'
+                          #slider
+                        ></nouislider>
+                        <div class='small'>{{stop.pos}}</div>
+                      </td>
+                      <td>{{stop.color}}</td>
+                      <td class=''>
+                        <div class='d-flex justify-content-end'>
+                          <button class='btn btn-danger'>
+                            <fa-icon [icon]='deleteIcon'></fa-icon>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='col h-100 d-flex flex-column justify-content-center'>
+      <div class='h-50'>
+        <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+

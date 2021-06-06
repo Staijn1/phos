@@ -1,0 +1,11 @@
+@import "../../../variables";
+
+#visualizer {
+  display: flex;
+  justify-content: center;
+
+  canvas {
+    width: 100% !important;
+  }
+}
+
