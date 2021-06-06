@@ -1,11 +1,25 @@
 @import "../../../variables";
 
-#visualizer {
-  display: flex;
-  justify-content: center;
+$transition: all ease-in 0.25s;
 
+#visualizer {
   canvas {
     width: 100% !important;
   }
+}
+
+.card-header{
+  transition: $transition;
+}
+
+.rotate {
+  transition: $transition;
+}
+
+.left {
+}
+
+.down {
+  transform:rotate(-90deg);
 }
 

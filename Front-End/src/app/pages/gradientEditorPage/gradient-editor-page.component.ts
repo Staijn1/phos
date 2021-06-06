@@ -1,13 +1,12 @@
 import { Component, OnInit } from '@angular/core'
-import AudioMotionAnalyzer, { Options } from 'audiomotion-analyzer'
+import { Options } from 'audiomotion-analyzer'
 import { SettingsService } from '../../services/settings/settings.service'
 import { GradientInformation, GradientInformationExtended } from '../../shared/types/GradientInformation'
 import { ConnectionService } from '../../services/connection/connection.service'
-import { faEdit, faTrash } from '@fortawesome/free-solid-svg-icons'
+import { faAngleLeft, faTrash } from '@fortawesome/free-solid-svg-icons'
 import { faSave } from '@fortawesome/free-solid-svg-icons/faSave'
 import { faFileDownload } from '@fortawesome/free-solid-svg-icons/faFileDownload'
 import { ColorService } from '../../services/color/color.service'
-import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.service'
 
 @Component({
   selector: 'app-gradient-editor-page',
@@ -18,11 +17,11 @@ export class GradientEditorPageComponent implements OnInit {
   visualizerOptions: Options = {}
 
   // Gradient definitions
-  gradients: GradientInformation[] = []
+  gradients: GradientInformationExtended[] = []
   saveIcon = faSave
   load = faFileDownload
   deleteIcon = faTrash
-  editIcon = faEdit
+  editIcon = faAngleLeft
 
   private defaultSliderOptions = {
     animate: true,
@@ -30,6 +29,7 @@ export class GradientEditorPageComponent implements OnInit {
     range: { min: 0, max: 1 },
     connect: [true, false],
   }
+
   constructor(
     private connection: ConnectionService,
     private colorService: ColorService,
@@ -107,5 +107,20 @@ export class GradientEditorPageComponent implements OnInit {
 
   updateOptions(): void {
     this.visualizerOptions = Object.assign({}, this.visualizerOptions)
+  }
+
+  submitGradient(gradient: GradientInformation) {
+    this.visualizerOptions.gradient = gradient.name
+    this.updateOptions()
+  }
+
+  removeColorStop(gradient: GradientInformationExtended, stopIndex: number) {
+    gradient.colorStops.splice(stopIndex, 1)
+  }
+
+  handleCollapsable(gradient: GradientInformationExtended) {
+    gradient.collapsed = !gradient.collapsed
+    this.visualizerOptions.gradient = gradient.name
+    this.updateOptions()
   }
 }
