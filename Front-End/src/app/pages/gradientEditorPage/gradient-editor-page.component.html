@@ -1,95 +1,109 @@
 <div class='min-vh-100 px-5'>
-  <div class='row h-100 mx-0 ps-5'>
-    <div class='col-12 col-md-6 mt-5'>
-      <div class='card'>
-        <div class='card-header d-flex justify-content-between bg-primary text-white align-content-center'>
-          <h5 class='text-white'>Overview</h5>
-        </div>
-        <div class='card-body text-dark'>
-
-          <div class='my-3' *ngFor='let gradient of gradients; let gradientIndex = index'>
+    <div class='row h-100 mx-0 ps-5'>
+        <div class='col-12 col-md-6 mt-5'>
             <div class='card'>
-              <div
-                class='card-header d-flex justify-content-between'
-                #gradientCard
-                [id]='gradient.name'
-                [ngClass]='gradientCard.id === visualizerOptions.gradient ? "bg-secondary text-white" : ""'>
-                <h3>{{gradient.name}}</h3>
-                <div class='d-flex'>
-                  <button
-                    class='btn mx-1 btn-success'
-                    (click)='submitGradient(gradient)'
-                    [ngClass]='gradientCard.id === visualizerOptions.gradient ? "text-white" : "text-dark"'
-                  >
-                    <fa-icon [icon]='saveIcon'></fa-icon>
-                  </button>
-                  <button
-                    class='btn mx-1 btn-warning text-dark rotate'
-                    (click)="handleCollapsable(gradient)"
-                    [attr.aria-expanded]='!gradient.collapsed'
-                    [ngClass]="[
-                     gradientCard.id === visualizerOptions.gradient ? 'text-white' : 'text-dark',
-                     gradient.collapsed ? 'left' : 'down']"
-                  >
-                    <fa-icon
-                      [icon]='editIcon'>
-                    </fa-icon>
-                  </button>
-                  <button class='btn mx-1 btn-danger'>
-                    <fa-icon [icon]='deleteIcon'></fa-icon>
-                  </button>
+                <div class='card-header d-flex justify-content-between bg-primary text-white align-content-center'>
+                    <h5 class='text-white'>Gradients overview</h5>
                 </div>
-              </div>
-              <div class='card-body'>
-                <p>Aantal kleuren: {{gradient.colorStops.length}}</p>
-                <div [ngbCollapse]='gradient.collapsed'>
-                  <table class='table' aria-label='Colorstops'>
-                    <thead>
-                    <tr>
-                      <th scope='col'>#</th>
-                      <th scope='col'>Position</th>
-                      <th scope='col'>Color</th>
-                      <th scope='col'>Action</th>
-                    </tr>
-                    </thead>
-                    <tbody>
-                    <tr *ngFor='let stop of gradient.colorStops;let stopIndex = index'>
-                      <th scope='row'>{{stopIndex + 1}}</th>
-                      <td colspan='1'>
-                        <nouislider
-                          [name]="'sliderinput' + stopIndex"
-                          [config]='gradient.sliderOptions'
-                          [(ngModel)]='stop.pos'
-                          (slide)='submitGradient(gradient)'
-                          #slider
-                        ></nouislider>
-                        <div class='small'>{{stop.pos}}</div>
-                      </td>
-                      <td>{{stop.color}}</td>
-                      <td class=''>
-                        <div class='d-flex justify-content-end'>
-                          <button class='btn btn-danger' (click)='removeColorStop(gradient, stopIndex)'>
-                            <fa-icon [icon]='deleteIcon'></fa-icon>
-                          </button>
+                <div class='card-body text-dark'>
+
+                    <div class='my-3' *ngFor='let gradient of gradients; let gradientIndex = index'>
+                        <div class='card'>
+                            <div
+                                    class='card-header d-flex justify-content-between'
+                                    #gradientCard
+                                    [id]='gradient.name'
+                                    [ngClass]='gradientCard.id === visualizerOptions.gradient ? "bg-secondary text-white" : ""'>
+                                <h3>{{gradient.name}}</h3>
+                                <div class='d-flex'>
+                                    <button
+                                            class='btn mx-1 text-dark rotate'
+                                            (click)="handleCollapsable(gradient)"
+                                            [attr.aria-expanded]='!gradient.collapsed'
+                                            [ngClass]="[
+                                                         gradientCard.id === visualizerOptions.gradient ? 'text-white' : 'text-dark',
+                                                         gradient.collapsed ? 'left' : 'down'
+                                                         ]"
+                                    >
+                                        <fa-icon
+                                                [icon]='editIcon'>
+                                        </fa-icon>
+                                    </button>
+                                    <button
+                                            class='btn mx-1 btn-info text-white'
+                                            (click)='submitGradient(gradient)'
+                                    >
+                                        <fa-icon [icon]='saveIcon'></fa-icon>
+                                    </button>
+                                    <button class='btn mx-1 btn-danger'>
+                                        <fa-icon [icon]='deleteIcon'></fa-icon>
+                                    </button>
+                                </div>
+                            </div>
+                            <div class='card-body'>
+                                <div class="row">
+                                    <div class="col">
+                                    <p>Aantal kleuren: {{gradient.colorStops.length}}</p>
+                                    </div>
+                                    <div class="col d-flex justify-content-end">
+                                        <button type="button" class="btn btn-success" (click)="addColorStopToGradient(gradient)">
+                                            <fa-icon [icon]="addIcon"></fa-icon>
+                                        </button>
+                                    </div>
+                                </div>
+                                <div [ngbCollapse]='gradient.collapsed'>
+                                    <table class='table' aria-label='Colorstops'>
+                                        <thead>
+                                        <tr>
+                                            <th scope='col'>#</th>
+                                            <th scope='col'>Position</th>
+                                            <th scope='col'>Color</th>
+                                            <th scope='col'>Action</th>
+                                        </tr>
+                                        </thead>
+                                        <tbody>
+                                        <tr *ngFor='let stop of gradient.colorStops;let stopIndex = index'>
+                                            <th scope='row'>{{stopIndex + 1}}</th>
+                                            <td colspan='1'>
+                                                <nouislider
+                                                        [name]="'sliderinput' + stopIndex"
+                                                        [config]='gradient.sliderOptions'
+                                                        [(ngModel)]='stop.pos'
+                                                        (slide)='submitGradient(gradient)'
+                                                        #slider
+                                                ></nouislider>
+                                                <div class='small'>{{stop.pos}}</div>
+                                            </td>
+                                            <td>
+                                                <app-colorpicker [colorChangeEvent]="testColor" [id]="gradientIndex + stopIndex"></app-colorpicker>
+                                                <div>Test</div>
+                                                {{stop.color}}
+                                            </td>
+                                            <td class=''>
+                                                <div class='d-flex justify-content-end'>
+                                                    <button class='btn btn-danger'
+                                                            (click)='removeColorStop(gradient, stopIndex)'>
+                                                        <fa-icon [icon]='deleteIcon'></fa-icon>
+                                                    </button>
+                                                </div>
+                                            </td>
+                                        </tr>
+                                        </tbody>
+                                    </table>
+                                </div>
+                            </div>
                         </div>
-                      </td>
-                    </tr>
-                    </tbody>
-                  </table>
+                    </div>
                 </div>
-              </div>
             </div>
-          </div>
         </div>
-      </div>
+        <div class='col d-flex flex-column'>
+            <div class='h-25 py-5 position-sticky sticky-top'>
+                <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
+                <p>Active: {{this.visualizerOptions.gradient}}</p>
+            </div>
+        </div>
     </div>
-    <div class='col d-flex flex-column'>
-      <div class='h-25 py-5 position-sticky sticky-top'>
-        <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
-        <p>Active: {{this.visualizerOptions.gradient}}</p>
-      </div>
-    </div>
-  </div>
 </div>
 
 

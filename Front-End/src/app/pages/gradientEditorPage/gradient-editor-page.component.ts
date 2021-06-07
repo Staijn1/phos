@@ -1,12 +1,15 @@
-import { Component, OnInit } from '@angular/core'
-import { Options } from 'audiomotion-analyzer'
-import { SettingsService } from '../../services/settings/settings.service'
-import { GradientInformation, GradientInformationExtended } from '../../shared/types/GradientInformation'
-import { ConnectionService } from '../../services/connection/connection.service'
-import { faAngleLeft, faTrash } from '@fortawesome/free-solid-svg-icons'
-import { faSave } from '@fortawesome/free-solid-svg-icons/faSave'
-import { faFileDownload } from '@fortawesome/free-solid-svg-icons/faFileDownload'
-import { ColorService } from '../../services/color/color.service'
+import {Component, OnInit} from '@angular/core'
+import {Options} from 'audiomotion-analyzer'
+import {SettingsService} from '../../services/settings/settings.service'
+import {GradientInformation, GradientInformationExtended} from '../../shared/types/GradientInformation'
+import {ConnectionService} from '../../services/connection/connection.service'
+import {faAngleLeft, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons'
+import {faSave} from '@fortawesome/free-solid-svg-icons/faSave'
+import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
+import {ColorService} from '../../services/color/color.service'
+import iro from '@jaames/iro';
+import {iroColorObject} from '../../shared/types/types';
+import {IroColorPicker} from '@jaames/iro/dist/ColorPicker';
 
 @Component({
   selector: 'app-gradient-editor-page',
@@ -23,12 +26,18 @@ export class GradientEditorPageComponent implements OnInit {
   deleteIcon = faTrash
   editIcon = faAngleLeft
 
+
   private defaultSliderOptions = {
     animate: true,
     start: 0,
-    range: { min: 0, max: 1 },
+    range: {min: 0, max: 1},
     connect: [true, false],
   }
+  addIcon = faPlus;
+  private picker: IroColorPicker;
+
+
+  testColor = (color) => {console.log(color)};
 
   constructor(
     private connection: ConnectionService,
@@ -122,5 +131,9 @@ export class GradientEditorPageComponent implements OnInit {
     gradient.collapsed = !gradient.collapsed
     this.visualizerOptions.gradient = gradient.name
     this.updateOptions()
+  }
+
+  addColorStopToGradient(gradient: GradientInformationExtended) {
+    gradient.colorStops.push({pos: 1, color: "#FFF"})
   }
 }
