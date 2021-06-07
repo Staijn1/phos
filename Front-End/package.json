@@ -10,7 +10,6 @@
   },
   "main": "main.js",
   "scripts": {
-    "ng": "ng",
     "lint": "ng lint",
     "postinstall": "node rebuild.js",
     "start": "npm-run-all -p ng:serve electron:serve",
@@ -24,9 +23,9 @@
     "electron:windows": "npm run build:prod && electron-packager . angulon --overwrite  --platform=win32 --arch=all --prune=true --out=release-builds --icon=\"favicon.ico\"",
     "electron:linux": "electron-packager . angulon --overwrite --asar --platform=linux --arch=x64 --prune=true --out=release-builds --icon=\"favicon.ico\"",
     "compile-watch": "tsc -w",
-    "e2e": "npm run postinstall && npm run electron:tsc && mocha",
-    "test": "ng test --code-coverage --watch false",
-    "test:watch": "ng test --code-coverage --watch true"
+    "e2e": "npx cypress open",
+    "e2e:headless": "npx cypress run --record --key 9298ec3d-a0be-49a8-adc0-36bf9837d737",
+    "test": "npm run e2e:headless"
   },
   "private": false,
   "dependencies": {
@@ -57,6 +56,7 @@
     "zone.js": "0.11.3"
   },
   "devDependencies": {
+    "cypress": "^7.4.0",
     "@angular-devkit/build-angular": "^0.1100.3",
     "@angular-eslint/builder": "4.3.0",
     "@angular-eslint/eslint-plugin": "4.3.0",
@@ -76,21 +76,7 @@
     "electron-rebuild": "2.3.4",
     "electron-reload": "1.5.0",
     "eslint": "^7.6.0",
-    "jasmine": "^3.6.3",
-    "jasmine-core": "^3.6.0",
-    "jasmine-spec-reporter": "~5.0.0",
-    "karma": "^5.2.3",
-    "karma-chrome-launcher": "~3.1.0",
-    "karma-coverage": "^2.0.3",
-    "karma-coverage-istanbul-instrumenter": "^1.0.2",
-    "karma-jasmine": "~4.0.0",
-    "karma-jasmine-html-reporter": "^1.5.0",
-    "karma-phantomjs-launcher": "^1.0.4",
-    "lite-server": "^2.6.1",
-    "mocha": "^8.2.1",
     "npm-run-all": "^4.1.3",
-    "puppeteer": "^2.1.1",
-    "spectron": "^13.0.0",
     "typescript": "4.0.5",
     "webpack": "4.31.0"
   }
