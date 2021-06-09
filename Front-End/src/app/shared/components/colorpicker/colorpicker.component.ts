@@ -1,32 +1,36 @@
-import {Component, Input, OnInit} from '@angular/core';
-import iro from '@jaames/iro';
-import {iroColorObject} from '../../types/types';
-import {IroColorPicker} from '@jaames/iro/dist/ColorPicker';
+import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core'
+import iro from '@jaames/iro'
+import { IroColorPicker } from '@jaames/iro/dist/ColorPicker'
+import Color = iro.Color
 
 @Component({
   selector: 'app-colorpicker',
   templateUrl: './colorpicker.component.html',
-  styleUrls: ['./colorpicker.component.scss']
+  styleUrls: ['./colorpicker.component.scss'],
 })
-export class ColorpickerComponent implements OnInit {
-  @Input() colorChangeEvent: (color) => void
-  private picker: IroColorPicker;
-  @Input() id: number = 0;
+export class ColorpickerComponent implements AfterViewInit {
+  @Input() id: string = 'colorpicker'
+  @Input() color: string[]
+  @Output() colorChange = new EventEmitter<Color>()
+  private picker: IroColorPicker
 
-  constructor() {
-  }
-
-  ngOnInit(): void {
-    console.log("ID:", this.id)
-    this.picker = iro.ColorPicker(`#colorpicker${this.id}`, {
-      width: 150,
-      layoutDirection: 'horizontal',
-      handleRadius: 6,
-      borderWidth: 2,
-      borderColor: '#fff',
-      wheelAngle: 90,
-    })
-    this.picker.on('color:change', this.colorChangeEvent.bind(this))
+  ngAfterViewInit(): void {
+    try {
+      this.picker = iro.ColorPicker(`#${this.id}`, {
+        width: 125,
+        layoutDirection: 'horizontal',
+        handleRadius: 6,
+        borderWidth: 2,
+        borderColor: '#fff',
+        wheelAngle: 90,
+        colors: this.color,
+      })
+      this.picker.on('color:change', (color: Color ) => {
+        this.colorChange.emit(color)
+      })
+    } catch (e) {
+      console.error(`Colorpicker creation failed for ${this.id}. Reason: `, e)
+    }
   }
 
 }

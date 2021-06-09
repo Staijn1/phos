@@ -93,11 +93,11 @@
   z-index: 9;
 }
 
+// Active navigation
 .active {
-  background: getColor('primary');
-  color: white;
+  background: getColor('primary') !important;
+  color: white !important;
 }
-
 
 /* Desktop Navigation */
 

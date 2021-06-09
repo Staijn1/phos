@@ -10,7 +10,7 @@ import { VisualizerState } from '../../services/chromaEffect/state/visualizer-st
 import { SettingsService } from '../../services/settings/settings.service'
 import { ConnectionService } from '../../services/connection/connection.service'
 import { TimelineMax } from 'gsap'
-import { GradientInformation, GradientInformationExtended } from '../../shared/types/GradientInformation'
+import { GradientInformation } from '../../shared/types/GradientInformation'
 import { VisualizerComponent } from '../../shared/components/visualizer/visualizer.component'
 
 @Component({

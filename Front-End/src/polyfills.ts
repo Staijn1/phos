@@ -17,18 +17,13 @@ import '@angular/localize/init'
  *
  * Learn more in https://angular.io/guide/browser-support
  */
-
 /***************************************************************************************************
  * BROWSER POLYFILLS
  */
-
-
 /** IE10 and IE11 requires the following for NgClass support on SVG elements */
 // import 'classlist.js';  // Run `npm install --save classlist.js`.
-
 /** IE10 and IE11 requires the following to support `@angular/animation`. */
 // import 'web-animations-js';  // Run `npm install --save web-animations-js`.
-
 /**
  * Evergreen browsers require these.
  */

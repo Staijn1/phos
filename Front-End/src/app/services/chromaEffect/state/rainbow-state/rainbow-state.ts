@@ -1,6 +1,6 @@
-import {State} from '../abstract/state'
-import {iroColorObject} from '../../../../shared/types/types'
-import {calculateBGRInteger, color_wheel, convertRGBIntegerToArray} from '../../../../shared/functions'
+import { State } from '../abstract/state'
+import { calculateBGRInteger, color_wheel, convertRGBIntegerToArray } from '../../../../shared/functions'
+import iro from '@jaames/iro'
 
 export class RainbowState extends State {
     private counter = 0;
@@ -15,7 +15,7 @@ export class RainbowState extends State {
     }
 
 
-    handle(colors: iroColorObject[]): void {
+    handle(colors: iro.Color[]): void {
         this.reset()
         if (this.interval === undefined) {
             this.interval = setInterval(() => {

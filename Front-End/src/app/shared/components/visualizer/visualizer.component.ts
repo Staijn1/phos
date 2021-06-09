@@ -22,7 +22,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
 
   @Input() set gradients(gradients: GradientInformation[]) {
-    console.log("Gradients changed in setter")
+    console.log("Setter gradients triggered")
     this._gradients = gradients
     this.registerGradients()
   }

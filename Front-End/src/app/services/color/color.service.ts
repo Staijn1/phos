@@ -1,10 +1,9 @@
-import {Inject, Injectable} from '@angular/core'
-import {DOCUMENT} from '@angular/common'
+import { Inject, Injectable } from '@angular/core'
+import { DOCUMENT } from '@angular/common'
 import iro from '@jaames/iro'
-import {ChromaEffectService} from '../chromaEffect/chroma-effect.service'
-import {iroColorObject} from '../../shared/types/types'
-import {SettingsService} from '../settings/settings.service'
-import {ConnectionService} from '../connection/connection.service'
+import { ChromaEffectService } from '../chromaEffect/chroma-effect.service'
+import { SettingsService } from '../settings/settings.service'
+import { ConnectionService } from '../connection/connection.service'
 
 @Injectable({
     providedIn: 'root'
@@ -29,11 +28,11 @@ export class ColorService {
                 colors: colorsSaved,
             })
 
-            this.picker.on('color:init', (iroColor: iroColorObject) => {
+            this.picker.on('color:init', (iroColor: iro.Color) => {
                 this.connection.setColor(this.picker.colors)
                 this.chromaEffect.setColors = this.picker.colors
             })
-            this.picker.on('color:change', (iroColor: iroColorObject) => {
+            this.picker.on('color:change', (iroColor:  iro.Color) => {
                 this.connection.setColor(this.picker.colors)
                 this.chromaEffect.setColors = this.picker.colors
             })
@@ -55,7 +54,7 @@ export class ColorService {
         return this.picker.colors[2].hexString
     }
 
-    get getColors(): iroColorObject[] {
+    get getColors(): iro.Color[] {
         return this.picker.colors
     }
 }

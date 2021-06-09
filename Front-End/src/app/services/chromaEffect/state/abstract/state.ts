@@ -1,5 +1,6 @@
-import {ChromaEffectService} from '../../chroma-effect.service'
-import {iroColorObject} from '../../../../shared/types/types'
+import { ChromaEffectService } from '../../chroma-effect.service'
+import iro from '@jaames/iro'
+
 
 export abstract class State {
     protected _context: ChromaEffectService;
@@ -16,7 +17,7 @@ export abstract class State {
         return this._context
     }
 
-    abstract handle(colors: iroColorObject[]): void;
+    abstract handle(colors: iro.Color[]): void;
 
     abstract onExit(): void;
 

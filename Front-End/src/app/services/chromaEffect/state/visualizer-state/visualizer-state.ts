@@ -1,6 +1,6 @@
-import {State} from '../abstract/state'
-import {iroColorObject} from '../../../../shared/types/types'
-import {calculateBGRInteger, map} from '../../../../shared/functions'
+import { State } from '../abstract/state'
+import { calculateBGRInteger, map } from '../../../../shared/functions'
+import iro from '@jaames/iro'
 
 export class VisualizerState extends State {
     private _intensity = 0;
@@ -8,7 +8,7 @@ export class VisualizerState extends State {
     private _BGRIntegerForeground;
     private _previousIntensity: number;
 
-    handle(colors: iroColorObject[]): void {
+    handle(colors: iro.Color[]): void {
         try {
             this._BGRIntegerForeground = calculateBGRInteger(colors[0].red, colors[0].green, colors[0].blue)
             this.createVisualizer(calculateBGRInteger(colors[1].red, colors[1].green, colors[1].blue))

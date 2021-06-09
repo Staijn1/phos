@@ -1,5 +1,5 @@
-import {Component, OnInit} from '@angular/core'
-import {TimelineLite} from 'gsap'
+import { Component, OnInit } from '@angular/core'
+import { TimelineLite } from 'gsap'
 
 @Component({
   selector: 'app-home',

@@ -1,4 +1,15 @@
-import { Controller, Example, Get, Route, SuccessResponse, Tags } from 'tsoa'
+import {
+  Body,
+  Controller,
+  Delete,
+  Example,
+  Get,
+  Path,
+  Put,
+  Route,
+  SuccessResponse,
+  Tags,
+} from 'tsoa'
 import { InformationService } from '../Services/InformationService'
 import { GradientInformation } from '../../Types/GradientInformation'
 import { ModeInformation } from '../../Types/ModeInformation'
@@ -60,8 +71,24 @@ export class VisualizerController extends Controller {
   ])
   public getVisualizerModes(): Promise<ModeInformation[]> {
     this.setStatus(200)
-
-    // [{pos: 0, color: "a"}, "b"] // no error
     return this.informationService.getVisualizerModes()
+  }
+
+  @Put('gradients/{name}')
+  @SuccessResponse(204, 'No content')
+  public editGradient(
+    @Path('name') name: string,
+    @Body() gradient: GradientInformation
+  ): Promise<void> {
+    return this.informationService.editVisualizerGradient(name, gradient)
+  }
+
+  @Delete('gradients/{name}')
+  @SuccessResponse(200, 'OK')
+  public removeGradient(
+    @Path('name') name: string
+  ): Promise<GradientInformation[]> {
+    this.setStatus(200)
+    return this.informationService.removeVisualizerGradient(name)
   }
 }

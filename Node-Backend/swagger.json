@@ -38,53 +38,40 @@
 				],
 				"type": "object"
 			},
-			"GradientColorStop": {
-				"anyOf": [
-					{
+			"ColorStop": {
+				"properties": {
+					"color": {
 						"type": "string"
 					},
-					{
-						"properties": {
-							"color": {
-								"type": "string"
-							},
-							"pos": {
-								"type": "number",
-								"format": "double"
-							}
-						},
-						"required": [
-							"color",
-							"pos"
-						],
-						"type": "object"
+					"pos": {
+						"type": "number",
+						"format": "double"
 					}
-				]
+				},
+				"required": [
+					"color",
+					"pos"
+				],
+				"type": "object"
 			},
-			"ArrayTwoOrMore_GradientColorStop_": {
-				"allOf": [
-					{
-						"properties": {
-							"0": {
-								"$ref": "#/components/schemas/GradientColorStop"
-							},
-							"1": {
-								"$ref": "#/components/schemas/GradientColorStop"
-							}
-						},
-						"required": [
-							"1",
-							"0"
-						],
-						"type": "object"
+			"Pick_GradientOptions.Exclude_keyofGradientOptions.colorStops__": {
+				"properties": {
+					"bgColor": {
+						"type": "string"
 					},
-					{
-						"items": {
-							"$ref": "#/components/schemas/GradientColorStop"
-						},
-						"type": "array"
+					"dir": {
+						"type": "string",
+						"enum": [
+							"h"
+						],
+						"nullable": false
 					}
-				]
+				},
+				"required": [
+					"bgColor"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
 			},
 			"GradientInformation": {
 				"properties": {
@@ -99,7 +86,10 @@
 						"nullable": false
 					},
 					"colorStops": {
-						"$ref": "#/components/schemas/ArrayTwoOrMore_GradientColorStop_"
+						"items": {
+							"$ref": "#/components/schemas/ColorStop"
+						},
+						"type": "array"
 					},
 					"name": {
 						"type": "string"
@@ -358,6 +348,72 @@
 				],
 				"security": [],
 				"parameters": []
+			}
+		},
+		"/visualizer/gradients/{name}": {
+			"put": {
+				"operationId": "EditGradient",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"visualizer"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GradientInformation"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveGradient",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GradientInformation"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"visualizer"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
 			}
 		}
 	},

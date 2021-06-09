@@ -1,6 +1,6 @@
-import {State} from '../abstract/state'
-import {iroColorObject} from '../../../../shared/types/types'
-import {calculateBGRInteger, ColdColor, map, qadd8, qsub8, randomInteger} from '../../../../shared/functions'
+import { State } from '../abstract/state'
+import { calculateBGRInteger, ColdColor, map, qadd8, qsub8, randomInteger } from '../../../../shared/functions'
+import iro from '@jaames/iro'
 
 export class WaterfallState extends State {
     private interval: NodeJS.Timeout;
@@ -14,7 +14,7 @@ export class WaterfallState extends State {
         super()
     }
 
-    handle(colors: iroColorObject[]): void {
+    handle(colors: iro.Color[]): void {
         if (this.interval === undefined) {
             this.interval = setInterval(() => {
                 this.waterfallKeyboard()

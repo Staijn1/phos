@@ -1,9 +1,9 @@
-import {WebsocketClient} from '../Client/WebsocketClient'
-import {KeyFunction} from '../Types/KeyFunction'
-import {IMessage} from 'websocket'
-import {ledstripAdresses} from '../Config/Config'
-import {logger} from '../Config/Logger'
-import {prettyPrint} from '../Utils/functions';
+import { WebsocketClient } from '../Client/WebsocketClient'
+import { KeyFunction } from '../Types/KeyFunction'
+import { IMessage } from 'websocket'
+import { ledstripAdresses } from '../Config/Config'
+import { logger } from '../Config/Logger'
+import { prettyPrint } from '../Utils/functions'
 
 /**
  * Handle incoming messages

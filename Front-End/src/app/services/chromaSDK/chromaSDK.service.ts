@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core'
-import {SettingsService} from '../settings/settings.service'
+import { Injectable } from '@angular/core'
+import { SettingsService } from '../settings/settings.service'
 
 // BGR
 @Injectable({

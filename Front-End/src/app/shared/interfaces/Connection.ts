@@ -1,4 +1,4 @@
-import {iroColorObject} from '../types/types'
+import iro from '@jaames/iro'
 
 export abstract class Connection {
     abstract setMode(mode: number): void;
@@ -7,7 +7,7 @@ export abstract class Connection {
 
     abstract setLeds(amount: number): void;
 
-    abstract setColor(colors: iroColorObject[] | string[]): void;
+    abstract setColor(colors: iro.Color[] | string[]): void;
 
     abstract decreaseBrightness(): void;
 

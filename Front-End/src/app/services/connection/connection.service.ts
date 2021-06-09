@@ -1,10 +1,10 @@
-import {Injectable} from '@angular/core'
-import {Connection} from '../../shared/interfaces/Connection'
-import {iroColorObject} from '../../shared/types/types'
-import {WebsocketService} from '../websocketconnection/websocket.service'
-import {HTTPConnectionService} from '../httpconnection/httpconnection.service'
-import {ModeInformation} from '../../shared/types/ModeInformation'
-import {GradientInformation} from '../../shared/types/GradientInformation'
+import { Injectable } from '@angular/core'
+import { Connection } from '../../shared/interfaces/Connection'
+import { WebsocketService } from '../websocketconnection/websocket.service'
+import { HTTPConnectionService } from '../httpconnection/httpconnection.service'
+import { ModeInformation } from '../../shared/types/ModeInformation'
+import { GradientInformation, GradientInformationExtended } from '../../shared/types/GradientInformation'
+import iro from '@jaames/iro'
 
 @Injectable({
     providedIn: 'root'
@@ -35,7 +35,7 @@ export class ConnectionService extends Connection {
         throw Error('Not implemented')
     }
 
-    setColor(colors: iroColorObject[] | string[]): void {
+    setColor(colors: iro.Color[] | string[]): void {
         this.apiService.setColor(colors)
     }
 
@@ -53,5 +53,13 @@ export class ConnectionService extends Connection {
 
     async getGradients(): Promise<GradientInformation[]> {
         return this.apiService.getGradients()
+    }
+
+    async editGradient(gradient: GradientInformationExtended): Promise<void> {
+        return this.apiService.editGradient(gradient)
+    }
+
+    async removeGradient(gradient: GradientInformationExtended): Promise<GradientInformation[]> {
+        return this.apiService.removeGradient(gradient as GradientInformation)
     }
 }

@@ -1,6 +1,7 @@
-import {Injectable} from '@angular/core'
-import {GeneralSettings, iroColorObject} from '../../shared/types/types'
-import {Options} from 'audiomotion-analyzer'
+import { Injectable } from '@angular/core'
+import { GeneralSettings } from '../../shared/types/types'
+import { Options } from 'audiomotion-analyzer'
+import iro from '@jaames/iro'
 
 
 @Injectable({
@@ -48,7 +49,7 @@ export class SettingsService {
     return this.readSettings('visualizerSettings')
   }
 
-  saveGeneralSettings(colors: iroColorObject[] | undefined,  chroma?: boolean): void {
+  saveGeneralSettings(colors: iro.Color[] | undefined,  chroma?: boolean): void {
     const currentSettings = this.readGeneralSettings()
     if (colors) {
       for (let i = 0; i < colors.length; i++) {

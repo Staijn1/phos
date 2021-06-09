@@ -1,13 +1,13 @@
-import {State} from '../abstract/state'
-import {iroColorObject} from '../../../../shared/types/types'
-import {calculateBGRInteger} from '../../../../shared/functions'
-import {GlobalVars} from '../../../../shared/constants'
+import { State } from '../abstract/state'
+import { calculateBGRInteger } from '../../../../shared/functions'
+import { GlobalVars } from '../../../../shared/constants'
+import iro from '@jaames/iro'
 
 export class TheaterChaseState extends State {
     effect;
     private counter = 0;
 
-    handle(colors: iroColorObject[]): void {
+    handle(colors: iro.Color[]): void {
         clearInterval(this.effect)
         this.effect = setInterval(
             () => {

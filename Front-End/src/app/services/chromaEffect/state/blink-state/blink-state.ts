@@ -1,18 +1,18 @@
-import {State} from '../abstract/state'
-import {iroColorObject} from '../../../../shared/types/types'
-import {calculateBGRInteger} from '../../../../shared/functions'
+import { State } from '../abstract/state'
+import { calculateBGRInteger } from '../../../../shared/functions'
+import iro from '@jaames/iro'
 
 export class BlinkState extends State {
     blinkEffect;
     counter = 0;
 
-    handle(colors: iroColorObject[]): void {
+    handle(colors: iro.Color[]): void {
         clearInterval(this.blinkEffect)
         this.blinkEffect = undefined
         this.setBlink(colors[0], colors[1])
     }
 
-    setBlink(color: iroColorObject, backgroundColor: iroColorObject): void {
+    setBlink(color: iro.Color, backgroundColor: iro.Color): void {
         if (!this.blinkEffect) {
             this.blinkEffect = setInterval(
                 () => {
@@ -27,7 +27,7 @@ export class BlinkState extends State {
         }
     }
 
-    setStatic(color: iroColorObject): void {
+    setStatic(color: iro.Color): void {
         const BGRColor = calculateBGRInteger(color.red, color.green, color.blue)
         this._context.createKeyboardEffect('CHROMA_STATIC', BGRColor).then()
         this._context.createMouseEffect('CHROMA_STATIC', BGRColor).then()

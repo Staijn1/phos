@@ -1,5 +1,5 @@
-import {State} from '../abstract/state'
-import {color_wheel, randomInteger} from '../../../../shared/functions'
+import { State } from '../abstract/state'
+import { color_wheel, randomInteger } from '../../../../shared/functions'
 
 export class MultiDynamicState extends State {
     private headsetColors = [0, 0, 0, 0, 0];

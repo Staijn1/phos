@@ -1,9 +1,9 @@
-import {Injectable} from '@angular/core'
-import {iroColorObject} from '../../shared/types/types'
-import {map} from '../../shared/functions'
-import {Connection} from '../../shared/interfaces/Connection'
+import { Injectable } from '@angular/core'
+import { map } from '../../shared/functions'
+import { Connection } from '../../shared/interfaces/Connection'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import {environment} from '../../../environments/environment'
+import { environment } from '../../../environments/environment'
+import iro from '@jaames/iro'
 
 @Injectable({
   providedIn: 'root'
@@ -21,10 +21,10 @@ export class WebsocketService extends Connection {
     }
   }
 
-  setColor(colors: iroColorObject[] | string[]): void {
+  setColor(colors: iro.Color[] | string[]): void {
     const formattedColors = []
     for (const color of colors) {
-      const colorstring: string = ((color as iroColorObject).hexString ? (color as iroColorObject).hexString : color) as string
+      const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
       formattedColors.push(colorstring.substring(1, colorstring.length))
     }
     this.send(`c ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`)
