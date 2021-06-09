@@ -1,0 +1,425 @@
+{
+	"components": {
+		"examples": {},
+		"headers": {},
+		"parameters": {},
+		"requestBodies": {},
+		"responses": {},
+		"schemas": {
+			"ColorInformation": {
+				"properties": {
+					"color": {
+						"items": {
+							"type": "string"
+						},
+						"type": "array"
+					}
+				},
+				"required": [
+					"color"
+				],
+				"type": "object"
+			},
+			"ModeInformation": {
+				"properties": {
+					"name": {
+						"type": "string",
+						"example": "Rainbow"
+					},
+					"mode": {
+						"type": "integer",
+						"format": "int32",
+						"example": 11,
+						"minimum": 0
+					}
+				},
+				"required": [
+					"mode"
+				],
+				"type": "object"
+			},
+			"ColorStop": {
+				"properties": {
+					"color": {
+						"type": "string"
+					},
+					"pos": {
+						"type": "number",
+						"format": "double"
+					}
+				},
+				"required": [
+					"color",
+					"pos"
+				],
+				"type": "object"
+			},
+			"Pick_GradientOptions.Exclude_keyofGradientOptions.colorStops__": {
+				"properties": {
+					"bgColor": {
+						"type": "string"
+					},
+					"dir": {
+						"type": "string",
+						"enum": [
+							"h"
+						],
+						"nullable": false
+					}
+				},
+				"required": [
+					"bgColor"
+				],
+				"type": "object",
+				"description": "From T, pick a set of properties whose keys are in the union K"
+			},
+			"GradientInformation": {
+				"properties": {
+					"bgColor": {
+						"type": "string"
+					},
+					"dir": {
+						"type": "string",
+						"enum": [
+							"h"
+						],
+						"nullable": false
+					},
+					"colorStops": {
+						"items": {
+							"$ref": "#/components/schemas/ColorStop"
+						},
+						"type": "array"
+					},
+					"name": {
+						"type": "string"
+					}
+				},
+				"required": [
+					"bgColor",
+					"colorStops",
+					"name"
+				],
+				"type": "object",
+				"additionalProperties": false
+			}
+		},
+		"securitySchemes": {}
+	},
+	"info": {
+		"title": "angulon_backend",
+		"version": "1.0.0",
+		"description": "Node backend for Angulon",
+		"license": {
+			"name": "ISC"
+		},
+		"contact": {
+			"name": "Stein Jonker"
+		}
+	},
+	"openapi": "3.0.0",
+	"paths": {
+		"/brightness/increase": {
+			"post": {
+				"operationId": "IncreaseBrightness",
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					}
+				},
+				"tags": [
+					"Brightness"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/brightness/decrease": {
+			"post": {
+				"operationId": "DecreaseBrightness",
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					}
+				},
+				"tags": [
+					"Brightness"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/color": {
+			"post": {
+				"operationId": "SetColor",
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					}
+				},
+				"tags": [
+					"Color"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ColorInformation"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/mode": {
+			"post": {
+				"operationId": "SetMode",
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					}
+				},
+				"tags": [
+					"Mode"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/ModeInformation"
+							}
+						}
+					}
+				}
+			},
+			"get": {
+				"operationId": "GetModes",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ModeInformation"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Mode"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/speed/increase": {
+			"post": {
+				"operationId": "IncreaseSpeed",
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					}
+				},
+				"tags": [
+					"Speed"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/speed/decrease": {
+			"post": {
+				"operationId": "DecreaseSpeed",
+				"responses": {
+					"202": {
+						"description": "Accepted"
+					}
+				},
+				"tags": [
+					"Speed"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/visualizer/gradients": {
+			"get": {
+				"operationId": "GetGradients",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GradientInformation"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"name": "Apple",
+												"bgColor": "#111",
+												"colorStops": [
+													{
+														"pos": 0.1667,
+														"color": "#61bb46"
+													},
+													{
+														"pos": 1,
+														"color": "#009ddc"
+													}
+												]
+											},
+											{
+												"name": "Aurora",
+												"bgColor": "#0e172a",
+												"colorStops": [
+													{
+														"pos": 0.1,
+														"color": "hsl( 120, 100%, 50% )"
+													},
+													{
+														"pos": 1,
+														"color": "hsl( 216, 100%, 50% )"
+													}
+												]
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"visualizer"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/visualizer/modes": {
+			"get": {
+				"operationId": "GetVisualizerModes",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/ModeInformation"
+									},
+									"type": "array"
+								},
+								"examples": {
+									"Example 1": {
+										"value": [
+											{
+												"mode": 0,
+												"name": "Discrete frequencies"
+											},
+											{
+												"mode": 1,
+												"name": "1/24th octave bands"
+											}
+										]
+									}
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"visualizer"
+				],
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/visualizer/gradients/{name}": {
+			"put": {
+				"operationId": "EditGradient",
+				"responses": {
+					"204": {
+						"description": "No content"
+					}
+				},
+				"tags": [
+					"visualizer"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GradientInformation"
+							}
+						}
+					}
+				}
+			},
+			"delete": {
+				"operationId": "RemoveGradient",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GradientInformation"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"visualizer"
+				],
+				"security": [],
+				"parameters": [
+					{
+						"in": "path",
+						"name": "name",
+						"required": true,
+						"schema": {
+							"type": "string"
+						}
+					}
+				]
+			}
+		}
+	},
+	"servers": [
+		{
+			"url": "/"
+		}
+	]
+}

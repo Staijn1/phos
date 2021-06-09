@@ -3,7 +3,7 @@
   "version": 1,
   "newProjectRoot": "projects",
   "projects": {
-    "serialportron": {
+    "angulon": {
       "root": "",
       "sourceRoot": "src",
       "projectType": "application",
@@ -26,7 +26,6 @@
               "src/styles.scss"
             ],
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ]
           },
@@ -58,18 +57,18 @@
         "serve": {
           "builder": "@angular-devkit/build-angular:dev-server",
           "options": {
-            "browserTarget": "serialportron:build"
+            "browserTarget": "angulon:build"
           },
           "configurations": {
             "production": {
-              "browserTarget": "serialportron:build:production"
+              "browserTarget": "angulon:build:production"
             }
           }
         },
         "extract-i18n": {
           "builder": "@angular-devkit/build-angular:extract-i18n",
           "options": {
-            "browserTarget": "serialportron:build"
+            "browserTarget": "angulon:build"
           }
         },
         "test": {
@@ -80,7 +79,6 @@
             "polyfills": "src/polyfills.ts",
             "tsConfig": "./tsconfig.spec.json",
             "scripts": [
-              "node_modules/jquery/dist/jquery.min.js",
               "node_modules/bootstrap/dist/js/bootstrap.min.js"
             ],
             "styles": [],
@@ -90,18 +88,17 @@
           }
         },
         "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
+          "builder": "@angular-eslint/builder:lint",
           "options": {
-            "tsConfig": [
-              "./tsconfig.app.json",
-              "./tsconfig.spec.json"
-            ],
-            "exclude": []
+            "lintFilePatterns": [
+              "src/**/*.ts",
+              "src/**/*.html"
+            ]
           }
         }
       }
     },
-    "serialportron-e2e": {
+    "angulon-e2e": {
       "root": "",
       "sourceRoot": "",
       "projectType": "application",
@@ -110,22 +107,13 @@
           "builder": "@angular-devkit/build-angular:protractor",
           "options": {
             "protractorConfig": "./protractor.conf.js",
-            "devServerTarget": "serialportron:serve"
-          }
-        },
-        "lint": {
-          "builder": "@angular-devkit/build-angular:tslint",
-          "options": {
-            "tsConfig": [
-              "e2e/tsconfig.e2e.json"
-            ],
-            "exclude": []
+            "devServerTarget": "angulon:serve"
           }
         }
       }
     }
   },
-  "defaultProject": "serialportron",
+  "defaultProject": "angulon",
   "schematics": {
     "@schematics/angular:component": {
       "prefix": "app",
@@ -134,5 +122,8 @@
     "@schematics/angular:directive": {
       "prefix": "app"
     }
+  },
+  "cli": {
+    "defaultCollection": "@angular-eslint/schematics"
   }
 }

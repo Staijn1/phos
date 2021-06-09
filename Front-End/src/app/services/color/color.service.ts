@@ -1,10 +1,9 @@
-import {Inject, Injectable} from '@angular/core';
-import {DOCUMENT} from '@angular/common';
-import iro from '@jaames/iro';
-import {ChromaEffectService} from '../chromaEffect/chroma-effect.service';
-import {iroColorObject} from '../../types/types';
-import {SettingsService} from '../settings/settings.service';
-import {ConnectionService} from '../connection/connection.service';
+import { Inject, Injectable } from '@angular/core'
+import { DOCUMENT } from '@angular/common'
+import iro from '@jaames/iro'
+import { ChromaEffectService } from '../chromaEffect/chroma-effect.service'
+import { SettingsService } from '../settings/settings.service'
+import { ConnectionService } from '../connection/connection.service'
 
 @Injectable({
     providedIn: 'root'
@@ -17,8 +16,7 @@ export class ColorService {
         private connection: ConnectionService,
         private settingsService: SettingsService,
         private chromaEffect: ChromaEffectService) {
-        // @ts-ignore
-        const colorsSaved = this.settingsService.readGeneralSettings().colors;
+        const colorsSaved = this.settingsService.readGeneralSettings().colors
         setTimeout(() => {
             this.picker = iro.ColorPicker('#picker', {
                 width: 150,
@@ -28,65 +26,35 @@ export class ColorService {
                 borderColor: '#fff',
                 wheelAngle: 90,
                 colors: colorsSaved,
-            });
+            })
 
-            this.picker.on('color:init', (iroColor: iroColorObject) => {
-                this.connection.setColor(this.picker.colors);
-                this.chromaEffect.setColors = this.picker.colors;
-            });
-            this.picker.on('color:change', (iroColor: iroColorObject) => {
-                this.connection.setColor(this.picker.colors);
-                this.chromaEffect.setColors = this.picker.colors;
-            });
+            this.picker.on('color:init', (iroColor: iro.Color) => {
+                this.connection.setColor(this.picker.colors)
+                this.chromaEffect.setColors = this.picker.colors
+            })
+            this.picker.on('color:change', (iroColor:  iro.Color) => {
+                this.connection.setColor(this.picker.colors)
+                this.chromaEffect.setColors = this.picker.colors
+            })
             this.picker.on('input:end', (iroColor) => {
-                this.settingsService.saveGeneralSettings(this.picker.colors, undefined, undefined, undefined);
-            });
-        }, 1);
+                this.settingsService.saveGeneralSettings(this.picker.colors)
+            })
+        }, 1)
     }
 
     get getFirstColorString(): string {
-        return this.picker.colors[0].hexString;
+        return this.picker.colors[0].hexString
     }
 
     get getSecondColorString(): string {
-        return this.picker.colors[1].hexString;
+        return this.picker.colors[1].hexString
     }
 
     get getThirdColorString(): string {
-        return this.picker.colors[2].hexString;
+        return this.picker.colors[2].hexString
     }
 
-    get getFirstColorObject(): iroColorObject {
-        try {
-            return this.picker.colors[0];
-        } catch (e) {
-            return {
-                red: 0,
-                green: 0,
-                blue: 0,
-                hexString: '#000000',
-                alpha: 0,
-                hex8String: '',
-                hsl: undefined,
-                hslString: '',
-                hsla: undefined,
-                hslaString: '',
-                hsv: undefined,
-                hsva: undefined,
-                hue: 0,
-                kelvin: 0,
-                rgb: undefined,
-                rgbString: '',
-                rgba: undefined,
-                rgbaString: '',
-                saturation: 0,
-                value: 0
-            };
-
-        }
-    }
-
-    get getColors(): iroColorObject[] {
-        return this.picker.colors;
+    get getColors(): iro.Color[] {
+        return this.picker.colors
     }
 }

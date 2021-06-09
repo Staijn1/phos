@@ -1,6 +1,6 @@
-#define DNS "bureau"
 WiFiMulti WiFiMulti;
 WebSocketsServer webSocket = WebSocketsServer(81);
+
 void handleEvent(uint8_t *payload, size_t length) {
   char* arguments = (char*) payload + 2;
 
@@ -22,7 +22,6 @@ void handleEvent(uint8_t *payload, size_t length) {
       }
     case 'c':
       {
-        webSocket.broadcastTXT(arguments, length - 1);
         char * strtokIndx; // this is used by strtok() as an index
 
         strtokIndx = strtok(arguments, ",");     // get the first color
@@ -100,6 +99,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       //webSocket.broadcastTXT(payload, length);
       break;
     case WStype_ERROR:
+        Serial.println("Error");
+        webSocket.broadcastTXT(payload, length);
       break;
     case WStype_FRAGMENT_TEXT_START:
       break;
@@ -135,8 +136,7 @@ void websocketSetup() {
   }
 
   Serial.println();
-  Serial.print("Connect to ws://"); Serial.print(DNS); Serial.println(".local");
-  Serial.print("or ws://"); Serial.print(WiFi.localIP()); Serial.println(":81");
+  Serial.print("Connect to ws://"); Serial.print(WiFi.localIP()); Serial.println(":81");
 
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
@@ -144,18 +144,4 @@ void websocketSetup() {
 
 void websocketRun() {
   webSocket.loop();
-}
-
-void MDNSSetup() {
-  //initialize mDNS service
-  esp_err_t err = mdns_init();
-  if (err) {
-    printf("MDNS Init failed: %d\n", err);
-    return;
-  }
-
-  //set hostname
-  mdns_hostname_set(DNS);
-  //set default instance
-  mdns_instance_name_set("Bed van Stein");
 }
