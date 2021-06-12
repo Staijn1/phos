@@ -108,7 +108,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   async editGradient(gradient: GradientInformation) {
-    const response = await fetch(`${this.url}/visualizer/gradients/${gradient.name}`, {
+    const response = await fetch(`${this.url}/visualizer/gradients/${gradient.id}`, {
       method: 'PUT',
       headers: {
         'Content-Type': 'application/json',
@@ -121,8 +121,21 @@ export class HTTPConnectionService extends Connection {
   }
 
   async removeGradient(gradient: GradientInformation) {
-    const response = await fetch(`${this.url}/visualizer/gradients/${gradient.name}`, {
+    const response = await fetch(`${this.url}/visualizer/gradients/${gradient.id}`, {
       method: 'DELETE',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    })
+
+    this.handleError(response)
+    return response.json()
+  }
+
+  async addGradient(newGradient: GradientInformation): Promise<GradientInformation[]> {
+    const response = await fetch(`${this.url}/visualizer/gradients/`, {
+      method: 'POST',
+      body: JSON.stringify(newGradient),
       headers: {
         'Content-Type': 'application/json',
       }

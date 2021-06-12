@@ -8,6 +8,8 @@ import { faSave } from '@fortawesome/free-solid-svg-icons/faSave'
 import { faFileDownload } from '@fortawesome/free-solid-svg-icons/faFileDownload'
 import { ColorService } from '../../services/color/color.service'
 import iro from '@jaames/iro'
+import { LoremIpsum, loremIpsum } from 'lorem-ipsum'
+
 
 @Component({
   selector: 'app-gradient-editor-page',
@@ -23,7 +25,7 @@ export class GradientEditorPageComponent implements OnDestroy {
   load = faFileDownload
   deleteIcon = faTrash
   collapseIcon = faAngleLeft
-
+  currentActiveGradientID: number = 0
 
   private defaultSliderOptions = {
     animate: true,
@@ -49,9 +51,9 @@ export class GradientEditorPageComponent implements OnDestroy {
     this.gradients = undefined
   }
 
-  changeGradient(gradient: number | string): void {
-    if (typeof gradient === 'number') this.visualizerOptions.gradient = this.gradients[gradient].name
-    else if (typeof  gradient === 'string') this.visualizerOptions.gradient = gradient
+  changeGradient(gradient: GradientInformation): void {
+    this.visualizerOptions.gradient = gradient?.name || 'classic'
+    this.currentActiveGradientID = gradient.id
 
     this.settingsService.saveVisualizerOptions(this.visualizerOptions)
     this.updateOptions()
@@ -76,8 +78,8 @@ export class GradientEditorPageComponent implements OnDestroy {
     this.settingsService.saveVisualizerOptions(this.visualizerOptions)
   }
 
-  private async getGradients(): Promise<void> {
-    const gradients = await this.connection.getGradients() as GradientInformationExtended[]
+  private async getGradients(gradientsPreFetched?: GradientInformation[]): Promise<void> {
+    const gradients = (gradientsPreFetched || await this.connection.getGradients()) as GradientInformationExtended[]
     for (const gradient of gradients) {
       gradient.sliderOptions = this.defaultSliderOptions
       gradient.collapsed = true
@@ -94,21 +96,21 @@ export class GradientEditorPageComponent implements OnDestroy {
 
   updateOptions(): void {
     this.visualizerOptions = Object.assign({}, this.visualizerOptions)
+    this.saveOptions()
   }
 
   submitGradient(gradient: GradientInformationExtended) {
-    this.changeGradient(gradient.name)
+    this.updateGradients()
     this.updateOptions()
-    this.connection.editGradient(gradient).then()
+    this.connection.editGradient(gradient).then(() => this.changeGradient(gradient))
   }
 
   removeGradient(gradient: GradientInformationExtended): void {
-    this.connection.removeGradient(gradient).then()
-    const gradientIndex = this.gradients.findIndex((value => {
-      return value.name == gradient.name
-    }))
-    this.gradients.splice(gradientIndex, 1)
-    this.changeGradient(gradientIndex)
+    if (this.currentActiveGradientID == gradient.id) return
+
+    this.connection.removeGradient(gradient).then((gradients => this.getGradients(gradients))).then(() => {
+      this.changeGradient(this.gradients[0])
+    })
   }
 
   removeColorStop(gradient: GradientInformationExtended, stopIndex: number) {
@@ -118,8 +120,12 @@ export class GradientEditorPageComponent implements OnDestroy {
   }
 
   handleCollapsable(gradient: GradientInformationExtended) {
+    for (const gradientElement of this.gradients) {
+      if (gradient.id !== gradientElement.id) gradientElement.collapsed = true
+    }
+
     gradient.collapsed = !gradient.collapsed
-    this.changeGradient(gradient.name)
+    this.changeGradient(gradient)
     this.updateOptions()
   }
 
@@ -149,12 +155,38 @@ export class GradientEditorPageComponent implements OnDestroy {
     }
   }
 
-  updateGradients():void{
+  updateGradients(): void {
     this.gradients = [...this.gradients]
   }
+
   changeBackgroundColor(newColor: iro.Color, gradient: GradientInformationExtended) {
     gradient.bgColor = newColor.hexString
 
     this.updateGradients()
+  }
+
+  addGradient() {
+    const loremIpsumName = new LoremIpsum().generateWords(1)
+    const newGradient: GradientInformationExtended = {
+      id: Math.floor(Math.random() * 1000),
+      name: loremIpsumName,
+      dir: 'h',
+      sliderOptions: this.defaultSliderOptions,
+      collapsed: true,
+      colorStops: [
+        { pos: 0, color: '#fff' },
+        { pos: 1, color: '#ff0000' },
+      ],
+      bgColor: '#000',
+    }
+    this.gradients.unshift(newGradient)
+    this.updateGradients()
+    this.connection.addGradient(newGradient).then((gradients) => {
+      return this.getGradients(gradients)
+    }).then(() => this.changeGradient(newGradient))
+  }
+
+  onNameChange(innerHTML: string, gradient: GradientInformationExtended) {
+    gradient.name = innerHTML
   }
 }

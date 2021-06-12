@@ -5,6 +5,7 @@ import {
   Example,
   Get,
   Path,
+  Post,
   Put,
   Route,
   SuccessResponse,
@@ -23,30 +24,48 @@ export class VisualizerController extends Controller {
   @SuccessResponse(200, 'OK')
   @Example<GradientInformation[]>([
     {
-      name: 'Apple',
+      id: 14,
+      name: 'Tie Dye',
       bgColor: '#111',
       colorStops: [
         {
-          pos: 0.1667,
-          color: '#61bb46',
+          pos: 0.038,
+          color: 'rgb( 15, 209, 165 )',
         },
         {
-          pos: 1,
-          color: '#009ddc',
+          pos: 0.208,
+          color: 'rgb( 15, 157, 209 )',
+        },
+        {
+          pos: 0.519,
+          color: 'rgb( 133, 13, 230 )',
+        },
+        {
+          pos: 0.731,
+          color: 'rgb( 230, 13, 202 )',
+        },
+        {
+          pos: 0.941,
+          color: 'rgb( 242, 180, 107 )',
         },
       ],
     },
     {
-      name: 'Aurora',
-      bgColor: '#0e172a',
+      id: 0,
+      name: 'Clouds',
+      bgColor: '#212224',
       colorStops: [
         {
-          pos: 0.1,
-          color: 'hsl( 120, 100%, 50% )',
+          pos: 0.731,
+          color: '#2b4051',
         },
         {
-          pos: 1,
-          color: 'hsl( 216, 100%, 50% )',
+          pos: 0.519,
+          color: '#3F5567',
+        },
+        {
+          pos: 0.208,
+          color: '#A7B8BE',
         },
       ],
     },
@@ -74,21 +93,30 @@ export class VisualizerController extends Controller {
     return this.informationService.getVisualizerModes()
   }
 
-  @Put('gradients/{name}')
-  @SuccessResponse(204, 'No content')
+  @Put('gradients/{id}')
+  @SuccessResponse(200, 'OK')
   public editGradient(
-    @Path('name') name: string,
+    @Path('id') id: number,
     @Body() gradient: GradientInformation
-  ): Promise<void> {
-    return this.informationService.editVisualizerGradient(name, gradient)
+  ): Promise<GradientInformation[]> {
+    return this.informationService.editVisualizerGradient(id, gradient)
   }
 
-  @Delete('gradients/{name}')
+  @Delete('gradients/{id}')
   @SuccessResponse(200, 'OK')
   public removeGradient(
-    @Path('name') name: string
+    @Path('id') id: number
   ): Promise<GradientInformation[]> {
     this.setStatus(200)
-    return this.informationService.removeVisualizerGradient(name)
+    return this.informationService.removeVisualizerGradient(id)
+  }
+
+  @Post('gradients')
+  @SuccessResponse(201, 'Created')
+  public addGradient(
+    @Body() content: GradientInformation
+  ): Promise<GradientInformation[]> {
+    this.setStatus(201)
+    return this.informationService.addVisualizerGradient(content)
   }
 }

@@ -93,12 +93,17 @@
 					},
 					"name": {
 						"type": "string"
+					},
+					"id": {
+						"type": "number",
+						"format": "double"
 					}
 				},
 				"required": [
 					"bgColor",
 					"colorStops",
-					"name"
+					"name",
+					"id"
 				],
 				"type": "object",
 				"additionalProperties": false
@@ -270,30 +275,48 @@
 									"Example 1": {
 										"value": [
 											{
-												"name": "Apple",
+												"id": 14,
+												"name": "Tie Dye",
 												"bgColor": "#111",
 												"colorStops": [
 													{
-														"pos": 0.1667,
-														"color": "#61bb46"
+														"pos": 0.038,
+														"color": "rgb( 15, 209, 165 )"
 													},
 													{
-														"pos": 1,
-														"color": "#009ddc"
+														"pos": 0.208,
+														"color": "rgb( 15, 157, 209 )"
+													},
+													{
+														"pos": 0.519,
+														"color": "rgb( 133, 13, 230 )"
+													},
+													{
+														"pos": 0.731,
+														"color": "rgb( 230, 13, 202 )"
+													},
+													{
+														"pos": 0.941,
+														"color": "rgb( 242, 180, 107 )"
 													}
 												]
 											},
 											{
-												"name": "Aurora",
-												"bgColor": "#0e172a",
+												"id": 0,
+												"name": "Clouds",
+												"bgColor": "#212224",
 												"colorStops": [
 													{
-														"pos": 0.1,
-														"color": "hsl( 120, 100%, 50% )"
+														"pos": 0.731,
+														"color": "#2b4051"
 													},
 													{
-														"pos": 1,
-														"color": "hsl( 216, 100%, 50% )"
+														"pos": 0.519,
+														"color": "#3F5567"
+													},
+													{
+														"pos": 0.208,
+														"color": "#A7B8BE"
 													}
 												]
 											}
@@ -309,6 +332,39 @@
 				],
 				"security": [],
 				"parameters": []
+			},
+			"post": {
+				"operationId": "AddGradient",
+				"responses": {
+					"201": {
+						"description": "Created",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GradientInformation"
+									},
+									"type": "array"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"visualizer"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/GradientInformation"
+							}
+						}
+					}
+				}
 			}
 		},
 		"/visualizer/modes": {
@@ -350,12 +406,22 @@
 				"parameters": []
 			}
 		},
-		"/visualizer/gradients/{name}": {
+		"/visualizer/gradients/{id}": {
 			"put": {
 				"operationId": "EditGradient",
 				"responses": {
-					"204": {
-						"description": "No content"
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"items": {
+										"$ref": "#/components/schemas/GradientInformation"
+									},
+									"type": "array"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -365,10 +431,11 @@
 				"parameters": [
 					{
 						"in": "path",
-						"name": "name",
+						"name": "id",
 						"required": true,
 						"schema": {
-							"type": "string"
+							"format": "double",
+							"type": "number"
 						}
 					}
 				],
@@ -407,10 +474,11 @@
 				"parameters": [
 					{
 						"in": "path",
-						"name": "name",
+						"name": "id",
 						"required": true,
 						"schema": {
-							"type": "string"
+							"format": "double",
+							"type": "number"
 						}
 					}
 				]

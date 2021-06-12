@@ -62,4 +62,8 @@ export class ConnectionService extends Connection {
     async removeGradient(gradient: GradientInformationExtended): Promise<GradientInformation[]> {
         return this.apiService.removeGradient(gradient as GradientInformation)
     }
+
+    async addGradient(newGradient: GradientInformationExtended) :Promise<GradientInformation[]>{
+        return this.apiService.addGradient(newGradient as GradientInformation)
+    }
 }

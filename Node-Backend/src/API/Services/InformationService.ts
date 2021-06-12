@@ -48,8 +48,11 @@ export class InformationService {
    * Read all gradients present for the visualizerPage
    */
   async getVisualizerGradients(): Promise<GradientInformation[]> {
-    const gradients = await this.readJSON('gradients.json')
-    return JSON.parse(gradients)
+    const gradientsJSONRaw = await this.readJSON('gradients.json')
+    const gradients = JSON.parse(gradientsJSONRaw) as GradientInformation[]
+    return gradients.sort((a: GradientInformation, b: GradientInformation) =>
+      a.name > b.name ? 1 : -1
+    )
   }
 
   /**
@@ -62,43 +65,64 @@ export class InformationService {
 
   /**
    * Edit a gradient with name x. Replace it with the given gradient
-   * @param {string} name
+   * @param {number}id
    * @param {GradientInformation} gradient
    * @return {Promise<void>}
    */
   async editVisualizerGradient(
-    name: string,
+    id: number,
     gradient: GradientInformation
-  ): Promise<void> {
+  ): Promise<GradientInformation[]> {
     const gradientsJSON = await this.readJSON('gradients.json')
     const gradients = JSON.parse(gradientsJSON) as GradientInformation[]
 
     const gradientIndex = gradients.findIndex((value) => {
-      return value.name === name
+      return value.id === id
     })
 
     gradients[gradientIndex] = gradient
 
     await this.writeJSON('gradients.json', gradients)
+    return this.getVisualizerGradients()
   }
 
   /**
    * Remove a gradient with name x.
-   * @param {string} name
    * @return {Promise<GradientInformation[]>}
+   * @param {number}id
    */
-  async removeVisualizerGradient(name: string): Promise<GradientInformation[]> {
+  async removeVisualizerGradient(id: number): Promise<GradientInformation[]> {
     const gradientsJSON = await this.readJSON('gradients.json')
     const gradients = JSON.parse(gradientsJSON) as GradientInformation[]
 
     const gradientIndex = gradients.findIndex((value) => {
-      return value.name === name
+      return value.id === id
     })
 
     gradients.splice(gradientIndex, 1)
 
     await this.writeJSON('gradients.json', gradients)
 
+    return this.getVisualizerGradients()
+  }
+
+  /**
+   * Create a gradient
+   * @param {GradientInformation} content
+   * @return {Promise<void>}
+   */
+  async addVisualizerGradient(
+    content: GradientInformation
+  ): Promise<GradientInformation[]> {
+    const gradientsJSON = await this.readJSON('gradients.json')
+    const gradients = JSON.parse(gradientsJSON) as GradientInformation[]
+
+    const highestIDCurrently = Math.max(...gradients.map((o) => o.id))
+    content.id = highestIDCurrently >= 0 ? highestIDCurrently + 1 : 0
+
+    gradients.push(content)
+
+    await this.writeJSON('gradients.json', gradients)
     return this.getVisualizerGradients()
   }
 }

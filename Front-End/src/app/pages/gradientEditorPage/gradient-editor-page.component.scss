@@ -20,3 +20,10 @@ $transition: all ease-in 0.25s;
   transform:rotate(-90deg);
 }
 
+.vh-50{
+  height: 50vh;
+}
+
+[contenteditable] {
+  border-bottom: 1px dotted getColor('secondary');
+}

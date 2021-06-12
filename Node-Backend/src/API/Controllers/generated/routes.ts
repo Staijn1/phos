@@ -44,6 +44,7 @@ const models: TsoaRoute.Models = {
             "dir": {"dataType":"enum","enums":["h"]},
             "colorStops": {"dataType":"array","array":{"dataType":"refAlias","ref":"ColorStop"},"required":true},
             "name": {"dataType":"string","required":true},
+            "id": {"dataType":"double","required":true},
         },
         "additionalProperties": false,
     },
@@ -249,10 +250,10 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.put('/visualizer/gradients/:name',
+        app.put('/visualizer/gradients/:id',
             function VisualizerController_editGradient(request: any, response: any, next: any) {
             const args = {
-                    name: {"in":"path","name":"name","required":true,"dataType":"string"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
                     gradient: {"in":"body","name":"gradient","required":true,"ref":"GradientInformation"},
             };
 
@@ -272,10 +273,10 @@ export function RegisterRoutes(app: express.Router) {
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-        app.delete('/visualizer/gradients/:name',
+        app.delete('/visualizer/gradients/:id',
             function VisualizerController_removeGradient(request: any, response: any, next: any) {
             const args = {
-                    name: {"in":"path","name":"name","required":true,"dataType":"string"},
+                    id: {"in":"path","name":"id","required":true,"dataType":"double"},
             };
 
             // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
@@ -291,6 +292,28 @@ export function RegisterRoutes(app: express.Router) {
 
 
             const promise = controller.removeGradient.apply(controller, validatedArgs as any);
+            promiseHandler(controller, promise, response, undefined, next);
+        });
+        // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+        app.post('/visualizer/gradients',
+            function VisualizerController_addGradient(request: any, response: any, next: any) {
+            const args = {
+                    content: {"in":"body","name":"content","required":true,"ref":"GradientInformation"},
+            };
+
+            // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
+
+            let validatedArgs: any[] = [];
+            try {
+                validatedArgs = getValidatedArgs(args, request, response);
+            } catch (err) {
+                return next(err);
+            }
+
+            const controller = new VisualizerController();
+
+
+            const promise = controller.addGradient.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

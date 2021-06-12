@@ -49,6 +49,7 @@
     "bootstrap": "^5.0.1",
     "core-js": "3.8.0",
     "gsap": "^3.5.1",
+    "lorem-ipsum": "^2.0.3",
     "ng2-nouislider": "^1.8.2",
     "nouislider": "^14.6.3",
     "reconnecting-websocket": "^4.4.0",

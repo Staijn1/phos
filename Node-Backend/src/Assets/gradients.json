@@ -1,5 +1,6 @@
 [
   {
+    "id": 1,
     "name":"Apple",
     "bgColor":"#111",
     "colorStops":[
@@ -30,6 +31,7 @@
     ]
   },
   {
+    "id": 2,
     "name":"Aurora",
     "bgColor":"#0e172a",
     "colorStops":[
@@ -44,6 +46,7 @@
     ]
   },
   {
+    "id": 3,
     "name":"Borealis",
     "bgColor":"#0d1526",
     "colorStops":[
@@ -62,6 +65,7 @@
     ]
   },
   {
+    "id": 4,
     "name":"Candy",
     "bgColor":"#0d0619",
     "colorStops":[
@@ -80,6 +84,7 @@
     ]
   },
   {
+    "id": 5,
     "name":"Cool",
     "bgColor":"#0b202b",
     "colorStops":[
@@ -88,6 +93,7 @@
     ]
   },
   {
+    "id": 6,
     "name":"Dusk",
     "bgColor":"#0e172a",
     "colorStops":[
@@ -102,6 +108,7 @@
     ]
   },
   {
+    "id": 7,
     "name":"Miami",
     "bgColor":"#110a11",
     "colorStops":[
@@ -128,6 +135,7 @@
     ]
   },
   {
+    "id": 8,
     "name":"Orient",
     "bgColor":"#100",
     "colorStops":[
@@ -142,6 +150,7 @@
     ]
   },
   {
+    "id": 9,
     "name":"Outrun",
     "bgColor":"#101",
     "colorStops":[
@@ -172,6 +181,7 @@
     ]
   },
   {
+    "id": 10,
     "name":"Pacific Dream",
     "bgColor":"#051319",
     "colorStops":[
@@ -186,6 +196,7 @@
     ]
   },
   {
+    "id": 11,
     "name":"Shahabi",
     "bgColor":"#060613",
     "colorStops":[
@@ -200,6 +211,7 @@
     ]
   },
   {
+    "id": 12,
     "name":"Summer",
     "bgColor":"#041919",
     "colorStops":[
@@ -214,6 +226,7 @@
     ]
   },
   {
+    "id": 13,
     "name":"Sunset",
     "bgColor":"#021119",
     "colorStops":[
@@ -228,6 +241,7 @@
     ]
   },
   {
+    "id": 14,
     "name":"Tie Dye",
     "bgColor":"#111",
     "colorStops":[
@@ -254,6 +268,7 @@
     ]
   },
   {
+    "id": 0,
     "name":"Clouds",
     "bgColor":"#212224",
     "colorStops":[

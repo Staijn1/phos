@@ -6,6 +6,9 @@
           class='card-header d-flex justify-content-between bg-primary text-white align-content-center'
           (click)='handleClickOnHeader()'>
           <h5 class='text-white'>Gradients overview</h5>
+          <button type='button' class='btn btn-info text-white' (click)='addGradient()'>
+            <fa-icon [icon]='addIcon'></fa-icon>
+          </button>
         </div>
         <div class='card-body text-dark'>
 
@@ -14,18 +17,18 @@
               <div
                 class='card-header d-flex justify-content-between'
                 #gradientCard
-                [id]='gradient.name'
-                [ngClass]='gradientCard.id === visualizerOptions.gradient ? "bg-secondary text-white" : ""'>
-                <h3>{{gradient.name}}</h3>
+                [id]='gradient.id'
+                [ngClass]='gradientCard.id === currentActiveGradientID.toString() ? "bg-secondary text-white" : ""'>
+                <h3 contenteditable (input)='onNameChange($event.target.innerHTML, gradient)'>{{gradient.name}}</h3>
                 <div class='d-flex'>
                   <button
                     class='btn mx-1 text-dark rotate'
                     (click)='handleCollapsable(gradient)'
                     [attr.aria-expanded]='!gradient.collapsed'
                     [ngClass]="[
-                                                         gradientCard.id === visualizerOptions.gradient ? 'text-white' : 'text-dark',
-                                                         gradient.collapsed ? 'left' : 'down'
-                                                         ]"
+                                 gradientCard.id === currentActiveGradientID.toString() ? 'text-white' : 'text-dark',
+                                 gradient.collapsed ? 'left' : 'down'
+                    ]"
                   >
                     <fa-icon
                       [icon]='collapseIcon'>
@@ -61,7 +64,10 @@
                       <p>Background color: {{gradient.bgColor}}</p>
                     </div>
                     <div class='col'>
-                      <app-colorpicker [id]='"bgColor"+gradientIndex' (colorChange)='changeBackgroundColor($event, gradient)'></app-colorpicker>
+                      <app-colorpicker
+                        [id]='"bgColor"+gradientIndex'
+                        (colorChange)='changeBackgroundColor($event, gradient)'
+                        [color]='[gradient.bgColor]'></app-colorpicker>
                     </div>
                   </div>
                   <table class='table' aria-label='Colorstops'>
@@ -113,7 +119,7 @@
       </div>
     </div>
     <div class='col d-flex flex-column'>
-      <div class='h-25 py-5 position-sticky sticky-top'>
+      <div class='vh-50 py-5 position-sticky sticky-top'>
         <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
       </div>
     </div>
