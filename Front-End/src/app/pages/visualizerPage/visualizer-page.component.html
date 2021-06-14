@@ -83,7 +83,7 @@
               <select #modeSelect (change)='updateMode($event)' class='form-select'
                       id='modeSelect'>
                 <option *ngFor='let mode of modes;'
-                        [selected]='mode.value == visualizerOptions.mode'
+                        [selected]='mode.value === visualizerOptions.mode'
                         [value]='mode.value'
                 >
                   {{mode.text}}
@@ -124,7 +124,7 @@
           </div>
         </div>
         <div class='row'>
-          <div *ngIf='modeSelect.value == 11' class='col-4 offset-8'>
+          <div *ngIf='modeSelect.value === 11' class='col-4 offset-8'>
             <nouislider (slide)='updateOptions()'
                         [(ngModel)]='this.visualizerOptions.lineWidth'
                         [config]='lineWidthConfig'></nouislider>
@@ -133,7 +133,7 @@
           </div>
         </div>
         <div class='row'>
-          <div *ngIf='modeSelect.value == 11' class='col-4 offset-8'>
+          <div *ngIf='modeSelect.value === 11' class='col-4 offset-8'>
             <nouislider (slide)='updateOptions()'
                         [(ngModel)]='this.visualizerOptions.fillAlpha'
                         [config]='bgAlphaConfig'></nouislider>
