@@ -1,5 +1,7 @@
-<div id="settingsWrapper" class="bg-warning">
-    <div id="settings" class="col-sm-6 col-xl-4">
+<div id="settingsWrapper" class="bg-warning"></div>
+<div class="row m-0 vh-100" id="settings">
+    <div class="col-6 d-none d-xl-block"></div>
+    <div class="col-sm-6 col-xl-4 m-0 d-flex flex-column justify-content-center">
         <div class="card">
             <div class="card-body">
                 <div class="card-title border-bottom">
@@ -9,7 +11,8 @@
                     <div class="col">
                         <div class="input-group mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" [(ngModel)]="chroma" id="chromaSupport" name="chromaSupport">
+                                <input class="form-check-input" type="checkbox" [(ngModel)]="chroma" id="chromaSupport"
+                                       name="chromaSupport">
                                 <label class="form-check-label" for="chromaSupport">
                                     Enable chroma support
                                 </label>

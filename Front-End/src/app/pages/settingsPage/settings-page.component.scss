@@ -2,14 +2,12 @@
 
 #settingsWrapper {
   position: absolute;
-  width: 90%;
-  height: calc(100% - #{$menu-bar-height});
-  top: $menu-bar-height;
+  width: 100%;
+  height: 100%;
   right: 0;
   clip-path: polygon(49% 0, 100% 0, 100% 100%, 46% 100%, 10% 50%);
-  #settings {
-    position: relative;
-    top: 33%;
-    left: 50%;
-  }
+
+}
+#settings {
+  padding-top: $menu-bar-height;
 }

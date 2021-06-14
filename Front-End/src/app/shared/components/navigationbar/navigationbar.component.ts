@@ -74,6 +74,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.animate()
+        this.mobileNav()
       }
     })
   }
