@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import {app, BrowserWindow} from 'electron'
 import * as path from 'path'
 import * as url from 'url'
 
@@ -18,6 +18,7 @@ function createWindow(): void {
         height: 700,
         webPreferences: {
             nodeIntegration: true,
+            contextIsolation: false,
             enableRemoteModule: true,
         },
         frame: false,
@@ -32,9 +33,6 @@ function createWindow(): void {
     // Open the DevTools.
     // win.webContents.openDevTools()
     if (serve) {
-        require('electron-reload')(__dirname, {
-            electron: require(`${__dirname}/node_modules/electron`),
-        })
         win.loadURL('http://localhost:4200')
     } else {
         win.loadURL(
@@ -81,5 +79,5 @@ try {
     app.allowRendererProcessReuse = false
 } catch (e) {
     // Catch Error
-    // throw e;
+    throw e
 }

@@ -1,5 +1,5 @@
-import { State } from '../abstract/state'
-import { calculateBGRInteger, map } from '../../../../shared/functions'
+import {State} from '../abstract/state'
+import {calculateBGRInteger, map} from '../../../../shared/functions'
 import iro from '@jaames/iro'
 
 export class VisualizerState extends State {

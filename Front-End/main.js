@@ -18,6 +18,7 @@ function createWindow() {
         height: 700,
         webPreferences: {
             nodeIntegration: true,
+            contextIsolation: false,
             enableRemoteModule: true
         },
         frame: false,
@@ -31,9 +32,6 @@ function createWindow() {
     // Open the DevTools.
     // win.webContents.openDevTools()
     if (serve) {
-        require('electron-reload')(__dirname, {
-            electron: require(__dirname + "/node_modules/electron")
-        });
         win.loadURL('http://localhost:4200');
     }
     else {
@@ -75,5 +73,5 @@ try {
 }
 catch (e) {
     // Catch Error
-    // throw e;
+    throw e;
 }

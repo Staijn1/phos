@@ -1,6 +1,6 @@
-import { Component, OnInit } from '@angular/core'
-import { faSave } from '@fortawesome/free-solid-svg-icons'
-import { SettingsService } from '../../services/settings/settings.service'
+import {Component, OnInit} from '@angular/core'
+import {faSave} from '@fortawesome/free-solid-svg-icons'
+import {SettingsService} from '../../services/settings/settings.service'
 
 @Component({
   selector: 'app-settings',

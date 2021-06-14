@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core'
 import {TimelineLite} from 'gsap'
-import {DeviceDetectorService} from 'ngx-device-detector';
+import {DeviceDetectorService} from 'ngx-device-detector'
 
 @Component({
   selector: 'app-home',

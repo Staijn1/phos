@@ -1,9 +1,9 @@
-import { Inject, Injectable } from '@angular/core'
-import { DOCUMENT } from '@angular/common'
+import {Inject, Injectable} from '@angular/core'
+import {DOCUMENT} from '@angular/common'
 import iro from '@jaames/iro'
-import { ChromaEffectService } from '../chromaEffect/chroma-effect.service'
-import { SettingsService } from '../settings/settings.service'
-import { ConnectionService } from '../connection/connection.service'
+import {ChromaEffectService} from '../chromaEffect/chroma-effect.service'
+import {SettingsService} from '../settings/settings.service'
+import {ConnectionService} from '../connection/connection.service'
 
 @Injectable({
     providedIn: 'root'

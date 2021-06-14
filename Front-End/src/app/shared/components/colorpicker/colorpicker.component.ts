@@ -1,7 +1,7 @@
-import { AfterViewInit, Component, EventEmitter, Input, Output } from '@angular/core'
+import {AfterViewInit, Component, EventEmitter, Input, Output} from '@angular/core'
 import iro from '@jaames/iro'
-import { IroColorPicker } from '@jaames/iro/dist/ColorPicker'
-import Color = iro.Color
+import {IroColorPicker} from '@jaames/iro/dist/ColorPicker'
+import Color = iro.Color;
 
 @Component({
   selector: 'app-colorpicker',

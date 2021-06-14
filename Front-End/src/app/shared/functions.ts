@@ -1,4 +1,4 @@
-import { GlobalVars } from './constants'
+import {GlobalVars} from './constants'
 
 /**
  * Map a value from one scale to another. This function is the same as the map() function from arduino.

@@ -1,10 +1,10 @@
-import { NgModule } from '@angular/core'
-import { RouterModule, Routes } from '@angular/router'
-import { SettingsPageComponent } from '../pages/settingsPage/settings-page.component'
-import { ModePageComponent } from '../pages/modePage/mode-page.component'
-import { VisualizerPageComponent } from '../pages/visualizerPage/visualizer-page.component'
-import { HomePageComponent } from '../pages/homePage/home-page.component'
-import { GradientEditorPageComponent } from '../pages/gradientEditorPage/gradient-editor-page.component'
+import {NgModule} from '@angular/core'
+import {RouterModule, Routes} from '@angular/router'
+import {SettingsPageComponent} from '../pages/settingsPage/settings-page.component'
+import {ModePageComponent} from '../pages/modePage/mode-page.component'
+import {VisualizerPageComponent} from '../pages/visualizerPage/visualizer-page.component'
+import {HomePageComponent} from '../pages/homePage/home-page.component'
+import {GradientEditorPageComponent} from '../pages/gradientEditorPage/gradient-editor-page.component'
 
 
 const routes: Routes = [

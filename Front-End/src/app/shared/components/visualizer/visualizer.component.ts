@@ -1,6 +1,6 @@
-import { Component, Input, OnDestroy, OnInit } from '@angular/core'
-import AudioMotionAnalyzer, { Options } from 'audiomotion-analyzer'
-import { GradientInformation } from '../../types/GradientInformation'
+import {Component, Input, OnDestroy, OnInit} from '@angular/core'
+import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
+import {GradientInformation} from '../../types/GradientInformation'
 
 @Component({
   selector: 'app-shared-visualizer',
