@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild } from '@angular/core'
-import { ElectronService } from '../../../services/electron/electron.service'
-import { faClone, faSquare } from '@fortawesome/free-regular-svg-icons'
-import { TimelineLite } from 'gsap'
-import { NavigationEnd, Router } from '@angular/router'
+import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild} from '@angular/core'
+import {ElectronService} from '../../../services/electron/electron.service'
+import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons'
+import {TimelineLite} from 'gsap'
+import {NavigationEnd, Router} from '@angular/router'
 
 import {
   faBars,
@@ -21,8 +21,8 @@ import {
   faWalking,
   faWindowMinimize,
 } from '@fortawesome/free-solid-svg-icons'
-import { ConnectionService } from '../../../services/connection/connection.service'
-import { ColorService } from '../../../services/color/color.service'
+import {ConnectionService} from '../../../services/connection/connection.service'
+import {ColorService} from '../../../services/color/color.service'
 
 @Component({
   selector: 'app-navigationbar',
@@ -74,7 +74,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.animate()
-        this.mobileNav()
+        this.closeMobileMenu()
       }
     })
   }
@@ -85,14 +85,22 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
   mobileNav(): void {
     if (!this.isOpen) {
-      this.mobileMenu = faTimes
-      this.renderer.addClass(document.body, 'mobile-nav-active')
+      this.openMobileMenu();
     } else {
-      this.mobileMenu = faBars
-      this.renderer.removeClass(document.body, 'mobile-nav-active')
+      this.closeMobileMenu();
     }
-    this.isOpen = !this.isOpen
+  }
 
+  private closeMobileMenu() {
+    this.mobileMenu = faBars
+    this.renderer.removeClass(document.body, 'mobile-nav-active')
+    this.isOpen = false;
+  }
+
+  private openMobileMenu() {
+    this.mobileMenu = faTimes
+    this.renderer.addClass(document.body, 'mobile-nav-active')
+    this.isOpen = true;
   }
 
   exitButtonAction(): void {
