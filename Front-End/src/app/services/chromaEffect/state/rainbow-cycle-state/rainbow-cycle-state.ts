@@ -1,5 +1,5 @@
-import { State } from '../abstract/state'
-import { calculateBGRInteger, color_wheel } from '../../../../shared/functions'
+import {State} from '../abstract/state'
+import {calculateBGRInteger, color_wheel} from '../../../../shared/functions'
 import iro from '@jaames/iro'
 
 export class RainbowCycleState extends State {

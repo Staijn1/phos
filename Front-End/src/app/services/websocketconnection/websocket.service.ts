@@ -1,8 +1,8 @@
-import { Injectable } from '@angular/core'
-import { map } from '../../shared/functions'
-import { Connection } from '../../shared/interfaces/Connection'
+import {Injectable} from '@angular/core'
+import {map} from '../../shared/functions'
+import {Connection} from '../../shared/interfaces/Connection'
 import ReconnectingWebSocket from 'reconnecting-websocket'
-import { environment } from '../../../environments/environment'
+import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
 
 @Injectable({

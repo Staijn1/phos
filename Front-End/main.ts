@@ -1,4 +1,4 @@
-import { app, BrowserWindow } from 'electron'
+import {app, BrowserWindow} from 'electron'
 import * as path from 'path'
 import * as url from 'url'
 
@@ -18,6 +18,7 @@ function createWindow(): void {
         height: 700,
         webPreferences: {
             nodeIntegration: true,
+            contextIsolation: false,
             enableRemoteModule: true,
         },
         frame: false,
@@ -78,5 +79,5 @@ try {
     app.allowRendererProcessReuse = false
 } catch (e) {
     // Catch Error
-    throw e;
+    throw e
 }

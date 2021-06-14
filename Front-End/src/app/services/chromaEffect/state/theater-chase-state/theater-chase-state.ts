@@ -1,6 +1,6 @@
-import { State } from '../abstract/state'
-import { calculateBGRInteger } from '../../../../shared/functions'
-import { GlobalVars } from '../../../../shared/constants'
+import {State} from '../abstract/state'
+import {calculateBGRInteger} from '../../../../shared/functions'
+import {GlobalVars} from '../../../../shared/constants'
 import iro from '@jaames/iro'
 
 export class TheaterChaseState extends State {

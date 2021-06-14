@@ -1,6 +1,6 @@
-import { Injectable } from '@angular/core'
-import { GeneralSettings } from '../../shared/types/types'
-import { Options } from 'audiomotion-analyzer'
+import {Injectable} from '@angular/core'
+import {GeneralSettings} from '../../shared/types/types'
+import {Options} from 'audiomotion-analyzer'
 import iro from '@jaames/iro'
 
 

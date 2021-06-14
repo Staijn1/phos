@@ -1,5 +1,5 @@
-import { State } from '../abstract/state'
-import { color_wheel, randomInteger } from '../../../../shared/functions'
+import {State} from '../abstract/state'
+import {color_wheel, randomInteger} from '../../../../shared/functions'
 
 export class SingleDynamicState extends State {
     private interval;

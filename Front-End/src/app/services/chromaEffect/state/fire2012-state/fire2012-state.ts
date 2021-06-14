@@ -1,5 +1,5 @@
-import { State } from '../abstract/state'
-import { calculateBGRInteger, map, qadd8, qsub8, randomInteger, WarmColor } from '../../../../shared/functions'
+import {State} from '../abstract/state'
+import {calculateBGRInteger, map, qadd8, qsub8, randomInteger, WarmColor} from '../../../../shared/functions'
 import iro from '@jaames/iro'
 
 export class Fire2012State extends State {

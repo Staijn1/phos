@@ -1,4 +1,4 @@
-import { ChromaEffectService } from '../../chroma-effect.service'
+import {ChromaEffectService} from '../../chroma-effect.service'
 import iro from '@jaames/iro'
 
 

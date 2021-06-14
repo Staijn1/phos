@@ -85,22 +85,22 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
   mobileNav(): void {
     if (!this.isOpen) {
-      this.openMobileMenu();
+      this.openMobileMenu()
     } else {
-      this.closeMobileMenu();
+      this.closeMobileMenu()
     }
   }
 
   private closeMobileMenu() {
     this.mobileMenu = faBars
     this.renderer.removeClass(document.body, 'mobile-nav-active')
-    this.isOpen = false;
+    this.isOpen = false
   }
 
   private openMobileMenu() {
     this.mobileMenu = faTimes
     this.renderer.addClass(document.body, 'mobile-nav-active')
-    this.isOpen = true;
+    this.isOpen = true
   }
 
   exitButtonAction(): void {
