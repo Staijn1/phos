@@ -21,7 +21,7 @@ export class ColorService {
             this.picker = iro.ColorPicker('#picker', {
                 width: 150,
                 layoutDirection: 'horizontal',
-                handleRadius: 9,
+                handleRadius: 8,
                 borderWidth: 2,
                 borderColor: '#fff',
                 wheelAngle: 90,
