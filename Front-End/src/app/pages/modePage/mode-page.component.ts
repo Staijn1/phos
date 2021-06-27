@@ -78,8 +78,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
     this.connection.setMode(id)
 
     const state = this.chromaEffects.find(stateToCompare => {
-      const  index =  id - 1 > 0 ? id - 1 : 0
-      return stateToCompare.name.toLowerCase() === this.modes[index].name.toLowerCase()
+      return stateToCompare.name.toLowerCase() === this.modes[id].name.toLowerCase()
     })
 
     this.chromaService.state = state === undefined ? new StaticState() : state.state
