@@ -73,7 +73,7 @@
     "@typescript-eslint/parser": "4.27.0",
     "concurrently": "^6.2.0",
     "cypress": "^7.5.0",
-    "electron": "13.1.2",
+    "electron": "13.1.7",
     "electron-packager": "15.2.0",
     "electron-rebuild": "2.3.5",
     "eslint": "^7.26.0",
