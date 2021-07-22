@@ -38,7 +38,11 @@ export class SettingsService {
     spinSpeed: 0,
   };
 
-  private readonly defaultGeneralSettings: GeneralSettings = {chroma: false, colors: ['#ff0000', '#00ff00', '#0000ff']};
+  private readonly defaultGeneralSettings: GeneralSettings = {
+    chroma: false,
+    colors: ['#ff0000', '#00ff00', '#0000ff'],
+    theme: 'default'
+  };
 
   saveVisualizerOptions(options: Options): void {
     delete options.onCanvasDraw
@@ -49,8 +53,9 @@ export class SettingsService {
     return this.readSettings('visualizerSettings')
   }
 
-  saveGeneralSettings(colors: iro.Color[] | undefined,  chroma?: boolean): void {
+  saveGeneralSettings(colors: iro.Color[] | undefined, chroma?: boolean, theme?: string): void {
     const currentSettings = this.readGeneralSettings()
+    currentSettings.theme = theme || currentSettings.theme
     if (colors) {
       for (let i = 0; i < colors.length; i++) {
         currentSettings.colors[i] = colors[i].hexString

@@ -21,6 +21,22 @@
                     </div>
                 </div>
                 <div class="row">
+                    <div class="col">
+                        Primary color:
+                        <div class="row justify-content-center">
+                            <div
+                                    *ngFor="let theme of themes;let i = index"
+                                    [class.active]="i === selectedTheme"
+                                    [ngClass]="theme"
+                                    (click)="setTheme(theme, i)"
+                                    class="color-option col-2 rounded d-flex justify-content-center align-items-center m-2 text-capitalize"
+                            >
+                                {{theme}}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row mt-3">
                     <div class="col text-right">
                         <button (click)="saveSettings()" class="btn btn-primary w-25">
                             <fa-icon [icon]="saveIcon"></fa-icon>
