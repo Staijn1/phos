@@ -38,7 +38,12 @@ export class SettingsService {
     spinSpeed: 0,
   };
 
-  private readonly defaultGeneralSettings: GeneralSettings = {chroma: false, colors: ['#ff0000', '#00ff00', '#0000ff'], initialColor: false};
+  private readonly defaultGeneralSettings: GeneralSettings = {
+    chroma: false,
+    colors: ['#ff0000', '#00ff00', '#0000ff'],
+    initialColor: false,
+    theme: 'default'
+  };
 
   saveVisualizerOptions(options: Options): void {
     delete options.onCanvasDraw

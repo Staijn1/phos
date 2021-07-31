@@ -1,5 +1,5 @@
 export type GeneralSettings = {
   initialColor: boolean;
   colors: string[];
-  chroma: boolean;
+  chroma: boolean;theme: string;
 };

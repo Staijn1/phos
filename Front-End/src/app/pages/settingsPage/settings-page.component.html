@@ -11,7 +11,8 @@
                     <div class="col">
                         <div class="input-group mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" [(ngModel)]="settings.chroma" id="chromaSupport"
+                                <input class="form-check-input" type="checkbox" [(ngModel)]="settings.chroma"
+                                       id="chromaSupport"
                                        name="chromaSupport">
                                 <label class="form-check-label" for="chromaSupport">
                                     Enable chroma support
@@ -24,11 +25,28 @@
                     <div class="col">
                         <div class="input-group mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" [(ngModel)]="settings.initialColor" id="initialColor"
+                                <input class="form-check-input" type="checkbox" [(ngModel)]="settings.initialColor"
+                                       id="initialColor"
                                        name="initialColor">
                                 <label class="form-check-label" for="initialColor">
                                     Set colors on startup
                                 </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col">
+                        Primary color:
+                        <div class="row justify-content-center">
+                            <div
+                                    *ngFor="let theme of themes;let i = index"
+                                    [class.active]="i === selectedTheme"
+                                    [ngClass]="theme"
+                                    (click)="setTheme(theme, i)"
+                                    class="color-option col-2 rounded d-flex justify-content-center align-items-center m-2 text-capitalize"
+                            >
+                                {{theme}}
                             </div>
                         </div>
                     </div>

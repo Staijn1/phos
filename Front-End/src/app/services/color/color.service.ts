@@ -16,7 +16,7 @@ export class ColorService {
     private connection: ConnectionService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService) {
-    const colorsSaved = this.settingsService.readGeneralSettings().colors
+    const currentSettings = this.settingsService.readGeneralSettings()
     setTimeout(() => {
       this.picker = iro.ColorPicker('#picker', {
         width: 150,
@@ -25,7 +25,7 @@ export class ColorService {
         borderWidth: 2,
         borderColor: '#fff',
         wheelAngle: 90,
-        colors: colorsSaved,
+        colors: currentSettings.colors,
       })
 
       this.picker.on('color:init', (iroColor: iro.Color) => {
@@ -43,6 +43,7 @@ export class ColorService {
         currentSettings.colors = this.settingsService.convertColors(this.picker.colors)
         this.settingsService.saveGeneralSettings(currentSettings)
       })
+      this.setTheme(currentSettings.theme)
     }, 1)
   }
 
@@ -60,5 +61,10 @@ export class ColorService {
 
   get getColors(): iro.Color[] {
     return this.picker.colors
+  }
+
+  setTheme(theme: string): void {
+    if (!theme || theme === '') return
+    this.document.body.className = theme
   }
 }

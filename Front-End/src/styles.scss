@@ -4,8 +4,6 @@
 /*--------------------------------------------------------------
 # Scrollbar
 --------------------------------------------------------------*/
-
-
 body::-webkit-scrollbar {
   width: 8px;
 }
@@ -15,9 +13,9 @@ body::-webkit-scrollbar-track {
 }
 
 body::-webkit-scrollbar-thumb {
-  background-color: getColor('primary');
+  background-color: getColor('secondary');
   border-radius: 10px;
-  border: 1px solid darken(getColor('primary'), 5%);
+  border: 1px solid darken(getColor('secondary'), 5%);
 }
 
 /*--------------------------------------------------------------
@@ -254,6 +252,74 @@ section {
   background-color: getColor('secondary') !important;
 }
 
+@function setTextColor($color) {
+  @if (lightness($color) > 50) {
+    @return #212529FF; // Lighter background, return dark color
+  } @else {
+    @return white; // Darker background, return light color
+  }
+}
+
+// Helper theme mixin
+// @param $name: name of the theme (HTML class)
+// @param $color: color of the theme
+@mixin theme($name, $color) {
+  $transition: 0.15s ease-in-out;
+
+  .#{$name}.color-option {
+    background: $color !important;
+    color: setTextColor($color);
+  }
+
+  .#{$name} {
+    #menu-bar {
+      transition: background-color $transition;
+      background: $color !important;
+    }
+
+    #text, #Light_Bulb {
+      stroke: $color !important;
+    }
+
+    .bg-primary, .btn-primary {
+      background: $color !important;
+    }
+
+    .btn-primary {
+      border-color: darken($color, 5%);
+
+      &:hover, &:focus {
+        border-color: darken($color, 10%) !important;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem transparentize($color, 0.5)
+      }
+    }
+
+    .nav-menu {
+      .active > a, li:hover > a {
+        background: $color !important;
+      }
+
+      ul > li {
+        .active {
+          background: $color !important;
+        }
+
+        > a:hover {
+          background: $color !important;
+        }
+      }
+    }
+  }
+}
+
+// Including themes
+// By looping through the $themes map
+@each $key, $value in $themes {
+  @include theme($key, $value);
+}
 
 @import "~nouislider/distribute/nouislider.min.css";
 
