@@ -2,7 +2,7 @@
 <div class="row m-0 vh-100" id="settings">
     <div class="col-6 d-none d-sm-block"></div>
     <div class="col-sm-6 col-xl-4 m-0 d-flex flex-column justify-content-center">
-        <div class="card">
+        <form class="card" #form="ngForm" (ngSubmit)="saveSettings()">
             <div class="card-body">
                 <div class="card-title border-bottom">
                     <h1 class="text-center">Settings</h1>
@@ -11,7 +11,7 @@
                     <div class="col">
                         <div class="input-group mb-3">
                             <div class="form-check">
-                                <input class="form-check-input" type="checkbox" [(ngModel)]="chroma" id="chromaSupport"
+                                <input class="form-check-input" type="checkbox" [(ngModel)]="settings.chroma" id="chromaSupport"
                                        name="chromaSupport">
                                 <label class="form-check-label" for="chromaSupport">
                                     Enable chroma support
@@ -21,13 +21,26 @@
                     </div>
                 </div>
                 <div class="row">
-                    <div class="col text-right">
-                        <button (click)="saveSettings()" class="btn btn-primary w-25">
+                    <div class="col">
+                        <div class="input-group mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" [(ngModel)]="settings.initialColor" id="initialColor"
+                                       name="initialColor">
+                                <label class="form-check-label" for="initialColor">
+                                    Set colors on startup
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-4 text-right">
+                        <button type="submit" class="btn btn-primary">
                             <fa-icon [icon]="saveIcon"></fa-icon>
                         </button>
                     </div>
                 </div>
             </div>
-        </div>
+        </form>
     </div>
 </div>
