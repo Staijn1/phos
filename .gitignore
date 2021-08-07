@@ -120,3 +120,5 @@ Front-End/release-builds
 /Node-Backend/src/Certs/*.pem
 /Node-Backend/src/Certs/*.crt
 /Node-Backend/src/Certs/*.key
+/Front-End/release-build/
+/Front-End/out/
