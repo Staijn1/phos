@@ -20,6 +20,7 @@ import {
   faTimes,
   faWalking,
   faWindowMinimize,
+  faCubes
 } from '@fortawesome/free-solid-svg-icons'
 import {ConnectionService} from '../../../services/connection/connection.service'
 import {ColorService} from '../../../services/color/color.service'
@@ -48,7 +49,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   speedIncreaseIcon = faRunning;
   speedDecreaseIcon = faWalking;
   editor = faEdit
-
+  visualizer3D = faCubes;
   private window: Electron.BrowserWindow | undefined;
   private animationMode = 0;
   private timeline: TimelineLite;
