@@ -55,7 +55,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   private timeline: TimelineLite;
 
   @Output() animationEnd = new EventEmitter<void>();
-  @ViewChild('animationObject') animationObject: ElementRef;
 
 
   constructor(
