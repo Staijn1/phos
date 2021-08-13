@@ -10,7 +10,6 @@ int fftValue = 0;
 #define DEFAULT_SPEED_LEDSTRIP 1000
 #define DEFAULT_MODE_LEDSTRIP FX_MODE_STATIC
 
-CRGB leds[NUM_LEDS];
 WS2812FX ws2812fx = WS2812FX(NUM_LEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
 uint8_t vuMeterEffect;
 
@@ -35,13 +34,6 @@ void setDefaultLedstripValues() {
   ws2812fx.setSpeed(1000);
   ws2812fx.setBrightness(185);
   ws2812fx.setOptions(0, REVERSE);
-}
-
-void changeLedStripColour(uint32_t colour) {
-  for (int i = 1; i < NUM_LEDS; i++) {
-    leds[i] = colour;
-  }
-  FastLED.show();
 }
 
 void ledstripRun() {
