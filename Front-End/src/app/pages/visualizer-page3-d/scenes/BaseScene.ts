@@ -4,6 +4,7 @@ import {ElementRef} from '@angular/core'
 import {GUI} from 'three/examples/jsm/libs/dat.gui.module'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import {SimplexNoise} from 'three/examples/jsm/math/SimplexNoise'
+import {ConnectionService} from '../../../services/connection/connection.service'
 
 export abstract class BaseScene {
   private renderer: WebGLRenderer;
@@ -21,8 +22,9 @@ export abstract class BaseScene {
   protected averageMidTreble: number = 0;
   protected averageBass: number = 0;
   protected noise: SimplexNoise
+  private isActive: boolean;
 
-  protected constructor(protected threeContainer: ElementRef) {
+  protected constructor(protected threeContainer: ElementRef, protected readonly connection: ConnectionService) {
     this.noise = new SimplexNoise()
     // Debug
     this.gui = new GUI()
@@ -47,6 +49,7 @@ export abstract class BaseScene {
   private init(): void {
     window.onresize = this.onResize.bind(this)
 
+    this.isActive = true
     this.renderer = new THREE.WebGLRenderer({canvas: this.threeContainer.nativeElement, antialias: true, alpha: false})
     this.renderer.setSize(window.innerWidth, window.innerHeight)
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
@@ -65,7 +68,11 @@ export abstract class BaseScene {
     this.collectFFTData()
     this.animate()
     this.renderer.render(this.scene, this.camera)
-    window.requestAnimationFrame(this.render.bind(this))
+
+    this.sendFFTData()
+    if (this.isActive) {
+      window.requestAnimationFrame(this.render.bind(this))
+    }
   }
 
   private setupAnalyser() {
@@ -102,5 +109,17 @@ export abstract class BaseScene {
       const lowMidTreble = dataArray.slice(this.frequencyLimits.lowMid[0], this.frequencyLimits.bass[1]).reduce((accumulator, value) => accumulator + value, 0)
       this.averageMidTreble = lowMidTreble / (this.frequencyLimits.lowMid[1] - this.frequencyLimits.lowMid[0])
     }
+  }
+
+  public uninit(): void {
+    this.gui.destroy()
+    this.scene = undefined
+    this.renderer = undefined
+    this.isActive = false
+    this.analyser = undefined
+  }
+
+  private sendFFTData() {
+    this.connection.setLeds(this.averageBass)
   }
 }

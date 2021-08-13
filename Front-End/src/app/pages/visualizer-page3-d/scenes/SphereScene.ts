@@ -3,7 +3,7 @@ import * as THREE from 'three'
 import {IcosahedronGeometry, Mesh, MeshBasicMaterial, MeshLambertMaterial, PlaneGeometry} from 'three'
 import {map} from '../../../shared/functions'
 import {ElementRef} from '@angular/core'
-import {SimplexNoise} from 'three/examples/jsm/math/SimplexNoise'
+import {ConnectionService} from '../../../services/connection/connection.service'
 
 export class SphereScene extends BaseScene {
   private upperPane: Mesh<PlaneGeometry, MeshBasicMaterial>;
@@ -11,8 +11,8 @@ export class SphereScene extends BaseScene {
   private ball: Mesh<IcosahedronGeometry, MeshLambertMaterial>;
 
 
-  constructor(readonly threeContainer: ElementRef) {
-    super(threeContainer)
+  constructor(readonly threeContainer: ElementRef, readonly connection: ConnectionService) {
+    super(threeContainer,connection)
   }
 
   private setupPanes(): void {
@@ -64,7 +64,8 @@ export class SphereScene extends BaseScene {
     this.scene.add(this.ball)
   }
 
-  private makeRoughBall(mesh: Mesh<IcosahedronGeometry, MeshLambertMaterial>, bassFr: number) {
+  private makeRoughBall(mesh: Mesh<IcosahedronGeometry, MeshLambertMaterial>, rawFFTValue: number) {
+    const fftValue = map(this.averageBass, 0, 255, 0, 10)
     const positionAttribute = mesh.geometry.getAttribute('position')
     const vertex = new THREE.Vector3()
     for (let vertexIndex = 0; vertexIndex < positionAttribute.count; vertexIndex++) {
@@ -74,10 +75,14 @@ export class SphereScene extends BaseScene {
       const time = window.performance.now()
       vertex.normalize()
       const rf = 0.00001
-      const distance = (offset + bassFr) + this.noise.noise3d(
+      const distance = (offset + fftValue) + this.noise.noise3d(
         vertex.x + time * rf * 7, vertex.y + time * rf * 8, vertex.z + time * rf * 9) * amp
       vertex.multiplyScalar(distance)
       positionAttribute.setXYZ(vertexIndex, vertex.x, vertex.y, vertex.z)
+
+      if (time % 10 === 0){
+        console.log(fftValue)
+      }
     }
     mesh.geometry.attributes.position.needsUpdate = true // required after the first render
   }
@@ -91,10 +96,6 @@ export class SphereScene extends BaseScene {
       const amp = 2
       const time = performance.now()
       const distance = this.noise.noise(vertex.x + time * 0.0004, vertex.y + time * 0.0001) * fftValue * amp
-
-      if (vertexIndex == 0 && time % 10 === 0){
-        console.log(distance)
-      }
       vertex.z = distance
       positionAttribute.setXYZ(vertexIndex, vertex.x, vertex.y, vertex.z)
     }
@@ -105,14 +106,17 @@ export class SphereScene extends BaseScene {
     this.setupBall()
     this.setupLights()
     this.setupPanes()
+    this.setupCamera()
+  }
 
+  private setupCamera() {
     this.camera.position.set(0, 0, 100)
     this.camera.lookAt(this.scene.position)
     this.scene.add(this.camera)
   }
 
   protected animate() {
-    this.makeRoughBall(this.ball, map(this.averageBass, 0, 255, 0, 10))
+    this.makeRoughBall(this.ball, this.averageBass)
     // todo doet het niet?
     this.animatePlane(this.upperPane, this.averageBass)
     this.animatePlane(this.bottomPane, this.averageMidTreble)

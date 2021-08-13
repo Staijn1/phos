@@ -39,30 +39,61 @@ export class ConnectionService extends Connection {
         this.apiService.setColor(colors)
     }
 
+    /**
+     * Sends data to show on visualizer mode
+     * @param {number} amount - Integer ranging from 0 - 255
+     */
     setLeds(amount: number): void {
-        this.websocketService.setLeds(amount)
+        this.websocketService.setLeds(Math.round(amount))
     }
 
+    /**
+     * Set the ledstrip to a certain mode
+     * @param {number} mode - The ID of the mode to select
+     */
     setMode(mode: number): void {
         this.websocketService.setMode(mode)
     }
 
+    /**
+     * Retrieve all the different modes from the server
+     * @return {Promise<ModeInformation[]>}
+     */
     async getModes(): Promise<ModeInformation[]> {
         return this.apiService.getModes()
     }
 
+    /**
+     * Retrieve all the different gradients from the server. Gradients are used in the audiomotion visualizer
+     * @return {Promise<GradientInformation[]>}
+     */
     async getGradients(): Promise<GradientInformation[]> {
         return this.apiService.getGradients()
     }
 
+    /**
+     * Edit a gradient
+     * @param {GradientInformationExtended} gradient - The gradient to edit with its new values
+     * @return {Promise<void>}
+     */
     async editGradient(gradient: GradientInformationExtended): Promise<void> {
         return this.apiService.editGradient(gradient)
     }
 
+    /***
+     * Delete a gradient
+     * @param {GradientInformationExtended} gradient
+     * @return {Promise<GradientInformation[]>}
+     */
     async removeGradient(gradient: GradientInformationExtended): Promise<GradientInformation[]> {
         return this.apiService.removeGradient(gradient as GradientInformation)
     }
 
+    /**
+     * Create a new gradient
+     * @param {GradientInformationExtended} newGradient
+     * @return {Promise<GradientInformation[]>}
+     */
     async addGradient(newGradient: GradientInformationExtended) :Promise<GradientInformation[]>{
         return this.apiService.addGradient(newGradient as GradientInformation)
     }
