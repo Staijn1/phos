@@ -71,6 +71,7 @@ void handleEvent(uint8_t *payload, size_t length) {
         break;
       }
     case 'r': {
+        // Does the same as v, 'r' is depracated
         fftValue = constrain((uint8_t)atoi(arguments), 0, 255);
         break;
       }
@@ -130,13 +131,21 @@ void websocketSetup() {
 
   WiFiMulti.addAP(ssid, password);
   yield();
+  Serial.println("[SETUP] Connecting to WiFi");
   while (WiFiMulti.run() != WL_CONNECTED) {
     Serial.print(".");
-    delay(100);
+    // BlinkLed has delay()
+    blinkLed(100);
+    
+    if(millis() >= CONNECT_TIMEOUT){
+      Serial.println("");
+      Serial.printf("[SETUP] Resetting ESP. WiFi Connection failed. Timeout: %d ms", CONNECT_TIMEOUT);
+      ESP.restart();
+    }
   }
 
   Serial.println();
-  Serial.print("Connect to ws://"); Serial.print(WiFi.localIP()); Serial.println(":81");
+  Serial.print("[SETUP] Connect to ws://"); Serial.print(WiFi.localIP()); Serial.println(":81");
 
   webSocket.begin();
   webSocket.onEvent(webSocketEvent);
