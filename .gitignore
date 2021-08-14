@@ -122,3 +122,4 @@ Front-End/release-builds
 /Node-Backend/src/Certs/*.key
 /Front-End/release-build/
 /Front-End/out/
+/Arduino/esp32/config.h

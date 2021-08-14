@@ -44,7 +44,7 @@ export class ConnectionService extends Connection {
      * @param {number} amount - Integer ranging from 0 - 255
      */
     setLeds(amount: number): void {
-        this.websocketService.setLeds(Math.round(amount))
+        this.websocketService.setLeds(amount)
     }
 
     /**

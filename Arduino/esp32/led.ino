@@ -1,5 +1,3 @@
-#define BUILTIN_LED 2
-
 void setupLed() {
   pinMode(BUILTIN_LED, OUTPUT);
 }

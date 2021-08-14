@@ -1,18 +1,25 @@
+#include "config.h"
 #include <Arduino.h>
+#include<FastLED.h>
 #include <WiFi.h>
-#include <WiFiMulti.h>
 #include <WiFiClientSecure.h>
+#include <WS2812FX.h>
+#include <WiFiMulti.h>
 #include <WebSocketsServer.h>
 // Git clone from Links2004 repo.
 #include <WebSocketsServer.h>
-#include <WS2812FX.h>
 #include <ArduinoJson.h>
 #include <mdns.h>
-const size_t capacity = JSON_OBJECT_SIZE(1);
 
 #define BUILTIN_LED 2
-static const char ssid[] = "De gelaarsde kat";
-static const char password[] = "JonkerDraadl00s";
+#define DEFAULT_COLOR_LEDSTRIP 0x000000
+#define DEFAULT_BRIGHTNESS_LEDSTRIP 180
+#define DEFAULT_SPEED_LEDSTRIP 1000
+#define DEFAULT_MODE_LEDSTRIP FX_MODE_STATIC
+
+const char *ssid = WIFI_SSID;
+const char *password = WIFI_PASSWORD;
+
 void setup()
 {
   Serial.begin(115200);
@@ -20,8 +27,9 @@ void setup()
   setupLed();
   initLeds();
   websocketSetup();
-  
+
   for (int i = 0; i < 15; i++) {
+    // We are done, blink fast to notify
     blinkLed(250);
   }
 }

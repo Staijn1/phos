@@ -10,14 +10,14 @@ void handleEvent(uint8_t *payload, size_t length) {
         uint8_t m = (uint8_t)atoi(arguments);
 
         switch (m) {
-          case 55:
+          case 56:
             ws2812fx.setSegment(0, 0, NUM_LEDS - 1, vuMeterEffect, ws2812fx.getColor(), 0, NO_OPTIONS);
             break;
 
           default: break;//Do nothing
         }
         ws2812fx.setMode(m);
-        //        Serial.println(ws2812fx.getModeName(ws2812fx.getMode()));
+        Serial.printf("[LOOP] Received mode index %d. Setting mode to: %s\r\n", m, ws2812fx.getModeName(ws2812fx.getMode()));
         break;
       }
     case 'c':
@@ -40,38 +40,28 @@ void handleEvent(uint8_t *payload, size_t length) {
     case 'B':
       {
         ws2812fx.increaseBrightness(25);
+        Serial.printf("[LOOP] Received brightness INCREASE. Brightness is now at %d\r\n", ws2812fx.getBrightness());
         break;
       }
     case 'b':
       {
-        Serial.println("Received brightness decrease");
         ws2812fx.decreaseBrightness(25);
+        Serial.printf("[LOOP] Received brightness DECREASE. Brightness is now at %d\r\n", ws2812fx.getBrightness());
         break;
       }
     case 'S':
       {
-        //        Serial.println("Received speed increase");
         ws2812fx.setSpeed(ws2812fx.getSpeed() * 0.6);
-        StaticJsonDocument<capacity>doc;
-        doc["speed"] = ws2812fx.getSpeed();
-        serializeJson(doc, Serial);
+        Serial.printf("[LOOP] Received speed INCREASE. Speed is now at %d\r\n", ws2812fx.getSpeed());
         break;
       }
     case 's':
       {
-        //        Serial.println("Received speed decrease");
         ws2812fx.setSpeed(ws2812fx.getSpeed() * 1.4);
-        StaticJsonDocument<capacity>doc;
-        doc["speed"] = ws2812fx.getSpeed();
-        serializeJson(doc, Serial);
+        Serial.printf("[LOOP] Received speed DECREASE. Speed is now at %d\r\n", ws2812fx.getSpeed());
         break;
       }
     case 'v': {
-        fftValue = constrain((uint8_t)atoi(arguments), 0, 255);
-        break;
-      }
-    case 'r': {
-        // Does the same as v, 'r' is depracated
         fftValue = constrain((uint8_t)atoi(arguments), 0, 255);
         break;
       }
@@ -100,8 +90,8 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
       //webSocket.broadcastTXT(payload, length);
       break;
     case WStype_ERROR:
-        Serial.println("Error");
-        webSocket.broadcastTXT(payload, length);
+      Serial.println("Error");
+      webSocket.broadcastTXT(payload, length);
       break;
     case WStype_FRAGMENT_TEXT_START:
       break;
@@ -124,7 +114,7 @@ void websocketSetup() {
   Serial.println();
 
   for (uint8_t t = 4; t > 0; t--) {
-    Serial.printf("[SETUP] BOOT WAIT %d...\n", t);
+    Serial.printf("[SETUP] BOOT WAIT %d...\r\n", t);
     Serial.flush();
     blinkLed(1000);
   }
@@ -134,12 +124,12 @@ void websocketSetup() {
   Serial.println("[SETUP] Connecting to WiFi");
   while (WiFiMulti.run() != WL_CONNECTED) {
     Serial.print(".");
-    // BlinkLed has delay()
+    delay(100);
     blinkLed(100);
-    
-    if(millis() >= CONNECT_TIMEOUT){
-      Serial.println("");
-      Serial.printf("[SETUP] Resetting ESP. WiFi Connection failed. Timeout: %d ms", CONNECT_TIMEOUT);
+
+    if (millis() >= CONNECT_TIMEOUT) {
+      Serial.println();
+      Serial.printf("[SETUP] Resetting ESP. WiFi Connection failed. Timeout: %d ms\r\n", CONNECT_TIMEOUT);
       ESP.restart();
     }
   }

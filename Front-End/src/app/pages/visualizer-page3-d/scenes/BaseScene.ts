@@ -5,11 +5,12 @@ import {GUI} from 'three/examples/jsm/libs/dat.gui.module'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import {SimplexNoise} from 'three/examples/jsm/math/SimplexNoise'
 import {ConnectionService} from '../../../services/connection/connection.service'
+import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
+import {SettingsService} from '../../../services/settings/settings.service'
 
 export abstract class BaseScene {
   private renderer: WebGLRenderer;
   protected scene: Scene;
-  protected analyser: AnalyserNode;
   protected readonly frequencyLimits = {
     bass: [20, 140],
     lowMid: [140, 400],
@@ -19,12 +20,16 @@ export abstract class BaseScene {
   }
   protected camera: PerspectiveCamera;
   protected gui: GUI;
-  protected averageMidTreble: number = 0;
-  protected averageBass: number = 0;
   protected noise: SimplexNoise
   private isActive: boolean;
+  private _options: Options = {
+    volume: 0,
+    useCanvas: false,
+    smoothing: this.settingsService.readVisualizerOptions().smoothing
+  }
+  protected audioMotion: AudioMotionAnalyzer;
 
-  protected constructor(protected threeContainer: ElementRef, protected readonly connection: ConnectionService) {
+  protected constructor(protected threeContainer: ElementRef, protected readonly connection: ConnectionService, protected readonly settingsService: SettingsService) {
     this.noise = new SimplexNoise()
     // Debug
     this.gui = new GUI()
@@ -59,13 +64,19 @@ export abstract class BaseScene {
     const orbitControls = new OrbitControls(this.camera, this.renderer.domElement)
     orbitControls.autoRotate = true
 
-    this.setupAnalyser()
-    this.setup()
-    this.render()
+    this.getMediaStream()
+      .then(stream => {
+        this.setupAnalyser(stream)
+        this.setup()
+        this.render()
+      })
+      .catch(err => {
+        console.error(`Could not change audio source`, err)
+      })
   }
 
   private render() {
-    this.collectFFTData()
+
     this.animate()
     this.renderer.render(this.scene, this.camera)
 
@@ -75,51 +86,48 @@ export abstract class BaseScene {
     }
   }
 
-  private setupAnalyser() {
-    navigator.mediaDevices.getUserMedia({audio: true})
-      .then(stream => {
-        const audioContext = new AudioContext()
-        const micInput = audioContext.createMediaStreamSource(stream)
-        // Create a volume and set it to 0 gain, to prevent sending the mic input through your speakers.
-        const volume = audioContext.createGain()
-        volume.gain.value = 0
-
-        // Create an analyser with fftSize being a power of 2
-        this.analyser = audioContext.createAnalyser()
-        this.analyser.fftSize = 1024
-
-        micInput.connect(this.analyser)
-        this.analyser.connect(volume)
-      })
-      .catch(err => {
-        console.error(`Could not change audio source`, err)
-      })
-  }
-
-  private collectFFTData() {
-    if (this.analyser) {
-      const bufferLength = this.analyser.frequencyBinCount
-      const dataArray = new Uint8Array(bufferLength)
-      this.analyser.getByteFrequencyData(dataArray)
-
-
-      const totalBass = dataArray.slice(this.frequencyLimits.bass[0], this.frequencyLimits.bass[1]).reduce((accumelator, value) => accumelator + value, 0)
-      this.averageBass = totalBass / (this.frequencyLimits.bass[1] - this.frequencyLimits.bass[0])
-
-      const lowMidTreble = dataArray.slice(this.frequencyLimits.lowMid[0], this.frequencyLimits.bass[1]).reduce((accumulator, value) => accumulator + value, 0)
-      this.averageMidTreble = lowMidTreble / (this.frequencyLimits.lowMid[1] - this.frequencyLimits.lowMid[0])
-    }
+  private async getMediaStream(): Promise<MediaStream> {
+    this.audioMotion = new AudioMotionAnalyzer(null, this._options)
+    return navigator.mediaDevices.getUserMedia({audio: true, video: false})
   }
 
   public uninit(): void {
     this.gui.destroy()
+    this.audioMotion.toggleAnalyzer(false)
     this.scene = undefined
     this.renderer = undefined
     this.isActive = false
-    this.analyser = undefined
+    this.audioMotion = undefined
   }
 
   private sendFFTData() {
-    this.connection.setLeds(this.averageBass)
+    this.connection.setLeds(this.bass)
+  }
+
+  private setupAnalyser(stream: MediaStream) {
+    const audioCtx = this.audioMotion.audioCtx
+    const micInput = audioCtx.createMediaStreamSource(stream)
+    this.audioMotion.disconnectInput()
+    this.audioMotion.connectInput(micInput)
+  }
+
+  get bass(): number {
+    return this.audioMotion.getEnergy('bass')
+  }
+
+  get lowMid(): number {
+    return this.audioMotion.getEnergy('lowMid')
+  }
+
+  get mid(): number {
+    return this.audioMotion.getEnergy('mid')
+  }
+
+  get highMid(): number {
+    return this.audioMotion.getEnergy('highMid')
+  }
+
+  get treble(): number {
+    return this.audioMotion.getEnergy('treble')
   }
 }

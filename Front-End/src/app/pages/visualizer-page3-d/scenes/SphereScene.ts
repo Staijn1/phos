@@ -4,6 +4,8 @@ import {IcosahedronGeometry, Mesh, MeshBasicMaterial, MeshLambertMaterial, Plane
 import {map} from '../../../shared/functions'
 import {ElementRef} from '@angular/core'
 import {ConnectionService} from '../../../services/connection/connection.service'
+import {degToRad} from 'three/src/math/MathUtils'
+import {SettingsService} from '../../../services/settings/settings.service'
 
 export class SphereScene extends BaseScene {
   private upperPane: Mesh<PlaneGeometry, MeshBasicMaterial>;
@@ -11,8 +13,8 @@ export class SphereScene extends BaseScene {
   private ball: Mesh<IcosahedronGeometry, MeshLambertMaterial>;
 
 
-  constructor(readonly threeContainer: ElementRef, readonly connection: ConnectionService) {
-    super(threeContainer,connection)
+  constructor(readonly threeContainer: ElementRef, readonly connection: ConnectionService, readonly settingsService: SettingsService) {
+    super(threeContainer, connection, settingsService)
   }
 
   private setupPanes(): void {
@@ -40,17 +42,26 @@ export class SphereScene extends BaseScene {
 
   private setupLights(): void {
     // Lights
-    const ambientLight = new THREE.AmbientLight(0xaaaaaa, 0.2)
-    this.scene.add(ambientLight)
+    // const ambientLight = new THREE.AmbientLight(0xaaaaaa, 0.2)
+    // this.scene.add(ambientLight)
 
-    const spotLight = new THREE.SpotLight(0xffffff, 0.9)
-    spotLight.position.set(-5, -1, 49)
+    const spotLight = new THREE.SpotLight(0xffffff, 2.1)
+    spotLight.castShadow = true
+    spotLight.position.set(-5, 51, 49)
     spotLight.lookAt(this.ball.position)
+
     this.scene.add(spotLight)
 
-    this.gui.add(spotLight.position, 'x').min(-100).max(100).name('X Light')
-    this.gui.add(spotLight.position, 'y').min(-100).max(100).name('Y Light')
-    this.gui.add(spotLight.position, 'z').min(-100).max(100).name('Z Light')
+    this.gui.add(spotLight, 'intensity').min(0).max(3).step(0.1).name('Intensity')
+
+    this.gui.add(spotLight.position, 'x').min(-100).max(100).name('X position')
+    this.gui.add(spotLight.position, 'y').min(-100).max(100).name('Y position')
+    this.gui.add(spotLight.position, 'z').min(-100).max(100).name('Z position')
+
+    this.gui.add(spotLight.rotation, 'x').min(-100).max(100).name('X rotation')
+    this.gui.add(spotLight.rotation, 'y').min(-100).max(100).name('Y rotation')
+    this.gui.add(spotLight.rotation, 'z').min(-100).max(100).name('Z rotation')
+
   }
 
   private setupBall(): void {
@@ -64,8 +75,8 @@ export class SphereScene extends BaseScene {
     this.scene.add(this.ball)
   }
 
-  private makeRoughBall(mesh: Mesh<IcosahedronGeometry, MeshLambertMaterial>, rawFFTValue: number) {
-    const fftValue = map(this.averageBass, 0, 255, 0, 10)
+  private animateBall(mesh: Mesh<IcosahedronGeometry, MeshLambertMaterial>) {
+    const fftValue = map(this.bass, 0, 1, 0, 10)
     const positionAttribute = mesh.geometry.getAttribute('position')
     const vertex = new THREE.Vector3()
     for (let vertexIndex = 0; vertexIndex < positionAttribute.count; vertexIndex++) {
@@ -79,23 +90,22 @@ export class SphereScene extends BaseScene {
         vertex.x + time * rf * 7, vertex.y + time * rf * 8, vertex.z + time * rf * 9) * amp
       vertex.multiplyScalar(distance)
       positionAttribute.setXYZ(vertexIndex, vertex.x, vertex.y, vertex.z)
-
-      if (time % 10 === 0){
-        console.log(fftValue)
-      }
     }
-    mesh.geometry.attributes.position.needsUpdate = true // required after the first render
+    mesh.geometry.attributes.position.needsUpdate = true
+
+    mesh.rotateX(degToRad(0.15))
+    mesh.rotateZ(degToRad(0.07))
   }
 
   private animatePlane(mesh: Mesh<PlaneGeometry, MeshBasicMaterial>, rawFFTValue: number): void {
-    const fftValue = map(rawFFTValue, 0, 255, 0, 4)
+    const fftValue = map(rawFFTValue, 0, 1, 0, 10)
     const positionAttribute = mesh.geometry.getAttribute('position')
     const vertex = new THREE.Vector3()
     for (let vertexIndex = 0; vertexIndex < positionAttribute.count; vertexIndex++) {
       vertex.fromBufferAttribute(positionAttribute, vertexIndex)
       const amp = 2
       const time = performance.now()
-      const distance = this.noise.noise(vertex.x + time * 0.0004, vertex.y + time * 0.0001) * fftValue * amp
+      const distance = this.noise.noise(vertex.x + time * 0.0004, vertex.y + time * 0.0002) * fftValue * amp
       vertex.z = distance
       positionAttribute.setXYZ(vertexIndex, vertex.x, vertex.y, vertex.z)
     }
@@ -110,15 +120,14 @@ export class SphereScene extends BaseScene {
   }
 
   private setupCamera() {
-    this.camera.position.set(0, 0, 100)
+    this.camera.position.set(0, 4, 64)
     this.camera.lookAt(this.scene.position)
     this.scene.add(this.camera)
   }
 
   protected animate() {
-    this.makeRoughBall(this.ball, this.averageBass)
-    // todo doet het niet?
-    this.animatePlane(this.upperPane, this.averageBass)
-    this.animatePlane(this.bottomPane, this.averageMidTreble)
+    this.animateBall(this.ball)
+    this.animatePlane(this.upperPane, this.treble)
+    this.animatePlane(this.bottomPane, this.lowMid)
   }
 }
