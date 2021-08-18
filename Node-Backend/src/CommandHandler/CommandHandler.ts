@@ -63,35 +63,35 @@ export class CommandHandler {
    * Set the FFTValue on the ledstrips
    * @param {string}payload
    */
-  setFFTValue(payload: string) {
+  setFFTValue(payload: string): void {
     this.sendAllLedstrips(`v ${payload}`)
   }
 
   /**
    * Decrease the brightness of the ledstrips
    */
-  decreaseBrightness() {
+  decreaseBrightness(): void {
     this.sendAllLedstrips('b')
   }
 
   /**
    * Increase the brightness of the ledstrips
    */
-  increaseBrightness() {
+  increaseBrightness(): void {
     this.sendAllLedstrips('B')
   }
 
   /**
    * Increase the speed of the ledstrips
    */
-  increaseSpeed() {
+  increaseSpeed(): void {
     this.sendAllLedstrips('S')
   }
 
   /**
    * Decrease the speed of the ledstrips
    */
-  decreaseSpeed() {
+  decreaseSpeed(): void {
     this.sendAllLedstrips('s')
   }
 
@@ -99,7 +99,7 @@ export class CommandHandler {
    * Change the modePage of the ledstrips
    * @param {string|number} payload
    */
-  changeMode(payload: string | number) {
+  changeMode(payload: string | number): void {
     this.sendAllLedstrips(`m ${payload}`)
   }
 
@@ -107,13 +107,14 @@ export class CommandHandler {
    * Set the color. Payload must be a string array containing hex values
    * @param {string[]}payload
    */
-  setColor(payload: string[]) {
+  setColor(payload: string[]): void {
     const formattedColors: string[] = []
     for (const color of payload) {
       formattedColors.push(color.replace('#', '').trim())
     }
-    logger.info(formattedColors.join(','))
-    this.sendAllLedstrips(`c ${formattedColors.join(',')}`)
+    const formatted = formattedColors.join(',')
+    logger.info(`Setting colors: ${formatted}`)
+    this.sendAllLedstrips(`c ${formatted}`)
   }
 
   /**
@@ -121,7 +122,7 @@ export class CommandHandler {
    * @param {string} payload
    * @private
    */
-  private sendAllLedstrips(payload: string) {
+  private sendAllLedstrips(payload: string): void {
     for (const ledstrip of this.ledstrips) {
       ledstrip.send(payload)
     }

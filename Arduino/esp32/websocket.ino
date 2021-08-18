@@ -41,24 +41,28 @@ void handleEvent(uint8_t *payload, size_t length) {
       {
         ws2812fx.increaseBrightness(25);
         Serial.printf("[LOOP] Received brightness INCREASE. Brightness is now at %d\r\n", ws2812fx.getBrightness());
+        webSocket.broadcastTXT("[BRIGHTNESS]" + String(ws2812fx.getBrightness()));
         break;
       }
     case 'b':
       {
         ws2812fx.decreaseBrightness(25);
         Serial.printf("[LOOP] Received brightness DECREASE. Brightness is now at %d\r\n", ws2812fx.getBrightness());
+        webSocket.broadcastTXT("[BRIGHTNESS]" + String(ws2812fx.getBrightness()));
         break;
       }
     case 'S':
       {
-        ws2812fx.setSpeed(ws2812fx.getSpeed() * 0.6);
+        ws2812fx.decreaseSpeed(500);
         Serial.printf("[LOOP] Received speed INCREASE. Speed is now at %d\r\n", ws2812fx.getSpeed());
+        webSocket.broadcastTXT("[SPEED]" + String(ws2812fx.getSpeed()));
         break;
       }
     case 's':
       {
-        ws2812fx.setSpeed(ws2812fx.getSpeed() * 1.4);
+        ws2812fx.increaseSpeed(500);
         Serial.printf("[LOOP] Received speed DECREASE. Speed is now at %d\r\n", ws2812fx.getSpeed());
+        webSocket.broadcastTXT("[SPEED]" + String(ws2812fx.getSpeed()));
         break;
       }
     case 'v': {
@@ -108,7 +112,6 @@ void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t length
 }
 
 void websocketSetup() {
-
   Serial.println();
   Serial.println();
   Serial.println();

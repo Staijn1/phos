@@ -15,6 +15,7 @@ export class WebsocketClient {
   retryattempt = 0
   private readonly SHORT_TIMEOUT = 25000
   private readonly LONG_TIMEOUT = 75000
+  private interval: NodeJS.Timeout
 
   /**
    * Construct the websocket
@@ -23,23 +24,14 @@ export class WebsocketClient {
   constructor(url: string) {
     if (!url.startsWith('ws://')) throw Error('Url should start with ws://')
     this.url = url
-    this.connect(false)
+    this.connect()
   }
 
   /**
    * Connect to a websocket
-   * @param {boolean} isRetry If this is a retry attempt, set this to true
    * @private
    */
-  private connect(isRetry: boolean): void {
-    if (this.retryattempt >= 5 && !isRetry) {
-      logger.warn(
-        `Retry attempt too high for ${this.url}. Retry attempt no: ${this.retryattempt}. Retrying again on longer intervals`
-      )
-      setTimeout(() => this.connect(true), this.LONG_TIMEOUT)
-      return
-    }
-
+  private connect(): void {
     logger.info(`Connecting to ${this.url}`)
     this.client = new W3CWebSocket(this.url)
     this.client.onerror = this.handleError.bind(this)
@@ -50,13 +42,34 @@ export class WebsocketClient {
   }
 
   /**
+   * Reconnects a websocket
+   * @private
+   */
+  private reconnect(): void {
+    // Its our first time reconnecting, immediately try to reconnect
+    if (this.retryattempt == 0) {
+      logger.info(`[${this.url}] Reconnecting immediately`)
+      this.connect()
+    } else if (this.retryattempt < 5) {
+      logger.info(
+        `[${this.url}] Reconnecting on short intervals (${this.SHORT_TIMEOUT})`
+      )
+      this.interval = setInterval(() => this.connect(), this.SHORT_TIMEOUT)
+    } else {
+      logger.info(
+        `[${this.url}] Retry attempt too high, retrying on longer intervals (${this.LONG_TIMEOUT})`
+      )
+      this.interval = setInterval(() => this.connect(), this.LONG_TIMEOUT)
+    }
+  }
+
+  /**
    * Send the payload to the server
    * @param {string}payload
    */
-  send(payload: string) {
+  send(payload: string): void {
     if (this.client.readyState !== this.client.OPEN) {
-      this.connect(false)
-      return
+      throw Error(`Websocket on ${this.url} is not connected`)
     }
     this.client.send(payload)
   }
@@ -67,18 +80,19 @@ export class WebsocketClient {
    * @private
    */
   private handleMessage(message: IMessageEvent) {
-    console.log(`"Received: ${message.data}`)
+    console.log(`[${this.url}] Received: ${message.data}`)
   }
 
   /**
    * Fired when the connection is closed
+   * @param {ICloseEvent} close
    * @private
    */
   private onclose(close: ICloseEvent) {
-    logger.info(`Closed websocket connection: ${prettyPrint(close)}`)
-    setTimeout(() => {
-      this.connect(false)
-    }, this.SHORT_TIMEOUT)
+    logger.info(
+      `[${this.url}] Closed websocket connection: ${prettyPrint(close)}`
+    )
+    this.reconnect()
   }
 
   /**
@@ -86,15 +100,18 @@ export class WebsocketClient {
    * @private
    */
   private onopen() {
-    logger.info(`Openened websocket ${this.url}`)
+    logger.info(`[${this.url}] Openened websocket`)
     this.retryattempt = 0
+    clearInterval(this.interval)
   }
 
   /**
    * Fired when an error occured
+   * @param {Error} e
    * @private
    */
   private handleError(e: Error) {
-    logger.error(`Error occured: ${prettyPrint(e)}`)
+    logger.error(`[${this.url}] Error occured: ${prettyPrint(e)}`)
+    throw e
   }
 }
