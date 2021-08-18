@@ -1,6 +1,5 @@
 import { WebsocketClient } from '../Client/WebsocketClient'
 import { KeyFunction } from '../Types/KeyFunction'
-import { IMessage } from 'websocket'
 import { ledstripAdresses } from '../Config/Config'
 import { logger } from '../Config/Logger'
 import { prettyPrint } from '../Utils/functions'
@@ -37,7 +36,8 @@ export class CommandHandler {
    * This function will process all incoming messages
    * @param {IMessage} payload
    */
-  handleMessage(payload: IMessage): void {
+  handleMessage(payload: any): void {
+    // todo type IMessage crashes dockerFile
     const received = payload.utf8Data.split(' ')
     if (received[0] !== 'v') {
       logger.info(`Received command: ${received[0]} payload: ${received[1]}`)
