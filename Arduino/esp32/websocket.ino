@@ -123,6 +123,10 @@ void websocketSetup() {
   }
 
   WiFiMulti.addAP(ssid, password);
+  if (!WiFi.config(local_IP, gateway, subnet)) {
+    Serial.println("[SETUP] Static IP failed");
+  }
+
   yield();
   Serial.println("[SETUP] Connecting to WiFi");
   while (WiFiMulti.run() != WL_CONNECTED) {

@@ -20,6 +20,11 @@
 const char *ssid = WIFI_SSID;
 const char *password = WIFI_PASSWORD;
 
+// it wil set the static IP address to 192, 168, 1, 184
+IPAddress local_IP(192, 168, 178, 3);
+//it wil set the gateway static IP address to 192, 168, 1,1
+IPAddress gateway(192, 168, 178, 1);
+IPAddress subnet(255, 255, 0, 0);
 void setup()
 {
   Serial.begin(115200);
