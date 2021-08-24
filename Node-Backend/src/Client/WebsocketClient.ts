@@ -112,6 +112,5 @@ export class WebsocketClient {
    */
   private handleError(e: Error) {
     logger.error(`[${this.url}] Error occured: ${prettyPrint(e)}`)
-    throw e
   }
 }
