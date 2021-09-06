@@ -28,7 +28,7 @@
     "express": "^4.17.1",
     "socket.io": "^4.1.2",
     "swagger-ui-express": "^4.1.6",
-    "tsoa": "^3.6.1",
+    "tsoa": "^3.10.0",
     "websocket": "^1.0.34",
     "winston": "^3.3.3"
   },
