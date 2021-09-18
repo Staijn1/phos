@@ -30,20 +30,13 @@ export abstract class BaseScene {
   protected audioMotion: AudioMotionAnalyzer;
 
   protected constructor(protected threeContainer: ElementRef, protected readonly connection: ConnectionService, protected readonly settingsService: SettingsService) {
-    this.noise = new SimplexNoise()
-    // Debug
-    this.gui = new GUI()
-    this.scene = new THREE.Scene()
-    this.init()
     Object.freeze(this.frequencyLimits)
   }
 
   onResize(event) {
-    const curWidth = window.innerWidth
-    const curHeight = window.innerHeight
-    this.threeContainer.nativeElement.width = curWidth
-    this.threeContainer.nativeElement.height = curHeight
-    this.camera.aspect = curWidth / curHeight
+    this.threeContainer.nativeElement.width = this.width
+    this.threeContainer.nativeElement.height = this.height
+    this.camera.aspect = this.width / this.height
     this.camera.updateProjectionMatrix()
   }
 
@@ -51,15 +44,19 @@ export abstract class BaseScene {
 
   protected abstract animate()
 
-  private init(): void {
+  public init(): void {
+    this.noise = new SimplexNoise()
+    // Debug
+    this.gui = new GUI()
+    this.scene = new THREE.Scene()
     window.onresize = this.onResize.bind(this)
 
     this.isActive = true
     this.renderer = new THREE.WebGLRenderer({canvas: this.threeContainer.nativeElement, antialias: true, alpha: false})
-    this.renderer.setSize(window.innerWidth, window.innerHeight)
+    this.renderer.setSize(this.width, this.height)
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
 
-    this.camera = new THREE.PerspectiveCamera(65, window.innerWidth / window.innerHeight, 0.1, 1000)
+    this.camera = new THREE.PerspectiveCamera(65, this.width / this.height, 0.1, 1000)
 
     const orbitControls = new OrbitControls(this.camera, this.renderer.domElement)
     orbitControls.autoRotate = true
@@ -129,5 +126,13 @@ export abstract class BaseScene {
 
   get treble(): number {
     return this.audioMotion.getEnergy('treble')
+  }
+
+  get width(): number {
+    return window.innerWidth
+  }
+
+  get height(): number {
+    return window.innerHeight * 0.7
   }
 }

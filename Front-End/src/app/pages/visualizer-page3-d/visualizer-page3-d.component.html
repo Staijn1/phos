@@ -1,3 +1,34 @@
 <div class='vh-100'>
-    <canvas class="w-100 h-100" #threeContainer></canvas>
+    <div class="row">
+        <div class="col p-0">
+            <canvas class="w-100 h-100 p-0" #threeContainer></canvas>
+        </div>
+    </div>
+    <div class="row ml-2 justify-content-center mt-2">
+        <div class="col-4">
+            <div class="card">
+                <div class="card-header bg-primary text-white">
+                    Scenes
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!--<div class="col" *ngFor="let scene of scenes;let i = index">
+                            <div class="form-check">
+                                <input
+                                        class="form-check-input"
+                                        type="radio"
+                                        name="scene"
+                                        [id]="scene.name"
+                                        [checked]="this.selectedScene === i"
+                                        (change)="changeScene(i)">
+                                <label class="form-check-label" [for]="scene.name">
+                                    {{scene.name}}
+                                </label>
+                            </div>
+                        </div>-->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 </div>
