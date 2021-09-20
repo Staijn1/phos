@@ -48,7 +48,7 @@
     "@ng-bootstrap/ng-bootstrap": "^10.0.0",
     "audiomotion-analyzer": "^3.4.0",
     "bootstrap": "^5.0.1",
-    "core-js": "3.14.0",
+    "core-js": "3.18.0",
     "gsap": "^3.7.1",
     "lorem-ipsum": "^2.0.3",
     "ng2-nouislider": "^1.8.2",
