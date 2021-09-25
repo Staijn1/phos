@@ -36,7 +36,7 @@ export class ConnectionService extends Connection {
     }
 
     setColor(colors: iro.Color[] | string[]): void {
-        this.apiService.setColor(colors)
+        this.websocketService.setColor(colors)
     }
 
     /**
@@ -52,7 +52,7 @@ export class ConnectionService extends Connection {
      * @param {number} mode - The ID of the mode to select
      */
     setMode(mode: number): void {
-        this.websocketService.setMode(mode)
+        this.apiService.setMode(mode)
     }
 
     /**
