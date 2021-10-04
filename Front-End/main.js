@@ -9,6 +9,9 @@ var args = process.argv.slice(1);
 serve = args.some(function (val) { return val === '--serve'; });
 // bypassing certificate errors
 electron_1.app.commandLine.appendSwitch('ignore-certificate-errors');
+// If it starts multiple times during install, quit
+if (require('electron-squirrel-startup'))
+    electron_1.app.quit();
 function createWindow() {
     // Create the browser window.
     win = new electron_1.BrowserWindow({
