@@ -60,6 +60,7 @@ export function RegisterRoutes(app: express.Router) {
     //      Please look into the "controllerPathGlobs" config option described in the readme: https://github.com/lukeautry/tsoa
     // ###########################################################################################################
         app.post('/brightness/increase',
+
             function BrightnessController_increaseBrightness(request: any, response: any, next: any) {
             const args = {
             };
@@ -81,6 +82,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/brightness/decrease',
+
             function BrightnessController_decreaseBrightness(request: any, response: any, next: any) {
             const args = {
             };
@@ -102,6 +104,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/color',
+
             function ColorController_setColor(request: any, response: any, next: any) {
             const args = {
                     request: {"in":"body","name":"request","required":true,"ref":"ColorInformation"},
@@ -124,6 +127,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/mode',
+
             function ModeController_setMode(request: any, response: any, next: any) {
             const args = {
                     request: {"in":"body","name":"request","required":true,"ref":"ModeInformation"},
@@ -146,6 +150,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/mode',
+
             function ModeController_getModes(request: any, response: any, next: any) {
             const args = {
             };
@@ -167,6 +172,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/speed/increase',
+
             function SpeedController_increaseSpeed(request: any, response: any, next: any) {
             const args = {
             };
@@ -188,6 +194,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/speed/decrease',
+
             function SpeedController_decreaseSpeed(request: any, response: any, next: any) {
             const args = {
             };
@@ -209,6 +216,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/visualizer/gradients',
+
             function VisualizerController_getGradients(request: any, response: any, next: any) {
             const args = {
             };
@@ -230,6 +238,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/visualizer/modes',
+
             function VisualizerController_getVisualizerModes(request: any, response: any, next: any) {
             const args = {
             };
@@ -251,6 +260,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.put('/visualizer/gradients/:id',
+
             function VisualizerController_editGradient(request: any, response: any, next: any) {
             const args = {
                     id: {"in":"path","name":"id","required":true,"dataType":"double"},
@@ -274,6 +284,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.delete('/visualizer/gradients/:id',
+
             function VisualizerController_removeGradient(request: any, response: any, next: any) {
             const args = {
                     id: {"in":"path","name":"id","required":true,"dataType":"double"},
@@ -296,6 +307,7 @@ export function RegisterRoutes(app: express.Router) {
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.post('/visualizer/gradients',
+
             function VisualizerController_addGradient(request: any, response: any, next: any) {
             const args = {
                     content: {"in":"body","name":"content","required":true,"ref":"GradientInformation"},

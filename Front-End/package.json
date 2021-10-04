@@ -60,7 +60,7 @@
     "lorem-ipsum": "^2.0.3",
     "ng2-nouislider": "^1.8.2",
     "ngx-device-detector": "^2.1.1",
-    "nouislider": "^15.4.0",
+    "nouislider": "^14.7.0",
     "reconnecting-websocket": "^4.4.0",
     "rxjs": "^6.5.2",
     "three": "^0.131.3",
