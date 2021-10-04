@@ -1,44 +1,74 @@
 import {Injectable} from '@angular/core'
 import {Connection} from '../../shared/interfaces/Connection'
-import {environment} from '../../../environments/environment'
 import {ModeInformation} from '../../shared/types/ModeInformation'
 import {GradientInformation} from '../../shared/types/GradientInformation'
 import iro from '@jaames/iro'
+import {environment} from '../../../environments/environment'
+import {map} from '../../shared/functions'
 
 @Injectable({
   providedIn: 'root',
 })
 export class HTTPConnectionService extends Connection {
-  readonly url = environment.url
+  readonly url = `http://${environment.ledstrip}`
+  private brightness: number;
+  private speed: number;
 
   constructor() {
     super()
+    Promise.all([this.getBrightness(), this.getSpeed()]).then()
+  }
+
+  private async getBrightness(): Promise<void> {
+    const response = await fetch(`${this.url}/get_brightness`, {
+      method: 'GET'
+    })
+    this.handleError(response)
+    const data = await response.text()
+    this.brightness = map(parseInt(data), 0, 100, 0, 255)
+  }
+
+  private async setBrightness(newBrightness: number): Promise<void> {
+    const response = await fetch(`${this.url}/set_brightness?p=${newBrightness}`, {
+      method: 'GET'
+    })
+    this.handleError(response)
+    const data = await response.json()
+    this.brightness = data.brightness
   }
 
   decreaseBrightness(): void {
-    fetch(`${this.url}/brightness/decrease`, {
-      method: 'POST',
-    }).then(response => this.handleError(response))
+    this.setBrightness(this.brightness - 10).then()
+  }
+
+  private async getSpeed(): Promise<void> {
+    const response = await fetch(`${this.url}/get_speed`, {
+      method: 'GET'
+    })
+    this.handleError(response)
+    const data = await response.text()
+    this.speed = map(parseInt(data), 0, 100, 0, 255)
+  }
+
+  private async setSpeed(newSpeed: number): Promise<void> {
+    const response = await fetch(`${this.url}/set_speed?p=${newSpeed}`, {
+      method: 'GET'
+    })
+    this.handleError(response)
+    const data = await response.json()
+    this.speed = data.speed
   }
 
   decreaseSpeed(): void {
-    fetch(`${this.url}/speed/decrease`, {
-      method: 'POST',
-    }).then(response => this.handleError(response))
+    this.setSpeed(this.speed - 10).then()
   }
 
   increaseBrightness(): void {
-    fetch(`${this.url}/brightness/increase`, {
-      method: 'POST',
-    }).then(response => this.handleError(response))
+    this.setBrightness(this.brightness + 10).then()
   }
 
   increaseSpeed(): void {
-    fetch(`${this.url}/speed/increase`, {
-      method: 'POST',
-    }).then(response => {
-      this.handleError(response)
-    })
+    this.setSpeed(this.speed + 10).then()
   }
 
   protected send(command: string): void {
@@ -46,22 +76,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   setColor(colors: iro.Color[] | string[]): void {
-    const formattedColors = []
-    for (const color of colors) {
-      let colorstring: string
-      if (typeof color === 'object') {
-        colorstring = color.hexString
-      } else {
-        colorstring = color
-      }
-
-      formattedColors.push(colorstring.substring(1, colorstring.length))
-    }
-    fetch(`${this.url}/color`, {
-      method: 'POST',
-      body: JSON.stringify({ color: formattedColors }),
-      headers: { 'Content-Type': 'application/json' },
-    }).then(response => this.handleError(response))
+    throw Error('Not implemented')
   }
 
   setLeds(amount: number): void {
@@ -69,10 +84,8 @@ export class HTTPConnectionService extends Connection {
   }
 
   setMode(mode: number): void {
-    fetch(`${this.url}/mode`, {
-      method: 'POST',
-      body: JSON.stringify(mode),
-      headers: { 'Content-Type': 'application/json' },
+    fetch(`${this.url}/set_mode?m=${mode}`, {
+      method: 'GET',
     }).then(response => {
       this.handleError(response)
     })
@@ -85,11 +98,8 @@ export class HTTPConnectionService extends Connection {
   }
 
   async getModes(): Promise<ModeInformation[]> {
-    const response = await fetch(`${this.url}/mode`, {
+    const response = await fetch(`http://192.168.178.80/get_modes`, {
       method: 'GET',
-      headers: {
-        'Content-Type': 'application/json',
-      },
     })
     this.handleError(response)
     return response.json()

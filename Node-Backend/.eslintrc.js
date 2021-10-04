@@ -3,7 +3,7 @@ module.exports = {
     es2021: true,
     node: true,
   },
-  extends: ['google', 'plugin:@typescript-eslint/recommended'],
+  extends: ['google', 'plugin:@typescript-eslint/recommended', 'prettier'],
   parser: '@typescript-eslint/parser',
   parserOptions: {
     ecmaVersion: 12,
@@ -20,8 +20,6 @@ module.exports = {
         semi: false,
       },
     ],
-    ...require('eslint-config-prettier').rules,
-    ...require('eslint-config-prettier/@typescript-eslint').rules,
   },
   overrides: [
     {

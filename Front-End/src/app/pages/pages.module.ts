@@ -9,11 +9,12 @@ import {NouisliderModule} from 'ng2-nouislider'
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {SharedModule} from '../shared/shared.module'
-import {GradientEditorPageComponent} from './gradientEditorPage/gradient-editor-page.component'
+import {GradientEditorPageComponent} from './gradientEditorPage/gradient-editor-page.component';
+import { VisualizerPage3DComponent } from './visualizer-page3-d/visualizer-page3-d.component'
 
 
 @NgModule({
-  declarations: [HomePageComponent, SettingsPageComponent, VisualizerPageComponent, ModePageComponent, GradientEditorPageComponent],
+  declarations: [HomePageComponent, SettingsPageComponent, VisualizerPageComponent, ModePageComponent, GradientEditorPageComponent, VisualizerPage3DComponent],
   imports: [
     FormsModule,
     NouisliderModule,
