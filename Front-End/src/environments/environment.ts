@@ -4,13 +4,13 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-    production: false,
-    saveSettings: false,
-    url: 'https://localhost:5000',
-    websockUrl: 'wss://localhost:5001'
+  production: false,
+  saveSettings: false,
+  ledstrip: '192.168.178.80',
+  websocketPort: 81
 }
 
 export const AppConfig = {
-    production: false,
-    environment: 'LOCAL',
+  production: false,
+  environment: 'LOCAL',
 }

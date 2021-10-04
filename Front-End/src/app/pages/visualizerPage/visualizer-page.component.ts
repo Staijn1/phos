@@ -117,7 +117,7 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
   }
 
   updateLedstrip(): void {
-    this.connection.setMode(55)
+    this.connection.setMode(56)
     this.connection.setColor(this.colorService.getColors)
   }
 

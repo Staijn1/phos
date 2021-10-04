@@ -1,4 +1,4 @@
-import { IMessage, request, server as WebSocketServer } from 'websocket'
+import { request, server as WebSocketServer } from 'websocket'
 import { SSLOptions, WEBSOCKET_PORT } from '../Config/Config'
 import {
   commandHandler,
@@ -43,7 +43,8 @@ export class WebsocketServer {
    * @param {IMessage} message
    * @private
    */
-  private handleMessage(message: IMessage): void {
+  private handleMessage(message: any): void {
+    // todo type IMessage crashes dockerFile
     this.commandHandler.handleMessage(message)
   }
 }
