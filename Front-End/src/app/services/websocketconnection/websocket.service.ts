@@ -9,8 +9,9 @@ import iro from '@jaames/iro'
   providedIn: 'root'
 })
 export class WebsocketService extends Connection {
-  websocketUrl = environment.websockUrl;
+  websocketUrl = `ws://${environment.ledstrip}:${environment.websocketPort}`;
   private socket: ReconnectingWebSocket;
+  private colorTimeout: NodeJS.Timeout;
 
   constructor() {
     super()
@@ -22,12 +23,14 @@ export class WebsocketService extends Connection {
   }
 
   setColor(colors: iro.Color[] | string[]): void {
-    const formattedColors = []
-    for (const color of colors) {
+    // We need to slow this down because the cute little chip cant handle the SPEEED
+    clearTimeout(this.colorTimeout)
+    this.colorTimeout = setTimeout(() => {
+      const color = colors[0]
       const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
-      formattedColors.push(colorstring.substring(1, colorstring.length))
-    }
-    this.send(`c ${formattedColors[0]},${formattedColors[1]},${formattedColors[2]}`)
+      this.send(`${colorstring}`)
+    }, 20)
+
   }
 
   send(payload: string): void {
