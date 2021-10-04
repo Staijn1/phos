@@ -5,6 +5,7 @@ import {ModePageComponent} from '../pages/modePage/mode-page.component'
 import {VisualizerPageComponent} from '../pages/visualizerPage/visualizer-page.component'
 import {HomePageComponent} from '../pages/homePage/home-page.component'
 import {GradientEditorPageComponent} from '../pages/gradientEditorPage/gradient-editor-page.component'
+import {VisualizerPage3DComponent} from '../pages/visualizer-page3-d/visualizer-page3-d.component';
 
 
 const routes: Routes = [
@@ -13,7 +14,8 @@ const routes: Routes = [
   {path: 'visualizer', component: VisualizerPageComponent},
   {path: 'mode', component: ModePageComponent},
   {path: 'gradients-editor', component: GradientEditorPageComponent},
-  {path: 'settings', component: SettingsPageComponent}
+  {path: 'settings', component: SettingsPageComponent},
+  {path: 'visualizer3d', component: VisualizerPage3DComponent}
 ] // sets up routes constant where you define your routes
 
 // configures NgModule imports and exports

@@ -31,15 +31,15 @@ export class ColorService {
       this.picker.on('color:init', (iroColor: iro.Color) => {
         if (this.settingsService.readGeneralSettings().initialColor) {
           this.connection.setColor(this.picker.colors)
-          this.chromaEffect.setColors = this.picker.colors
         }
+        this.chromaEffect.setColors = this.picker.colors
       })
       this.picker.on('color:change', (iroColor: iro.Color) => {
         this.connection.setColor(this.picker.colors)
         this.chromaEffect.setColors = this.picker.colors
       })
       this.picker.on('input:end', (iroColor) => {
-        const currentSettings = this.settingsService.readGeneralSettings();
+        const currentSettings = this.settingsService.readGeneralSettings()
         currentSettings.colors = this.settingsService.convertColors(this.picker.colors)
         this.settingsService.saveGeneralSettings(currentSettings)
       })
