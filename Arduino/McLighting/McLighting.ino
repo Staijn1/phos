@@ -260,7 +260,10 @@ void saveConfigCallback () {
 #include "request_handlers.h"
 
 #ifdef CUSTOM_WS2812FX_ANIMATIONS
+int fftValue = 0;
 #include "custom_ws2812fx_animations.h" // Add animations in this file
+//#include "VUMeter.h"
+#include "BlockDissolve.h"
 #endif
 
 // function to Initialize the strip
@@ -300,7 +303,8 @@ void initStrip(uint16_t stripSize = WS2812FXStripSettings.stripSize, neoPixelTyp
   strip->setColor(main_color.red, main_color.green, main_color.blue);
   strip->setOptions(0, GAMMA);  // We only have one WS2812FX segment, set color to human readable GAMMA correction
 #ifdef CUSTOM_WS2812FX_ANIMATIONS
-  strip->setCustomMode(0, F("Fire 2012"), myCustomEffect);
+//  strip->setCustomMode(F("Fire 2012"), Fire2012Effect);
+  strip->setCustomMode(F("VUMeter"), blockDissolve);
 #endif
   strip->start();
   if (mode != HOLD) mode = SET_MODE;
