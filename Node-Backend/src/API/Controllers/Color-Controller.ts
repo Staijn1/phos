@@ -1,4 +1,12 @@
-import { Body, Controller, Post, Route, SuccessResponse, Tags } from 'tsoa'
+import {
+  Body,
+  Controller,
+  Deprecated,
+  Post,
+  Route,
+  SuccessResponse,
+  Tags,
+} from 'tsoa'
 import {
   commandHandler,
   CommandHandler,

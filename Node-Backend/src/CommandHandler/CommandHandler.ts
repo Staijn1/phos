@@ -3,6 +3,7 @@ import { KeyFunction } from '../Types/KeyFunction'
 import { ledstripAdresses } from '../Config/Config'
 import { logger } from '../Config/Logger'
 import { prettyPrint } from '../Utils/functions'
+import { SpeedInformation } from '../Types/SpeedInformation'
 
 /**
  * Handle incoming messages
@@ -100,21 +101,17 @@ export class CommandHandler {
    * @param {string|number} payload
    */
   changeMode(payload: string | number): void {
-    this.sendAllLedstrips(`m ${payload}`)
+    this.sendAllLedstrips(`/${payload}`)
   }
 
   /**
    * Set the color. Payload must be a string array containing hex values
    * @param {string[]}payload
    */
-  setColor(payload: string[]): void {
-    const formattedColors: string[] = []
-    for (const color of payload) {
-      formattedColors.push(color.replace('#', '').trim())
-    }
-    const formatted = formattedColors.join(',')
-    logger.info(`Setting colors: ${formatted}`)
-    this.sendAllLedstrips(`c ${formatted}`)
+  setColor(payload: string): void {
+    if (!payload.startsWith('#')) payload = '#' + payload
+    logger.info(`Setting colors: ${payload}`)
+    this.sendAllLedstrips(`${payload}`)
   }
 
   /**

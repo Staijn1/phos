@@ -4,7 +4,6 @@
    See @shootdaj's answer on issue: https://github.com/zhouhan0126/WIFIMANAGER-ESP32/issues/17
    @jotadepicas corrected the other answer with a typo.
 */
-
 #include "definitions.h"
 #include "version.h"
 // ***************************************************************************
@@ -24,6 +23,9 @@
 
 #include <WebSockets.h>           //https://github.com/Links2004/arduinoWebSockets
 #include <WebSocketsServer.h>
+
+// Variable to keep track of fft value received, used in vuMeter
+int fftValue = 0;
 
 // OTA
 #ifdef ENABLE_OTA
@@ -260,10 +262,8 @@ void saveConfigCallback () {
 #include "request_handlers.h"
 
 #ifdef CUSTOM_WS2812FX_ANIMATIONS
-int fftValue = 0;
 #include "custom_ws2812fx_animations.h" // Add animations in this file
 //#include "VUMeter.h"
-#include "BlockDissolve.h"
 #endif
 
 // function to Initialize the strip
@@ -303,8 +303,8 @@ void initStrip(uint16_t stripSize = WS2812FXStripSettings.stripSize, neoPixelTyp
   strip->setColor(main_color.red, main_color.green, main_color.blue);
   strip->setOptions(0, GAMMA);  // We only have one WS2812FX segment, set color to human readable GAMMA correction
 #ifdef CUSTOM_WS2812FX_ANIMATIONS
-//  strip->setCustomMode(F("Fire 2012"), Fire2012Effect);
-  strip->setCustomMode(F("VUMeter"), blockDissolve);
+  //  strip->setCustomMode(F("Fire 2012"), Fire2012Effect);
+  //  strip->setCustomMode(F("VUMeter"), blockDissolve);
 #endif
   strip->start();
   if (mode != HOLD) mode = SET_MODE;
@@ -323,7 +323,6 @@ void initStrip(uint16_t stripSize = WS2812FXStripSettings.stripSize, neoPixelTyp
 // ***************************************************************************
 void setup() {
   //  system_update_cpu_freq(160);
-
   DBG_OUTPUT_PORT.begin(115200);
   EEPROM.begin(512);
 
@@ -398,7 +397,7 @@ void setup() {
   //Local intialization. Once its business is done, there is no need to keep it around
   WiFiManager wifiManager;
   //reset settings - for testing
-  //wifiManager.resetSettings();
+//  wifiManager.resetSettings();
   //set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode
   wifiManager.setAPCallback(configModeCallback);
 
@@ -568,6 +567,7 @@ void setup() {
   // ***************************************************************************
   bool mdns_result = MDNS.begin(HOSTNAME);
 
+  DBG_OUTPUT_PORT.println("MAC Address: " + WiFi.macAddress());
   DBG_OUTPUT_PORT.print("Open http://");
   DBG_OUTPUT_PORT.print(WiFi.localIP());
   DBG_OUTPUT_PORT.println("/ to open McLighting.");

@@ -2,6 +2,11 @@ import { ModeInformation } from '../../Types/ModeInformation'
 import * as fs from 'fs'
 import path from 'path'
 import { GradientInformation } from '../../Types/GradientInformation'
+import { SpeedInformation } from '../../Types/SpeedInformation'
+import fetch, { RequestInit } from 'node-fetch'
+import { ErrorWithStatus } from '../../Utils/ErrorWithStatus'
+import { ledstripAdresses } from '../../Config/Config'
+import { BrightnessInformation } from '../../Types/BrightnessInformation'
 
 /**
  * A class that has access to information retrieved from assets
@@ -40,8 +45,7 @@ export class InformationService {
    * @async
    */
   async getModes(): Promise<ModeInformation[]> {
-    const modes = await this.readJSON('modes.json')
-    return JSON.parse(modes)
+    return this.apiSend(`get_modes`, undefined, 'JSON')
   }
 
   /**
@@ -124,5 +128,75 @@ export class InformationService {
 
     await this.writeJSON('gradients.json', gradients)
     return this.getVisualizerGradients()
+  }
+
+  /**
+   * Ask the speed
+   * @return {Promise<SpeedInformation>}
+   */
+  async getSpeed(): Promise<SpeedInformation> {
+    return { speed: parseInt(await this.apiSend('get_speed')) }
+  }
+
+  /**
+   * Ask the brightness
+   * @return {Promise<SpeedInformation>}
+   */
+  async getBrightness(): Promise<BrightnessInformation> {
+    return { brightness: parseInt(await this.apiSend('get_brightness')) }
+  }
+
+  /**
+   * Set the brightness to a certain value
+   * @param {number} brightness - Value between 0 and 255
+   * @return {Promise<BrightnessInformation>}
+   */
+  async setBrightness(brightness: number): Promise<BrightnessInformation> {
+    const result = await this.apiSend(
+      `set_brightness?p=${brightness}`,
+      undefined,
+      'JSON'
+    )
+    return { brightness: result.brightness }
+  }
+  /**
+   * Set speed to a certain value
+   * @param {number} speed - A value between 0 and 255
+   * @return {Promise<SpeedInformation>}
+   */
+  async setSpeed(speed: number): Promise<SpeedInformation> {
+    const response = await this.apiSend(
+      `set_speed?d=${speed}`,
+      undefined,
+      'JSON'
+    )
+    return { speed: response.speed }
+  }
+
+  /**
+   * Make an API call to the first ledstrip to receive information from its API
+   * @param {string} endpoint
+   * @param {RequestInit} headers
+   * @param {'text' | 'JSON'} responseType
+   * @return {Promise<any>}
+   */
+  async apiSend(
+    endpoint: string,
+    headers?: RequestInit,
+    responseType: 'text' | 'JSON' = 'text'
+  ): Promise<string | any> {
+    const tmpUrl = new URL(ledstripAdresses[0]).host
+    const url = tmpUrl.substr(0, tmpUrl.length - 3)
+
+    const response = await fetch(`http://${url}/${endpoint}`, headers)
+    if (!response.ok) throw new ErrorWithStatus('', response.status)
+
+    if (responseType === 'text') return response.text()
+    else if (responseType === 'JSON') return response.json()
+    else
+      throw new ErrorWithStatus(
+        `Illegal response type, only 'text' or 'JSON' is allowed. Received: ${responseType}`,
+        500
+      )
   }
 }

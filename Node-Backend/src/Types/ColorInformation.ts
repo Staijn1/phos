@@ -1,3 +1,3 @@
 export type ColorInformation = {
-  color: string[]
+  color: string
 }

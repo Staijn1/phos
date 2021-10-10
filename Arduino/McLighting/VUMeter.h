@@ -31,6 +31,7 @@
   2018-08-21 initial version
 */
 
+/*
 #ifndef VUMeter_h
 #define VUMeter_h
 
@@ -58,3 +59,4 @@ uint16_t vuMeter(void) {
 }
 
 #endif
+*/

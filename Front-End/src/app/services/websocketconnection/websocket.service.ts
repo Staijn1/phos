@@ -9,13 +9,13 @@ import iro from '@jaames/iro'
   providedIn: 'root'
 })
 export class WebsocketService extends Connection {
-  websocketUrl = `ws://${environment.ledstrip}:${environment.websocketPort}`;
+  websocketUrl = environment.websockUrl
   private socket: ReconnectingWebSocket;
   private colorTimeout: NodeJS.Timeout;
 
   constructor() {
     super()
-
+    console.log(this.websocketUrl)
     this.socket = new ReconnectingWebSocket(this.websocketUrl)
     this.socket.onopen = (ev: Event) => {
       console.log(`Opened websocket at`, (ev.currentTarget as WebSocket).url)
@@ -28,7 +28,8 @@ export class WebsocketService extends Connection {
     this.colorTimeout = setTimeout(() => {
       const color = colors[0]
       const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
-      this.send(`${colorstring}`)
+      console.log(colorstring)
+      this.send(`c ${colorstring}`)
     }, 20)
 
   }

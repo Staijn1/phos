@@ -4,13 +4,12 @@ import {ModeInformation} from '../../shared/types/ModeInformation'
 import {GradientInformation} from '../../shared/types/GradientInformation'
 import iro from '@jaames/iro'
 import {environment} from '../../../environments/environment'
-import {map} from '../../shared/functions'
 
 @Injectable({
   providedIn: 'root',
 })
 export class HTTPConnectionService extends Connection {
-  readonly url = `http://${environment.ledstrip}`
+  readonly url = environment.url;
   private brightness: number;
   private speed: number;
 
@@ -20,17 +19,19 @@ export class HTTPConnectionService extends Connection {
   }
 
   private async getBrightness(): Promise<void> {
-    const response = await fetch(`${this.url}/get_brightness`, {
+    const response = await fetch(`${this.url}/brightness`, {
       method: 'GET'
     })
     this.handleError(response)
-    const data = await response.text()
-    this.brightness = map(parseInt(data), 0, 100, 0, 255)
+    const data = await response.json()
+    this.brightness = data.brightness
   }
 
   private async setBrightness(newBrightness: number): Promise<void> {
-    const response = await fetch(`${this.url}/set_brightness?p=${newBrightness}`, {
-      method: 'GET'
+    const response = await fetch(`${this.url}/brightness/set`, {
+      method: 'POST',
+      body: JSON.stringify({brightness: newBrightness}),
+      headers: {'Content-Type': 'application/json'}
     })
     this.handleError(response)
     const data = await response.json()
@@ -42,18 +43,21 @@ export class HTTPConnectionService extends Connection {
   }
 
   private async getSpeed(): Promise<void> {
-    const response = await fetch(`${this.url}/get_speed`, {
+    const response = await fetch(`${this.url}/speed`, {
       method: 'GET'
     })
     this.handleError(response)
-    const data = await response.text()
-    this.speed = map(parseInt(data), 0, 100, 0, 255)
+    const data = await response.json()
+    this.speed = data.speed
   }
 
   private async setSpeed(newSpeed: number): Promise<void> {
-    const response = await fetch(`${this.url}/set_speed?p=${newSpeed}`, {
-      method: 'GET'
+    const response = await fetch(`${this.url}/speed/set`, {
+      method: 'POST',
+      body: JSON.stringify({speed: newSpeed}),
+      headers: {'Content-Type': 'application/json'}
     })
+
     this.handleError(response)
     const data = await response.json()
     this.speed = data.speed
@@ -84,21 +88,17 @@ export class HTTPConnectionService extends Connection {
   }
 
   setMode(mode: number): void {
-    fetch(`${this.url}/set_mode?m=${mode}`, {
-      method: 'GET',
+    fetch(`${this.url}/mode`, {
+      method: 'POST',
+      body: JSON.stringify({mode: mode}),
+      headers: {'Content-Type': 'application/json'}
     }).then(response => {
       this.handleError(response)
     })
   }
 
-  private handleError(response: Response): void {
-    if (!response.ok) {
-      throw new Error(response.statusText)
-    }
-  }
-
   async getModes(): Promise<ModeInformation[]> {
-    const response = await fetch(`http://192.168.178.80/get_modes`, {
+    const response = await fetch(`${this.url}/mode`, {
       method: 'GET',
     })
     this.handleError(response)
@@ -153,5 +153,11 @@ export class HTTPConnectionService extends Connection {
 
     this.handleError(response)
     return response.json()
+  }
+
+  private handleError(response: Response): void {
+    if (!response.ok) {
+      throw new Error(response.statusText)
+    }
   }
 }
