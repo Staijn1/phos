@@ -28,10 +28,8 @@ export class WebsocketService extends Connection {
     this.colorTimeout = setTimeout(() => {
       const color = colors[0]
       const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
-      console.log(colorstring)
       this.send(`c ${colorstring}`)
-    }, 20)
-
+    }, 25)
   }
 
   send(payload: string): void {
