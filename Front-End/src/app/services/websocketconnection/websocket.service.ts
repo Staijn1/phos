@@ -29,7 +29,7 @@ export class WebsocketService extends Connection {
       const color = colors[0]
       const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
       this.send(`c ${colorstring}`)
-    }, 25)
+    }, 10)
   }
 
   send(payload: string): void {
