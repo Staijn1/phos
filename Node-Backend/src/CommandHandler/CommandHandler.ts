@@ -65,7 +65,7 @@ export class CommandHandler {
    * @param {string}payload
    */
   setFFTValue(payload: string): void {
-    this.sendAllLedstrips(`v ${payload}`)
+    this.sendAllLedstrips(`. ${payload}`)
   }
 
   /**

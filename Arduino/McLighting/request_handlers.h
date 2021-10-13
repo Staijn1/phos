@@ -322,6 +322,12 @@ void handleSetWS2812FXMode(uint8_t * mypayload) {
   mode = SET_MODE;
   uint8_t ws2812fx_mode_tmp = (uint8_t) strtol((const char *) &mypayload[1], NULL, 10);
   ws2812fx_mode = constrain(ws2812fx_mode_tmp, 0, strip->getModeCount() - 1);
+
+  Serial.println(strip->getModeName(strip->getMode()));
+  if (ws2812fx_mode == FX_MODE_CUSTOM) {
+
+    strip->setSegment(0, 0, NUMLEDS - 1, FX_MODE_CUSTOM, strip->getColor(), 0, NO_OPTIONS);
+  }
 }
 
 String listStatusJSON(void) {
@@ -715,8 +721,6 @@ void checkpayload(uint8_t * payload, bool mqtt = false, uint8_t num = 0) {
   if (payload[0] == '.') {
     int tmpFFTValue = (int) strtol((const char *) &payload[1], NULL, 10);
     fftValue = constrain(tmpFFTValue, 0, 255);
-    Serial.print("FFTValue: ");
-    Serial.println(fftValue);
   }
 }
 

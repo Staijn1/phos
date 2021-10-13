@@ -31,7 +31,7 @@
   2018-08-21 initial version
 */
 
-/*
+
 #ifndef VUMeter_h
 #define VUMeter_h
 
@@ -41,17 +41,18 @@
 #define NUM_BANDS 1
 #endif
 
-extern WS2812FX ws2812fx;
+extern WS2812FX* strip;
 
 uint16_t vuMeter(void) {
-    WS2812FX::Segment *seg = ws2812fx.getSegment();
+    WS2812FX::Segment *seg = strip->getSegment();
     const int amountOfLedsToShow = map(fftValue, 0, 255, 0, NUMLEDS);
-
+    Serial.print("To show: ");
+    Serial.println(amountOfLedsToShow);
     for (int index = 0; index < NUMLEDS; index++) {
         if (index <= amountOfLedsToShow) {
-            ws2812fx.setPixelColor(index, seg->colors[0]);
+            strip->setPixelColor(index, seg->colors[0]);
         } else {
-            ws2812fx.setPixelColor(index, seg->colors[1]);
+            strip->setPixelColor(index, seg->colors[1]);
         }
     }
 
@@ -59,4 +60,3 @@ uint16_t vuMeter(void) {
 }
 
 #endif
-*/

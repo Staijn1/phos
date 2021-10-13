@@ -24,9 +24,6 @@
 #include <WebSockets.h>           //https://github.com/Links2004/arduinoWebSockets
 #include <WebSocketsServer.h>
 
-// Variable to keep track of fft value received, used in vuMeter
-int fftValue = 0;
-
 // OTA
 #ifdef ENABLE_OTA
 #include <WiFiUdp.h>
@@ -259,11 +256,14 @@ void saveConfigCallback () {
 // ***************************************************************************
 // Include: Request handlers
 // ***************************************************************************
+
+// Variable to keep track of fft value received, used in vuMeter
+int fftValue = 0;
 #include "request_handlers.h"
 
-#ifdef CUSTOM_WS2812FX_ANIMATIONS
+#include "VUMeter.h"
 #include "custom_ws2812fx_animations.h" // Add animations in this file
-//#include "VUMeter.h"
+#ifdef CUSTOM_WS2812FX_ANIMATIONS
 #endif
 
 // function to Initialize the strip
@@ -304,7 +304,7 @@ void initStrip(uint16_t stripSize = WS2812FXStripSettings.stripSize, neoPixelTyp
   strip->setOptions(0, GAMMA);  // We only have one WS2812FX segment, set color to human readable GAMMA correction
 #ifdef CUSTOM_WS2812FX_ANIMATIONS
   //  strip->setCustomMode(F("Fire 2012"), Fire2012Effect);
-  //  strip->setCustomMode(F("VUMeter"), blockDissolve);
+  strip->setCustomMode(F("VUMeter"), vuMeter);
 #endif
   strip->start();
   if (mode != HOLD) mode = SET_MODE;
@@ -397,7 +397,7 @@ void setup() {
   //Local intialization. Once its business is done, there is no need to keep it around
   WiFiManager wifiManager;
   //reset settings - for testing
-//  wifiManager.resetSettings();
+  //  wifiManager.resetSettings();
   //set callback that gets called when connecting to previous WiFi fails, and enters Access Point mode
   wifiManager.setAPCallback(configModeCallback);
 
@@ -1204,6 +1204,7 @@ void loop() {
 #endif
 
   // Simple statemachine that handles the different modes
+  strip->service();
   if (mode == SET_MODE) {
     DBG_OUTPUT_PORT.printf("SET_MODE: %d %d\n", ws2812fx_mode, mode);
     if (strip) strip->setMode(ws2812fx_mode);
