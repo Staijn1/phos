@@ -11,11 +11,9 @@ import iro from '@jaames/iro'
 export class WebsocketService extends Connection {
   websocketUrl = environment.websockUrl
   private socket: ReconnectingWebSocket;
-  private colorTimeout: NodeJS.Timeout;
 
   constructor() {
     super()
-    console.log(this.websocketUrl)
     this.socket = new ReconnectingWebSocket(this.websocketUrl)
     this.socket.onopen = (ev: Event) => {
       console.log(`Opened websocket at`, (ev.currentTarget as WebSocket).url)
@@ -23,13 +21,9 @@ export class WebsocketService extends Connection {
   }
 
   setColor(colors: iro.Color[] | string[]): void {
-    // We need to slow this down because the cute little chip cant handle the SPEEED
-    clearTimeout(this.colorTimeout)
-    this.colorTimeout = setTimeout(() => {
-      const color = colors[0]
-      const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
-      this.send(`c ${colorstring}`)
-    }, 25)
+    const color = colors[0]
+    const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
+    this.send(`c ${colorstring}`)
   }
 
   send(payload: string): void {
