@@ -77,58 +77,6 @@ bool handleFileRead(String path) {
 	return false;
 }
 
-void handleFileUpload() {
-	if (server.uri() != "/edit") return;
-	HTTPUpload& upload = server.upload();
-	if (upload.status == UPLOAD_FILE_START) {
-		String filename = upload.filename;
-		if (!filename.startsWith("/")) filename = "/" + filename;
-		DBG_OUTPUT_PORT.print("handleFileUpload Name: "); 
-		DBG_OUTPUT_PORT.println(filename);
-		fsUploadFile = SPIFFS.open(filename, "w");
-		filename = String();
-	} else if (upload.status == UPLOAD_FILE_WRITE) {
-		//DBG_OUTPUT_PORT.print("handleFileUpload Data: "); DBG_OUTPUT_PORT.println(upload.currentSize);
-	if (fsUploadFile)
-		fsUploadFile.write(upload.buf, upload.currentSize);
-	} else if (upload.status == UPLOAD_FILE_END) {
-		if (fsUploadFile)
-			fsUploadFile.close();
-		DBG_OUTPUT_PORT.print("handleFileUpload Size: "); DBG_OUTPUT_PORT.println(upload.totalSize);
-	}
-}
-
-void handleFileDelete() {
-	if (server.args() == 0) return server.send(500, "text/plain", "BAD ARGS");
-	String path = server.arg(0);
-	DBG_OUTPUT_PORT.println("handleFileDelete: " + path);
-	if (path == "/")
-		return server.send(500, "text/plain", "BAD PATH");
-	if (!SPIFFS.exists(path))
-		return server.send(404, "text/plain", "FileNotFound");
-	SPIFFS.remove(path);
-	server.send(200, "text/plain", "");
-	path = String();
-}
-
-void handleFileCreate() {
-	if (server.args() == 0)
-		return server.send(500, "text/plain", "BAD ARGS");
-	String path = server.arg(0);
-	DBG_OUTPUT_PORT.println("handleFileCreate: " + path);
-	if (path == "/")
-		return server.send(500, "text/plain", "BAD PATH");
-	if (SPIFFS.exists(path))
-		return server.send(500, "text/plain", "FILE EXISTS");
-	File file = SPIFFS.open(path, "w");
-	if (file)
-		file.close();
-	else
-		return server.send(500, "text/plain", "CREATE FAILED");
-	server.send(200, "text/plain", "");
-	path = String();
-}
-
 void handleFileList() {
 	if (!server.hasArg("dir")) {
 		server.send(500, "text/plain", "BAD ARGS");

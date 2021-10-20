@@ -138,7 +138,7 @@ export function RegisterRoutes(app: express.Router) {
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
         app.get('/brightness',
 
-            function BrightnessController_getSpeed(request: any, response: any, next: any) {
+            function BrightnessController_getBrightness(request: any, response: any, next: any) {
             const args = {
             };
 
@@ -154,7 +154,7 @@ export function RegisterRoutes(app: express.Router) {
             const controller = new BrightnessController();
 
 
-            const promise = controller.getSpeed.apply(controller, validatedArgs as any);
+            const promise = controller.getBrightness.apply(controller, validatedArgs as any);
             promiseHandler(controller, promise, response, undefined, next);
         });
         // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa

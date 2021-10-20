@@ -216,7 +216,7 @@
 		},
 		"/brightness": {
 			"get": {
-				"operationId": "GetSpeed",
+				"operationId": "GetBrightness",
 				"responses": {
 					"200": {
 						"description": "OK",

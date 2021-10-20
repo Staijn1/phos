@@ -45,7 +45,7 @@ export class InformationService {
    * @async
    */
   async getModes(): Promise<ModeInformation[]> {
-    return this.apiSend(`get_modes`, undefined, 'JSON')
+    return this.apiSend(`get_modes`, undefined)
   }
 
   /**
@@ -135,7 +135,8 @@ export class InformationService {
    * @return {Promise<SpeedInformation>}
    */
   async getSpeed(): Promise<SpeedInformation> {
-    return { speed: parseInt(await this.apiSend('get_speed')) }
+    const status = await this.apiSend('status')
+    return { speed: status.speed }
   }
 
   /**
@@ -143,7 +144,8 @@ export class InformationService {
    * @return {Promise<SpeedInformation>}
    */
   async getBrightness(): Promise<BrightnessInformation> {
-    return { brightness: parseInt(await this.apiSend('get_brightness')) }
+    const status = await this.apiSend('status')
+    return { brightness: status.brightness }
   }
 
   /**
@@ -153,23 +155,19 @@ export class InformationService {
    */
   async setBrightness(brightness: number): Promise<BrightnessInformation> {
     const result = await this.apiSend(
-      `set_brightness?p=${brightness}`,
-      undefined,
-      'JSON'
+      `set_brightness?absolute=${brightness}`,
+      undefined
     )
     return { brightness: result.brightness }
   }
+
   /**
    * Set speed to a certain value
    * @param {number} speed - A value between 0 and 255
    * @return {Promise<SpeedInformation>}
    */
   async setSpeed(speed: number): Promise<SpeedInformation> {
-    const response = await this.apiSend(
-      `set_speed?d=${speed}`,
-      undefined,
-      'JSON'
-    )
+    const response = await this.apiSend(`set_speed?s=${speed}`, undefined)
     return { speed: response.speed }
   }
 
@@ -182,8 +180,7 @@ export class InformationService {
    */
   async apiSend(
     endpoint: string,
-    headers?: RequestInit,
-    responseType: 'text' | 'JSON' = 'text'
+    headers?: RequestInit
   ): Promise<string | any> {
     const tmpUrl = new URL(ledstripAdresses[0]).host
     const url = tmpUrl.substr(0, tmpUrl.length - 3)
@@ -191,12 +188,6 @@ export class InformationService {
     const response = await fetch(`http://${url}/${endpoint}`, headers)
     if (!response.ok) throw new ErrorWithStatus('', response.status)
 
-    if (responseType === 'text') return response.text()
-    else if (responseType === 'JSON') return response.json()
-    else
-      throw new ErrorWithStatus(
-        `Illegal response type, only 'text' or 'JSON' is allowed. Received: ${responseType}`,
-        500
-      )
+    return response.json()
   }
 }

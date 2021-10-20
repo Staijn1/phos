@@ -64,7 +64,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   decreaseSpeed(): void {
-    this.setSpeed(this.speed - 10).then()
+    this.setSpeed(this.speed + 10).then()
   }
 
   increaseBrightness(): void {
@@ -72,7 +72,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   increaseSpeed(): void {
-    this.setSpeed(this.speed + 10).then()
+    this.setSpeed(this.speed - 10).then()
   }
 
   protected send(command: string): void {

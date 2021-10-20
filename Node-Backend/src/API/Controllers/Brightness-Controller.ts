@@ -48,7 +48,7 @@ export class BrightnessController extends Controller {
 
   @Get()
   @SuccessResponse(200, 'OK')
-  public async getSpeed(): Promise<BrightnessInformation> {
+  public async getBrightness(): Promise<BrightnessInformation> {
     return this.informationService.getBrightness()
   }
 }
