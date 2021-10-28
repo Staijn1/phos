@@ -1,6 +1,13 @@
 #include "definitions.h"
 
 /**
+   Conditional imports
+*/
+#ifdef INCLUDE_VUMETER
+#include "customEffects/VUMeter.h"
+#endif
+
+/**
     Include webserver/ websockets
 */
 #include <WiFi.h>
@@ -16,14 +23,15 @@
 
 void setup() {
   Serial.begin(115200);
-  pinMode(BUILTIN_LED, OUTPUT);
-  setupWebserver();
-  setupWebsocketServer();
+  pinMode(BUILTIN_LED, OUTPUT); 
   setupLedstrip();
+  //  setupWebserver();
+  //  setupWebsocketServer();
+
 }
 
 void loop() {
-  runWebsocketServer();
-  runWebserver();
-  runLedstrip();
+  //  runWebsocketServer();
+  //  runWebserver();
+    runLedstrip();
 }

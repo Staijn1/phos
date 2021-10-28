@@ -1,8 +1,10 @@
-#define LED_PIN 25
-#define NUMLEDS 60
+#define LED_PIN 26
+#define NUMLEDS 30
 #define BUILTIN_LED 2
 #define WIFI_SSID "Waalstraat 6"
 #define WIFI_PASSWORD "PayForInternet!3"
+
+//#define INCLUDE_VUMETER
 
 struct ledstate             // Data structure to store a state of a single led
 {
