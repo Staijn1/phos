@@ -23,15 +23,14 @@
 
 void setup() {
   Serial.begin(115200);
-  pinMode(BUILTIN_LED, OUTPUT); 
+  pinMode(BUILTIN_LED, OUTPUT);
   setupLedstrip();
-  //  setupWebserver();
-  //  setupWebsocketServer();
-
+  setupWebserver();
+  setupWebsocketServer();
 }
 
 void loop() {
-  //  runWebsocketServer();
-  //  runWebserver();
-    runLedstrip();
+  runWebsocketServer();
+  runWebserver();
+  runLedstrip();
 }

@@ -78,8 +78,8 @@ void checkpayload(uint8_t* payload, uint8_t num = 0) {
 
   // . ==> (CUSTOM) Set FFT value, to display in music mode
   if (payload[0] == '.') {
-    //    int tmpFFTValue = (int) strtol((const char *) &payload[1], NULL, 10);
-    //    fftValue = constrain(tmpFFTValue, 0, 255);
+    int tmpFFTValue = (int) strtol((const char *) &payload[1], NULL, 10);
+    fftValue = constrain(tmpFFTValue, 0, 255);
     return;
   }
   webSocket.sendTXT(num, "COMMAND NOT FOUND");

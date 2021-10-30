@@ -25,7 +25,7 @@ export class ColorService {
         borderWidth: 2,
         borderColor: '#fff',
         wheelAngle: 90,
-        colors: currentSettings.colors,
+        color: currentSettings.colors[0],
       })
 
       this.picker.on('color:init', (iroColor: iro.Color) => {
