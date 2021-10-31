@@ -248,10 +248,6 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
       this.loadOptions()
     })
     this.chromaEffect.state = new VisualizerState()
-
-    setTimeout(() => {
-      this.updateLedstrip()
-    }, 2000)
   }
 
   scroll(el: HTMLDivElement): void {

@@ -4,7 +4,7 @@
 #define WIFI_SSID "Waalstraat 6"
 #define WIFI_PASSWORD "PayForInternet!3"
 
-#define INCLUDE_VUMETER
+#define INCLUDE_CUSTOM_EFFECTS
 
 struct ledstate             // Data structure to store a state of a single led
 {

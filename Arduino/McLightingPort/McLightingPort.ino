@@ -3,8 +3,8 @@
 /**
    Conditional imports
 */
-#ifdef INCLUDE_VUMETER
-#include "customEffects/VUMeter.h"
+#ifdef INCLUDE_CUSTOM_EFFECTS
+#include "custom_effects.h"
 #endif
 
 /**
