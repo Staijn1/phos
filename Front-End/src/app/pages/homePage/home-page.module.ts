@@ -13,7 +13,8 @@ const routerConfig: Routes = [
   imports: [
     RouterModule.forChild(routerConfig),
     CommonModule
-  ], exports: [RouterModule]
+  ],
+  exports: [RouterModule]
 })
 export class HomePageModule {
 }

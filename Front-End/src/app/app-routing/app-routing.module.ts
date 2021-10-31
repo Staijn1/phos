@@ -3,8 +3,6 @@ import {RouterModule, Routes} from '@angular/router'
 import {SettingsPageComponent} from '../pages/settingsPage/settings-page.component'
 import {ModePageComponent} from '../pages/modePage/mode-page.component'
 import {VisualizerPageComponent} from '../pages/visualizerPage/visualizer-page.component'
-import {HomePageComponent} from '../pages/homePage/home-page.component'
-import {GradientEditorPageComponent} from '../pages/gradientEditorPage/gradient-editor-page.component'
 import {VisualizerPage3DComponent} from '../pages/visualizer-page3-d/visualizer-page3-d.component';
 
 
@@ -13,7 +11,10 @@ const routes: Routes = [
   {path: 'home', loadChildren: () => import('../pages/homePage/home-page.module').then(m => m.HomePageModule)},
   {path: 'visualizer', component: VisualizerPageComponent},
   {path: 'mode', component: ModePageComponent},
-  {path: 'gradients-editor', component: GradientEditorPageComponent},
+  {
+    path: 'gradients-editor',
+    loadChildren: () => import('../pages/gradientEditorPage/gradient-editor.module').then(m => m.GradientEditorModule)
+  },
   {path: 'settings', component: SettingsPageComponent},
   {path: 'visualizer3d', component: VisualizerPage3DComponent}
 ] // sets up routes constant where you define your routes
