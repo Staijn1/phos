@@ -10,7 +10,7 @@ import {VisualizerPage3DComponent} from '../pages/visualizer-page3-d/visualizer-
 
 const routes: Routes = [
   {path: '', pathMatch: 'full', redirectTo: 'home'},
-  {path: 'home', component: HomePageComponent},
+  {path: 'home', loadChildren: () => import('../pages/homePage/home-page.module').then(m => m.HomePageModule)},
   {path: 'visualizer', component: VisualizerPageComponent},
   {path: 'mode', component: ModePageComponent},
   {path: 'gradients-editor', component: GradientEditorPageComponent},

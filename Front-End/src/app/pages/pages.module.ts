@@ -10,11 +10,18 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome'
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap'
 import {SharedModule} from '../shared/shared.module'
 import {GradientEditorPageComponent} from './gradientEditorPage/gradient-editor-page.component';
-import { VisualizerPage3DComponent } from './visualizer-page3-d/visualizer-page3-d.component'
+import {VisualizerPage3DComponent} from './visualizer-page3-d/visualizer-page3-d.component'
+import {HomePageModule} from './homePage/home-page.module';
 
 
 @NgModule({
-  declarations: [HomePageComponent, SettingsPageComponent, VisualizerPageComponent, ModePageComponent, GradientEditorPageComponent, VisualizerPage3DComponent],
+  declarations: [
+    SettingsPageComponent,
+    VisualizerPageComponent,
+    ModePageComponent,
+    GradientEditorPageComponent,
+    VisualizerPage3DComponent
+  ],
   imports: [
     FormsModule,
     NouisliderModule,
@@ -23,7 +30,7 @@ import { VisualizerPage3DComponent } from './visualizer-page3-d/visualizer-page3
     CommonModule,
     SharedModule
   ],
-   exports: []
+  exports: []
 })
 export class PagesModule {
 }
