@@ -4,7 +4,7 @@ import {NavigationbarComponent} from './components/navigationbar/navigationbar.c
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome'
 import {RouterModule} from '@angular/router'
 import {VisualizerComponent} from './components/visualizer/visualizer.component'
-import {ColorpickerComponent} from './components/colorpicker/colorpicker.component'
+import {ColorpickerComponent} from './components/colorpicker/colorpicker.component';
 
 
 @NgModule({
