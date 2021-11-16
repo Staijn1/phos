@@ -40,7 +40,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   decreaseBrightness(): void {
-    this.setBrightness(this.brightness * 0.90).then()
+    this.setBrightness(Math.floor(this.brightness * 0.90)).then()
   }
 
   private async getSpeed(): Promise<void> {
@@ -65,15 +65,15 @@ export class HTTPConnectionService extends Connection {
   }
 
   decreaseSpeed(): void {
-    this.setSpeed(this.speed * 1.1).then()
+    this.setSpeed(Math.floor(this.speed * 1.1)).then()
   }
 
   increaseBrightness(): void {
-    this.setBrightness(this.brightness * 1.1).then()
+    this.setBrightness(Math.floor(this.brightness * 1.1)).then()
   }
 
   increaseSpeed(): void {
-    this.setSpeed(this.speed * 0.9).then()
+    this.setSpeed(Math.floor(this.speed * 0.9)).then()
   }
 
   protected send(command: string): void {
