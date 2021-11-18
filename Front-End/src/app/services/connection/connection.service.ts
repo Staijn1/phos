@@ -57,7 +57,7 @@ export class ConnectionService extends Connection {
 
   setColor(colors: iro.Color[] | string[]): void {
     try {
-      this.apiService.setColor(colors)
+      this.websocketService.setColor(colors)
     } catch (error) {
      this.errorService.setError(error)
     }
