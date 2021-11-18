@@ -69,7 +69,7 @@ export class ConnectionService extends Connection {
    */
   setLeds(amount: number): void {
     try {
-      this.apiService.setLeds(amount)
+      this.websocketService.setLeds(amount)
     } catch (error) {
      this.errorService.setError(error)
     }
