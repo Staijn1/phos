@@ -5,6 +5,7 @@
 #define WIFI_PASSWORD "PayForInternet!3"
 
 #define INCLUDE_CUSTOM_EFFECTS
+#define NETWORK_TIMEOUT 10000 // Time in milliseconds before the ESP resets when network is not connected
 
 struct ledstate             // Data structure to store a state of a single led
 {

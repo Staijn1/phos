@@ -1,6 +1,16 @@
 WebServer server(80);
+unsigned long lastTimeConnected = 0L;
 
 void runWebserver() {
+  if(WiFi.status() != WL_CONNECTED){
+    unsigned long now = millis();
+    if(now - lastTimeConnected >= NETWORK_TIMEOUT){
+      ESP.restart();
+    }
+  } else{
+    lastTimeConnected = millis();
+  }
+  
   server.handleClient();
 }
 
