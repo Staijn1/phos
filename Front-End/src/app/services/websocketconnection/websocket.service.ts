@@ -4,6 +4,8 @@ import {Connection} from '../../shared/interfaces/Connection'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
+import {ErrorService} from '../error/error.service';
+import * as Events from 'reconnecting-websocket/events';
 
 @Injectable({
   providedIn: 'root'
@@ -13,12 +15,15 @@ export class WebsocketService extends Connection {
   private socket: ReconnectingWebSocket;
   private colorTimeout: NodeJS.Timeout;
 
-  constructor() {
+  constructor(errorService: ErrorService) {
     super()
-    console.log(this.websocketUrl)
     this.socket = new ReconnectingWebSocket(this.websocketUrl)
     this.socket.onopen = (ev: Event) => {
       console.log(`Opened websocket at`, (ev.currentTarget as WebSocket).url)
+    }
+    this.socket.onerror = (ev: Events.ErrorEvent) => {
+      console.log(`Error on websocket`, ev)
+      errorService.setError(new Error('Failed to connect'))
     }
   }
 

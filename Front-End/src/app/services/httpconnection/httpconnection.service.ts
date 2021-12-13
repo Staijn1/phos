@@ -4,6 +4,7 @@ import {ModeInformation} from '../../shared/types/ModeInformation'
 import {GradientInformation} from '../../shared/types/GradientInformation'
 import iro from '@jaames/iro'
 import {environment} from '../../../environments/environment'
+import {ErrorService} from '../error/error.service';
 
 @Injectable({
   providedIn: 'root',
@@ -13,9 +14,9 @@ export class HTTPConnectionService extends Connection {
   private brightness: number;
   private speed: number;
 
-  constructor() {
+  constructor(errorService: ErrorService) {
     super()
-    Promise.all([this.getBrightness(), this.getSpeed()]).then()
+    Promise.all([this.getBrightness(), this.getSpeed()]).then().catch(e => errorService.setError(e))
   }
 
   private async getBrightness(): Promise<void> {
@@ -39,7 +40,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   decreaseBrightness(): void {
-    this.setBrightness(this.brightness - 10).then()
+    this.setBrightness(Math.round(this.brightness * 0.90)).then()
   }
 
   private async getSpeed(): Promise<void> {
@@ -64,15 +65,15 @@ export class HTTPConnectionService extends Connection {
   }
 
   decreaseSpeed(): void {
-    this.setSpeed(this.speed + 10).then()
+    this.setSpeed(Math.round(this.speed * 1.1)).then()
   }
 
   increaseBrightness(): void {
-    this.setBrightness(this.brightness + 10).then()
+    this.setBrightness(Math.round(this.brightness * 1.1)).then()
   }
 
   increaseSpeed(): void {
-    this.setSpeed(this.speed - 10).then()
+    this.setSpeed(Math.round(this.speed * 0.9)).then()
   }
 
   protected send(command: string): void {
