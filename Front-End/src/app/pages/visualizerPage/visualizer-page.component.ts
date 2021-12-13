@@ -6,12 +6,12 @@ import {faSave} from '@fortawesome/free-solid-svg-icons/faSave'
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
 import {faEdit, faLightbulb, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
-import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
 import {SettingsService} from '../../services/settings/settings.service'
 import {ConnectionService} from '../../services/connection/connection.service'
 import {TimelineMax} from 'gsap'
 import {GradientInformation} from '../../shared/types/GradientInformation'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
+import {VisualizerBrightnessState} from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
 
 @Component({
   selector: 'app-visualizer',
@@ -247,7 +247,8 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
     this.getGradients().then(() => {
       this.loadOptions()
     })
-    this.chromaEffect.state = new VisualizerState()
+
+    // this.chromaEffect.state = new VisualizerBrightnessState()
   }
 
   scroll(el: HTMLDivElement): void {

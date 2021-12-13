@@ -1,16 +1,15 @@
-import {State} from '../abstract/state'
-import {calculateBGRInteger, map} from '../../../../shared/functions'
 import iro from '@jaames/iro'
+import {VisualizerState} from '../visualizer-state/visualizer-state';
+import {calculateBGRInteger, map} from '../../../../shared/functions';
 
-export class VisualizerState extends State {
-  protected _intensity = 0;
-  protected visualizerCounter = 0;
-  protected _BGRIntegerForeground;
-  protected _previousBGRIntegerForeground;
-  protected _previousIntensity: number;
+export class VisualizerBrightnessState extends VisualizerState {
 
   handle(colors: iro.Color[]): void {
     if (!colors) return
+
+    map(this._intensity, 0, 1, 0, 255, true)
+
+
     this.createVisualizer(colors)
   }
 
@@ -24,14 +23,14 @@ export class VisualizerState extends State {
       this.visualizerCounter = 0
     }
 
-    this.createHeadsetVisualizer();
+    // this.createHeadsetVisualizer();
     this.createKeyBoardVisualizer(backgroundColor);
-    this.createMouseVisualizer(backgroundColor);
+    // this.createMouseVisualizer(backgroundColor);
 
     this._previousBGRIntegerForeground = this._BGRIntegerForeground;
   }
 
-  protected createMouseVisualizer(backgroundColor: number) {
+  createMouseVisualizer(backgroundColor: number) {
     // Mouse
     const mouseLed = new Array(9)
     for (let r = 0; r < 9; r++) {
@@ -56,35 +55,24 @@ export class VisualizerState extends State {
     this._context.createMouseEffect('CHROMA_CUSTOM2', mouseLed).then()
   }
 
-  protected createKeyBoardVisualizer(backgroundColor: number) {
+  createKeyBoardVisualizer(backgroundColor: number) {
     const color = new Array(6)
-    for (let r = 0; r < 6; r++) {
-      color[r] = new Array(22)
-      for (let c = 0; c < 22; c++) {
-        color[r][c] = backgroundColor
-      }
-    }
     const key = new Array(6)
     for (let r = 0; r < 6; r++) {
+      color[r] = new Array(22)
       key[r] = new Array(22)
       for (let c = 0; c < 22; c++) {
-        key[r][c] = backgroundColor
+        color[r][c] = this._BGRIntegerForeground
+        key[r][c] = 128
       }
     }
 
-    const amountOfColumns = map(this._intensity, 1, 0, 21, 0, true)
-    for (let r = 0; r < 6; r++) {
-      for (let c = 0; c < amountOfColumns; c++) {
-        key[r][c] = 0x01000000 | this._BGRIntegerForeground
-      }
-
-    }
     const data = {color, key}
 
     this._context.createKeyboardEffect('CHROMA_CUSTOM_KEY', data).then()
   }
 
-  protected createHeadsetVisualizer() {
+  createHeadsetVisualizer() {
     if (this._BGRIntegerForeground !== this._previousBGRIntegerForeground) {
       this._context.createHeadsetEffect('CHROMA_STATIC', this._BGRIntegerForeground).then()
     }
@@ -96,6 +84,7 @@ export class VisualizerState extends State {
   }
 
   onEntry(): void {
+    console.log('Hl')
   }
 
   onExit(): void {
