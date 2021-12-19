@@ -4,7 +4,7 @@ import {State} from './state/abstract/state'
 import {StaticState} from './state/static-state/static-state'
 import {SettingsService} from '../settings/settings.service'
 import iro from '@jaames/iro'
-import {VisualizerState} from './state/visualizer-state/visualizer-state';
+import {VisualizerState} from './state/visualizer-state/visualizer-state'
 
 @Injectable({
     providedIn: 'root'

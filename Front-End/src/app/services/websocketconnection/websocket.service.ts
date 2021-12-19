@@ -4,8 +4,8 @@ import {Connection} from '../../shared/interfaces/Connection'
 import ReconnectingWebSocket from 'reconnecting-websocket'
 import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
-import {ErrorService} from '../error/error.service';
-import * as Events from 'reconnecting-websocket/events';
+import {ErrorService} from '../error/error.service'
+import * as Events from 'reconnecting-websocket/events'
 
 @Injectable({
   providedIn: 'root'

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, OnInit, Output, Renderer2, ViewChild} from '@angular/core'
+import {AfterViewInit, Component, EventEmitter, OnInit, Output, Renderer2} from '@angular/core'
 import {ElectronService} from '../../../services/electron/electron.service'
 import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons'
 import {TimelineLite} from 'gsap'
@@ -8,6 +8,7 @@ import {
   faBars,
   faChartBar,
   faCog,
+  faCubes,
   faEdit,
   faEyeDropper,
   faHome,
@@ -19,8 +20,7 @@ import {
   faSlidersH,
   faTimes,
   faWalking,
-  faWindowMinimize,
-  faCubes
+  faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons'
 import {ConnectionService} from '../../../services/connection/connection.service'
 import {ColorService} from '../../../services/color/color.service'

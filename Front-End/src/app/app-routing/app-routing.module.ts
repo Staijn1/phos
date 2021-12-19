@@ -3,7 +3,7 @@ import {RouterModule, Routes} from '@angular/router'
 import {SettingsPageComponent} from '../pages/settingsPage/settings-page.component'
 import {ModePageComponent} from '../pages/modePage/mode-page.component'
 import {VisualizerPageComponent} from '../pages/visualizerPage/visualizer-page.component'
-import {VisualizerPage3DComponent} from '../pages/visualizer-page3-d/visualizer-page3-d.component';
+import {VisualizerPage3DComponent} from '../pages/visualizer-page3-d/visualizer-page3-d.component'
 
 
 const routes: Routes = [

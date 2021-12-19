@@ -12,7 +12,6 @@ import {
   commandHandler,
   CommandHandler,
 } from '../../CommandHandler/CommandHandler'
-import { SpeedInformation } from '../../Types/SpeedInformation'
 import { BrightnessInformation } from '../../Types/BrightnessInformation'
 import { InformationService } from '../Services/InformationService'
 

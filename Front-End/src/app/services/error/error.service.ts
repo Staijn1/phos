@@ -6,9 +6,6 @@ import {Injectable} from '@angular/core'
 export class ErrorService {
   private _errors: Error[] = [];
 
-  constructor() {
-  }
-
   public setError(error: Error) {
     this._errors.push(error)
     setTimeout(() => {

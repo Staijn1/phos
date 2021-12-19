@@ -5,7 +5,7 @@ import {HTTPConnectionService} from '../httpconnection/httpconnection.service'
 import {ModeInformation} from '../../shared/types/ModeInformation'
 import {GradientInformation, GradientInformationExtended} from '../../shared/types/GradientInformation'
 import iro from '@jaames/iro'
-import {ErrorService} from '../error/error.service';
+import {ErrorService} from '../error/error.service'
 
 @Injectable({
   providedIn: 'root'

@@ -1,17 +1,25 @@
 /* tslint:disable */
 /* eslint-disable */
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { Controller, ValidationService, FieldErrors, ValidateError, TsoaRoute, HttpStatusCodeLiteral, TsoaResponse } from '@tsoa/runtime';
+import {
+  Controller,
+  FieldErrors,
+  HttpStatusCodeLiteral,
+  TsoaResponse,
+  TsoaRoute,
+  ValidateError,
+  ValidationService
+} from '@tsoa/runtime';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { BrightnessController } from './../Brightness-Controller';
+import {BrightnessController} from './../Brightness-Controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { ColorController } from './../Color-Controller';
+import {ColorController} from './../Color-Controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { ModeController } from './../Mode-Controller';
+import {ModeController} from './../Mode-Controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { SpeedController } from './../Speed-Controller';
+import {SpeedController} from './../Speed-Controller';
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
-import { VisualizerController } from './../Visualizer-Controller';
+import {VisualizerController} from './../Visualizer-Controller';
 import * as express from 'express';
 
 // WARNING: This file was auto-generated with tsoa. Please do not modify it. Re-run tsoa to re-generate this file: https://github.com/lukeautry/tsoa
