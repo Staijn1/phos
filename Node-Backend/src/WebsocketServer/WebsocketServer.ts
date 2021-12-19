@@ -44,7 +44,7 @@ export class WebsocketServer {
    * @private
    */
   private handleMessage(message: any): void {
-    // todo type IMessage crashes dockerFile
+    // message is of type IMessage, the type chrashes the dockerfile
     this.commandHandler.handleMessage(message)
   }
 }

@@ -45,7 +45,7 @@ export class InformationService {
    * @async
    */
   async getModes(): Promise<ModeInformation[]> {
-    return this.apiSend(`get_modes`, undefined)
+    return this.apiSend(`get_modes`)
   }
 
   /**
@@ -154,10 +154,7 @@ export class InformationService {
    * @return {Promise<BrightnessInformation>}
    */
   async setBrightness(brightness: number): Promise<BrightnessInformation> {
-    const result = await this.apiSend(
-      `set_brightness?absolute=${brightness}`,
-      undefined
-    )
+    const result = await this.apiSend(`set_brightness?absolute=${brightness}`)
     return {brightness: result.brightness}
   }
 
@@ -167,7 +164,7 @@ export class InformationService {
    * @return {Promise<SpeedInformation>}
    */
   async setSpeed(speed: number): Promise<SpeedInformation> {
-    const response = await this.apiSend(`set_speed?s=${speed}`, undefined)
+    const response = await this.apiSend(`set_speed?s=${speed}`)
     return {speed: response.speed}
   }
 
@@ -184,7 +181,7 @@ export class InformationService {
   ): Promise<string | any> {
     const responses: any = []
     for (const ledstripAdress of ledstripAdresses) {
-      const tmpUrl = new URL(ledstripAdresses[0]).host
+      const tmpUrl = new URL(ledstripAdress).host
       const url = tmpUrl.substr(0, tmpUrl.length - 3)
 
       const response = await fetch(`http://${url}/${endpoint}`, headers)

@@ -1,6 +1,6 @@
 import iro from '@jaames/iro'
-import {VisualizerState} from '../visualizer-state/visualizer-state';
-import {calculateBGRInteger, map} from '../../../../shared/functions';
+import {VisualizerState} from '../visualizer-state/visualizer-state'
+import {calculateBGRInteger, map} from '../../../../shared/functions'
 
 export class VisualizerBrightnessState extends VisualizerState {
 
@@ -24,10 +24,10 @@ export class VisualizerBrightnessState extends VisualizerState {
     }
 
     // this.createHeadsetVisualizer();
-    this.createKeyBoardVisualizer(backgroundColor);
+    this.createKeyBoardVisualizer(backgroundColor)
     // this.createMouseVisualizer(backgroundColor);
 
-    this._previousBGRIntegerForeground = this._BGRIntegerForeground;
+    this._previousBGRIntegerForeground = this._BGRIntegerForeground
   }
 
   createMouseVisualizer(backgroundColor: number) {

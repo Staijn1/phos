@@ -24,11 +24,11 @@ export class VisualizerState extends State {
       this.visualizerCounter = 0
     }
 
-    this.createHeadsetVisualizer();
-    this.createKeyBoardVisualizer(backgroundColor);
-    this.createMouseVisualizer(backgroundColor);
+    this.createHeadsetVisualizer()
+    this.createKeyBoardVisualizer(backgroundColor)
+    this.createMouseVisualizer(backgroundColor)
 
-    this._previousBGRIntegerForeground = this._BGRIntegerForeground;
+    this._previousBGRIntegerForeground = this._BGRIntegerForeground
   }
 
   protected createMouseVisualizer(backgroundColor: number) {

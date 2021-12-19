@@ -18,7 +18,8 @@ import { ModeInformation } from '../../Types/ModeInformation'
 @Route('visualizer')
 @Tags('visualizer')
 export class VisualizerController extends Controller {
-  private readonly informationService: InformationService = new InformationService()
+  private readonly informationService: InformationService =
+    new InformationService()
 
   @Get('gradients')
   @SuccessResponse(200, 'OK')

@@ -1,6 +1,6 @@
 import {Component} from '@angular/core'
 import {SwUpdate} from '@angular/service-worker'
-import {ErrorService} from './services/error/error.service';
+import {ErrorService} from './services/error/error.service'
 
 @Component({
   selector: 'app-root',
