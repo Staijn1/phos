@@ -5,6 +5,8 @@ import {
 } from 'websocket'
 import { logger } from '../Config/Logger'
 import { prettyPrint } from '../Utils/functions'
+import { ErrorWithStatus } from '../Utils/ErrorWithStatus'
+import fetch, { RequestInit } from 'node-fetch'
 
 /**
  * Class to connect to other websockets (on the ESP32 modules)

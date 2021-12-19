@@ -6,13 +6,25 @@
 		"requestBodies": {},
 		"responses": {},
 		"schemas": {
+			"BrightnessInformation": {
+				"properties": {
+					"brightness": {
+						"type": "integer",
+						"format": "int32",
+						"example": 11,
+						"minimum": 0,
+						"maximum": 255
+					}
+				},
+				"required": [
+					"brightness"
+				],
+				"type": "object"
+			},
 			"ColorInformation": {
 				"properties": {
 					"color": {
-						"items": {
-							"type": "string"
-						},
-						"type": "array"
+						"type": "string"
 					}
 				},
 				"required": [
@@ -35,6 +47,20 @@
 				},
 				"required": [
 					"mode"
+				],
+				"type": "object"
+			},
+			"SpeedInformation": {
+				"properties": {
+					"speed": {
+						"type": "integer",
+						"format": "int32",
+						"example": 11,
+						"minimum": 0
+					}
+				},
+				"required": [
+					"speed"
 				],
 				"type": "object"
 			},
@@ -135,6 +161,7 @@
 				"tags": [
 					"Brightness"
 				],
+				"deprecated": true,
 				"security": [],
 				"parameters": []
 			}
@@ -145,6 +172,61 @@
 				"responses": {
 					"202": {
 						"description": "Accepted"
+					}
+				},
+				"tags": [
+					"Brightness"
+				],
+				"deprecated": true,
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/brightness/set": {
+			"post": {
+				"operationId": "SetBrightness",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BrightnessInformation"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Brightness"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/BrightnessInformation"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/brightness": {
+			"get": {
+				"operationId": "GetBrightness",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/BrightnessInformation"
+								}
+							}
+						}
 					}
 				},
 				"tags": [
@@ -238,6 +320,7 @@
 				"tags": [
 					"Speed"
 				],
+				"deprecated": true,
 				"security": [],
 				"parameters": []
 			}
@@ -248,6 +331,61 @@
 				"responses": {
 					"202": {
 						"description": "Accepted"
+					}
+				},
+				"tags": [
+					"Speed"
+				],
+				"deprecated": true,
+				"security": [],
+				"parameters": []
+			}
+		},
+		"/speed/set": {
+			"post": {
+				"operationId": "SetSpeed",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SpeedInformation"
+								}
+							}
+						}
+					}
+				},
+				"tags": [
+					"Speed"
+				],
+				"security": [],
+				"parameters": [],
+				"requestBody": {
+					"required": true,
+					"content": {
+						"application/json": {
+							"schema": {
+								"$ref": "#/components/schemas/SpeedInformation"
+							}
+						}
+					}
+				}
+			}
+		},
+		"/speed": {
+			"get": {
+				"operationId": "GetSpeed",
+				"responses": {
+					"200": {
+						"description": "OK",
+						"content": {
+							"application/json": {
+								"schema": {
+									"$ref": "#/components/schemas/SpeedInformation"
+								}
+							}
+						}
 					}
 				},
 				"tags": [

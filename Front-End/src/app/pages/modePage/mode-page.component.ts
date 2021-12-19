@@ -13,6 +13,11 @@ import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
 import {ConnectionService} from '../../services/connection/connection.service'
 import {ModeInformation} from '../../shared/types/ModeInformation'
+import {
+  VisualizerBrightnessState,
+} from 'src/app/services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state'
+import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state';
+
 
 @Component({
   selector: 'app-mode',
@@ -30,6 +35,8 @@ export class ModePageComponent implements OnInit, OnDestroy {
     {name: 'Theater chase', state: new TheaterChaseState()},
     {name: 'Fire2012', state: new Fire2012State()},
     {name: 'Waterfall', state: new WaterfallState()},
+    {name: 'VuMeter', state: new VisualizerState()},
+    {name: 'VuMeter Brightness', state: new VisualizerBrightnessState()},
   ];
   classes = ['iconbox-primary', 'iconbox-orange', 'iconbox-pink', 'iconbox-yellow', 'iconbox-red', 'iconbox-teal'];
   selectedMode = 0;

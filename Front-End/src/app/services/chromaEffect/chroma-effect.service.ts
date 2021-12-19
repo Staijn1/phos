@@ -2,9 +2,9 @@ import {Injectable} from '@angular/core'
 import {ChromaSDKService} from '../chromaSDK/chromaSDK.service'
 import {State} from './state/abstract/state'
 import {StaticState} from './state/static-state/static-state'
-import {VisualizerState} from './state/visualizer-state/visualizer-state'
 import {SettingsService} from '../settings/settings.service'
 import iro from '@jaames/iro'
+import {VisualizerState} from './state/visualizer-state/visualizer-state';
 
 @Injectable({
     providedIn: 'root'
