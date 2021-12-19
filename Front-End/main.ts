@@ -10,7 +10,7 @@ serve = args.some(val => val === '--serve')
 app.commandLine.appendSwitch('ignore-certificate-errors')
 
 // If it starts multiple times during install, quit
-if (require('electron-squirrel-startup')) app.quit();
+if (require('electron-squirrel-startup')) app.quit()
 
 function createWindow(): void {
     // Create the browser window.

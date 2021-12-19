@@ -1,5 +1,4 @@
 import winston, { format } from 'winston'
-import path from 'path'
 
 export const logger = winston.createLogger({
   level: 'info',
@@ -17,7 +16,7 @@ export const logger = winston.createLogger({
         format.simple()
       ),
     }),
-   /* new winston.transports.File({
+    /* new winston.transports.File({
       filename: path.join(__dirname, '..', 'logs', 'error.log'),
       level: 'error',
     }),

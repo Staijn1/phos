@@ -10,7 +10,8 @@ import { InformationService } from '../Services/InformationService'
 @Tags('Mode')
 export class ModeController extends Controller {
   private readonly commandHandler: CommandHandler = commandHandler
-  private readonly informationservice: InformationService = new InformationService()
+  private readonly informationservice: InformationService =
+    new InformationService()
 
   @Post()
   @SuccessResponse(202, 'Accepted')

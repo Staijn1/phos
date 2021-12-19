@@ -3,7 +3,6 @@ import { KeyFunction } from '../Types/KeyFunction'
 import { ledstripAdresses } from '../Config/Config'
 import { logger } from '../Config/Logger'
 import { prettyPrint } from '../Utils/functions'
-import { SpeedInformation } from '../Types/SpeedInformation'
 
 /**
  * Handle incoming messages

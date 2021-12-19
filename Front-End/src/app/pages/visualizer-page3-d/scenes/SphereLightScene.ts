@@ -1,7 +1,6 @@
 import {BaseScene} from './BaseScene'
 import * as THREE from 'three'
-import {Mesh, MeshLambertMaterial, SphereGeometry, MeshStandardMaterial, Texture} from 'three'
-import {map} from '../../../shared/functions'
+import {Mesh, MeshStandardMaterial, SphereGeometry, Texture} from 'three'
 import {ElementRef} from '@angular/core'
 import {ConnectionService} from '../../../services/connection/connection.service'
 import {degToRad} from 'three/src/math/MathUtils'

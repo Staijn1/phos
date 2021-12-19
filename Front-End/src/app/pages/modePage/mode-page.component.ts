@@ -13,10 +13,8 @@ import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
 import {ConnectionService} from '../../services/connection/connection.service'
 import {ModeInformation} from '../../shared/types/ModeInformation'
-import {
-  VisualizerBrightnessState,
-} from 'src/app/services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state'
-import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state';
+import {VisualizerBrightnessState,} from 'src/app/services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state'
+import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
 
 
 @Component({

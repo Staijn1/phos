@@ -1,12 +1,12 @@
-import {ModeInformation} from '../../Types/ModeInformation'
+import { ModeInformation } from '../../Types/ModeInformation'
 import * as fs from 'fs'
 import path from 'path'
-import {GradientInformation} from '../../Types/GradientInformation'
-import {SpeedInformation} from '../../Types/SpeedInformation'
-import fetch, {RequestInit} from 'node-fetch'
-import {ErrorWithStatus} from '../../Utils/ErrorWithStatus'
-import {ledstripAdresses} from '../../Config/Config'
-import {BrightnessInformation} from '../../Types/BrightnessInformation'
+import { GradientInformation } from '../../Types/GradientInformation'
+import { SpeedInformation } from '../../Types/SpeedInformation'
+import fetch, { RequestInit } from 'node-fetch'
+import { ErrorWithStatus } from '../../Utils/ErrorWithStatus'
+import { ledstripAdresses } from '../../Config/Config'
+import { BrightnessInformation } from '../../Types/BrightnessInformation'
 
 /**
  * A class that has access to information retrieved from assets
@@ -136,7 +136,7 @@ export class InformationService {
    */
   async getSpeed(): Promise<SpeedInformation> {
     const status = await this.apiSend('status')
-    return {speed: status.speed}
+    return { speed: status.speed }
   }
 
   /**
@@ -145,7 +145,7 @@ export class InformationService {
    */
   async getBrightness(): Promise<BrightnessInformation> {
     const status = await this.apiSend('status')
-    return {brightness: status.brightness}
+    return { brightness: status.brightness }
   }
 
   /**
@@ -158,7 +158,7 @@ export class InformationService {
       `set_brightness?absolute=${brightness}`,
       undefined
     )
-    return {brightness: result.brightness}
+    return { brightness: result.brightness }
   }
 
   /**
@@ -168,7 +168,7 @@ export class InformationService {
    */
   async setSpeed(speed: number): Promise<SpeedInformation> {
     const response = await this.apiSend(`set_speed?s=${speed}`, undefined)
-    return {speed: response.speed}
+    return { speed: response.speed }
   }
 
   /**

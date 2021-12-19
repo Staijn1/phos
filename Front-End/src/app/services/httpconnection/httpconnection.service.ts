@@ -4,7 +4,7 @@ import {ModeInformation} from '../../shared/types/ModeInformation'
 import {GradientInformation} from '../../shared/types/GradientInformation'
 import iro from '@jaames/iro'
 import {environment} from '../../../environments/environment'
-import {ErrorService} from '../error/error.service';
+import {ErrorService} from '../error/error.service'
 
 @Injectable({
   providedIn: 'root',
