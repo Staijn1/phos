@@ -42,9 +42,6 @@ export class SphereScene extends BaseScene {
 
   private setupLights(): void {
     // Lights
-    // const ambientLight = new THREE.AmbientLight(0xaaaaaa, 0.2)
-    // this.scene.add(ambientLight)
-
     const spotLight = new THREE.SpotLight(0xffffff, 2.1)
     spotLight.castShadow = true
     spotLight.position.set(-5, 51, 49)

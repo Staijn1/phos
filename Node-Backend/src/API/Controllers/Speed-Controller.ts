@@ -48,6 +48,6 @@ export class SpeedController extends Controller {
   @Get()
   @SuccessResponse(200, 'OK')
   public async getSpeed(): Promise<SpeedInformation> {
-    return await this.informationService.getSpeed()
+    return this.informationService.getSpeed()
   }
 }

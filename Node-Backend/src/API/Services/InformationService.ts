@@ -1,12 +1,12 @@
-import { ModeInformation } from '../../Types/ModeInformation'
+import {ModeInformation} from '../../Types/ModeInformation'
 import * as fs from 'fs'
 import path from 'path'
-import { GradientInformation } from '../../Types/GradientInformation'
-import { SpeedInformation } from '../../Types/SpeedInformation'
-import fetch, { RequestInit } from 'node-fetch'
-import { ErrorWithStatus } from '../../Utils/ErrorWithStatus'
-import { ledstripAdresses } from '../../Config/Config'
-import { BrightnessInformation } from '../../Types/BrightnessInformation'
+import {GradientInformation} from '../../Types/GradientInformation'
+import {SpeedInformation} from '../../Types/SpeedInformation'
+import fetch, {RequestInit} from 'node-fetch'
+import {ErrorWithStatus} from '../../Utils/ErrorWithStatus'
+import {ledstripAdresses} from '../../Config/Config'
+import {BrightnessInformation} from '../../Types/BrightnessInformation'
 
 /**
  * A class that has access to information retrieved from assets
@@ -45,7 +45,7 @@ export class InformationService {
    * @async
    */
   async getModes(): Promise<ModeInformation[]> {
-    return this.apiSend(`get_modes`, undefined)
+    return this.apiSend(`get_modes`)
   }
 
   /**
@@ -136,7 +136,7 @@ export class InformationService {
    */
   async getSpeed(): Promise<SpeedInformation> {
     const status = await this.apiSend('status')
-    return { speed: status.speed }
+    return {speed: status.speed}
   }
 
   /**
@@ -145,7 +145,7 @@ export class InformationService {
    */
   async getBrightness(): Promise<BrightnessInformation> {
     const status = await this.apiSend('status')
-    return { brightness: status.brightness }
+    return {brightness: status.brightness}
   }
 
   /**
@@ -154,11 +154,8 @@ export class InformationService {
    * @return {Promise<BrightnessInformation>}
    */
   async setBrightness(brightness: number): Promise<BrightnessInformation> {
-    const result = await this.apiSend(
-      `set_brightness?absolute=${brightness}`,
-      undefined
-    )
-    return { brightness: result.brightness }
+    const result = await this.apiSend(`set_brightness?absolute=${brightness}`)
+    return {brightness: result.brightness}
   }
 
   /**
@@ -167,8 +164,8 @@ export class InformationService {
    * @return {Promise<SpeedInformation>}
    */
   async setSpeed(speed: number): Promise<SpeedInformation> {
-    const response = await this.apiSend(`set_speed?s=${speed}`, undefined)
-    return { speed: response.speed }
+    const response = await this.apiSend(`set_speed?s=${speed}`)
+    return {speed: response.speed}
   }
 
   /**
@@ -184,7 +181,7 @@ export class InformationService {
   ): Promise<string | any> {
     const responses: any = []
     for (const ledstripAdress of ledstripAdresses) {
-      const tmpUrl = new URL(ledstripAdresses[0]).host
+      const tmpUrl = new URL(ledstripAdress).host
       const url = tmpUrl.substr(0, tmpUrl.length - 3)
 
       const response = await fetch(`http://${url}/${endpoint}`, headers)

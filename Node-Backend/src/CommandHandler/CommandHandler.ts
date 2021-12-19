@@ -37,7 +37,7 @@ export class CommandHandler {
    * @param {IMessage} payload
    */
   handleMessage(payload: any): void {
-    // todo type IMessage crashes dockerFile
+    // message is of type IMessage, the type chrashes the dockerfile
     const received = payload.utf8Data.split(' ')
     if (received[0] !== 'v') {
       logger.info(`Received command: ${received[0]} payload: ${received[1]}`)

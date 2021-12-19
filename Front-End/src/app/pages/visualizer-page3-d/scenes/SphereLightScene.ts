@@ -14,15 +14,13 @@ export class SphereLightScene extends BaseScene {
     super(threeContainer, connection, settingsService)
   }
 
-  private loadTextures():void{
+  private loadTextures(): void {
     const textureLoader = new THREE.TextureLoader()
     this.normalTexture = textureLoader.load('../../../../assets/normal-maps/dimples.png')
   }
+
   private setupLights(): void {
     // Lights
-    // const ambientLight = new THREE.AmbientLight(0xaaaaaa, 0.2)
-    // this.scene.add(ambientLight)
-
     const spotLight = new THREE.SpotLight(0xffffff, 2.1)
     spotLight.castShadow = true
     spotLight.position.set(-5, 51, 49)

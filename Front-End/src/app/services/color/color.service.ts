@@ -12,7 +12,7 @@ export class ColorService {
   picker: any;
 
   constructor(
-    @Inject(DOCUMENT) private document: HTMLDocument,
+    @Inject(DOCUMENT) private document: Document,
     private connection: ConnectionService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService) {
@@ -39,9 +39,9 @@ export class ColorService {
         this.chromaEffect.setColors = this.picker.colors
       })
       this.picker.on('input:end', (iroColor) => {
-        const currentSettings = this.settingsService.readGeneralSettings()
-        currentSettings.colors = this.settingsService.convertColors(this.picker.colors)
-        this.settingsService.saveGeneralSettings(currentSettings)
+        const settings = this.settingsService.readGeneralSettings()
+        settings.colors = this.settingsService.convertColors(this.picker.colors)
+        this.settingsService.saveGeneralSettings(settings)
       })
       this.setTheme(currentSettings.theme)
     }, 1)
