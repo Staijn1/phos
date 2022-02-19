@@ -42,7 +42,7 @@ const App = () => {
           style={styles.scrollView}
         >
           <View style={styles.section}>
-            <Text style={styles.textLg}>Hello there,</Text>
+            <Text style={styles.textLg}>Hello there!</Text>
             <Text style={[styles.textXL, styles.appTitleText]} testID="heading">
               Welcome Mobile 👋
             </Text>
