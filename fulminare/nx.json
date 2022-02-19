@@ -4,7 +4,7 @@
     "defaultBase": "master"
   },
   "cli": {
-    "defaultCollection": "@nrwl/react-native"
+    "defaultCollection": "@nrwl/express"
   },
   "implicitDependencies": {
     "package.json": {
@@ -17,7 +17,12 @@
     "default": {
       "runner": "@nrwl/workspace/tasks-runners/default",
       "options": {
-        "cacheableOperations": ["build", "lint", "test", "e2e"]
+        "cacheableOperations": [
+          "build",
+          "lint",
+          "test",
+          "e2e"
+        ]
       }
     }
   },
@@ -29,5 +34,8 @@
       }
     ]
   },
-  "defaultProject": "mobile"
+  "defaultProject": "api",
+  "plugins": [
+    "@nxrocks/nx-flutter"
+  ]
 }
