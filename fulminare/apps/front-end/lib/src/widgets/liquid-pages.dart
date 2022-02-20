@@ -1,21 +1,18 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../pages/home.dart';
+import '../pages/mode.dart';
+
 const textStyle = TextStyle(fontSize: 20, color: Colors.white);
 
 
 final liquidPages = [
   Container(
-      color: Colors.pinkAccent,
-      child: const Center(
-        child: Text("Slide 1", style: textStyle),
-      )
+      child: const HomePage()
   ),
   Container(
-      color: Colors.blueAccent,
-      child: const Center(
-        child: Text("Slide 2", style: textStyle),
-      )
+      child: const ModePage()
   ),
   Container(
       color: Colors.deepPurpleAccent,
