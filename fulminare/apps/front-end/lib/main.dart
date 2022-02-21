@@ -15,14 +15,14 @@ class _FulminareState extends State<Fulminare> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Builder(
-          builder: (context) => LiquidSwipe(
+      home: Scaffold(
+          body: LiquidSwipe(
             pages: liquidPages,
-            fullTransitionValue: 1100,
+            fullTransitionValue: 1300,
             enableLoop: true,
             ignoreUserGestureWhileAnimating: true,
             slideIconWidget: const Icon(Icons.arrow_back_ios),
-            enableSideReveal: true,
+            enableSideReveal: false,
             waveType: WaveType.liquidReveal,
           )),
     );

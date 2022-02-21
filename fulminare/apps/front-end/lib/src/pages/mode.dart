@@ -1,4 +1,3 @@
-import 'package:Fulminare/src/widgets/liquid-pages.dart';
 import 'package:flutter/material.dart';
 
 import '../../styles/styles.dart';
@@ -10,7 +9,7 @@ class ModePage extends StatelessWidget {
   Widget build(BuildContext context) {
     return const Scaffold(
       backgroundColor: Colors.blueAccent,
-      body: Center(child: Text("Mode page", style: textStyle)),
+      body: Center(child: Text("Mode page", style: headingStyle)),
     );
   }
 }

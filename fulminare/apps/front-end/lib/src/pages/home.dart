@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_hsvcolor_picker/flutter_hsvcolor_picker.dart';
-import 'package:web_socket_channel/web_socket_channel.dart';
+
 import '../../styles/styles.dart';
 
 class HomePage extends StatefulWidget {
@@ -16,19 +16,17 @@ class _HomePageState extends State<HomePage> {
     return Scaffold(
       backgroundColor: Colors.redAccent,
       body: SafeArea(
-          child: Center(
-              child: Column(
-        children: [
-          const Text("Homepage", style: textStyle),
-          Container(
-              width: 250,
-              color: Colors.blueAccent,
-              child: ColorPicker(
-                onChanged: (Color value) {
-                },
-              )),
-        ],
-      ))),
+          child: Padding(
+        padding: EdgeInsets.all(30),
+        child: Column(children: [
+          const Text("Homepage", style: headingStyle),
+          Scrollbar(
+            child: ColorPicker(
+              onChanged: (Color value) {},
+            ),
+          )
+        ]),
+      )),
     );
   }
 }
