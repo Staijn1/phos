@@ -1,6 +1,8 @@
 import 'package:Fulminare/src/widgets/liquid-pages.dart';
 import 'package:flutter/material.dart';
 
+import '../../styles/styles.dart';
+
 class ModePage extends StatelessWidget {
   const ModePage({Key? key}) : super(key: key);
 

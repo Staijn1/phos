@@ -11,8 +11,9 @@ class Fulminare extends StatelessWidget {
       home: Builder(
           builder: (context) => LiquidSwipe(
                 pages: liquidPages,
-                fullTransitionValue: 1000,
+                fullTransitionValue: 1100,
                 enableLoop: true,
+                ignoreUserGestureWhileAnimating: true,
                 slideIconWidget: const Icon(Icons.arrow_back_ios),
                 enableSideReveal: true,
                 waveType: WaveType.liquidReveal,
