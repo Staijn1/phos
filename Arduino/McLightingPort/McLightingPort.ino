@@ -1,10 +1,10 @@
-#include "definitions.h"
+#include "A20_definitions.h"
 
 /**
    Conditional imports
 */
 #ifdef INCLUDE_CUSTOM_EFFECTS
-#include "custom_effects.h"
+#include "A10_custom_effects.h"
 #endif
 
 /**
@@ -14,23 +14,41 @@
 #include <WebServer.h>
 #include <WebSockets.h>           //https://github.com/Links2004/arduinoWebSockets
 #include <WebSocketsServer.h>
-
+#include <EEPROM.h>
+#include<Preferences.h> //https://github.com/espressif/arduino-esp32/tree/master/libraries/Preferences
 /**
    Include Arduino JSON
 */
 #include <ArduinoJson.h>
+extern const char index_html[];
 
+Preferences preferences;
+/** 
+ *  Initialized in configMode tab in setup
+ */
+bool isConfigured;
+int ledCount;
 
 void setup() {
   Serial.begin(115200);
   pinMode(BUILTIN_LED, OUTPUT);
-  setupLedstrip();
-  setupWebserver();
-  setupWebsocketServer();
+  initializeConfigMode();
+
+  if (isConfigured) {
+    connectToWifi();
+    setupWebserver();
+    setupLedstrip();
+    setupWebsocketServer();
+  } else {
+    setupWebserver();
+  }
 }
 
 void loop() {
-  runWebsocketServer();
   runWebserver();
-  runLedstrip();
+  
+  if (isConfigured) {
+    runWebsocketServer();
+    runLedstrip();
+  }
 }

@@ -2,71 +2,62 @@ WebServer server(80);
 unsigned long lastTimeConnected = 0L;
 
 void runWebserver() {
-  if(WiFi.status() != WL_CONNECTED){
+  if (WiFi.status() != WL_CONNECTED && isConfigured) {
     unsigned long now = millis();
-    if(now - lastTimeConnected >= NETWORK_TIMEOUT){
+    if (now - lastTimeConnected >= NETWORK_TIMEOUT) {
       ESP.restart();
     }
-  } else{
+  } else {
     lastTimeConnected = millis();
   }
-  
+
   server.handleClient();
 }
 
 void setupWebserver() {
-  ticker.attach(0.5, tick);
-  Serial.print("Connecting to ");
-  Serial.println(WIFI_SSID);
-
-  Serial.print("Mac adress: ");
-  Serial.println(WiFi.macAddress());
-  WiFi.begin(WIFI_SSID, WIFI_PASSWORD);
-  while (WiFi.status() != WL_CONNECTED) {
-    delay(500);
-    Serial.print(".");
-  }
-  // Print local IP address and start web server
-  Serial.println("");
-  Serial.println("WiFi connected.");
-  Serial.println("IP address: ");
-  Serial.println(WiFi.localIP());
-
+  server.enableCORS();
 
   server.on("/", []() {
-    server.send(200, "text/plain", "Up and running!");
+    server.send(200, "text/html", index_html);
   });
 
-  server.on("/status", []() {
-    getStatusJSON();
+  server.on("/configure", []() {
+    saveConfig();
   });
 
-  server.on("/restart", []() {
-    ESP.restart();
-  });
-  server.on("/set_brightness", []() {
-    handleSetBrightness();
-    getStatusJSON();
-  });
+  if (isConfigured) {
+    server.on("/status", []() {
+      getStatusJSON();
+    });
 
-  server.on("/set_speed", []() {
-    handleSetSpeed();
-    getStatusJSON();
-  });
+    server.on("/restart", []() {
+      ESP.restart();
+    });
 
-  server.on("/get_modes", []() {
-    getModesJSON();
-  });
+    server.on("/set_brightness", []() {
+      handleSetBrightness();
+      getStatusJSON();
+    });
 
-  server.on("/set_mode", []() {
-    handleSetMode();
-    getStatusJSON();
-  });
+    server.on("/set_speed", []() {
+      handleSetSpeed();
+      getStatusJSON();
+    });
 
-  ticker.detach();
+    server.on("/get_modes", []() {
+      getModesJSON();
+    });
 
-  //keep LED on
-  digitalWrite(BUILTIN_LED, HIGH);
+    server.on("/reset", []() {
+      resetConfig();
+    });
+
+    server.on("/set_mode", []() {
+      handleSetMode();
+      getStatusJSON();
+    });
+  }
+
   server.begin();
 }
 
@@ -74,12 +65,10 @@ void setupWebserver() {
    Utility functions
 */
 void getStatusJSON() {
-  server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send ( 200, "application/json", listStatusJSON() );
 }
 
 void getModesJSON() {
-  server.sendHeader("Access-Control-Allow-Origin", "*");
   server.send ( 200, "application/json", listModesJSON() );
 }
 

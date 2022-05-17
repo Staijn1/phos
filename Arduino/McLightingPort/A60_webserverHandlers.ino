@@ -15,8 +15,6 @@ void handleSetMode() {
     ws2812fx_mode = constrain(server.arg("m").toInt(), 0, strip->getModeCount() - 1);
     updateMode();
   }
-
-  getStatusJSON();
 }
 
 void handleSetSpeed() {
@@ -25,7 +23,6 @@ void handleSetSpeed() {
   }
 
   updateSpeed();
-  getStatusJSON();
 }
 
 void handleSetBrightness() {
@@ -36,5 +33,4 @@ void handleSetBrightness() {
   }
 
   updateBrightness();
-  getStatusJSON();
 }

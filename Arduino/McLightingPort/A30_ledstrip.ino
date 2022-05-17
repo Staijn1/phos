@@ -9,7 +9,7 @@ void runLedstrip() {
 }
 
 void setupLedstrip() {
-  strip = new WS2812FX(NUMLEDS, LED_PIN, NEO_GRB + NEO_KHZ800);
+  strip = new WS2812FX(ledCount, preferences.getInt("ledpin"), NEO_GRB + NEO_KHZ800);
   strip->init();
 #ifdef INCLUDE_CUSTOM_EFFECTS
   Serial.println("[LEDSTRIP]: Registering VUMeter effect");

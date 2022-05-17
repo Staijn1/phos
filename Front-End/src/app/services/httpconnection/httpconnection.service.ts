@@ -20,7 +20,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   private async getBrightness(): Promise<void> {
-    const response = await fetch(`${this.url}/brightness`, {
+    const response = await fetch(`${this.url}/status`, {
       method: 'GET'
     })
     this.handleError(response)
@@ -44,7 +44,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   private async getSpeed(): Promise<void> {
-    const response = await fetch(`${this.url}/speed`, {
+    const response = await fetch(`${this.url}/status`, {
       method: 'GET'
     })
     this.handleError(response)
@@ -89,17 +89,13 @@ export class HTTPConnectionService extends Connection {
   }
 
   setMode(mode: number): void {
-    fetch(`${this.url}/mode`, {
-      method: 'POST',
-      body: JSON.stringify({mode: mode}),
-      headers: {'Content-Type': 'application/json'}
-    }).then(response => {
+    fetch(`${this.url}/set_mode?m=${mode}`).then(response => {
       this.handleError(response)
     })
   }
 
   async getModes(): Promise<ModeInformation[]> {
-    const response = await fetch(`${this.url}/mode`, {
+    const response = await fetch(`${this.url}/get_modes`, {
       method: 'GET',
     })
     this.handleError(response)

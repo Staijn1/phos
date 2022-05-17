@@ -6,8 +6,8 @@
 export const environment = {
   production: false,
   saveSettings: false,
-  url: 'https://localhost:5000',
-  websockUrl: 'wss://localhost:5001'
+  url: 'http://192.168.2.249',
+  websockUrl: 'ws://192.168.2.249:81'
 }
 
 export const AppConfig = {
