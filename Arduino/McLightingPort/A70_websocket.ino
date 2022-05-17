@@ -83,7 +83,8 @@ void checkpayload(uint8_t* payload, uint8_t num = 0) {
     return;
   }
   webSocket.sendTXT(num, "COMMAND NOT FOUND");
-  Serial.printf("WS: Command not found: %s\n", payload[0]);
+  Serial.print("WS: Command not found: ");
+  Serial.println((char*)payload);
 }
 
 void webSocketEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) {
