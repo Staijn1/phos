@@ -69,6 +69,6 @@ export class WebsocketService extends Connection {
 
   setLeds(value: number): void {
     const mappedValue = map(value, 0, 1, 0, 255)
-    this.send(`v ${mappedValue}`)
+    this.send(`.${mappedValue}`)
   }
 }
