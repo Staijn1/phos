@@ -29,11 +29,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   private async setBrightness(newBrightness: number): Promise<void> {
-    const response = await fetch(`${this.url}/brightness/set`, {
-      method: 'POST',
-      body: JSON.stringify({brightness: newBrightness}),
-      headers: {'Content-Type': 'application/json'}
-    })
+    const response = await fetch(`${this.url}/set_brightness?absolute=${newBrightness}`)
     this.handleError(response)
     const data = await response.json()
     this.brightness = data.brightness
@@ -53,11 +49,7 @@ export class HTTPConnectionService extends Connection {
   }
 
   private async setSpeed(newSpeed: number): Promise<void> {
-    const response = await fetch(`${this.url}/speed/set`, {
-      method: 'POST',
-      body: JSON.stringify({speed: newSpeed}),
-      headers: {'Content-Type': 'application/json'}
-    })
+    const response = await fetch(`${this.url}/set_speed?s=${newSpeed}`)
 
     this.handleError(response)
     const data = await response.json()
