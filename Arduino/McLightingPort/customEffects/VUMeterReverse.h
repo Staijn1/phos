@@ -46,7 +46,7 @@ uint16_t vuMeter(void) {
     WS2812FX::Segment *seg = ws2812fx.getSegment();
     const int amountOfLedsToShow =map(fftValue, 0, 255, NUM_LEDS, 0);
 
-    for (int index = 0; index < NUM_LEDS; index++) {
+    for (int index = 0; index < ledCount; index++) {
         if (index >= amountOfLedsToShow) {
             ws2812fx.setPixelColor(index, seg->colors[0]);
         } else {

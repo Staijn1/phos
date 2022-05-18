@@ -4,6 +4,7 @@
 #include <WS2812FX.h>
 
 WS2812FX* strip;
+
 void runLedstrip() {
   strip->service();
 }

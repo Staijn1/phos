@@ -1,4 +1,3 @@
-#define NUMLEDS 60
 #define BUILTIN_LED 2
 
 #define INCLUDE_CUSTOM_EFFECTS
