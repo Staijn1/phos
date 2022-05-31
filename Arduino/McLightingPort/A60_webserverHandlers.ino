@@ -1,5 +1,8 @@
 void updateMode() {
   strip->setMode(ws2812fx_mode);
+  if (ws2812fx_mode == FX_MODE_CUSTOM) {
+    strip->setSegment(0, 0, ledCount - 1, FX_MODE_CUSTOM, strip->getColor(), 0, NO_OPTIONS);
+  }
 }
 
 void updateBrightness() {

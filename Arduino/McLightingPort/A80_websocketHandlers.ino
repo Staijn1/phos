@@ -12,7 +12,24 @@ void handleSetWS2812FXMode(uint8_t * mypayload) {
   ws2812fx_mode = constrain(ws2812fx_mode_tmp, 0, strip->getModeCount() - 1);
 
   updateMode();
-  if (ws2812fx_mode == FX_MODE_CUSTOM) {
-    strip->setSegment(0, 0, NUMLEDS - 1, FX_MODE_CUSTOM, strip->getColor(), 0, NO_OPTIONS);
+}
+
+void webSocketServerEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t lenght) {
+  switch (type) {
+    case WStype_DISCONNECTED:
+      Serial.printf("WS: [%u] Disconnected!\n", num);
+      break;
+    case WStype_CONNECTED: {
+        IPAddress ip = webSocket.remoteIP(num);
+        Serial.printf("WS: [%u] Connected from %d.%d.%d.%d url: %s\n", num, ip[0], ip[1], ip[2], ip[3], payload);
+        // send message to client
+        webSocket.sendTXT(num, "Connected");
+      }
+      break;
+    case WStype_TEXT:
+      Serial.printf("WS: [%u] get Text: %s\n", num, payload);
+      checkpayload(payload, num);
+      webSocketClient.sendTXT(payload);
+      break;
   }
 }

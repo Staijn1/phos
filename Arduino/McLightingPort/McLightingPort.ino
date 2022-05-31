@@ -14,6 +14,7 @@
 #include <WebServer.h>
 #include <WebSockets.h>           //https://github.com/Links2004/arduinoWebSockets
 #include <WebSocketsServer.h>
+#include <WebSocketsClient.h>
 #include <EEPROM.h>
 #include<Preferences.h> //https://github.com/espressif/arduino-esp32/tree/master/libraries/Preferences
 /**
@@ -23,9 +24,9 @@
 extern const char index_html[];
 
 Preferences preferences;
-/** 
- *  Initialized in configMode tab in setup
- */
+/**
+    Initialized in configMode tab in setup
+*/
 bool isConfigured;
 int ledCount;
 
@@ -39,6 +40,7 @@ void setup() {
     setupWebserver();
     setupLedstrip();
     setupWebsocketServer();
+    setupWebsocketClient();
   } else {
     setupWebserver();
   }
@@ -46,9 +48,10 @@ void setup() {
 
 void loop() {
   runWebserver();
-  
+
   if (isConfigured) {
     runWebsocketServer();
+    runWebsocketClient();
     runLedstrip();
   }
 }
