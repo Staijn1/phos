@@ -29,6 +29,10 @@ char index_html[] PROGMEM = R"=====(
             <label for='ledCount'>LED Pin</label>
             <input type='number' class='form-control' id='ledCount' name='ledCount' placeholder='LED Count' min="0" value="30">
         </div>
+        <div class='form-group'>
+            <label for='serverip'>Server IP</label>
+            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP of other ledstrip to connect to' maxlength='15'>
+        </div>
         <button type='submit' class='btn btn-primary mt-3'>Submit</button>
     </form>
 </div>

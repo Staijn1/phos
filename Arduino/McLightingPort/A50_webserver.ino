@@ -25,7 +25,8 @@ void setupWebserver() {
     saveConfig();
   });
 
-  if (isConfigured) {
+  if (isConfigured && !isConfiguredAsClient()) {
+    Serial.println("[WEBSERVER SETUP] Creating additional routes");
     server.on("/status", []() {
       getStatusJSON();
     });
@@ -56,6 +57,8 @@ void setupWebserver() {
       handleSetMode();
       getStatusJSON();
     });
+  } else {
+    Serial.println("[WEBSERVER SETUP] This device is not configured yet or configured as client. Skipping creating additional routes");
   }
 
   server.begin();

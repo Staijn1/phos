@@ -8,3 +8,11 @@ void setupWebsocketServer() {
 void runWebsocketServer() {
   webSocket.loop();
 }
+
+void broadcastToAllClients(uint8_t * payload) {
+  if (!isConfiguredAsClient()) {
+    Serial.print("[WSS] Broadcasting to all clients: ");
+    Serial.println((char*)payload);
+    webSocket.broadcastTXT(payload);
+  }
+}

@@ -28,8 +28,8 @@ void webSocketServerEvent(uint8_t num, WStype_t type, uint8_t * payload, size_t 
       break;
     case WStype_TEXT:
       Serial.printf("WS: [%u] get Text: %s\n", num, payload);
-      checkpayload(payload, num);
-      webSocketClient.sendTXT(payload);
+      checkpayloadserver(payload, num);
+      broadcastToAllClients(payload);
       break;
   }
 }

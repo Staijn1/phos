@@ -39,8 +39,12 @@ void setup() {
     connectToWifi();
     setupWebserver();
     setupLedstrip();
-    setupWebsocketServer();
-    setupWebsocketClient();
+    if (isConfiguredAsClient()) {
+      Serial.println("[SETUP] This device is configured as a client. A websocket server will not be created on this instance.");
+      setupWebsocketClient();
+    } else {
+      setupWebsocketServer();
+    }
   } else {
     setupWebserver();
   }
@@ -50,8 +54,13 @@ void loop() {
   runWebserver();
 
   if (isConfigured) {
-    runWebsocketServer();
-    runWebsocketClient();
+    if (isConfiguredAsClient()) {
+      runWebsocketClient();
+    } else {
+      runWebsocketServer();
+    }
+
+
     runLedstrip();
   }
 }

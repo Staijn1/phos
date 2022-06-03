@@ -1,8 +1,10 @@
 WebSocketsClient webSocketClient;
 
 void setupWebsocketClient() {
+  Serial.print("[WSc SETUP] Connecting to server with IP: ");
+  Serial.println(preferences.getString("serverip"));
   // Start connection
-  webSocketClient.begin("192.168.2.248", 81, "/");
+  webSocketClient.begin(preferences.getString("serverip"), 81, "/");
   // event handler
   webSocketClient.onEvent(webSocketClientEvent);
 
@@ -15,8 +17,7 @@ void runWebsocketClient() {
 }
 
 
-void webSocketClientEvent(WStype_t type, uint8_t * payload, size_t length) {
-
+void webSocketClientEvent(WStype_t type, uint8_t* payload, size_t length) {
   switch (type) {
     case WStype_DISCONNECTED:
       Serial.printf("[WSc] Disconnected from server!\n");
@@ -24,9 +25,17 @@ void webSocketClientEvent(WStype_t type, uint8_t * payload, size_t length) {
     case WStype_CONNECTED:
       Serial.printf("[WSc] Connected to url: %s\n", payload);
       break;
-    case WStype_TEXT:
-      Serial.printf("[WSc] Got text from server: %s\n", payload);
-      break;
+    case WStype_TEXT: {
+        Serial.printf("[WSc] Got text from server: %s\n", payload);
+        bool recognizedCommand = checkpayloadclient(payload);
+
+        if (!recognizedCommand) {
+          Serial.print("[WSc] Command not found: ");
+          Serial.println((char*)payload);
+        }
+
+        break;
+      }
     case WStype_BIN:
       Serial.printf("[WSc] get binary length: %u\n", length);
       break;
@@ -39,16 +48,12 @@ void webSocketClientEvent(WStype_t type, uint8_t * payload, size_t length) {
   }
 }
 
-
-void checkpayload(uint8_t* payload, uint8_t num = 0) {
+bool checkpayloadclient(uint8_t* payload) {
   // # ==> Set main color
   if (payload[0] == '#') {
     handleSetMainColor(payload);
-    Serial.print("WS: ");
-    webSocket.sendTXT(num, "OK");
-
     Serial.printf("Set main color to: R: [%u] G: [%u] B: [%u]\n",  main_color.red, main_color.green, main_color.blue);
-    return;
+    return true;
   }
 
   // ? ==> Set speed
@@ -56,11 +61,9 @@ void checkpayload(uint8_t* payload, uint8_t num = 0) {
     uint8_t d = (uint8_t) strtol((const char *) &payload[1], NULL, 10);
     ws2812fx_speed = constrain(d, 0, 255);
     updateSpeed();
-    Serial.print("WS: ");
-    webSocket.sendTXT(num, "OK");
 
     Serial.printf("Set speed to: [%u]\n", ws2812fx_speed);
-    return;
+    return true;
   }
 
   // % ==> Set brightness
@@ -68,17 +71,33 @@ void checkpayload(uint8_t* payload, uint8_t num = 0) {
     uint8_t tempBrightness = (uint8_t) strtol((const char *) &payload[1], NULL, 10);
     ws2812fx_brightness = constrain(tempBrightness, 0, 255);
     updateBrightness();
-    Serial.print("WS: ");
-    webSocket.sendTXT(num, "OK");
 
     Serial.printf("WS: Set brightness to: [%u]\n", ws2812fx_brightness);
-    return;
+    return true;
   }
 
+  // / ==> Set WS2812 mode.
+  if (payload[0] == '/') {
+    handleSetWS2812FXMode(payload);
+    Serial.printf("Set WS2812 mode: [%s]\n", payload);
+    return true;
+  }
+
+  // . ==> (CUSTOM) Set FFT value, to display in music mode
+  if (payload[0] == '.') {
+    int tmpFFTValue = (int) strtol((const char *) &payload[1], NULL, 10);
+    fftValue = constrain(tmpFFTValue, 0, 255);
+    return true;
+  }
+
+  return false;
+}
+void checkpayloadserver(uint8_t* payload, uint8_t num = 0) {
+  bool recognizedCommand = checkpayloadclient(payload);
+
   // $ ==> Get status Info.
-  if (payload[0] == '$') {
+  if (payload[0] == '$' && !isConfiguredAsClient()) {
     String json = listStatusJSON();
-    Serial.print("WS: ");
     webSocket.sendTXT(num, "OK");
     webSocket.sendTXT(num, json);
     Serial.println("Get status info: " + json);
@@ -86,7 +105,7 @@ void checkpayload(uint8_t* payload, uint8_t num = 0) {
   }
 
   // ~ ==> Get WS2812 modes.
-  if (payload[0] == '~') {
+  if (payload[0] == '~' && !isConfiguredAsClient()) {
     String json = listModesJSON();
 
     Serial.print("WS: ");
@@ -97,22 +116,7 @@ void checkpayload(uint8_t* payload, uint8_t num = 0) {
     return;
   }
 
-  // / ==> Set WS2812 mode.
-  if (payload[0] == '/') {
-    handleSetWS2812FXMode(payload);
-    Serial.print("WS: ");
-    webSocket.sendTXT(num, "OK");
-    Serial.printf("Set WS2812 mode: [%s]\n", payload);
-    return;
+  if (!recognizedCommand) {
+    webSocket.sendTXT(num, "COMMAND NOT FOUND");
   }
-
-  // . ==> (CUSTOM) Set FFT value, to display in music mode
-  if (payload[0] == '.') {
-    int tmpFFTValue = (int) strtol((const char *) &payload[1], NULL, 10);
-    fftValue = constrain(tmpFFTValue, 0, 255);
-    return;
-  }
-  webSocket.sendTXT(num, "COMMAND NOT FOUND");
-  Serial.print("WS: Command not found: ");
-  Serial.println((char*)payload);
 }

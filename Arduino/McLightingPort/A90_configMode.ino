@@ -6,14 +6,14 @@ void initializeConfigMode() {
   readConfig();
 
   if (isConfigured) {
-    Serial.println("This device is already configured, skipping creating access point");
+    Serial.println("[SETUP] This device is already configured, skipping creating access point");
     return;
   }
 
   WiFi.softAP(hotspotName, password);
   IPAddress IP = WiFi.softAPIP();
-  Serial.printf("Please configure your device by connecting to the network: %s\n With password: %s\n", hotspotName, password);
-  Serial.print("Once connected, navigate to ");
+  Serial.printf("[SETUP] Please configure your device by connecting to the network: %s\n With password: %s\n", hotspotName, password);
+  Serial.print("[SETUP] Once connected, navigate to ");
   Serial.println(IP);
 }
 
@@ -31,6 +31,7 @@ void saveConfig() {
 
   const String ssid = server.arg("ssid");
   const String password = server.arg("password");
+  const String serverip = server.arg("serverip");
   const int ledpin = server.arg("ledPin").toInt();
   const int ledCount = server.arg("ledCount").toInt();
 
@@ -41,6 +42,7 @@ void saveConfig() {
 
   preferences.putString("ssid", ssid);
   preferences.putString("password", password);
+  preferences.putString("serverip", serverip);
   preferences.putInt("ledpin", ledpin);
   preferences.putInt("ledCount", ledCount);
   preferences.putBool("configured", true);
@@ -61,15 +63,16 @@ void connectToWifi() {
   int passwordLength = password.length() + 1;
   char passwordChar[passwordLength];
   password.toCharArray(passwordChar, passwordLength);
-  
+
   ticker.attach(0.5, tick);
-  Serial.print("Connecting to ");
+  Serial.print("[SETUP] Connecting to ");
   Serial.println(ssidChar);
 
-  Serial.print("Mac adress: ");
+  Serial.print("[SETUP] Mac adress: ");
   Serial.println(WiFi.macAddress());
   WiFi.begin(ssidChar, passwordChar);
 
+  Serial.print("Connecting");
   int amountButtonPressed = 0;
   while (WiFi.status() != WL_CONNECTED) {
     delay(500);
@@ -85,8 +88,8 @@ void connectToWifi() {
 
   // Print local IP address and start web server
   Serial.println("");
-  Serial.println("WiFi connected.");
-  Serial.println("IP address: ");
+  Serial.println("[SETUP] WiFi connected.");
+  Serial.println("[SETUP] IP address: ");
   Serial.println(WiFi.localIP());
 
 
@@ -101,4 +104,8 @@ void resetConfig() {
   Serial.println("Resetting ESP, rebooting");
   preferences.remove("configured");
   ESP.restart();
+}
+
+bool isConfiguredAsClient() {
+  return preferences.getString("serverip") != "";
 }

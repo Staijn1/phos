@@ -17,6 +17,7 @@ void handleSetMode() {
   if (server.arg("m") != "") {
     ws2812fx_mode = constrain(server.arg("m").toInt(), 0, strip->getModeCount() - 1);
     updateMode();
+    broadcastToAllClients("/" + ws2812fx_mode);
   }
 }
 
