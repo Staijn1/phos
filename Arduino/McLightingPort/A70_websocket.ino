@@ -16,3 +16,11 @@ void broadcastToAllClients(uint8_t * payload) {
     webSocket.broadcastTXT(payload);
   }
 }
+
+void broadcastToAllClients(String payload) {
+  if (!isConfiguredAsClient()) {
+    Serial.print("[WSS] Broadcasting to all clients: ");
+    Serial.println(payload);
+    webSocket.broadcastTXT(payload);
+  }
+}

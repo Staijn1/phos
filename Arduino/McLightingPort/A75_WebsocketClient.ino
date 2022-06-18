@@ -40,6 +40,7 @@ void webSocketClientEvent(WStype_t type, uint8_t* payload, size_t length) {
       Serial.printf("[WSc] get binary length: %u\n", length);
       break;
     case WStype_ERROR:
+      Serial.printf("[WSc] Error occured: %s", payload);
     case WStype_FRAGMENT_TEXT_START:
     case WStype_FRAGMENT_BIN_START:
     case WStype_FRAGMENT:

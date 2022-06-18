@@ -17,13 +17,14 @@ void handleSetMode() {
   if (server.arg("m") != "") {
     ws2812fx_mode = constrain(server.arg("m").toInt(), 0, strip->getModeCount() - 1);
     updateMode();
-    broadcastToAllClients("/" + ws2812fx_mode);
+    broadcastToAllClients("/" + server.arg("m"));
   }
 }
 
 void handleSetSpeed() {
   if (server.arg("s").toInt() > 0) {
     ws2812fx_speed = constrain((int) server.arg("s").toInt(), 0, 3000);
+    broadcastToAllClients("?" + server.arg("s"));
   }
 
   updateSpeed();
@@ -34,6 +35,7 @@ void handleSetBrightness() {
     ws2812fx_brightness = constrain((int) server.arg("percentage").toInt() * 2.55, 0, 255);
   } else if (server.arg("absolute").toInt() > 0) {
     ws2812fx_brightness = constrain(server.arg("absolute").toInt(), 0, 255);
+    broadcastToAllClients("%" + server.arg("absolute"));
   }
 
   updateBrightness();
