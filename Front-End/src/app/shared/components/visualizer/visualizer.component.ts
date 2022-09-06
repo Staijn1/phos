@@ -15,7 +15,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   @Input() set options(options: Options) {
     this._options = {
       ...options,
-      ...{ volume: 0 },
+      ...{ volume: 0, gradient: "rainbow" },
     }
     this.updateOptions()
   }
@@ -70,7 +70,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     }
 
     for (const gradient of this._gradients) {
-      this.audioMotion.registerGradient(gradient.name, { bgColor: gradient.bgColor, colorStops: gradient.colorStops })
+      // this.audioMotion.registerGradient(gradient.name, { bgColor: gradient.bgColor, colorStops: gradient.colorStops })
     }
   }
 

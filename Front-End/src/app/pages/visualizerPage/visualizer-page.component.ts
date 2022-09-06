@@ -222,7 +222,7 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
     this.visualizerOptions.mode = value
     this.updateOptions()
   }
-
+  
   loadOptions(): void {
     setTimeout(() => {
       this.visualizerOptions = {
@@ -231,7 +231,7 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
           onCanvasDraw: this.drawCallback.bind(this),
         },
       }
-    }, 50)
+    }, 1000)
   }
 
   saveOptions(): void {

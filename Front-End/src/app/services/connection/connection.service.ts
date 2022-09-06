@@ -6,6 +6,7 @@ import {ModeInformation} from '../../shared/types/ModeInformation'
 import {GradientInformation, GradientInformationExtended} from '../../shared/types/GradientInformation'
 import iro from '@jaames/iro'
 import {ErrorService} from '../error/error.service'
+import {gradientList} from '../../data/gradients';
 
 @Injectable({
   providedIn: 'root'
@@ -105,7 +106,7 @@ export class ConnectionService extends Connection {
    */
   async getGradients(): Promise<GradientInformation[]> {
     try {
-      return await this.apiService.getGradients()
+      return Promise.resolve(gradientList as GradientInformation[])
     } catch (error) {
      this.errorService.setError(error)
     }
