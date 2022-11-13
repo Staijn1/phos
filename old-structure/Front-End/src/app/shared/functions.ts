@@ -11,7 +11,7 @@ import {GlobalVars} from './constants'
  * @param {boolean} withinBounds
  * @returns {number}
  */
-export function map(value, start1, stop1, start2, stop2, withinBounds = false): number {
+export function map(value: number, start1: number, stop1: number, start2: number, stop2: number, withinBounds = false): number {
   const newval = (value - start1) / (stop1 - start1) * (stop2 - start2) + start2
   if (!withinBounds) {
     return newval

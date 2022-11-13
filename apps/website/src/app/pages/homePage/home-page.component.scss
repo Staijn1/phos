@@ -1,0 +1,41 @@
+@import "../../../variables";
+
+#introcover {
+  background: black;
+  display: flex;
+  justify-content: center;
+  width: 100%;
+  height: 100vh;
+
+  #text {
+    stroke-dasharray: 100%;
+    stroke-dashoffset: 100%;
+    fill: none;
+    stroke: getColor('primary');
+    stroke-width: 2px;
+    stroke-linejoin: round;
+  }
+
+  #Light_Bulb {
+    stroke: getColor('primary');
+    stroke-width: 7px;
+    fill: none;
+
+    .bulb {
+      stroke-dasharray: 88%;
+      stroke-dashoffset: 100%;
+    }
+
+    .reflection{
+      stroke-width: 0;
+      stroke: getColor('secondary');
+    }
+
+    .light{
+      stroke-opacity: 0;
+      stroke-width: 3px;
+      stroke: #f9cb40;
+      fill-opacity: 0;
+    }
+  }
+}

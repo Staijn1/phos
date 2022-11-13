@@ -1,1 +1,16 @@
-<angulon-nx-welcome></angulon-nx-welcome>
+<app-navigationbar></app-navigationbar>
+<div class='container mt-5' *ngIf='updateAvailable'>
+    <div class='alert alert-info'>
+        <strong>Update</strong>
+        <p>There is an update available! Click <a href='#'>here</a> to reload!</p>
+    </div>
+</div>
+<router-outlet></router-outlet>
+
+<div *ngFor="let error of errorService.getErrors()" class="alert-container">
+    <div class="alert alert-danger">
+        <p>{{error.message}}</p>
+    </div>
+</div>
+
+

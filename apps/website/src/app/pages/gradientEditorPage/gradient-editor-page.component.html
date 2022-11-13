@@ -1,0 +1,147 @@
+<div class="d-md-none text-center d-flex flex-column justify-content-center min-vh-100 p-3">
+  <h1 class="text-danger">Sorry!</h1>
+  <p>For the optimal experience, please open this page on a tablet or desktop!</p>
+</div>
+<div class='min-vh-100 px-5 d-none d-md-block'>
+  <div class='row h-100 mx-0 ps-5'>
+    <div class='col-12 col-md-6 mt-5'>
+      <div class='card'>
+        <div
+          class='card-header d-flex justify-content-between bg-primary text-white align-content-center'
+          (click)='handleClickOnHeader()'>
+          <h5 class='text-white'>Gradients overview</h5>
+          <button type='button' class='btn btn-info text-white' (click)='addGradient()'>
+            <fa-icon [icon]='addIcon'></fa-icon>
+          </button>
+        </div>
+        <div class='card-body text-dark'>
+
+          <div class='my-3' *ngFor='let gradient of gradients; let gradientIndex = index'>
+            <div class='card'>
+              <div
+                class='card-header d-flex justify-content-between'
+                #gradientCard
+                [id]='gradient.id'
+                [ngClass]='gradientCard.id === currentActiveGradientID.toString() ? "bg-secondary text-white" : ""'>
+                <h3 contenteditable (input)='onNameChange($event.target.innerHTML, gradient)'>{{gradient.name}}</h3>
+                <div class='d-flex'>
+                  <button
+                    class='btn mx-1 text-dark rotate'
+                    (click)='handleCollapsable(gradient)'
+                    [attr.aria-expanded]='!gradient.collapsed'
+                    [ngClass]="[
+                                 gradientCard.id === currentActiveGradientID.toString() ? 'text-white' : 'text-dark',
+                                 gradient.collapsed ? 'left' : 'down'
+                    ]"
+                  >
+                    <fa-icon
+                      [icon]='collapseIcon'>
+                    </fa-icon>
+                  </button>
+                  <button
+                    class='btn mx-1 btn-info text-white'
+                    (click)='submitGradient(gradient)'
+                  >
+                    <fa-icon [icon]='saveIcon'></fa-icon>
+                  </button>
+                  <button class='btn mx-1 btn-danger' (click)='removeGradient(gradient)'>
+                    <fa-icon [icon]='deleteIcon'></fa-icon>
+                  </button>
+                </div>
+              </div>
+              <div class='card-body'>
+                <div class='row'>
+                  <div class='col'>
+                    <p>Amount of colors in gradient: <span
+                      [ngClass]='gradient.colorStops.length === 2 ? "text-decoration-underline" : ""'>{{gradient.colorStops.length}}</span>
+                    </p>
+                  </div>
+                  <div class='col d-flex justify-content-end'>
+                    <button type='button' class='btn btn-success' (click)='addColorStopToGradient(gradient)'>
+                      <fa-icon [icon]='addIcon'></fa-icon>
+                    </button>
+                  </div>
+                </div>
+                <div [ngbCollapse]='gradient.collapsed'>
+                  <div class='row'>
+                    <div class='col'>
+                      <p>Background color: {{gradient.bgColor}}</p>
+                    </div>
+                    <div class='col'>
+                      <app-colorpicker
+                        [id]='"bgColor"+gradientIndex'
+                        (colorChange)='changeBackgroundColor($event, gradient)'
+                        [color]='[gradient.bgColor]'></app-colorpicker>
+                    </div>
+                  </div>
+                  <table class='table' aria-label='Colorstops'>
+                    <thead>
+                    <tr>
+                      <th scope='col'>#</th>
+                      <th scope='col'>Position</th>
+                      <th scope='col'>Color</th>
+                      <th scope='col'>Action</th>
+                    </tr>
+                    </thead>
+                    <tbody>
+                    <tr *ngFor='let stop of gradient.colorStops;let stopIndex = index'>
+                      <th scope='row'>{{stopIndex + 1}}</th>
+                      <td colspan='1'>
+                        <nouislider
+                          [name]="'sliderinput' + stopIndex"
+                          [config]='gradient.sliderOptions'
+                          [(ngModel)]='stop.pos'
+                          (slide)='updateOptions()'
+                          #slider
+                        ></nouislider>
+                        <div class='small'>{{stop.pos}}</div>
+                      </td>
+                      <td class='text-center'>
+                        <app-colorpicker
+                          (colorChange)='changeStopColor($event, gradient, stopIndex)'
+                          [id]="gradient.name.split(' ').join('') + stopIndex"
+                          [color]='[stop.color]'
+                        ></app-colorpicker>
+                        {{stop.color}}
+                      </td>
+                      <td class=''>
+                        <div class='d-flex justify-content-end'>
+                          <button class='btn btn-danger'
+                                  (click)='removeColorStop(gradient, stopIndex)'>
+                            <fa-icon [icon]='deleteIcon'></fa-icon>
+                          </button>
+                        </div>
+                      </td>
+                    </tr>
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class='col d-flex flex-column'>
+      <div class='vh-50 py-5 position-sticky sticky-top'>
+        <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
+      </div>
+    </div>
+  </div>
+
+  <div class='container mt-5' *ngIf='jsonEnabled'>
+    <div class='card '>
+      <div class='card-header bg-primary text-white'>JSON</div>
+      <div class='card-body'>
+        <pre>{{this.basicGradients | json}}</pre>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+

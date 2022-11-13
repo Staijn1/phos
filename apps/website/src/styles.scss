@@ -1,1 +1,328 @@
 /* You can add global styles to this file, and also import other style files */
+@import '_variables.scss';
+
+/*--------------------------------------------------------------
+# Scrollbar
+--------------------------------------------------------------*/
+body::-webkit-scrollbar {
+  width: 8px;
+}
+
+body::-webkit-scrollbar-track {
+  background: none;
+}
+
+body::-webkit-scrollbar-thumb {
+  background-color: getColor('secondary');
+  border-radius: 10px;
+  border: 1px solid darken(getColor('secondary'), 5%);
+}
+
+/*--------------------------------------------------------------
+# General
+--------------------------------------------------------------*/
+body {
+  font-family: "Open Sans", sans-serif;
+  color: #272829;
+  overflow-x: hidden;
+}
+
+a {
+  color: getColor('primary');
+
+  &:hover {
+    color: getColor('primary');
+    text-decoration: none !important;
+  }
+}
+
+h1, h3, h4, h5, h6 {
+  font-family: "Comfortaa", sans-serif !important;
+}
+
+h2 {
+  font-family: "Raleway", sans-serif !important;
+}
+
+/*--------------------------------------------------------------
+# Disable aos animation delay on mobile devices
+--------------------------------------------------------------*/
+@media screen and (max-width: 768px) {
+  [data-aos-delay] {
+    transition-delay: 0s !important;
+  }
+}
+
+/*--------------------------------------------------------------
+# Header
+--------------------------------------------------------------*/
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 9997;
+  transition: all 0.5s;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+@media (max-width: 992px) {
+  #header {
+    width: 300px;
+    background: #fff;
+    border-right: 1px solid #e6e9ec;
+    left: -300px;
+  }
+}
+
+@media (min-width: 992px) {
+  #main {
+    margin-left: 100px;
+  }
+}
+
+/*--------------------------------------------------------------
+# Sections General
+--------------------------------------------------------------*/
+
+section {
+  padding: 60px 0;
+  overflow: hidden;
+}
+
+.section-title {
+  text-align: center;
+  padding-bottom: 30px;
+
+  h2 {
+    font-size: 32px;
+    font-weight: bold;
+    text-transform: uppercase;
+    margin-bottom: 20px;
+    padding-bottom: 20px;
+    position: relative;
+    color: #45505b;
+
+    &::before {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 120px;
+      height: 1px;
+      background: #ddd;
+      bottom: 1px;
+      left: calc(50% - 60px);
+    }
+
+    &::after {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 40px;
+      height: 3px;
+      background: getColor('primary');
+      bottom: 0;
+      left: calc(50% - 20px);
+    }
+  }
+
+  p {
+    margin-bottom: 0;
+  }
+}
+
+/*--------------------------------------------------------------
+# Hero Section
+--------------------------------------------------------------*/
+
+#hero {
+  width: 100%;
+  height: 100vh;
+  //background: url("../../../assets/hero-bg.jpg") top right no-repeat;
+  background-size: cover;
+  position: relative;
+
+  &:before {
+    content: "";
+    //background: rgba(255, 255, 255, 0.8);
+    position: absolute;
+    bottom: 0;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+
+  h1 {
+    margin: 0;
+    font-weight: 700;
+    line-height: 56px;
+    color: #45505b;
+  }
+
+  p {
+    color: #45505b;
+    margin: 15px 0 0 0;
+    font-family: "Poppins", sans-serif;
+
+    span {
+      color: getColor('primary');
+      letter-spacing: 1px;
+    }
+  }
+
+  .social-links {
+    margin-top: 30px;
+
+    a {
+      font-size: 24px;
+      display: inline-block;
+      color: #45505b;
+      line-height: 1;
+      margin-right: 20px;
+      transition: 0.3s;
+
+      &:hover {
+        color: getColor('primary');
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  #hero {
+    padding-left: 160px;
+  }
+}
+
+@media (max-width: 992px) {
+  #hero {
+    text-align: center;
+
+    h1 {
+      font-size: 32px;
+      line-height: 36px;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 20px;
+      line-height: 24px;
+    }
+  }
+}
+
+/* Mobile Navigation */
+
+.mobile-nav-toggle {
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  z-index: 9998;
+  border: 0;
+  background: none;
+  font-size: 24px;
+  transition: all 0.4s;
+  outline: none !important;
+  line-height: 1;
+  cursor: pointer;
+  text-align: right;
+
+  fa-icon {
+    color: getColor('secondary');
+  }
+}
+
+.mobile-nav-active {
+  overflow: hidden;
+
+  #header {
+    left: 0;
+  }
+
+  .mobile-nav-toggle fa-icon {
+    color: getColor('primary');
+  }
+}
+
+/*--------------------------------------------------------------
+# No UI Slider
+--------------------------------------------------------------*/
+.noUi-connect {
+  background-color: getColor('secondary') !important;
+}
+
+@function setTextColor($color) {
+  @if (lightness($color) > 50) {
+    @return #212529FF; // Lighter background, return dark color
+  } @else {
+    @return white; // Darker background, return light color
+  }
+}
+
+// Helper theme mixin
+// @param $name: name of the theme (HTML class)
+// @param $color: color of the theme
+@mixin theme($name, $color) {
+  $transition: 0.15s ease-in-out;
+
+  .#{$name}.color-option {
+    background: $color !important;
+    color: setTextColor($color);
+  }
+
+  .#{$name} {
+    #menu-bar {
+      transition: background-color $transition;
+      background: $color !important;
+    }
+
+    #text, #Light_Bulb {
+      stroke: $color !important;
+    }
+
+    .bg-primary, .btn-primary {
+      background: $color !important;
+    }
+
+    .btn-primary {
+      border-color: darken($color, 5%);
+
+      &:hover, &:focus {
+        border-color: darken($color, 10%) !important;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem transparentize($color, 0.5)
+      }
+    }
+
+    .nav-menu {
+      .active > a, li:hover > a {
+        background: $color !important;
+      }
+
+      ul > li {
+        .active {
+          background: $color !important;
+        }
+
+        > a:hover {
+          background: $color !important;
+        }
+      }
+    }
+  }
+}
+
+// Including themes
+// By looping through the $themes map
+@each $key, $value in $themes {
+  @include theme($key, $value);
+}
+
+@import "~nouislider/distribute/nouislider.min.css";
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';

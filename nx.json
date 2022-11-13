@@ -11,8 +11,7 @@
         "cacheableOperations": [
           "build",
           "lint",
-          "test",
-          "e2e"
+          "test"
         ],
         "accessToken": "YzhjNWQ0YWYtNDEyNS00MzRmLWFjMDctMGY2NGMwN2U3M2U4fHJlYWQtd3JpdGU="
       }
@@ -33,12 +32,6 @@
         "default",
         "^production",
         "{workspaceRoot}/jest.preset.js"
-      ]
-    },
-    "e2e": {
-      "inputs": [
-        "default",
-        "^production"
       ]
     },
     "lint": {
