@@ -1,6 +1,6 @@
 import {Component, Input, OnDestroy, OnInit} from '@angular/core'
 import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
-import {GradientInformation} from '../../types/GradientInformation'
+import {GradientInformation} from "@angulon/interfaces";
 
 @Component({
   selector: 'app-shared-visualizer',

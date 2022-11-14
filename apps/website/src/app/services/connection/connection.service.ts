@@ -2,11 +2,10 @@ import {Injectable} from '@angular/core'
 import {Connection} from '../../shared/interfaces/Connection'
 import {WebsocketService} from '../websocketconnection/websocket.service'
 import {HTTPConnectionService} from '../httpconnection/httpconnection.service'
-import {ModeInformation} from '../../shared/types/ModeInformation'
-import {GradientInformation, GradientInformationExtended} from '../../shared/types/GradientInformation'
 import iro from '@jaames/iro'
 import {ErrorService} from '../error/error.service'
 import {gradientList} from '../../data/gradients';
+import {GradientInformation, GradientInformationExtended, ModeInformation} from "@angulon/interfaces";
 
 @Injectable({
   providedIn: 'root'
@@ -121,7 +120,7 @@ export class ConnectionService extends Connection {
    */
   async editGradient(gradient: GradientInformationExtended): Promise<void> {
     try {
-      await this.apiService.editGradient(gradient)
+      await this.apiService.editGradient(gradient as GradientInformation)
     } catch (error: any) {
       this.errorService.setError(error)
     }
@@ -134,7 +133,7 @@ export class ConnectionService extends Connection {
    */
   async removeGradient(gradient: GradientInformationExtended): Promise<GradientInformation[]> {
     try {
-      return await this.apiService.removeGradient(gradient)
+      return await this.apiService.removeGradient(gradient as GradientInformation)
     } catch (error: any) {
       this.errorService.setError(error)
       return this.getGradients()
@@ -148,7 +147,7 @@ export class ConnectionService extends Connection {
    */
   async addGradient(newGradient: GradientInformationExtended): Promise<GradientInformation[]> {
     try {
-      return await this.apiService.addGradient(newGradient)
+      return await this.apiService.addGradient(newGradient as GradientInformation)
     } catch (error: any) {
       this.errorService.setError(error)
       return this.getGradients();

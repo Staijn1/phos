@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core'
 import {Connection} from '../../shared/interfaces/Connection'
-import {ModeInformation} from '../../shared/types/ModeInformation'
-import {GradientInformation} from '../../shared/types/GradientInformation'
 import iro from '@jaames/iro'
 import {environment} from '../../../environments/environment'
 import {ErrorService} from '../error/error.service'
+import {GradientInformation, ModeInformation} from "@angulon/interfaces";
 
 @Injectable({
   providedIn: 'root',

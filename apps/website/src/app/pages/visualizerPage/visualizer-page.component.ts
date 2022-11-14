@@ -9,8 +9,8 @@ import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.ser
 import {SettingsService} from '../../services/settings/settings.service'
 import {ConnectionService} from '../../services/connection/connection.service'
 import {TimelineMax} from 'gsap'
-import {GradientInformation} from '../../shared/types/GradientInformation'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
+import {GradientInformation} from "@angulon/interfaces";
 
 @Component({
   selector: 'app-visualizer',

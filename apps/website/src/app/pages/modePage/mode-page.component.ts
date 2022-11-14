@@ -12,9 +12,9 @@ import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state'
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
 import {ConnectionService} from '../../services/connection/connection.service'
-import {ModeInformation} from '../../shared/types/ModeInformation'
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
 import {VisualizerBrightnessState} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
+import {ModeInformation} from "@angulon/interfaces";
 
 
 @Component({

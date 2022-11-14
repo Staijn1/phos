@@ -11,3 +11,8 @@ export interface GradientInformation
   name: string
   id: number
 }
+
+export interface GradientInformationExtended extends GradientInformation {
+  collapsed?: boolean;
+  sliderOptions: any;
+}
