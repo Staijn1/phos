@@ -51,31 +51,19 @@ export class WebsocketClientsManagerService {
   }
 
   /**
-   * Decrease the brightness of the ledstrips
+   * Set the brightness of all clients
+   * @param brightness
    */
-  decreaseBrightness(): void {
-    this.sendAllClients('b')
+  setBrightness(brightness: number): void {
+    this.sendAllClients(`% ${brightness}`)
   }
 
   /**
-   * Increase the brightness of the ledstrips
+   * Set the speed of the ledstrips
+   * @param {number} speed
    */
-  increaseBrightness(): void {
-    this.sendAllClients('B')
-  }
-
-  /**
-   * Increase the speed of the ledstrips
-   */
-  increaseSpeed(): void {
-    this.sendAllClients('S')
-  }
-
-  /**
-   * Decrease the speed of the ledstrips
-   */
-  decreaseSpeed(): void {
-    this.sendAllClients('s')
+  setSpeed(speed: number): void {
+    this.sendAllClients(`? ${speed}`)
   }
 
   /**

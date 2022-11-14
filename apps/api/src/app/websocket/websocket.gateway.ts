@@ -13,26 +13,27 @@ import {WebsocketClientsManagerService} from "./websocket-clients-manager.servic
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private server: Server;
+
   constructor(private readonly websocketClientsManagerService: WebsocketClientsManagerService) {
   }
 
   private logger: Logger = new Logger('WebsocketGateway');
 
   @SubscribeMessage('mode')
-  onMode(client: Socket, payload: number): string {
+  onModeCommand(client: Socket, payload: number): string {
     this.websocketClientsManagerService.setMode(payload);
     return 'OK';
   }
 
-  @SubscribeMessage('brightness/increase')
-  onBrightnessIncrease(client: Socket, payload: number): string {
-    this.websocketClientsManagerService.increaseBrightness();
+  @SubscribeMessage('brightness')
+  onBrightnessCommand(client: Socket, payload: number): string {
+    this.websocketClientsManagerService.setBrightness(payload);
     return 'OK';
   }
 
-  @SubscribeMessage('brightness/decrease')
-  onBrightnessDecrease(client: Socket, payload: number): string {
-    this.websocketClientsManagerService.decreaseBrightness();
+  @SubscribeMessage('speed')
+  onSpeedCommand(client: Socket, payload: number): string {
+    this.websocketClientsManagerService.setSpeed(payload);
     return 'OK';
   }
 
