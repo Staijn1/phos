@@ -1,5 +1,4 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, Output, Renderer2} from '@angular/core'
-import {ElectronService} from '../../../services/electron/electron.service'
 import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons'
 import {TimelineLite} from 'gsap'
 import {NavigationEnd, Router} from '@angular/router'
@@ -51,7 +50,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   editor = faEdit
   visualizer3D = faCubes;
   // private window: Electron.BrowserWindow | undefined;
-  private window: any | undefined;
   private animationMode = 0;
   private timeline!: TimelineLite;
 
@@ -59,7 +57,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
 
   constructor(
-    public electronService: ElectronService,
     private colorService: ColorService,
     public connection: ConnectionService,
     private router: Router,
@@ -68,10 +65,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   }
 
   ngOnInit(): void {
-    if (this.electronService.isElectron()) {
-      this.window = this.electronService.remote.getCurrentWindow()
-    }
-
     this.router.events.subscribe((val) => {
       if (val instanceof NavigationEnd) {
         this.animate()
@@ -102,24 +95,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.mobileMenu = faTimes
     this.renderer.addClass(document.body, 'mobile-nav-active')
     this.isOpen = true
-  }
-
-  exitButtonAction(): void {
-    this.window.close()
-  }
-
-  minimizeButtonAction(): void {
-    this.window.minimize()
-  }
-
-  maximizeButtonAction(): void {
-    if (this.window.isMaximized()) {
-      this.window.unmaximize()
-      this.maximize = faSquare
-    } else {
-      this.window.maximize()
-      this.maximize = faClone
-    }
   }
 
   private animationFromLeft(anime: TimelineLite): TimelineLite {

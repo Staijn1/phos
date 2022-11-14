@@ -3,7 +3,7 @@ import {color_wheel, randomInteger} from '../../../../shared/functions'
 
 export class MultiDynamicState extends State {
     private headsetColors = [0, 0, 0, 0, 0];
-    private interval;
+    private interval: string | number | NodeJS.Timeout | undefined;
 
 
     handle(): void {

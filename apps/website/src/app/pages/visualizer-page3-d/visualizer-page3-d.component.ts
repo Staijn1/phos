@@ -11,10 +11,10 @@ import {SphereLightScene} from './scenes/SphereLightScene'
   styleUrls: ['./visualizer-page3-d.component.scss']
 })
 export class VisualizerPage3DComponent implements AfterViewInit, OnDestroy {
-  @ViewChild('threeContainer') threeContainer: ElementRef;
-  private scene: BaseScene;
-  scenes = []
-  selectedScene: number;
+  @ViewChild('threeContainer') threeContainer!: ElementRef;
+  private scene: BaseScene | undefined;
+  scenes: { name: string, action: BaseScene }[] = []
+  selectedScene = 0;
 
   constructor(private readonly connection: ConnectionService, private readonly settingsService: SettingsService) {
   }
@@ -23,7 +23,10 @@ export class VisualizerPage3DComponent implements AfterViewInit, OnDestroy {
     this.selectedScene = 0
     this.scenes = [
       {name: 'Sphere Scene', action: new SphereScene(this.threeContainer, this.connection, this.settingsService)},
-      {name: 'Sphere Light Scene', action: new SphereLightScene(this.threeContainer, this.connection, this.settingsService)}
+      {
+        name: 'Sphere Light Scene',
+        action: new SphereLightScene(this.threeContainer, this.connection, this.settingsService)
+      }
     ]
     this.scene = this.scenes[this.selectedScene].action
     this.scene.init()
@@ -31,7 +34,7 @@ export class VisualizerPage3DComponent implements AfterViewInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.scene.uninit()
+    this.scene?.uninit()
     this.scene = undefined
   }
 

@@ -4,7 +4,7 @@ import iro from '@jaames/iro'
 
 export class RainbowState extends State {
     private counter = 0;
-    private interval: NodeJS.Timeout;
+    private interval: string | number | NodeJS.Timer | undefined;
 
     onExit(): void {
         this.reset()

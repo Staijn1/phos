@@ -25,7 +25,7 @@ export class GradientEditorPageComponent implements OnDestroy {
   load = faFileDownload
   deleteIcon = faTrash
   collapseIcon = faAngleLeft
-  currentActiveGradientID: number = 0
+  currentActiveGradientID = 0
 
   private defaultSliderOptions = {
     animate: true,
@@ -34,7 +34,7 @@ export class GradientEditorPageComponent implements OnDestroy {
     connect: [true, false],
   }
   addIcon = faPlus
-  jsonEnabled: boolean = false
+  jsonEnabled = false
   readonly amountClickLimit = 10
   clicked = 0
   basicGradients: GradientInformation[] = []
@@ -48,7 +48,7 @@ export class GradientEditorPageComponent implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.gradients = undefined
+    this.gradients = []
   }
 
   changeGradient(gradient: GradientInformation): void {
@@ -186,7 +186,7 @@ export class GradientEditorPageComponent implements OnDestroy {
     }).then(() => this.changeGradient(newGradient))
   }
 
-  onNameChange(innerHTML: string, gradient: GradientInformationExtended) {
-    gradient.name = innerHTML
+  onNameChange(innerHTML: EventTarget, gradient: GradientInformationExtended) {
+    gradient.name = (innerHTML as HTMLElement).innerHTML
   }
 }

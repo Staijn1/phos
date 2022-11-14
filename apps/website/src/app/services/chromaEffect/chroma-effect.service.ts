@@ -10,7 +10,7 @@ import {VisualizerState} from './state/visualizer-state/visualizer-state'
     providedIn: 'root'
 })
 export class ChromaEffectService extends ChromaSDKService {
-    _setColors: iro.Color[];
+    _setColors: iro.Color[] = [];
     private _state: State;
     private _speed = 1000;
 

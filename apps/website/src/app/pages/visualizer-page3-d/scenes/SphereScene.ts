@@ -8,14 +8,9 @@ import {degToRad} from 'three/src/math/MathUtils'
 import {SettingsService} from '../../../services/settings/settings.service'
 
 export class SphereScene extends BaseScene {
-  private upperPane: Mesh<PlaneGeometry, MeshBasicMaterial>;
-  private bottomPane: Mesh<PlaneGeometry, MeshLambertMaterial>;
-  private ball: Mesh<IcosahedronGeometry, MeshLambertMaterial>;
-
-
-  constructor(readonly threeContainer: ElementRef, readonly connection: ConnectionService, readonly settingsService: SettingsService) {
-    super(threeContainer, connection, settingsService)
-  }
+  private upperPane!: Mesh<PlaneGeometry, MeshBasicMaterial>;
+  private bottomPane!: Mesh<PlaneGeometry, MeshLambertMaterial>;
+  private ball!: Mesh<IcosahedronGeometry, MeshLambertMaterial>;
 
   private setupPanes(): void {
     // Objects
@@ -32,12 +27,12 @@ export class SphereScene extends BaseScene {
     this.upperPane = new THREE.Mesh(planeGeometry, planeMaterial)
     this.upperPane.rotation.x = -0.5 * Math.PI
     this.upperPane.position.set(0, 30, 0)
-    this.scene.add(this.upperPane)
+    this.scene?.add(this.upperPane)
 
     this.bottomPane = new THREE.Mesh(planeGeometry, planeMaterial)
     this.bottomPane.rotation.x = -0.5 * Math.PI
     this.bottomPane.position.set(0, -30, 0)
-    this.scene.add(this.bottomPane)
+    this.scene?.add(this.bottomPane)
   }
 
   private setupLights(): void {
@@ -47,7 +42,7 @@ export class SphereScene extends BaseScene {
     spotLight.position.set(-5, 51, 49)
     spotLight.lookAt(this.ball.position)
 
-    this.scene.add(spotLight)
+    this.scene?.add(spotLight)
 
     this.gui.add(spotLight, 'intensity').min(0).max(3).step(0.1).name('Intensity')
 
@@ -69,7 +64,7 @@ export class SphereScene extends BaseScene {
     })
     this.ball = new THREE.Mesh(icosahedronGeometry, lambertMaterial)
     this.ball.position.set(0, 0, 0)
-    this.scene.add(this.ball)
+    this.scene?.add(this.ball)
   }
 
   private animateBall(mesh: Mesh<IcosahedronGeometry, MeshLambertMaterial>) {
@@ -88,7 +83,7 @@ export class SphereScene extends BaseScene {
       vertex.multiplyScalar(distance)
       positionAttribute.setXYZ(vertexIndex, vertex.x, vertex.y, vertex.z)
     }
-    mesh.geometry.attributes.position.needsUpdate = true
+    mesh.geometry.attributes['position'].needsUpdate = true
 
     mesh.rotateX(degToRad(0.15))
     mesh.rotateZ(degToRad(0.07))
@@ -106,7 +101,7 @@ export class SphereScene extends BaseScene {
       vertex.z = distance
       positionAttribute.setXYZ(vertexIndex, vertex.x, vertex.y, vertex.z)
     }
-    mesh.geometry.attributes.position.needsUpdate = true // required after the first render
+    mesh.geometry.attributes['position'].needsUpdate = true // required after the first render
   }
 
   protected setup() {
@@ -117,6 +112,7 @@ export class SphereScene extends BaseScene {
   }
 
   private setupCamera() {
+    if (!this.scene) return
     this.camera.position.set(0, 4, 64)
     this.camera.lookAt(this.scene.position)
     this.scene.add(this.camera)

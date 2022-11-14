@@ -3,7 +3,7 @@ import {calculateBGRInteger} from '../../../../shared/functions'
 import iro from '@jaames/iro'
 
 export class BlinkState extends State {
-    blinkEffect;
+    blinkEffect: string | number | NodeJS.Timeout | undefined;
     counter = 0;
 
     handle(colors: iro.Color[]): void {

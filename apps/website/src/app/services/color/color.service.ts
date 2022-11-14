@@ -38,7 +38,7 @@ export class ColorService {
         this.connection.setColor(this.picker.colors)
         this.chromaEffect.setColors = this.picker.colors
       })
-      this.picker.on('input:end', (iroColor) => {
+      this.picker.on('input:end', (iroColor: iro.Color) => {
         const settings = this.settingsService.readGeneralSettings()
         settings.colors = this.settingsService.convertColors(this.picker.colors)
         this.settingsService.saveGeneralSettings(settings)

@@ -2,7 +2,7 @@ import {State} from '../abstract/state'
 import {color_wheel, randomInteger} from '../../../../shared/functions'
 
 export class SingleDynamicState extends State {
-    private interval;
+    private interval: string | number | NodeJS.Timeout | undefined;
     private headsetColors = [0, 0, 0, 0, 0];
 
 

@@ -1,18 +1,3 @@
-<div id='menu-bar' *ngIf='this.electronService.isElectron()'>
-    <div class='left'></div>
-    <div class='right'>
-        <button (click)='minimizeButtonAction()' class='menubar-btn' id='minimize-btn'>
-            <fa-icon [icon]='minimize'></fa-icon>
-        </button>
-        <button (click)='maximizeButtonAction()' class='menubar-btn' id='max-unmax-btn'>
-            <fa-icon [icon]='maximize'></fa-icon>
-        </button>
-        <button (click)='exitButtonAction()' class='menubar-btn' id='close-btn'>
-            <fa-icon [icon]='exit'></fa-icon>
-        </button>
-    </div>
-</div>
-
 <!-- ======= Mobile nav toggle button ======= -->
 <button (click)='mobileNav()' class='mobile-nav-toggle d-lg-none mt-4' type='button'>
     <fa-icon [icon]='mobileMenu'></fa-icon>

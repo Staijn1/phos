@@ -13,8 +13,8 @@ import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
 import {ConnectionService} from '../../services/connection/connection.service'
 import {ModeInformation} from '../../shared/types/ModeInformation'
-import {VisualizerBrightnessState,} from 'src/app/services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state'
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
+import {VisualizerBrightnessState} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
 
 
 @Component({
@@ -23,7 +23,7 @@ import {VisualizerState} from '../../services/chromaEffect/state/visualizer-stat
   styleUrls: ['./mode-page.component.scss'],
 })
 export class ModePageComponent implements OnInit, OnDestroy {
-  modes: ModeInformation[] | undefined;
+  modes: ModeInformation[] = [];
   chromaEffects = [
     {name: 'Rainbow', state: new RainbowState()},
     {name: 'Rainbow Cycle', state: new RainbowCycleState()},
@@ -46,7 +46,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.modes = undefined
+    this.modes = []
   }
 
   ngOnInit(): void {
@@ -83,7 +83,9 @@ export class ModePageComponent implements OnInit, OnDestroy {
     this.connection.setMode(id)
 
     const state = this.chromaEffects.find(stateToCompare => {
-      return stateToCompare.name.toLowerCase() === this.modes[id].name.toLowerCase()
+      const mode = this.modes[id];
+      if(!mode) return false;
+      return stateToCompare.name.toLowerCase() === mode.name?.toLowerCase()
     })
 
     this.chromaService.state = state === undefined ? new StaticState() : state.state

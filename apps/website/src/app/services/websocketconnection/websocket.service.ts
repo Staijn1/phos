@@ -13,12 +13,12 @@ import * as Events from 'reconnecting-websocket/events'
 export class WebsocketService extends Connection {
   websocketUrl = environment.websockUrl
   private socket: ReconnectingWebSocket;
-  private colorTimeout: NodeJS.Timeout;
+  private colorTimeout!: NodeJS.Timeout;
 
   constructor(errorService: ErrorService) {
     super()
     this.socket = new ReconnectingWebSocket(this.websocketUrl)
-    this.socket.onopen = (ev: Event) => {
+    this.socket.onopen = (ev: any) => {
       console.log(`Opened websocket at`, (ev.currentTarget as WebSocket).url)
     }
     this.socket.onerror = (ev: Events.ErrorEvent) => {

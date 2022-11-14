@@ -9,11 +9,12 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
+        "no-empty-function": "off",
         "@angular-eslint/directive-selector": [
           "error",
           {
             "type": "attribute",
-            "prefix": "angulon",
+            "prefix": "app",
             "style": "camelCase"
           }
         ],
@@ -21,7 +22,7 @@
           "error",
           {
             "type": "element",
-            "prefix": "angulon",
+            "prefix": "app",
             "style": "kebab-case"
           }
         ]

@@ -5,9 +5,9 @@ import iro from '@jaames/iro'
 export class VisualizerState extends State {
   protected _intensity = 0;
   protected visualizerCounter = 0;
-  protected _BGRIntegerForeground;
-  protected _previousBGRIntegerForeground;
-  protected _previousIntensity: number;
+  protected _BGRIntegerForeground!: number;
+  protected _previousBGRIntegerForeground!: number;
+  protected _previousIntensity!: number;
 
   handle(colors: iro.Color[]): void {
     if (!colors) return

@@ -10,9 +10,9 @@ import Color = iro.Color;
 })
 export class ColorpickerComponent implements AfterViewInit {
   @Input() id: string = 'colorpicker'
-  @Input() color: string[]
+  @Input() color!: string[]
   @Output() colorChange = new EventEmitter<Color>()
-  private picker: IroColorPicker
+  private picker!: IroColorPicker
 
   ngAfterViewInit(): void {
     try {

@@ -11,8 +11,8 @@ import {ErrorService} from '../error/error.service'
 })
 export class HTTPConnectionService extends Connection {
   readonly url = environment.url;
-  private brightness: number;
-  private speed: number;
+  private brightness!: number;
+  private speed!: number;
 
   constructor(errorService: ErrorService) {
     super()

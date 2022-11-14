@@ -29,7 +29,7 @@ export abstract class BaseScene {
   }
   protected audioMotion: AudioMotionAnalyzer | undefined;
 
-  protected constructor(protected threeContainer: ElementRef, protected readonly connection: ConnectionService, protected readonly settingsService: SettingsService) {
+  public constructor(protected threeContainer: ElementRef, protected readonly connection: ConnectionService, protected readonly settingsService: SettingsService) {
     Object.freeze(this.frequencyLimits)
   }
 

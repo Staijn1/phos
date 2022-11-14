@@ -23,32 +23,32 @@ export class ConnectionService extends Connection {
   decreaseBrightness(): void {
     try {
       this.apiService.decreaseBrightness()
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
     }
   }
 
   decreaseSpeed(): void {
     try {
       this.apiService.decreaseSpeed()
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
     }
   }
 
   increaseBrightness(): void {
     try {
       this.apiService.increaseBrightness()
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
     }
   }
 
   increaseSpeed(): void {
     try {
       this.apiService.increaseSpeed()
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
     }
   }
 
@@ -59,8 +59,8 @@ export class ConnectionService extends Connection {
   setColor(colors: iro.Color[] | string[]): void {
     try {
       this.websocketService.setColor(colors)
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
     }
   }
 
@@ -71,8 +71,8 @@ export class ConnectionService extends Connection {
   setLeds(amount: number): void {
     try {
       this.websocketService.setLeds(amount)
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
     }
   }
 
@@ -83,8 +83,8 @@ export class ConnectionService extends Connection {
   setMode(mode: number): void {
     try {
       this.apiService.setMode(mode)
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
     }
   }
 
@@ -95,8 +95,9 @@ export class ConnectionService extends Connection {
   async getModes(): Promise<ModeInformation[]> {
     try {
       return await this.apiService.getModes()
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
+      return []
     }
   }
 
@@ -107,8 +108,9 @@ export class ConnectionService extends Connection {
   async getGradients(): Promise<GradientInformation[]> {
     try {
       return Promise.resolve(gradientList as GradientInformation[])
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
+      return []
     }
   }
 
@@ -120,8 +122,8 @@ export class ConnectionService extends Connection {
   async editGradient(gradient: GradientInformationExtended): Promise<void> {
     try {
       await this.apiService.editGradient(gradient)
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
     }
   }
 
@@ -133,8 +135,9 @@ export class ConnectionService extends Connection {
   async removeGradient(gradient: GradientInformationExtended): Promise<GradientInformation[]> {
     try {
       return await this.apiService.removeGradient(gradient)
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
+      return this.getGradients()
     }
   }
 
@@ -146,8 +149,9 @@ export class ConnectionService extends Connection {
   async addGradient(newGradient: GradientInformationExtended): Promise<GradientInformation[]> {
     try {
       return await this.apiService.addGradient(newGradient)
-    } catch (error) {
-     this.errorService.setError(error)
+    } catch (error: any) {
+      this.errorService.setError(error)
+      return this.getGradients();
     }
   }
 }

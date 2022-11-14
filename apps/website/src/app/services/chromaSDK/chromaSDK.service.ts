@@ -61,7 +61,7 @@ export class ChromaSDKService {
     ],
     category: 'application'
   };
-  private timerId: NodeJS.Timeout;
+  private timerId!: NodeJS.Timeout;
 
   constructor(private settingsService: SettingsService) {
     if (this.isChromaSupport()) {
@@ -75,7 +75,7 @@ export class ChromaSDKService {
     }
   }
 
-  private initializedApiURL;
+  private initializedApiURL: string | undefined;
 
   set setInitializedApiURL(newApiUrl: string) {
     this.initializedApiURL = newApiUrl
@@ -114,7 +114,7 @@ export class ChromaSDKService {
     })
   }
 
-  async createKeyboardEffect(effect, data): Promise<any> {
+  async createKeyboardEffect(effect: string, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return
     }
@@ -143,7 +143,7 @@ export class ChromaSDKService {
     return response.json()
   }
 
-  async createMouseEffect(effect, data): Promise<any> {
+  async createMouseEffect(effect: string, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return
     }
@@ -185,7 +185,7 @@ export class ChromaSDKService {
     return response.json()
   }
 
-  async createHeadsetEffect(effect, data): Promise<any> {
+  async createHeadsetEffect(effect: string, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return
     }

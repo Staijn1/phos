@@ -3,7 +3,7 @@ import iro from '@jaames/iro'
 
 
 export abstract class State {
-    protected _context: ChromaEffectService;
+    protected _context!: ChromaEffectService;
 
     protected update(newState: State): void {
         this._context.state = newState

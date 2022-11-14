@@ -8,7 +8,7 @@ import {DeviceDetectorService} from 'ngx-device-detector'
   styleUrls: ['./home-page.component.scss']
 })
 export class HomePageComponent implements OnInit {
-  timeline: TimelineLite;
+  timeline!: TimelineLite;
 
   constructor(private readonly deviceService: DeviceDetectorService) {
   }

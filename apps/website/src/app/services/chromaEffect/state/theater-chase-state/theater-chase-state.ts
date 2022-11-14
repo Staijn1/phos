@@ -4,7 +4,7 @@ import {GlobalVars} from '../../../../shared/constants'
 import iro from '@jaames/iro'
 
 export class TheaterChaseState extends State {
-    effect;
+    effect: string | number | NodeJS.Timeout | undefined;
     private counter = 0;
 
     handle(colors: iro.Color[]): void {
@@ -49,7 +49,7 @@ export class TheaterChaseState extends State {
     }
 
     onEntry(): void {
-        this.effect = clearInterval()
+        clearInterval(this.effect)
         this.effect = undefined
     }
 

@@ -7,6 +7,6 @@ export interface GradientInformation extends GradientOptions {
 
 
 export interface GradientInformationExtended extends GradientInformation {
-  collapsed: boolean;
+  collapsed?: boolean;
   sliderOptions: any;
 }

@@ -4,7 +4,7 @@ import {calculateBGRInteger, map} from '../../../../shared/functions'
 
 export class VisualizerBrightnessState extends VisualizerState {
 
-  handle(colors: iro.Color[]): void {
+  override handle(colors: iro.Color[]): void {
     if (!colors) return
 
     map(this._intensity, 0, 1, 0, 255, true)
@@ -13,7 +13,7 @@ export class VisualizerBrightnessState extends VisualizerState {
     this.createVisualizer(colors)
   }
 
-  createVisualizer(colors: iro.Color[], backgroundColor = 0): void {
+  override createVisualizer(colors: iro.Color[], backgroundColor = 0): void {
     this._BGRIntegerForeground = calculateBGRInteger(colors[0].red, colors[0].green, colors[0].blue)
     this.visualizerCounter++
 
@@ -30,7 +30,7 @@ export class VisualizerBrightnessState extends VisualizerState {
     this._previousBGRIntegerForeground = this._BGRIntegerForeground
   }
 
-  createMouseVisualizer(backgroundColor: number) {
+ override createMouseVisualizer(backgroundColor: number) {
     // Mouse
     const mouseLed = new Array(9)
     for (let r = 0; r < 9; r++) {
@@ -55,7 +55,7 @@ export class VisualizerBrightnessState extends VisualizerState {
     this._context.createMouseEffect('CHROMA_CUSTOM2', mouseLed).then()
   }
 
-  createKeyBoardVisualizer(backgroundColor: number) {
+  override createKeyBoardVisualizer(backgroundColor: number) {
     const color = new Array(6)
     const key = new Array(6)
     for (let r = 0; r < 6; r++) {
@@ -72,21 +72,20 @@ export class VisualizerBrightnessState extends VisualizerState {
     this._context.createKeyboardEffect('CHROMA_CUSTOM_KEY', data).then()
   }
 
-  createHeadsetVisualizer() {
+ override createHeadsetVisualizer() {
     if (this._BGRIntegerForeground !== this._previousBGRIntegerForeground) {
       this._context.createHeadsetEffect('CHROMA_STATIC', this._BGRIntegerForeground).then()
     }
   }
 
-  set intensity(value: number) {
+  override set intensity(value: number) {
     this._previousIntensity = this._intensity
     this._intensity = value
   }
 
-  onEntry(): void {
-    console.log('Hl')
+  override onEntry(): void {
   }
 
-  onExit(): void {
+  override onExit(): void {
   }
 }
