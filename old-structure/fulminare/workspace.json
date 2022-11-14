@@ -1,7 +1,0 @@
-{
-  "version": 2,
-  "projects": {
-    "api": "apps/api",
-    "front-end": "apps/front-end"
-  }
-}
