@@ -15,7 +15,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   @Input() set options(options: Options) {
     this._options = {
       ...options,
-      ...{ volume: 0, gradient: "rainbow" },
+      ...{volume: 0, gradient: "rainbow"},
     }
     this.updateOptions()
   }
@@ -45,7 +45,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   }
 
   private setSource(): void {
-    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
+    navigator.mediaDevices.getUserMedia({audio: true, video: false})
       .then(stream => {
         if (!this.audioMotion) return;
         const audioCtx = this.audioMotion.audioCtx

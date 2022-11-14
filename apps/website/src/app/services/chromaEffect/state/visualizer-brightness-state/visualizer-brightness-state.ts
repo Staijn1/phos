@@ -30,7 +30,7 @@ export class VisualizerBrightnessState extends VisualizerState {
     this._previousBGRIntegerForeground = this._BGRIntegerForeground
   }
 
- override createMouseVisualizer(backgroundColor: number) {
+  override createMouseVisualizer(backgroundColor: number) {
     // Mouse
     const mouseLed = new Array(9)
     for (let r = 0; r < 9; r++) {
@@ -72,7 +72,7 @@ export class VisualizerBrightnessState extends VisualizerState {
     this._context.createKeyboardEffect('CHROMA_CUSTOM_KEY', data).then()
   }
 
- override createHeadsetVisualizer() {
+  override createHeadsetVisualizer() {
     if (this._BGRIntegerForeground !== this._previousBGRIntegerForeground) {
       this._context.createHeadsetEffect('CHROMA_STATIC', this._BGRIntegerForeground).then()
     }

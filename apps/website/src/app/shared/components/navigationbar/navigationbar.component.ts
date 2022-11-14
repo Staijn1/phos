@@ -1,5 +1,5 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, Output, Renderer2} from '@angular/core'
-import {faClone, faSquare} from '@fortawesome/free-regular-svg-icons'
+import {faSquare} from '@fortawesome/free-regular-svg-icons'
 import {TimelineLite} from 'gsap'
 import {NavigationEnd, Router} from '@angular/router'
 

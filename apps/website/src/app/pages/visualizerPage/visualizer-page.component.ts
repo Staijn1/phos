@@ -25,17 +25,17 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
   gradients: GradientInformation[] = []
   // Visualization modes
   modes = [
-    { value: 0, text: 'Discrete frequencies', disabled: false },
-    { value: 10, text: 'Area graph', disabled: false },
-    { value: 11, text: 'Line graph', disabled: false },
-    { value: 1, text: '1/24th octave bands', disabled: false },
-    { value: 2, text: '1/12th octave bands', disabled: false },
-    { value: 3, text: '1/8th octave bands', disabled: false },
-    { value: 4, text: '1/6th octave bands', disabled: false },
-    { value: 5, text: '1/4th octave bands', disabled: false },
-    { value: 6, text: '1/3rd octave bands', disabled: false },
-    { value: 7, text: 'Half octave bands', disabled: false },
-    { value: 8, text: 'Full octave bands', disabled: false },
+    {value: 0, text: 'Discrete frequencies', disabled: false},
+    {value: 10, text: 'Area graph', disabled: false},
+    {value: 11, text: 'Line graph', disabled: false},
+    {value: 1, text: '1/24th octave bands', disabled: false},
+    {value: 2, text: '1/12th octave bands', disabled: false},
+    {value: 3, text: '1/8th octave bands', disabled: false},
+    {value: 4, text: '1/6th octave bands', disabled: false},
+    {value: 5, text: '1/4th octave bands', disabled: false},
+    {value: 6, text: '1/3rd octave bands', disabled: false},
+    {value: 7, text: 'Half octave bands', disabled: false},
+    {value: 8, text: 'Full octave bands', disabled: false},
   ]
 
   smoothingConfig = {
@@ -109,7 +109,7 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
 
   ngOnInit(): void {
     if (localStorage.getItem('dismissedSettingsPopup') !== 'true') {
-      this.timeline.to('#overlay', { duration: 1, opacity: 1 }, '+=1.8')
+      this.timeline.to('#overlay', {duration: 1, opacity: 1}, '+=1.8')
     } else {
       this.dismissOverlay()
     }
@@ -253,12 +253,12 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
   }
 
   scroll(el: HTMLDivElement): void {
-    el.scrollIntoView({ behavior: 'smooth' })
+    el.scrollIntoView({behavior: 'smooth'})
   }
 
   dismissOverlay(): void {
-    this.timeline.to('#overlay', { duration: 1, opacity: 0 })
-    this.timeline.to('#overlay', { duration: 0.5, visibility: 'hidden' })
+    this.timeline.to('#overlay', {duration: 1, opacity: 0})
+    this.timeline.to('#overlay', {duration: 0.5, visibility: 'hidden'})
     localStorage.setItem('dismissedSettingsPopup', 'true')
   }
 

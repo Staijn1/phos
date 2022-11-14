@@ -25,7 +25,7 @@ export class ColorpickerComponent implements AfterViewInit {
         wheelAngle: 90,
         colors: this.color,
       })
-      this.picker.on('color:change', (color: Color ) => {
+      this.picker.on('color:change', (color: Color) => {
         this.colorChange.emit(color)
       })
     } catch (e) {

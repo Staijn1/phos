@@ -67,8 +67,8 @@
           </div>
           <!--                Smooth slider-->
           <div class='col d-flex flex-column'>
-<!--            <nouislider (update)='updateOptions()' [(ngModel)]='visualizerOptions.smoothing'-->
-<!--                        [config]='smoothingConfig'></nouislider>-->
+            <!--            <nouislider (update)='updateOptions()' [(ngModel)]='visualizerOptions.smoothing'-->
+            <!--                        [config]='smoothingConfig'></nouislider>-->
             <p class='small text-dark'>Smoothing: {{visualizerOptions.smoothing}}</p>
           </div>
         </div>
@@ -107,8 +107,8 @@
           </div>
           <!--                Frequency slider-->
           <div class='col flex-column'>
-<!--            <nouislider (slide)='changeFrequencyLimit()' [(ngModel)]='frequencyLimits'-->
-<!--                        [config]='frequencyLimitsConfig'></nouislider>-->
+            <!--            <nouislider (slide)='changeFrequencyLimit()' [(ngModel)]='frequencyLimits'-->
+            <!--                        [config]='frequencyLimitsConfig'></nouislider>-->
             <p class='small text-dark'>Minimum: {{frequencyLimits[0]}}</p>
             <p class='small text-dark'>Maximum: {{frequencyLimits[1]}}</p>
           </div>
@@ -116,9 +116,9 @@
         <div class='row'>
           <!--                    Spin speed if radial is active-->
           <div class='col-4 offset-8'>
-<!--            <nouislider (slide)='updateOptions()' *ngIf='this.visualizerOptions.radial'-->
-<!--                        [(ngModel)]='this.visualizerOptions.spinSpeed'-->
-<!--                        [config]='spinSpeedConfig'></nouislider>-->
+            <!--            <nouislider (slide)='updateOptions()' *ngIf='this.visualizerOptions.radial'-->
+            <!--                        [(ngModel)]='this.visualizerOptions.spinSpeed'-->
+            <!--                        [config]='spinSpeedConfig'></nouislider>-->
             <p *ngIf='this.visualizerOptions.radial' class='small text-dark'>Spin
               speed: {{this.visualizerOptions.spinSpeed}}</p>
           </div>
@@ -126,18 +126,18 @@
 
         <div class='row'>
           <div *ngIf="modeSelect.value === '11'" class='col-4 offset-8'>
-<!--            <nouislider (slide)='updateOptions()'-->
-<!--                        [(ngModel)]='this.visualizerOptions.lineWidth'-->
-<!--                        [config]='lineWidthConfig'></nouislider>-->
+            <!--            <nouislider (slide)='updateOptions()'-->
+            <!--                        [(ngModel)]='this.visualizerOptions.lineWidth'-->
+            <!--                        [config]='lineWidthConfig'></nouislider>-->
             <p class='small text-dark'>
               Line width: {{this.visualizerOptions.lineWidth}}</p>
           </div>
         </div>
         <div class='row'>
           <div *ngIf="modeSelect.value === '11'" class='col-4 offset-8'>
-<!--            <nouislider (slide)='updateOptions()'-->
-<!--                        [(ngModel)]='this.visualizerOptions.fillAlpha'-->
-<!--                        [config]='bgAlphaConfig'></nouislider>-->
+            <!--            <nouislider (slide)='updateOptions()'-->
+            <!--                        [(ngModel)]='this.visualizerOptions.fillAlpha'-->
+            <!--                        [config]='bgAlphaConfig'></nouislider>-->
             <p class='small text-dark'>
               Fill opacity: {{this.visualizerOptions.fillAlpha}}</p>
           </div>

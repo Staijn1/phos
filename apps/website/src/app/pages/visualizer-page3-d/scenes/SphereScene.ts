@@ -2,10 +2,7 @@ import {BaseScene} from './BaseScene'
 import * as THREE from 'three'
 import {IcosahedronGeometry, Mesh, MeshBasicMaterial, MeshLambertMaterial, PlaneGeometry} from 'three'
 import {map} from '../../../shared/functions'
-import {ElementRef} from '@angular/core'
-import {ConnectionService} from '../../../services/connection/connection.service'
 import {degToRad} from 'three/src/math/MathUtils'
-import {SettingsService} from '../../../services/settings/settings.service'
 
 export class SphereScene extends BaseScene {
   private upperPane!: Mesh<PlaneGeometry, MeshBasicMaterial>;

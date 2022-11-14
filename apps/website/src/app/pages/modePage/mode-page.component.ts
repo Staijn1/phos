@@ -13,7 +13,9 @@ import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
 import {ConnectionService} from '../../services/connection/connection.service'
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
-import {VisualizerBrightnessState} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
+import {
+  VisualizerBrightnessState
+} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
 import {ModeInformation} from "@angulon/interfaces";
 
 
@@ -84,7 +86,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
     const state = this.chromaEffects.find(stateToCompare => {
       const mode = this.modes[id];
-      if(!mode) return false;
+      if (!mode) return false;
       return stateToCompare.name.toLowerCase() === mode.name?.toLowerCase()
     })
 

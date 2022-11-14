@@ -30,7 +30,7 @@ export class GradientEditorPageComponent implements OnDestroy {
   private defaultSliderOptions = {
     animate: true,
     start: 0,
-    range: { min: 0, max: 1 },
+    range: {min: 0, max: 1},
     connect: [true, false],
   }
   addIcon = faPlus
@@ -133,7 +133,7 @@ export class GradientEditorPageComponent implements OnDestroy {
     const lastColorstop = (gradient.colorStops[gradient.colorStops.length - 1] as any)
 
     const newPos = lastColorstop.pos + 0.1 > 1 ? 1 : lastColorstop.pos + 0.1
-    gradient.colorStops.push({ pos: newPos, color: '#FFF' })
+    gradient.colorStops.push({pos: newPos, color: '#FFF'})
     lastColorstop.pos -= 0.1
   }
 
@@ -174,8 +174,8 @@ export class GradientEditorPageComponent implements OnDestroy {
       sliderOptions: this.defaultSliderOptions,
       collapsed: true,
       colorStops: [
-        { pos: 0, color: '#fff' },
-        { pos: 1, color: '#ff0000' },
+        {pos: 0, color: '#fff'},
+        {pos: 1, color: '#ff0000'},
       ],
       bgColor: '#000',
     }

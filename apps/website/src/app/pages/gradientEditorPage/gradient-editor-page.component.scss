@@ -8,7 +8,7 @@ $transition: all ease-in 0.25s;
   }
 }
 
-.card-header{
+.card-header {
   transition: $transition;
 }
 
@@ -17,10 +17,10 @@ $transition: all ease-in 0.25s;
 }
 
 .down {
-  transform:rotate(-90deg);
+  transform: rotate(-90deg);
 }
 
-.vh-50{
+.vh-50 {
   height: 50vh;
 }
 

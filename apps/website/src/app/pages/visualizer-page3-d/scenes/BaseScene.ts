@@ -6,7 +6,7 @@ import {SimplexNoise} from 'three/examples/jsm/math/SimplexNoise'
 import {ConnectionService} from '../../../services/connection/connection.service'
 import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
 import {SettingsService} from '../../../services/settings/settings.service'
-import { GUI } from 'dat.gui'
+import {GUI} from 'dat.gui'
 
 export abstract class BaseScene {
   private renderer: WebGLRenderer | undefined;
@@ -33,16 +33,16 @@ export abstract class BaseScene {
     Object.freeze(this.frequencyLimits)
   }
 
-  onResize(event:any) {
+  onResize(event: any) {
     this.threeContainer.nativeElement.width = this.width
     this.threeContainer.nativeElement.height = this.height
     this.camera.aspect = this.width / this.height
     this.camera.updateProjectionMatrix()
   }
 
-  protected abstract setup():any
+  protected abstract setup(): any
 
-  protected abstract animate():any
+  protected abstract animate(): any
 
   public init(): void {
     this.noise = new SimplexNoise()
@@ -101,7 +101,7 @@ export abstract class BaseScene {
   }
 
   private setupAnalyser(stream: MediaStream) {
-    if(!this.audioMotion) return;
+    if (!this.audioMotion) return;
     const audioCtx = this.audioMotion.audioCtx
     const micInput = audioCtx.createMediaStreamSource(stream)
     this.audioMotion.disconnectInput()

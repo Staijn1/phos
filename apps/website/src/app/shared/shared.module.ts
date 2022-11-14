@@ -17,4 +17,5 @@ import {CastPipe} from "./pipe/CastPipe";
   ],
   exports: [NavigationbarComponent, RouterModule, VisualizerComponent, ColorpickerComponent, CastPipe]
 })
-export class SharedModule { }
+export class SharedModule {
+}

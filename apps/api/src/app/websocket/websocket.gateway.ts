@@ -1,12 +1,6 @@
-import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
-  SubscribeMessage,
-  WebSocketGateway
-} from "@nestjs/websockets";
+import {OnGatewayConnection, OnGatewayDisconnect, SubscribeMessage, WebSocketGateway} from "@nestjs/websockets";
 import {Logger} from "@nestjs/common";
-import {Server, Socket} from "socket.io";
+import {Socket} from "socket.io";
 
 @WebSocketGateway()
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
