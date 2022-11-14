@@ -9,7 +9,7 @@ import Color = iro.Color;
   styleUrls: ['./colorpicker.component.scss'],
 })
 export class ColorpickerComponent implements AfterViewInit {
-  @Input() id: string = 'colorpicker'
+  @Input() id = 'colorpicker'
   @Input() color!: string[]
   @Output() colorChange = new EventEmitter<Color>()
   private picker!: IroColorPicker
