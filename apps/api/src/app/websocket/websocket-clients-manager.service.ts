@@ -46,8 +46,8 @@ export class WebsocketClientsManagerService {
    * Set the FFTValue on the ledstrips
    * @param {string}payload
    */
-  setFFTValue(payload: string): void {
-    this.sendAllClients(`. ${payload}`)
+  setFFTValue(payload: number): void {
+    this.sendAllClients(`.${payload}`)
   }
 
   /**
@@ -55,7 +55,7 @@ export class WebsocketClientsManagerService {
    * @param brightness
    */
   setBrightness(brightness: number): void {
-    this.sendAllClients(`% ${brightness}`)
+    this.sendAllClients(`%${brightness}`)
   }
 
   /**
@@ -63,7 +63,7 @@ export class WebsocketClientsManagerService {
    * @param {number} speed
    */
   setSpeed(speed: number): void {
-    this.sendAllClients(`? ${speed}`)
+    this.sendAllClients(`?${speed}`)
   }
 
   /**
@@ -75,5 +75,9 @@ export class WebsocketClientsManagerService {
     for (const client of this.clients) {
       client.send(payload)
     }
+  }
+
+  setColor(payload: string) {
+    this.sendAllClients(payload)
   }
 }

@@ -9,7 +9,7 @@ import {Logger} from "@nestjs/common";
 import {Socket, Server} from "socket.io";
 import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
 
-@WebSocketGateway()
+@WebSocketGateway(3334, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private server: Server;
@@ -22,6 +22,18 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   @SubscribeMessage('mode')
   onModeCommand(client: Socket, payload: number): string {
     this.websocketClientsManagerService.setMode(payload);
+    return 'OK';
+  }
+
+  @SubscribeMessage('color')
+  onColorCommand(client: Socket, payload: string): string {
+    this.websocketClientsManagerService.setColor(payload);
+    return 'OK';
+  }
+
+  @SubscribeMessage('fft')
+  onFFTCommand(client: Socket, payload: number): string {
+    this.websocketClientsManagerService.setFFTValue(payload);
     return 'OK';
   }
 
