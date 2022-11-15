@@ -326,7 +326,6 @@ section {
   @include theme($key, $value);
 }
 
-@import "~nouislider/distribute/nouislider.min.css";
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';

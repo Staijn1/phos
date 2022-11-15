@@ -1,7 +1,7 @@
 import {Component, OnDestroy, ViewChild} from '@angular/core'
 import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand'
-import {faLightbulb, faWrench} from '@fortawesome/free-solid-svg-icons'
+import {faCheck, faLightbulb, faList, faSliders, faWrench} from '@fortawesome/free-solid-svg-icons'
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
 import {SettingsService} from '../../services/settings/settings.service'
 import {ConnectionService} from '../../services/connection/connection.service'
@@ -9,6 +9,7 @@ import {TimelineMax} from 'gsap'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
 import {GradientInformation} from "@angulon/interfaces";
 import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
+import * as slider from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-visualizer',
@@ -40,6 +41,33 @@ export class VisualizerPageComponent implements OnDestroy {
   fullscreenIcon = faExpand
   modeIcon = faLightbulb
   private timeline: TimelineMax
+  smoothingSliderOptions: slider.Options = {
+    floor: 0,
+    ceil: 1,
+    step: 0.05
+  };
+  spinSpeedSliderOptions: slider.Options = {
+    floor: 0,
+    ceil: 20,
+    step: 1
+  }
+  frequencySliderOptions: slider.Options = {
+    floor: 20,
+    ceil: 22000
+  };
+  lineWidthSliderOptions: slider.Options = {
+    floor: 0,
+    ceil: 10
+  };
+  fillAlphaSliderOptions: slider.Options = {
+    floor: 0,
+    ceil: 1,
+    step: 0.1
+  }
+  activeTab = 0;
+  listIcon = faList;
+  checkboxIcon = faCheck;
+  sliderIcon = faSliders;
 
   constructor(
     private connection: ConnectionService,
@@ -70,6 +98,7 @@ export class VisualizerPageComponent implements OnDestroy {
   init(): void {
     this.connection.getGradients().then((gradients) => {
       this.gradients = gradients
+      this.openSettingsWindow()
       // this.chromaEffect.state = new VisualizerBrightnessState()
     });
   }
