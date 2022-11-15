@@ -6,5 +6,7 @@ docker-compose build
 
 echo "Uploading website image"
 docker push staijn/angulon:website
+echo "Uploading API image"
+docker push staijn/angulon:api
 echo "Done!"
 pause
