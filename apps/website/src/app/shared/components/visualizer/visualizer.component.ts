@@ -1,6 +1,7 @@
-import {Component, Input, OnDestroy, OnInit} from '@angular/core'
+import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core'
 import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
 import {GradientInformation} from "@angulon/interfaces";
+
 
 @Component({
   selector: 'app-shared-visualizer',
@@ -8,6 +9,8 @@ import {GradientInformation} from "@angulon/interfaces";
   styleUrls: ['./visualizer.component.scss'],
 })
 export class VisualizerComponent implements OnInit, OnDestroy {
+  @Output() ready: EventEmitter<AudioMotionAnalyzer> = new EventEmitter<AudioMotionAnalyzer>();
+  @Output() registeredGradients: EventEmitter<GradientInformation[]> = new EventEmitter<GradientInformation[]>();
   private audioMotion: AudioMotionAnalyzer | undefined
   private _options!: Options
   private _gradients!: GradientInformation[]
@@ -15,14 +18,13 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   @Input() set options(options: Options) {
     this._options = {
       ...options,
-      ...{volume: 0, gradient: "rainbow"},
+      ...{volume: 0},
     }
     this.updateOptions()
   }
 
 
   @Input() set gradients(gradients: GradientInformation[]) {
-    console.log("Setter gradients triggered")
     this._gradients = gradients
     this.registerGradients()
   }
@@ -42,6 +44,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     const elem = document.getElementById('visualizer')
     this.audioMotion = new AudioMotionAnalyzer(elem as HTMLElement, this._options)
     this.setSource()
+    this.ready.emit(this.audioMotion)
   }
 
   private setSource(): void {
@@ -65,14 +68,13 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   }
 
   private registerGradients(): void {
-    console.log("Registering gradients")
-    if (!this._gradients) {
-      throw Error('No gradients!')
-    }
+    if (this._gradients.length === 0) return;
+    if (!this.audioMotion) throw Error('No visualizer!')
 
     for (const gradient of this._gradients) {
-      // this.audioMotion.registerGradient(gradient.name, { bgColor: gradient.bgColor, colorStops: gradient.colorStops })
+      this.audioMotion.registerGradient(gradient.name, {...gradient})
     }
+    this.registeredGradients.emit(this._gradients)
   }
 
   toggleFullscreen() {
