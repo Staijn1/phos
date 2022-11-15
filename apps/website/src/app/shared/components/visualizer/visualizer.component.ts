@@ -18,7 +18,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   @Input() set options(options: Options) {
     this._options = {
       ...options,
-      ...{volume: 0},
+      ...{connectSpeakers: false},
     }
     this.updateOptions()
   }

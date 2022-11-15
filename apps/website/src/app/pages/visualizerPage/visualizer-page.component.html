@@ -30,12 +30,114 @@
         <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
       </select>
     </div>
-    <!--    Select box for the modes-->
+    <!--    Select box for the display modes-->
     <div class="form-group">
-      <label for="modes">Mode</label>
+      <label for="modes">Display Mode</label>
       <select class="form-control" id="modes" (change)="applySettings()" [(ngModel)]="visualizerOptions.mode">
         <option *ngFor="let mode of modes" [ngValue]="mode.value">{{mode.text}}</option>
       </select>
+    </div>
+    <!--    Selectbox for mirror. Accepted values are -1 for mirror left, 0 for no mirror and 1 for mirror right-->
+    <div class="form-group">
+      <label for="mirror">Mirror</label>
+      <select class="form-control" id="mirror" (change)="applySettings()" [(ngModel)]="visualizerOptions.mirror">
+        <option [ngValue]="-1">Left</option>
+        <option [ngValue]="0">None</option>
+        <option [ngValue]="1">Right</option>
+      </select>
+    </div>
+    <!--    Selectbox for FFT bin size-->
+    <div class="form-group">
+      <label for="fftBinSize">FFT Bin Size</label>
+      <select class="form-control" id="fftBinSize" (change)="applySettings()"
+              [(ngModel)]="visualizerOptions.fftSize">
+        <option [ngValue]="512">512</option>
+        <option [ngValue]="1024">1024</option>
+        <option [ngValue]="2048">2048</option>
+        <option [ngValue]="4096">4096</option>
+        <option [ngValue]="8192">8192</option>
+        <option [ngValue]="16384">16384</option>
+        <option [ngValue]="32768">32768</option>
+      </select>
+    </div>
+    <!--    Checkbox for alpha bars-->
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" id="alphaBars" (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.alphaBars">
+      <label class="form-check-label" for="alphaBars">Alpha Bars</label>
+    </div>
+    <!--Checkbox for led bars -->
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" id="ledBars" (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.ledBars">
+      <label class="form-check-label" for="ledBars">Led Bars</label>
+    </div>
+    <!-- Checkbox for luminance bars -->
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" id="luminanceBars" (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.lumiBars">
+      <label class="form-check-label" for="luminanceBars">Luminance Bars</label>
+    </div>
+    <!--Checkbox for showing peaks-->
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" id="showPeaks" (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.showPeaks">
+      <label class="form-check-label" for="showPeaks">Show Peaks</label>
+    </div>
+    <!--    Checkbox for showing outline bars. Only works when mode is on of the octave bands-->
+    <div class="form-check">
+      <input type="checkbox" class="form-check-input" id="showOutline"
+             title="Only works when mode is one of the octave bands"
+             (change)="applySettings()"
+             [disabled]="!isOctaveBandMode"
+             [(ngModel)]="visualizerOptions.outlineBars">
+      <label class="form-check-label" for="showOutline">Show Outline</label>
+    </div>
+    <!--    Checkbox for show scale on X axis-->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="showScaleX"
+             (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.showScaleX">
+      <label class="form-check-label" for="showScaleX">
+        Show scale on X axis
+      </label>
+    </div>
+    <!--    Checkbox for show scale on Y axis-->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="showScaleY"
+             (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.showScaleY">
+      <label class="form-check-label" for="showScaleY">
+        Show scale on Y axis
+      </label>
+    </div>
+    <!--    Checkbox for radial-->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="radial"
+             (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.radial">
+      <label class="form-check-label" for="radial">
+        Radial
+      </label>
+    </div>
+    <!--    Checkbox for stereo mode-->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="stereo"
+             (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.stereo">
+      <label class="form-check-label" for="stereo">
+        Stereo
+      </label>
+    </div>
+    <!--    When stereo is enabled, show a checkbox to split gradient-->
+    <div class="form-check">
+      <input class="form-check-input" type="checkbox" id="splitGradient"
+             [disabled]="!visualizerOptions.stereo"
+             (change)="applySettings()"
+             [(ngModel)]="visualizerOptions.splitGradient">
+      <label class="form-check-label" for="splitGradient">
+        Split Gradient
+      </label>
     </div>
   </div>
 </app-offcanvas>
