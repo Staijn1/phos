@@ -2,9 +2,11 @@
 @echo off
 
 echo "Building sub-applications"
-docker-compose build --no-cache
+docker-compose build --platform=linux/arm64,linux/amd64 --no-cache
 
 echo "Uploading website image"
 docker push staijn/angulon:website
+echo "Uploading API image"
+docker push staijn/angulon:api
 echo "Done!"
 pause

@@ -7,7 +7,7 @@ export const environment = {
   production: false,
   saveSettings: false,
   url: 'http://192.168.2.249',
-  websockUrl: 'ws://192.168.2.249:81'
+  websockUrl: 'http://localhost:3334'
 }
 
 export const AppConfig = {
