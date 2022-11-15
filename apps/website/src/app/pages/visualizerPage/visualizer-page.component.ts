@@ -64,6 +64,12 @@ export class VisualizerPageComponent implements OnDestroy {
     ceil: 1,
     step: 0.1
   }
+  reflexSliderOptions: slider.Options = {
+    floor: 0,
+    ceil: 1,
+    step: 0.1,
+    vertical: true
+  };
   activeTab = 0;
   listIcon = faList;
   checkboxIcon = faCheck;

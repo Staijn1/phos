@@ -22,7 +22,7 @@
 </div>
 <app-offcanvas>
   <div header class="p-1"><h3>Settings</h3></div>
-  <div body class="p-3">
+  <div body class="p-3 h-100">
     <!--    Create tabs-->
     <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
       <li [ngbNavItem]="0">
@@ -166,49 +166,67 @@
           <fa-icon [icon]="sliderIcon"></fa-icon>
         </a>
         <ng-template ngbNavContent>
+          <!--      Simple slider for smoothing-->
           <div>
-            <!--      Simple slider for smoothing-->
-            <div>
-              Smoothing
-              <ngx-slider *ngIf="visualizerOptions.smoothing" (valueChange)="applySettings()"
-                          [(value)]="visualizerOptions.smoothing"
-                          [options]="smoothingSliderOptions"></ngx-slider>
+            Smoothing
+            <ngx-slider *ngIf="visualizerOptions.smoothing" (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.smoothing"
+                        [options]="smoothingSliderOptions"></ngx-slider>
+          </div>
+          <!--Simple slider for rotation speed, only visible when radial is true-->
+          <div>
+            Rotation Speed
+            <ngx-slider *ngIf="visualizerOptions.spinSpeed !== undefined" (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.spinSpeed"
+                        [options]="spinSpeedSliderOptions"></ngx-slider>
+          </div>
+          <!--      Range slider for min and max frequency-->
+          <div>
+            Min Frequency
+            <ngx-slider *ngIf="visualizerOptions.minFreq !== undefined && visualizerOptions.maxFreq !== undefined"
+                        (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.minFreq"
+                        [(highValue)]="visualizerOptions.maxFreq"
+                        [options]="frequencySliderOptions"></ngx-slider>
+          </div>
+          <!--      Simple slider for line width-->
+          <div>
+            Line Width
+            <ngx-slider *ngIf="visualizerOptions.lineWidth !== undefined" (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.lineWidth"
+                        [options]="lineWidthSliderOptions"></ngx-slider>
+          </div>
+          <!--      Simple slider for fill alpha-->
+          <div>
+            Fill Alpha
+            <ngx-slider *ngIf="visualizerOptions.fillAlpha !== undefined" (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.fillAlpha"
+                        [options]="fillAlphaSliderOptions"></ngx-slider>
+          </div>
+          <!--            Create three vertical sliders next to each other for all reflex controls: reflexRatio, reflexAlpha and reflexBright-->
+          <div class="row h-25">
+            <div class="col-4">
+              Reflex Ratio
+              <ngx-slider *ngIf="visualizerOptions.reflexRatio !== undefined" (valueChange)="applySettings()"
+                          [(value)]="visualizerOptions.reflexRatio"
+                          [options]="reflexSliderOptions"></ngx-slider>
             </div>
-            <!--Simple slider for rotation speed, only visible when radial is true-->
-            <div>
-              Rotation Speed
-              <ngx-slider *ngIf="visualizerOptions.spinSpeed !== undefined" (valueChange)="applySettings()"
-                          [(value)]="visualizerOptions.spinSpeed"
-                          [options]="spinSpeedSliderOptions"></ngx-slider>
+            <div class="col-4">
+              Reflex Alpha
+              <ngx-slider *ngIf="visualizerOptions.reflexAlpha !== undefined" (valueChange)="applySettings()"
+                          [(value)]="visualizerOptions.reflexAlpha"
+                          [options]="reflexSliderOptions"></ngx-slider>
             </div>
-            <!--      Range slider for min and max frequency-->
-            <div>
-              Min Frequency
-              <ngx-slider *ngIf="visualizerOptions.minFreq !== undefined && visualizerOptions.maxFreq !== undefined"
-                          (valueChange)="applySettings()"
-                          [(value)]="visualizerOptions.minFreq"
-                          [(highValue)]="visualizerOptions.maxFreq"
-                          [options]="frequencySliderOptions"></ngx-slider>
-            </div>
-            <!--      Simple slider for line width-->
-            <div>
-              Line Width
-              <ngx-slider *ngIf="visualizerOptions.lineWidth !== undefined" (valueChange)="applySettings()"
-                          [(value)]="visualizerOptions.lineWidth"
-                          [options]="lineWidthSliderOptions"></ngx-slider>
-            </div>
-            <!--      Simple slider for fill alpha-->
-            <div>
-              Fill Alpha
-              <ngx-slider *ngIf="visualizerOptions.fillAlpha !== undefined" (valueChange)="applySettings()"
-                          [(value)]="visualizerOptions.fillAlpha"
-                          [options]="fillAlphaSliderOptions"></ngx-slider>
+            <div class="col-4">
+              Reflex Bright
+              <ngx-slider *ngIf="visualizerOptions.reflexBright !== undefined" (valueChange)="applySettings()"
+                          [(value)]="visualizerOptions.reflexBright"
+                          [options]="reflexSliderOptions"></ngx-slider>
             </div>
           </div>
         </ng-template>
       </li>
     </ul>
-    <div [ngbNavOutlet]="nav" class="mt-2"></div>
-
+    <div [ngbNavOutlet]="nav" class="mt-2 h-100"></div>
   </div>
 </app-offcanvas>

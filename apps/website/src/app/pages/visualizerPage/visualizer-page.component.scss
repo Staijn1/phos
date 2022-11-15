@@ -9,7 +9,7 @@
   }
 }
 
-.toolbar-container{
+.toolbar-container {
   height: 12.5%;
   display: flex;
   justify-content: center;
@@ -17,7 +17,7 @@
   opacity: 0;
   transition: opacity 0.5s;
 
-  &:hover{
+  &:hover {
     opacity: 1;
   }
 }

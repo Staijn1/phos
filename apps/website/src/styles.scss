@@ -326,6 +326,9 @@ section {
   @include theme($key, $value);
 }
 
+.tabset, .tab-content, .tab-pane, .tabbable {
+  height: 100% !important;
+}
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';
