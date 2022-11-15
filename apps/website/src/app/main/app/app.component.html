@@ -2,7 +2,7 @@
 <div class='container mt-5' *ngIf='updateAvailable'>
   <div class='alert alert-info'>
     <strong>Update</strong>
-    <p>There is an update available! Click <a href='#'>here</a> to reload!</p>
+    <p>There is an update available! Click <a href='#' (click)="update()">here</a> to reload!</p>
   </div>
 </div>
 <router-outlet></router-outlet>

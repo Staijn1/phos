@@ -21,8 +21,7 @@ import {
   faWalking,
   faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons'
-import {ConnectionService} from '../../../services/connection/connection.service'
-import {ColorService} from '../../../services/color/color.service'
+import {ConnectionService} from '../../services/connection/connection.service'
 
 @Component({
   selector: 'app-navigationbar',
@@ -57,7 +56,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
 
   constructor(
-    private colorService: ColorService,
     public connection: ConnectionService,
     private router: Router,
     private renderer: Renderer2

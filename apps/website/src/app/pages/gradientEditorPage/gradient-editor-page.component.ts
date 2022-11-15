@@ -5,7 +5,6 @@ import {ConnectionService} from '../../services/connection/connection.service'
 import {faAngleLeft, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave'
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
-import {ColorService} from '../../services/color/color.service'
 import iro from '@jaames/iro'
 import {LoremIpsum} from 'lorem-ipsum'
 import {GradientInformation, GradientInformationExtended} from '@angulon/interfaces'
@@ -41,7 +40,6 @@ export class GradientEditorPageComponent implements OnDestroy {
 
   constructor(
     private connection: ConnectionService,
-    private colorService: ColorService,
     private settingsService: SettingsService,
   ) {
     this.init()

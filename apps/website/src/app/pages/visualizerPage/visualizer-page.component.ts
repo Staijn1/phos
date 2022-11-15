@@ -1,6 +1,5 @@
 import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
 import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
-import {ColorService} from '../../services/color/color.service'
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand'
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave'
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
@@ -95,7 +94,6 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
 
   constructor(
     private connection: ConnectionService,
-    private colorService: ColorService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService,
   ) {
@@ -117,7 +115,6 @@ export class VisualizerPageComponent implements OnInit, OnDestroy {
 
   updateLedstrip(): void {
     this.connection.setMode(56)
-    this.connection.setColor(this.colorService.getColors)
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {

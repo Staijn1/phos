@@ -2,7 +2,7 @@ import {Component} from '@angular/core'
 import {faSave} from '@fortawesome/free-solid-svg-icons'
 import {SettingsService} from '../../services/settings/settings.service'
 import {GeneralSettings} from '../../shared/types/types'
-import {ColorService} from '../../services/color/color.service'
+import {ThemeService} from "../../services/theme/theme.service";
 
 @Component({
   selector: 'app-settings',
@@ -28,7 +28,7 @@ export class SettingsPageComponent {
   ];
   selectedTheme = 0;
 
-  constructor(private settingsService: SettingsService, private colorService: ColorService) {
+  constructor(private settingsService: SettingsService, private readonly theme: ThemeService) {
     this.settings = this.settingsService.readGeneralSettings()
   }
 
@@ -38,8 +38,8 @@ export class SettingsPageComponent {
   }
 
   setTheme(theme: string, index: number): void {
-    this.colorService.setTheme(theme)
     this.selectedTheme = index
     this.settings.theme = this.themes[this.selectedTheme]
+    this.theme.setTheme(this.settings.theme)
   }
 }
