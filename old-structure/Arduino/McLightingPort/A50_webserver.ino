@@ -25,7 +25,7 @@ void setupWebserver() {
     saveConfig();
   });
 
-  if (isConfigured && !isConfiguredAsClient()) {
+  if (isConfigured) {
     Serial.println("[WEBSERVER SETUP] Creating additional routes");
     server.on("/status", []() {
       getStatusJSON();

@@ -97,27 +97,27 @@ void checkpayloadserver(uint8_t* payload, uint8_t num = 0) {
   bool recognizedCommand = checkpayloadclient(payload);
 
   // $ ==> Get status Info.
-  if (payload[0] == '$' && !isConfiguredAsClient()) {
+  if (payload[0] == '$') {
     String json = listStatusJSON();
-    webSocket.sendTXT(num, "OK");
-    webSocket.sendTXT(num, json);
+//    webSocketClient.sendTXT(num, "OK");
+//    webSocketClient.sendTXT(num, json);
     Serial.println("Get status info: " + json);
     return;
   }
 
   // ~ ==> Get WS2812 modes.
-  if (payload[0] == '~' && !isConfiguredAsClient()) {
+  if (payload[0] == '~') {
     String json = listModesJSON();
 
     Serial.print("WS: ");
-    webSocket.sendTXT(num, "OK");
-    webSocket.sendTXT(num, json);
+//    webSocketClient.sendTXT(num, "OK");
+//    webSocketClient.sendTXT(num, json);
     Serial.println("Get WS2812 modes.");
     Serial.println(json);
     return;
   }
 
   if (!recognizedCommand) {
-    webSocket.sendTXT(num, "COMMAND NOT FOUND");
+//    webSocketClient.sendTXT(num, "COMMAND NOT FOUND");
   }
 }
