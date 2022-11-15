@@ -21,6 +21,7 @@ services:
     image: staijn/angulon:api
     ports:
       - 7001:3333
+      - 7002:3334
     environment:
       NODE_ENV: 'development'
       PORT: 3333
