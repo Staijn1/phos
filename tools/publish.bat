@@ -2,7 +2,7 @@
 @echo off
 
 echo "Building sub-applications"
-docker-compose build
+docker-compose build --platform=linux/arm64,linux/amd64
 
 echo "Uploading website image"
 docker push staijn/angulon:website
