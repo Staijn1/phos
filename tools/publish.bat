@@ -2,7 +2,7 @@
 @echo off
 
 echo "Building sub-applications"
-docker-compose build
+docker-compose build --no-cache
 
 echo "Uploading website image"
 docker push staijn/angulon:website

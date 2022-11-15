@@ -3,7 +3,7 @@
 
 echo "Building base image"
 cd ../
-docker build . -t staijn/angulon:nx-base
+docker build . -t staijn/angulon:nx-base --no-cache
 
 echo "Uploading base image"
 docker push staijn/angulon:nx-base

@@ -9,7 +9,7 @@ networks:
 
 services:
   website:
-    container_name: website
+    container_name: angulon
     build:
       context: ./
       cache_from:
@@ -20,10 +20,10 @@ services:
         BUILD_FLAG: ''
     image: staijn/angulon:website
     ports:
-      - 4900:80
+      - 7000:80
     environment:
       NODE_ENV: 'development'
-      PORT: 4900
+      PORT: 7000
     networks:
       - corp
     restart: on-failure
