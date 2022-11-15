@@ -9,6 +9,9 @@ import {TimelineMax} from 'gsap'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
 import {GradientInformation} from "@angulon/interfaces";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
+import {
+  VisualizerBrightnessState
+} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
 
 @Component({
   selector: 'app-visualizer',
@@ -70,12 +73,14 @@ export class VisualizerPageComponent implements OnDestroy {
   init(): void {
     this.connection.getGradients().then((gradients) => {
       this.gradients = gradients
+      // this.chromaEffect.state = new VisualizerBrightnessState()
     });
-//this.chromaEffect.state = new VisualizerBrightnessState()
   }
 
   readSettings() {
-    this.visualizerOptions = this.settingsService.readVisualizerOptions();
+    const settings = this.settingsService.readVisualizerOptions();
+    settings.onCanvasDraw = this.drawCallback.bind(this)
+    this.visualizerOptions = settings
   }
 
   updateOptions(): void {
