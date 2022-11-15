@@ -8,6 +8,8 @@ import {PagesModule} from './pages/pages.module'
 import {NavigationbarComponent} from "./main/navigationbar/navigationbar.component";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {ColorpickerComponent} from "./main/colorpicker/colorpicker.component";
+import { ServiceWorkerModule } from '@angular/service-worker';
+import { environment } from '../environments/environment';
 
 @NgModule({
   imports: [
@@ -16,7 +18,13 @@ import {ColorpickerComponent} from "./main/colorpicker/colorpicker.component";
     AppRoutingModule,
     SharedModule,
     PagesModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    ServiceWorkerModule.register('ngsw-worker.js', {
+      enabled: environment.production,
+      // Register the ServiceWorker as soon as the application is stable
+      // or after 30 seconds (whichever comes first).
+      registrationStrategy: 'registerImmediately'
+    })
   ],
   declarations: [
     AppComponent,
