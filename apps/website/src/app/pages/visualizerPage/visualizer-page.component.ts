@@ -9,9 +9,7 @@ import {TimelineMax} from 'gsap'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
 import {GradientInformation} from "@angulon/interfaces";
 import {ModalComponent} from "../../shared/components/modal/modal.component";
-import {
-  VisualizerBrightnessState
-} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
+import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
 
 @Component({
   selector: 'app-visualizer',
@@ -20,7 +18,7 @@ import {
 })
 export class VisualizerPageComponent implements OnDestroy {
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent
-  @ViewChild(ModalComponent) modal!: ModalComponent;
+  @ViewChild(OffCanvasComponent) offcanvas!: OffCanvasComponent;
   visualizerOptions: Options = {}
 
   // Gradient definitions
@@ -88,12 +86,14 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   openSettingsWindow() {
-    this.modal.open({
-      size: 'xl',
+    this.offcanvas.open({
+      position: 'end',
+      backdropClass: 'offcanvas-backdrop-custom',
     })
   }
 
   applySettings() {
     this.visualizerOptions = Object.assign({}, this.visualizerOptions)
+    this.settingsService.saveVisualizerOptions(this.visualizerOptions)
   }
 }

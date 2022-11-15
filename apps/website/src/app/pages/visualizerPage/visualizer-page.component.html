@@ -16,12 +16,13 @@
     </div>
   </div>
   <div class='h-75'>
-    <app-shared-visualizer (ready)="init()" (registeredGradients)="readSettings()" [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
+    <app-shared-visualizer (ready)="init()" (registeredGradients)="readSettings()" [options]='visualizerOptions'
+                           [gradients]='gradients'></app-shared-visualizer>
   </div>
 </div>
-<app-modal>
-  <div header><h3>Settings</h3></div>
-  <div body>
+<app-offcanvas>
+  <div header class="p-1"><h3>Settings</h3></div>
+  <div body class="p-1">
     <!--    Select box for the gradients-->
     <div class="form-group">
       <label for="gradients">Gradient</label>
@@ -29,6 +30,12 @@
         <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
       </select>
     </div>
-    Footer
+    <!--    Select box for the modes-->
+    <div class="form-group">
+      <label for="modes">Mode</label>
+      <select class="form-control" id="modes" (change)="applySettings()" [(ngModel)]="visualizerOptions.mode">
+        <option *ngFor="let mode of modes" [ngValue]="mode.value">{{mode.text}}</option>
+      </select>
+    </div>
   </div>
-</app-modal>
+</app-offcanvas>
