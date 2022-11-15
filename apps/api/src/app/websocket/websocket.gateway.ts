@@ -31,7 +31,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return 'OK';
   }
 
-  @SubscribeMessage('fft')
+  @SubscribeMessage('FFT')
   onFFTCommand(client: Socket, payload: number): string {
     this.websocketClientsManagerService.setFFTValue(payload);
     return 'OK';
