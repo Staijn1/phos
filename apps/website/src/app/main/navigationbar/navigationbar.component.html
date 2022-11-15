@@ -1,0 +1,98 @@
+<!-- ======= Mobile nav toggle button ======= -->
+<button (click)='mobileNav()' class='mobile-nav-toggle d-lg-none mt-4' type='button'>
+  <fa-icon [icon]='mobileMenu'></fa-icon>
+</button>
+
+<!-- ======= Header ======= -->
+<header class='d-flex flex-column justify-content-center' id='header'>
+
+  <nav class="nav-menu">
+    <ul>
+      <li>
+        <a routerLink="home" routerLinkActive="active">
+          <fa-icon [icon]="home"></fa-icon>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/mode" routerLinkActive="active">
+          <fa-icon [icon]="mode"></fa-icon>
+          <span>Mode</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/visualizer" routerLinkActive="active">
+          <fa-icon [icon]="visualizer"></fa-icon>
+          <span>Visualizer</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/gradients-editor" routerLinkActive="active">
+          <fa-icon [icon]="editor"></fa-icon>
+          <span>Gradients editor</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/visualizer3d" routerLinkActive="active">
+          <fa-icon [icon]="visualizer3D"></fa-icon>
+          <span>Visualizer 3D</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/settings" routerLinkActive="active">
+          <fa-icon [icon]="settings"></fa-icon>
+          <span>Settings</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="$event.preventDefault()" href="">
+          <fa-icon [icon]="controls"></fa-icon>
+          <span>
+                        <fa-icon (click)="this.connection.decreaseBrightness()" [icon]="decreaseBrightnessIcon"
+                                 class="ms-2 ms-lg-4 hover"></fa-icon>
+                        <fa-icon (click)="this.connection.increaseBrightness()" [icon]="increaseBrightnessIcon"
+                                 class="ms-2 ms-lg-4 hover"></fa-icon>
+                        <fa-icon (click)="this.connection.decreaseSpeed()" [icon]="speedDecreaseIcon"
+                                 class="ms-2 ms-lg-4 hover"></fa-icon>
+                        <fa-icon (click)="this.connection.increaseSpeed()" [icon]="speedIncreaseIcon"
+                                 class="ms-2 ms-lg-4 hover"></fa-icon>
+                    </span>
+        </a>
+      </li>
+      <li>
+        <a class='colorpicker h-100'>
+          <fa-icon [icon]='colorpicker'></fa-icon>
+          <div class='ms-2 ms-lg-4'><app-colorpicker></app-colorpicker></div>
+        </a>
+      </li>
+      <li (click)='turnOff()'>
+        <a (click)='$event.preventDefault()' href='' id='powerOff'>
+          <fa-icon [icon]='powerOff'></fa-icon>
+          <span>Power Off</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
+
+</header>
+
+
+<div id='cover'></div>
+
+<div class='transition-container from-left'>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+</div>
+
+<div class='transition-container from-top'>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+</div>

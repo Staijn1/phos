@@ -1,0 +1,29 @@
+@import "../../../variables";
+
+$transition: all ease-in 0.25s;
+
+#visualizer {
+  canvas {
+    width: 100% !important;
+  }
+}
+
+.card-header {
+  transition: $transition;
+}
+
+.rotate {
+  transition: $transition;
+}
+
+.down {
+  transform: rotate(-90deg);
+}
+
+.vh-50 {
+  height: 50vh;
+}
+
+[contenteditable] {
+  border-bottom: 1px dotted getColor('secondary');
+}
