@@ -25,7 +25,7 @@ export class WebsocketService extends Connection {
       console.log(`Disconnected from websocket at ${this.websocketUrl}`)
     });
 
-    this.socket.on('connect_error', (error) => {
+    this.socket.on('connect_error', (error: Error) => {
       console.log(`Failed to connect to websocket at ${this.websocketUrl}`)
       errorService.setError(error)
     });
