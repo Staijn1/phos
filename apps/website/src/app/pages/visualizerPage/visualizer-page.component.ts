@@ -8,7 +8,6 @@ import {ConnectionService} from '../../services/connection/connection.service'
 import {TimelineMax} from 'gsap'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
 import {GradientInformation} from "@angulon/interfaces";
-import {ModalComponent} from "../../shared/components/modal/modal.component";
 import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
 
 @Component({
@@ -26,8 +25,6 @@ export class VisualizerPageComponent implements OnDestroy {
   // Visualization modes
   modes = [
     {value: 0, text: 'Discrete frequencies', disabled: false},
-    {value: 10, text: 'Area graph', disabled: false},
-    {value: 11, text: 'Line graph', disabled: false},
     {value: 1, text: '1/24th octave bands', disabled: false},
     {value: 2, text: '1/12th octave bands', disabled: false},
     {value: 3, text: '1/8th octave bands', disabled: false},
@@ -36,7 +33,9 @@ export class VisualizerPageComponent implements OnDestroy {
     {value: 6, text: '1/3rd octave bands', disabled: false},
     {value: 7, text: 'Half octave bands', disabled: false},
     {value: 8, text: 'Full octave bands', disabled: false},
+    {value: 10, text: 'Area graph', disabled: false},
   ]
+
   settingsIcon = faWrench;
   fullscreenIcon = faExpand
   modeIcon = faLightbulb
@@ -95,5 +94,15 @@ export class VisualizerPageComponent implements OnDestroy {
   applySettings() {
     this.visualizerOptions = Object.assign({}, this.visualizerOptions)
     this.settingsService.saveVisualizerOptions(this.visualizerOptions)
+  }
+
+  /**
+   * For the current selected mode, find the corresponding mode object
+   * If the name of the mode includes octave then return true
+   */
+  get isOctaveBandMode() {
+    const currentMode = this.visualizerOptions.mode
+    const mode = this.modes.find((mode) => mode.value === currentMode)
+    return mode?.text.includes('octave')
   }
 }
