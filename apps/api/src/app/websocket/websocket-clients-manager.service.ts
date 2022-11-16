@@ -1,38 +1,11 @@
 import {Injectable} from '@nestjs/common';
-import {Server} from "socket.io";
+import {Server, Socket} from "socket.io";
 import {WebsocketClient} from "./websocket-client";
 
 @Injectable()
 export class WebsocketClientsManagerService {
-  private readonly urls = [
-    "ws://192.168.2.249:81"
-  ]
-  private clients: WebsocketClient[] = [];
+  private clients: Socket[] = [];
 
-  /**
-   * When the first client connects we make a connection to all configured websocket servers.
-   */
-  connectAll() {
-    if (this.clients.length !== 0) return;
-
-    for (const ip of this.urls) {
-      const websocket = new WebsocketClient(ip);
-      this.clients.push(websocket);
-    }
-  }
-
-  /**
-   * If there are no clients connected to the websocket server anymore, we disconnect all websocket clients.
-   * @param server
-   */
-  disconnectAll(server: Server) {
-    if (server.engine.clientsCount !== 0) return;
-
-    for (const client of this.clients) {
-      client.disconnect();
-    }
-    this.clients = []
-  }
 
   /**
    * Set the mode of all clients
@@ -79,5 +52,21 @@ export class WebsocketClientsManagerService {
 
   setColor(payload: string) {
     this.sendAllClients(payload)
+  }
+
+  /**
+   * Remove a socket that has disconnected
+   * @param client
+   */
+  removeClient(client: Socket) {
+    this.clients = this.clients.filter(c => c.id !== client.id)
+  }
+
+  /**
+   * Register a new socket that has connected
+   * @param socket
+   */
+  addClient(socket: Socket) {
+    this.clients.push(socket)
   }
 }

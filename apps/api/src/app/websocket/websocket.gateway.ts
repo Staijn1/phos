@@ -51,11 +51,11 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   handleConnection(client: Socket, ...args: any[]): any {
     this.logger.log(`Client connected: ${client.id}. IP: ${client.conn.remoteAddress}`);
-    this.websocketClientsManagerService.connectAll();
+    this.websocketClientsManagerService.addClient(client);
   }
 
   handleDisconnect(client: Socket): any {
     this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
-    this.websocketClientsManagerService.disconnectAll(this.server);
+    this.websocketClientsManagerService.removeClient(client);
   }
 }
