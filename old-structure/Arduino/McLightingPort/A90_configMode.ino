@@ -105,7 +105,3 @@ void resetConfig() {
   preferences.remove("configured");
   ESP.restart();
 }
-
-bool isConfiguredAsClient() {
-  return preferences.getString("serverip") != "";
-}

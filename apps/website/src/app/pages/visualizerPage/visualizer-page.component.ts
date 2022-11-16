@@ -104,7 +104,6 @@ export class VisualizerPageComponent implements OnDestroy {
   init(): void {
     this.connection.getGradients().then((gradients) => {
       this.gradients = gradients
-      this.openSettingsWindow()
       // this.chromaEffect.state = new VisualizerBrightnessState()
     });
   }

@@ -31,7 +31,7 @@ char index_html[] PROGMEM = R"=====(
         </div>
         <div class='form-group'>
             <label for='serverip'>Server IP</label>
-            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP of other ledstrip to connect to' maxlength='15'>
+            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP or domain of API to connect to'>
         </div>
         <button type='submit' class='btn btn-primary mt-3'>Submit</button>
     </form>

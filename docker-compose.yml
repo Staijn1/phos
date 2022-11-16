@@ -30,7 +30,7 @@ services:
     restart: on-failure
 
   website:
-    container_name: website
+    container_name: angulon
     build:
       context: ./
       cache_from:
@@ -44,7 +44,7 @@ services:
       - 7000:80
     environment:
       NODE_ENV: 'development'
-      PORT: 4900
+      PORT: 7000
     networks:
       - corp
     restart: on-failure
