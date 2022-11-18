@@ -1,6 +1,5 @@
 import {Injectable} from '@nestjs/common';
-import {Server, Socket} from "socket.io";
-import {WebsocketClient} from "./websocket-client";
+import {Socket} from "socket.io";
 
 @Injectable()
 export class WebsocketClientsManagerService {
@@ -12,7 +11,7 @@ export class WebsocketClientsManagerService {
    * @param mode
    */
   setMode(mode: number) {
-    this.sendAllClients(`/${mode}`);
+    this.sendAllClients('/', mode.toString());
   }
 
   /**
@@ -20,7 +19,7 @@ export class WebsocketClientsManagerService {
    * @param {string}payload
    */
   setFFTValue(payload: number): void {
-    this.sendAllClients(`.${payload}`)
+    this.sendAllClients('.', payload.toString())
   }
 
   /**
@@ -28,7 +27,7 @@ export class WebsocketClientsManagerService {
    * @param brightness
    */
   setBrightness(brightness: number): void {
-    this.sendAllClients(`%${brightness}`)
+    this.sendAllClients('%', brightness.toString())
   }
 
   /**
@@ -36,7 +35,7 @@ export class WebsocketClientsManagerService {
    * @param {number} speed
    */
   setSpeed(speed: number): void {
-    this.sendAllClients(`?${speed}`)
+    this.sendAllClients('?', speed.toString())
   }
 
   /**
@@ -44,14 +43,18 @@ export class WebsocketClientsManagerService {
    * @param {string} payload
    * @private
    */
-  private sendAllClients(payload: string): void {
+  private sendAllClients(event: string, payload: string): void {
     for (const client of this.clients) {
-      client.send(payload)
+      client.emit(event, payload)
     }
   }
 
+  /**
+   * Receive a hex color to set on all ledstrips
+   * @param payload
+   */
   setColor(payload: string) {
-    this.sendAllClients(payload)
+    this.sendAllClients('#', payload)
   }
 
   /**
