@@ -15,9 +15,6 @@ services:
       cache_from:
         - staijn/angulon:nx-base
       dockerfile: ./apps/api/Dockerfile
-      args:
-        NODE_ENV: 'development'
-        BUILD_FLAG: ''
     image: staijn/angulon:api
     ports:
       - 7001:3333
@@ -36,9 +33,6 @@ services:
       cache_from:
         - nginx:1.19.2
       dockerfile: ./apps/website/Dockerfile
-      args:
-        NODE_ENV: 'development'
-        BUILD_FLAG: ''
     image: staijn/angulon:website
     ports:
       - 7000:80

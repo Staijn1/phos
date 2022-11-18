@@ -1,10 +1,8 @@
 FROM staijn/angulon:nx-base AS builder
 
-ARG NODE_ENV
-ARG BUILD_FLAG
 WORKDIR /app/builder
 COPY . .
-RUN npx nx build website ${BUILD_FLAG}
+RUN npx nx build website
 
 FROM nginx:1.19.2
 

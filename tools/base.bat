@@ -1,11 +1,9 @@
 @REM This is a script to publish to build images and publish them to Docker hub automatically
 @echo off
 
-echo "Building base image"
+echo "Building base image cross platform and pushing to Docker Hub"
 cd ../
-docker build . -t staijn/angulon:nx-base --no-cache --platform=linux/arm64,linux/amd64
+docker buildx build --platform linux/amd64,linux/arm64,linux/arm/v7 -t staijn/angulon:nx-base --push .
 
-echo "Uploading base image"
-docker push staijn/angulon:nx-base
 echo "Done!"
 pause
