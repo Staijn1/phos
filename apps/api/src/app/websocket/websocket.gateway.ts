@@ -9,7 +9,7 @@ import {Logger} from "@nestjs/common";
 import {Socket, Server} from "socket.io";
 import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
 
-@WebSocketGateway(3334, {cors: true})
+@WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private server: Server;
