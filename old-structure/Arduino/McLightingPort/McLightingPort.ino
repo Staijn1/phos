@@ -14,6 +14,7 @@
 #include <WebServer.h>
 #include <WebSockets.h>           //https://github.com/Links2004/arduinoWebSockets
 #include <WebSocketsClient.h>
+#include <SocketIOclient.h>
 #include <EEPROM.h>
 #include<Preferences.h> //https://github.com/espressif/arduino-esp32/tree/master/libraries/Preferences
 /**
@@ -36,7 +37,6 @@ void setup() {
 
   if (isConfigured) {
     connectToWifi();
-
     setupLedstrip();
     setupWebsocketClient();
   }

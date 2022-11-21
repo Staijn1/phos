@@ -30,8 +30,12 @@ char index_html[] PROGMEM = R"=====(
             <input type='number' class='form-control' id='ledCount' name='ledCount' placeholder='LED Count' min="0" value="30">
         </div>
         <div class='form-group'>
-            <label for='serverip'>Server IP</label>
-            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP or domain of API to connect to'>
+            <label for='serverip'>Server API IP</label>
+            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP or domain of API to connect to (without port)'>
+        </div>
+        <div class='form-group'>
+            <label for='serverport'>Server API Port</label>
+            <input type='number' class='form-control' id='serverport' name='serverport' placeholder='Port of the API server to connect to'>
         </div>
         <button type='submit' class='btn btn-primary mt-3'>Submit</button>
     </form>
