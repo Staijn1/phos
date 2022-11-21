@@ -16,7 +16,9 @@ export class WebsocketService extends Connection {
 
   constructor(errorService: ErrorService) {
     super()
-    this.socket = io(environment.websockUrl);
+    this.socket = io(environment.websockUrl, {
+      transports: ['websocket'],
+    });
     this.socket.on('connect', () => {
       console.log(`Opened websocket at`, this.websocketUrl)
     });
@@ -27,6 +29,7 @@ export class WebsocketService extends Connection {
 
     this.socket.on('connect_error', (error: Error) => {
       console.log(`Failed to connect to websocket at ${this.websocketUrl}`)
+      console.error(error)
       errorService.setError(error)
     });
   }

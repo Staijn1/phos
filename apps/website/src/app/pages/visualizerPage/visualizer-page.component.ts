@@ -88,7 +88,7 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   updateLedstrip(): void {
-    this.connection.setMode(56)
+    this.connection.setMode(72)
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
