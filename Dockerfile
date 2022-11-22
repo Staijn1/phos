@@ -1,7 +1,7 @@
 FROM node:lts-alpine3.15 as builder
 
 WORKDIR /app
-RUN apk add --no-cache python2 g++ make
+RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
 
 ARG BUILD_FLAGWORKDIR /app/builder
 
