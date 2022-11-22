@@ -26,7 +26,7 @@ char index_html[] PROGMEM = R"=====(
             <input type='number' class='form-control' id='ledPin' name='ledPin' placeholder='LED Pin' min="0" value="26">
         </div>
         <div class='form-group'>
-            <label for='ledCount'>LED Pin</label>
+            <label for='ledCount'>LED Count</label>
             <input type='number' class='form-control' id='ledCount' name='ledCount' placeholder='LED Count' min="0" value="30">
         </div>
         <div class='form-group'>
