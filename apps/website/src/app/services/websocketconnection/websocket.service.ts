@@ -5,6 +5,7 @@ import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
 import {ErrorService} from '../error/error.service'
 import {io, Socket} from 'socket.io-client'
+import {GradientInformation, ModeInformation} from '@angulon/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -40,7 +41,7 @@ export class WebsocketService extends Connection {
     this.colorTimeout = setTimeout(() => {
       const color = colors[0]
       const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
-      this.send("color", colorstring)
+      this.send('color', colorstring)
     }, 10)
   }
 
@@ -79,4 +80,19 @@ export class WebsocketService extends Connection {
     throw new Error('Method not implemented.')
   }
 
+  getModes(): Promise<ModeInformation[]> {
+    return new Promise((resolve, reject) => {
+      this.socket.emit('getModes', (data: ModeInformation[]) => {
+        resolve(data)
+      })
+    });
+  }
+
+  getGradients(): Promise<GradientInformation[]> {
+    return new Promise((resolve, reject) => {
+      this.socket.emit('getGradients', (data: GradientInformation[]) => {
+        resolve(data)
+      })
+    });
+  }
 }

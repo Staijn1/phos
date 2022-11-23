@@ -1,4 +1,4 @@
-export const gradientList = [
+[
   {
     "id": 1,
     "name": "Apple",

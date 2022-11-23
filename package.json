@@ -34,6 +34,7 @@
     "@nestjs/platform-socket.io": "^9.2.0",
     "@nestjs/websockets": "^9.2.0",
     "@ng-bootstrap/ng-bootstrap": "^13.0.0",
+    "@popperjs/core": "^2.11.6",
     "audiomotion-analyzer": "^3.6.0",
     "bootstrap": "^5.2.2",
     "dat.gui": "^0.7.9",

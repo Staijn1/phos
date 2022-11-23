@@ -8,6 +8,8 @@ import {
 import {Logger} from '@nestjs/common';
 import {Socket, Server} from 'socket.io';
 import {WebsocketClientsManagerService} from './websocket-clients-manager.service';
+import {ConfigurationService} from '../configuration/configuration.service';
+import {GradientInformation, ModeInformation} from '@angulon/interfaces';
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -15,7 +17,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   private server: Server;
   private logger: Logger = new Logger('WebsocketGateway');
 
-  constructor(private readonly websocketClientsManagerService: WebsocketClientsManagerService) {
+  constructor(private readonly websocketClientsManagerService: WebsocketClientsManagerService, private configurationService: ConfigurationService) {
   }
 
   @SubscribeMessage('mode')
@@ -46,6 +48,16 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   onSpeedCommand(client: Socket, payload: number): string {
     this.websocketClientsManagerService.setSpeed(payload);
     return 'OK';
+  }
+
+  @SubscribeMessage('getModes')
+  async onGetModes(): Promise<ModeInformation[]> {
+    return this.configurationService.getModes();
+  }
+
+  @SubscribeMessage('getGradients')
+  async onGetGradients(): Promise<GradientInformation[]> {
+    return this.configurationService.getGradients();
   }
 
   handleConnection(client: Socket, ...args: any[]): any {
