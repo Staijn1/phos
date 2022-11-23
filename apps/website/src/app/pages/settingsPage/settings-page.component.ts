@@ -3,6 +3,7 @@ import {faSave} from '@fortawesome/free-solid-svg-icons'
 import {SettingsService} from '../../services/settings/settings.service'
 import {GeneralSettings} from '../../shared/types/types'
 import {ThemeService} from "../../services/theme/theme.service";
+import { themes } from '../../shared/constants';
 
 @Component({
   selector: 'app-settings',
@@ -12,20 +13,7 @@ import {ThemeService} from "../../services/theme/theme.service";
 export class SettingsPageComponent {
   settings: GeneralSettings
   saveIcon = faSave;
-  themes = [
-    'default',
-    'carrot',
-    'banana',
-    'cherry',
-    'candy-cane',
-    'sunday',
-    'leaf',
-    'seaweed',
-    'sulfur',
-    'yucca',
-    'walnut',
-    'elderberry'
-  ];
+  themes = themes;
   selectedTheme = 0;
 
   constructor(private settingsService: SettingsService, private readonly theme: ThemeService) {

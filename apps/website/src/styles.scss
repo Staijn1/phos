@@ -271,6 +271,18 @@ section {
 @mixin theme($name, $color) {
   $transition: 0.15s ease-in-out;
 
+  .icon-box-#{$name} {
+    border: 3px solid $color;
+
+    h4:after {
+      background: $color;
+    }
+
+    path {
+      fill: $color;
+    }
+  }
+
   .#{$name}.color-option {
     background: $color !important;
     color: setTextColor($color);

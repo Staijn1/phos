@@ -15,6 +15,7 @@ import {
   VisualizerBrightnessState
 } from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
 import {ModeInformation} from "@angulon/interfaces";
+import {themes} from '../../shared/constants';
 
 
 @Component({
@@ -36,7 +37,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
     {name: 'VuMeter', state: new VisualizerState()},
     {name: 'VuMeter Brightness', state: new VisualizerBrightnessState()},
   ];
-  classes = ['iconbox-primary', 'iconbox-orange', 'iconbox-pink', 'iconbox-yellow', 'iconbox-red', 'iconbox-teal'];
+  classes = themes;
   selectedMode = 0;
 
   constructor(
