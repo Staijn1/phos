@@ -4,9 +4,12 @@ import {MessageService} from '../../services/error/message.service'
 import {ThemeService} from '../../services/theme/theme.service';
 import {environment} from '../../../environments/environment';
 import {Message} from '../../messages/Message';
+import {swipeRight} from '@angulon/interfaces';
+
 
 @Component({
   selector: 'app-root',
+  animations: [swipeRight],
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
