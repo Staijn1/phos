@@ -1,6 +1,6 @@
 import iro from '@jaames/iro'
 
-export abstract class Connection {
+export abstract class LedstripConnection {
   abstract setMode(mode: number): void;
 
   abstract setLeds(amount: number): void;

@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {Connection} from '../../shared/interfaces/Connection'
+import {LedstripConnection} from '../../shared/interfaces/LedstripConnection'
 import iro from '@jaames/iro'
 import {environment} from '../../../environments/environment'
 import {MessageService} from '../error/message.service'
@@ -8,7 +8,7 @@ import {GradientInformation, ModeInformation} from "@angulon/interfaces";
 @Injectable({
   providedIn: 'root',
 })
-export class HTTPConnectionService extends Connection {
+export class HTTPConnectionService extends LedstripConnection {
   readonly url = environment.url;
   private brightness!: number;
   private speed!: number;

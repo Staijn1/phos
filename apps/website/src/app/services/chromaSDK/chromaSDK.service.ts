@@ -6,8 +6,8 @@ import {SettingsService} from '../settings/settings.service'
   providedIn: 'root'
 })
 export class ChromaSDKService {
-  readonly API_PORT = 54235;
-  readonly API_URL = `http://localhost:${this.API_PORT}/razer/chromasdk/`;
+  readonly RAZER_API_PORT = 54235;
+  readonly API_URL = `http://localhost:${this.RAZER_API_PORT}/razer/chromasdk/`;
 
   readonly mouse = {
     rows: 9,
@@ -45,7 +45,7 @@ export class ChromaSDKService {
   ];
 
   private readonly options = {
-    title: 'Razer Chroma implemented with WS2812B ledstrip in Electron!',
+    title: 'Angulon',
     description: 'The ledstrip and Razer peripherals will share some effects, controlled through a nice UI.',
     author: {
       name: 'Stein Jonker',
@@ -76,10 +76,6 @@ export class ChromaSDKService {
   }
 
   private initializedApiURL: string | undefined;
-
-  set setInitializedApiURL(newApiUrl: string) {
-    this.initializedApiURL = newApiUrl
-  }
 
   public async init(): Promise<any> {
     const response = await fetch(`${this.API_URL}/`, {

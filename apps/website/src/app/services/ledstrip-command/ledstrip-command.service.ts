@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {Connection} from '../../shared/interfaces/Connection'
+import {LedstripConnection} from '../../shared/interfaces/LedstripConnection'
 import {WebsocketService} from '../websocketconnection/websocket.service'
 import {HTTPConnectionService} from '../httpconnection/httpconnection.service'
 import iro from '@jaames/iro'
@@ -9,7 +9,7 @@ import {GradientInformation, GradientInformationExtended, ModeInformation} from 
 @Injectable({
   providedIn: 'root'
 })
-export class ConnectionService extends Connection {
+export class LedstripCommandService extends LedstripConnection {
 
   constructor(
     private websocketService: WebsocketService,
@@ -20,7 +20,7 @@ export class ConnectionService extends Connection {
 
   decreaseBrightness(): void {
     try {
-      this.apiService.decreaseBrightness()
+      this.websocketService.decreaseBrightness()
     } catch (error: any) {
       this.errorService.setMessage(error)
     }
@@ -28,7 +28,7 @@ export class ConnectionService extends Connection {
 
   decreaseSpeed(): void {
     try {
-      this.apiService.decreaseSpeed()
+      this.websocketService.decreaseSpeed()
     } catch (error: any) {
       this.errorService.setMessage(error)
     }
@@ -36,7 +36,7 @@ export class ConnectionService extends Connection {
 
   increaseBrightness(): void {
     try {
-      this.apiService.increaseBrightness()
+      this.websocketService.increaseBrightness()
     } catch (error: any) {
       this.errorService.setMessage(error)
     }
@@ -44,14 +44,10 @@ export class ConnectionService extends Connection {
 
   increaseSpeed(): void {
     try {
-      this.apiService.increaseSpeed()
+      this.websocketService.increaseSpeed()
     } catch (error: any) {
       this.errorService.setMessage(error)
     }
-  }
-
-  protected send(command: string): void {
-    throw Error('Not implemented')
   }
 
   setColor(colors: iro.Color[] | string[]): void {

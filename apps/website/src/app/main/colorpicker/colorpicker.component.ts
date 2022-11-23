@@ -4,7 +4,7 @@ import {IroColorPicker} from '@jaames/iro/dist/ColorPicker'
 import {SettingsService} from "../../services/settings/settings.service";
 import Color = iro.Color;
 import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.service";
-import {ConnectionService} from "../../services/connection/connection.service";
+import {LedstripCommandService} from "../../services/ledstrip-command/ledstrip-command.service";
 
 @Component({
   selector: 'app-colorpicker',
@@ -16,7 +16,7 @@ export class ColorpickerComponent implements OnInit {
   @Output() colorChange = new EventEmitter<Color>()
   private picker!: IroColorPicker
 
-  constructor(private readonly settingsService: SettingsService, private chromaEffect: ChromaEffectService, private connection: ConnectionService,) {
+  constructor(private readonly settingsService: SettingsService, private chromaEffect: ChromaEffectService, private connection: LedstripCommandService,) {
   }
 
   ngOnInit(): void {

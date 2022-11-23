@@ -38,15 +38,27 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return 'OK';
   }
 
-  @SubscribeMessage('brightness')
-  onBrightnessCommand(client: Socket, payload: number): string {
-    this.websocketClientsManagerService.setBrightness(payload);
+  @SubscribeMessage('increaseBrightness')
+  onIncreaseBrightnessCommand(): string {
+    this.websocketClientsManagerService.increaseBrightness();
     return 'OK';
   }
 
-  @SubscribeMessage('speed')
-  onSpeedCommand(client: Socket, payload: number): string {
-    this.websocketClientsManagerService.setSpeed(payload);
+  @SubscribeMessage('increaseSpeed')
+  onIncreaseSpeedCommand(): string {
+    this.websocketClientsManagerService.increaseSpeed();
+    return 'OK';
+  }
+
+  @SubscribeMessage('decreaseBrightness')
+  onDecreaseBrightnessCommand(): string {
+    this.websocketClientsManagerService.decreaseBrightness();
+    return 'OK';
+  }
+
+  @SubscribeMessage('decreaseSpeed')
+  onDecreaseSpeedCommand(): string {
+    this.websocketClientsManagerService.decreaseSpeed();
     return 'OK';
   }
 

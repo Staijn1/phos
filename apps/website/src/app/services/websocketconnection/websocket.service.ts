@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core'
 import {map} from '../../shared/functions'
-import {Connection} from '../../shared/interfaces/Connection'
+import {LedstripConnection} from '../../shared/interfaces/LedstripConnection'
 import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
 import {MessageService} from '../error/message.service'
@@ -10,7 +10,7 @@ import {GradientInformation, ModeInformation} from '@angulon/interfaces';
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketService extends Connection {
+export class WebsocketService extends LedstripConnection {
   websocketUrl = environment.websockUrl
   private socket: Socket;
   private colorTimeout!: NodeJS.Timeout;
@@ -54,7 +54,7 @@ export class WebsocketService extends Connection {
     this.send('FFT', mappedValue.toString())
   }
 
-  send(event: string, payload: string): void {
+  send(event: string, payload?: string): void {
     if (this.isOpen()) {
       this.socket.emit(event, payload)
     }
@@ -65,19 +65,19 @@ export class WebsocketService extends Connection {
   }
 
   decreaseBrightness(): void {
-    throw new Error('Method not implemented.')
+    this.send('decreaseBrightness', undefined)
   }
 
   increaseBrightness(): void {
-    throw new Error('Method not implemented.')
+    this.send('increaseBrightness', undefined)
   }
 
   decreaseSpeed(): void {
-    throw new Error('Method not implemented.')
+    this.send('decreaseSpeed', undefined)
   }
 
   increaseSpeed(): void {
-    throw new Error('Method not implemented.')
+    this.send('increaseSpeed', undefined)
   }
 
   getModes(): Promise<ModeInformation[]> {
