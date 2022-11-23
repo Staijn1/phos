@@ -319,6 +319,10 @@ section {
         background: $color !important;
       }
 
+      a span fa-icon:hover {
+        background: darken($color, 10%) !important;
+      }
+
       ul > li {
         .active {
           background: $color !important;

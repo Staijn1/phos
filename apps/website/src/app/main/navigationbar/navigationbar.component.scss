@@ -61,48 +61,49 @@
 /* Desktop Navigation */
 
 .nav-menu {
-  * {
-    margin: 0;
-    padding: 0;
+  > ul {
     list-style: none;
-  }
+    padding: 0;
 
-  > ul > li {
-    position: relative;
-    white-space: nowrap;
+    li {
+      position: relative;
+      white-space: nowrap;
+    }
   }
 
   a {
     display: flex;
     align-items: center;
+
     text-decoration: none;
     color: getColor('secondary');
     padding: 10px 18px;
-    margin-bottom: 8px;
-    transition: 0.3s;
     font-size: 15px;
+
+    // Create some space between each nav item
+    margin-top: 4px;
+    margin-bottom: 8px;
+
     border-radius: 50px;
     background: #f2f3f5;
     height: 56px;
     width: 100%;
     overflow: hidden;
+    transition: 0.3s;
 
     fa-icon {
       font-size: 20px;
     }
 
-    .hover {
-      padding: 0.75em;
-      border-radius: 50%;
-
-      &:hover {
-        background: darken(getColor('primary'), 10%);
-      }
-    }
-
-    span, div {
+    span {
       padding: 0 5px 0 7px;
-      color: getColor('secondary');
+
+      fa-icon{
+        transition: background-color 0.3s;
+        padding: 0.75em;
+        height: 56px;
+        border-radius: 50px;
+      }
     }
 
     &:hover {
