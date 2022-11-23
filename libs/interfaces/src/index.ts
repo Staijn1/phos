@@ -5,3 +5,4 @@ export * from './lib/KeyFunction';
 export * from './lib/ModeInformation';
 export * from './lib/SpeedInformation';
 export * from './lib/ArrayTwoOrMore';
+export * from './lib/Animations';

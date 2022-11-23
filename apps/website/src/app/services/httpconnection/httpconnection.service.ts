@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core'
 import {Connection} from '../../shared/interfaces/Connection'
 import iro from '@jaames/iro'
 import {environment} from '../../../environments/environment'
-import {ErrorService} from '../error/error.service'
+import {MessageService} from '../error/message.service'
 import {GradientInformation, ModeInformation} from "@angulon/interfaces";
 
 @Injectable({
@@ -13,9 +13,9 @@ export class HTTPConnectionService extends Connection {
   private brightness!: number;
   private speed!: number;
 
-  constructor(errorService: ErrorService) {
+  constructor(errorService: MessageService) {
     super()
-    Promise.all([this.getBrightness(), this.getSpeed()]).then().catch(e => errorService.setError(e))
+    Promise.all([this.getBrightness(), this.getSpeed()]).then().catch(e => errorService.setMessage(e))
   }
 
   private async getBrightness(): Promise<void> {

@@ -3,7 +3,7 @@ import {Connection} from '../../shared/interfaces/Connection'
 import {WebsocketService} from '../websocketconnection/websocket.service'
 import {HTTPConnectionService} from '../httpconnection/httpconnection.service'
 import iro from '@jaames/iro'
-import {ErrorService} from '../error/error.service'
+import {MessageService} from '../error/message.service'
 import {GradientInformation, GradientInformationExtended, ModeInformation} from '@angulon/interfaces';
 
 @Injectable({
@@ -14,7 +14,7 @@ export class ConnectionService extends Connection {
   constructor(
     private websocketService: WebsocketService,
     private apiService: HTTPConnectionService,
-    private errorService: ErrorService) {
+    private errorService: MessageService) {
     super()
   }
 
@@ -22,7 +22,7 @@ export class ConnectionService extends Connection {
     try {
       this.apiService.decreaseBrightness()
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
     }
   }
 
@@ -30,7 +30,7 @@ export class ConnectionService extends Connection {
     try {
       this.apiService.decreaseSpeed()
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
     }
   }
 
@@ -38,7 +38,7 @@ export class ConnectionService extends Connection {
     try {
       this.apiService.increaseBrightness()
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
     }
   }
 
@@ -46,7 +46,7 @@ export class ConnectionService extends Connection {
     try {
       this.apiService.increaseSpeed()
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
     }
   }
 
@@ -58,7 +58,7 @@ export class ConnectionService extends Connection {
     try {
       this.websocketService.setColor(colors)
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
     }
   }
 
@@ -70,7 +70,7 @@ export class ConnectionService extends Connection {
     try {
       this.websocketService.setLeds(amount)
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
     }
   }
 
@@ -82,7 +82,7 @@ export class ConnectionService extends Connection {
     try {
       this.websocketService.setMode(mode)
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
     }
   }
 
@@ -102,7 +102,7 @@ export class ConnectionService extends Connection {
     try {
       return this.websocketService.getGradients();
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
       return []
     }
   }
@@ -116,7 +116,7 @@ export class ConnectionService extends Connection {
     try {
       await this.apiService.editGradient(gradient as GradientInformation)
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
     }
   }
 
@@ -129,7 +129,7 @@ export class ConnectionService extends Connection {
     try {
       return await this.apiService.removeGradient(gradient as GradientInformation)
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
       return this.getGradients()
     }
   }
@@ -143,7 +143,7 @@ export class ConnectionService extends Connection {
     try {
       return await this.apiService.addGradient(newGradient as GradientInformation)
     } catch (error: any) {
-      this.errorService.setError(error)
+      this.errorService.setMessage(error)
       return this.getGradients();
     }
   }

@@ -1,14 +1,12 @@
 <app-navigationbar></app-navigationbar>
-<div class='container mt-5' *ngIf='updateAvailable'>
-  <div class='alert alert-info'>
-    <strong>Update</strong>
-    <p>There is an update available! Click <a href='#' (click)="update()">here</a> to reload!</p>
-  </div>
-</div>
 <router-outlet></router-outlet>
 
-<div *ngFor="let error of errorService.getErrors()" class="alert-container">
-  <div class="alert alert-danger">
+<div class="alert-container w-50-s">
+  <div class="alert" @swipeRight *ngFor="let error of errorService.getMessages()"
+       [class.alert-danger]="error.severity === 'error'"
+       [class.alert-warning]="error.severity === 'warning'"
+       [class.alert-info]="error.severity === 'info'"
+       (click)="onAlertClick(error)">
     <p>{{error.message}}</p>
   </div>
 </div>

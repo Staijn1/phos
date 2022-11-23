@@ -3,7 +3,7 @@ import {map} from '../../shared/functions'
 import {Connection} from '../../shared/interfaces/Connection'
 import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
-import {ErrorService} from '../error/error.service'
+import {MessageService} from '../error/message.service'
 import {io, Socket} from 'socket.io-client'
 import {GradientInformation, ModeInformation} from '@angulon/interfaces';
 
@@ -15,7 +15,7 @@ export class WebsocketService extends Connection {
   private socket: Socket;
   private colorTimeout!: NodeJS.Timeout;
 
-  constructor(errorService: ErrorService) {
+  constructor(errorService: MessageService) {
     super()
     this.socket = io(environment.websockUrl, {
       transports: ['websocket'],
@@ -31,7 +31,7 @@ export class WebsocketService extends Connection {
     this.socket.on('connect_error', (error: Error) => {
       console.log(`Failed to connect to websocket at ${this.websocketUrl}`)
       console.error(error)
-      errorService.setError(error)
+      errorService.setMessage(error)
     });
   }
 
