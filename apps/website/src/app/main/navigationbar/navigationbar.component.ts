@@ -124,7 +124,7 @@ export class NavigationbarComponent implements OnInit {
         break
     }
 
-    this.timeline.to('#cover', {duration: 0.6, opacity: 0, ease: 'power4.inOut'})
+    this.timeline.to('#cover', {duration: 0.6, autoAlpha: 0, ease: 'power4.inOut'})
     this.animationMode = ++this.animationMode % 2
   }
 

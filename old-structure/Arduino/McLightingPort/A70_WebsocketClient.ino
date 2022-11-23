@@ -73,15 +73,6 @@ void checkpayloadclient(uint8_t* payload, size_t inputLength) {
 
   }
 
-  // ? ==> Decrease speed
-  if (*event == '?') {
-    // The speed is an interval (or delay). The lower the interval/delay is, the faster it goes.
-    ws2812fx_speed = constrain(ws2812fx_speed * 1.1, 0, 5000);
-    updateSpeed();
-
-    Serial.printf("Set speed to: [%u]\n", ws2812fx_speed);
-    return;
-  }
   // ! ==> Increase speed
   if (*event == '!') {
     // The speed is an interval (or delay). The lower the interval/delay is, the faster it goes.
@@ -91,6 +82,7 @@ void checkpayloadclient(uint8_t* payload, size_t inputLength) {
     Serial.printf("Set speed to: [%u]\n", ws2812fx_speed);
     return;
   }
+
   // + ==> Increase brightness
   if (*event == '+') {
     ws2812fx_brightness = constrain(ws2812fx_brightness * 1.1, 0, 255);
@@ -99,12 +91,23 @@ void checkpayloadclient(uint8_t* payload, size_t inputLength) {
     Serial.printf("WS: Set brightness to: [%u]\n", ws2812fx_brightness);
     return;
   }
+
   // - ==> Decrease brightness
   if (*event == '-') {
     ws2812fx_brightness = constrain(ws2812fx_brightness * 0.90, 0, 255);
     updateBrightness();
 
     Serial.printf("WS: Set brightness to: [%u]\n", ws2812fx_brightness);
+    return;
+  }
+  
+  // ? ==> Decrease speed
+  if (*event == '?') {
+    // The speed is an interval (or delay). The lower the interval/delay is, the faster it goes.
+    ws2812fx_speed = constrain(ws2812fx_speed * 1.1, 0, 5000);
+    updateSpeed();
+
+    Serial.printf("Set speed to: [%u]\n", ws2812fx_speed);
     return;
   }
   // / ==> Set WS2812 mode.
