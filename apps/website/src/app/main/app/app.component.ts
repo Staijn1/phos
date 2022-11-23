@@ -1,11 +1,11 @@
-import {Component} from '@angular/core'
+import {Component, OnInit} from '@angular/core'
 import {SwUpdate} from '@angular/service-worker'
 import {MessageService} from '../../services/error/message.service'
 import {ThemeService} from '../../services/theme/theme.service';
 import {environment} from '../../../environments/environment';
 import {Message} from '../../messages/Message';
 import {swipeRight} from '@angulon/interfaces';
-
+import * as AOS from 'aos';
 
 @Component({
   selector: 'app-root',
@@ -13,7 +13,7 @@ import {swipeRight} from '@angulon/interfaces';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent {
+export class AppComponent implements OnInit {
   constructor(readonly updates: SwUpdate, public errorService: MessageService, private theme: ThemeService) {
     this.theme.loadTheme();
 
@@ -33,5 +33,9 @@ export class AppComponent {
   onAlertClick(error: Message) {
     if (!error.action) return;
     error.action();
+  }
+
+  ngOnInit(): void {
+    AOS.init()
   }
 }
