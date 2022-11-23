@@ -244,10 +244,6 @@ section {
   #header {
     left: 0;
   }
-
-  .mobile-nav-toggle fa-icon {
-    color: getColor('primary');
-  }
 }
 
 /*--------------------------------------------------------------
@@ -270,6 +266,10 @@ section {
 // @param $color: color of the theme
 @mixin theme($name, $color) {
   $transition: 0.15s ease-in-out;
+
+  .mobile-nav-active .mobile-nav-toggle fa-icon {
+    color: $color;
+  }
 
   .icon-box-#{$name} {
     border: 3px solid $color;
