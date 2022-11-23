@@ -7,6 +7,6 @@ ARG BUILD_FLAGWORKDIR /app/builder
 
 COPY . .
 
-RUN npm i
+RUN npm i --legacy-peer-deps
 
 # docker build . -t staijn/angulon:nx-base
