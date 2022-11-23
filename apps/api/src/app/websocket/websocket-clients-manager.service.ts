@@ -1,10 +1,9 @@
 import {Injectable} from '@nestjs/common';
-import {Socket} from "socket.io";
+import {Server} from 'socket.io';
 
 @Injectable()
 export class WebsocketClientsManagerService {
-  private clients: Socket[] = [];
-
+  private server!: Server;
 
   /**
    * Set the mode of all clients
@@ -44,7 +43,8 @@ export class WebsocketClientsManagerService {
    * @private
    */
   private sendAllClients(event: string, payload: string): void {
-    for (const client of this.clients) {
+    const clients = this.server.sockets.sockets;
+    for (const [id, client] of clients) {
       client.emit(event, payload)
     }
   }
@@ -54,22 +54,16 @@ export class WebsocketClientsManagerService {
    * @param payload
    */
   setColor(payload: string) {
+    // If the payload contains a #, remove it
+    if (payload.includes('#')) payload = payload.replace('#', '');
     this.sendAllClients('#', payload)
   }
 
   /**
-   * Remove a socket that has disconnected
-   * @param client
+   * Update the server variable so we have access to all the connected clients
+   * @param {Server} server
    */
-  removeClient(client: Socket) {
-    this.clients = this.clients.filter(c => c.id !== client.id)
-  }
-
-  /**
-   * Register a new socket that has connected
-   * @param socket
-   */
-  addClient(socket: Socket) {
-    this.clients.push(socket)
+  setServer(server: Server) {
+    this.server = server;
   }
 }

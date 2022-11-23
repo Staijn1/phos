@@ -56,8 +56,11 @@ void checkpayloadclient(uint8_t* payload, size_t inputLength) {
   const char* event = doc[0]; // The first element holds the code corrosponding to the action (set color, mode, fft etc)
   // # ==> Set main color
   if (*event == '#') {
-    uint32_t rgb = doc[1]; // "#ff00ff"
-    handleSetMainColor(rgb);
+    long number = (long) strtol( (const char*) doc[1], NULL, 16 );
+
+    main_color.red = number >> 16;
+    main_color.green = number >> 8 & 0xFF;
+    main_color.blue = number & 0xFF;
     Serial.printf("Set main color to: R: [%u] G: [%u] B: [%u]\n",  main_color.red, main_color.green, main_color.blue);
     return;
 

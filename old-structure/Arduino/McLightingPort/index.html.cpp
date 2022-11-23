@@ -27,7 +27,7 @@ char index_html[] PROGMEM = R"=====(
         </div>
         <div class='form-group'>
             <label for='ledCount'>LED Count</label>
-            <input type='number' class='form-control' id='ledCount' name='ledCount' placeholder='LED Count' min="0" value="30">
+            <input type='number' class='form-control' id='ledCount' name='ledCount' placeholder='LED Count' min="0" value="60">
         </div>
         <div class='form-group'>
             <label for='serverip'>Server API IP</label>
