@@ -5,6 +5,8 @@ import {GradientEditorPageComponent} from './gradient-editor-page.component'
 import {SharedModule} from '../../shared/shared.module'
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome'
 import {NgbCollapseModule} from '@ng-bootstrap/ng-bootstrap'
+import {NgxSliderModule} from '@angular-slider/ngx-slider';
+import {FormsModule} from '@angular/forms';
 
 
 const routerConfig: Routes = [
@@ -18,7 +20,9 @@ const routerConfig: Routes = [
     FontAwesomeModule,
     NgbCollapseModule,
     RouterModule.forChild(routerConfig),
-    CommonModule
+    CommonModule,
+    NgxSliderModule,
+    FormsModule
   ],
   exports: [RouterModule]
 })

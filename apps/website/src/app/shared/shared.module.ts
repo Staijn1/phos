@@ -3,19 +3,20 @@ import {CommonModule} from '@angular/common'
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome'
 import {RouterModule} from '@angular/router'
 import {VisualizerComponent} from './components/visualizer/visualizer.component'
-import {CastPipe} from "./pipe/CastPipe";
-import {ModalComponent} from "./components/modal/modal.component";
-import {OffCanvasComponent} from "./components/offcanvas/off-canvas.component";
+import {CastPipe} from './pipe/CastPipe';
+import {ModalComponent} from './components/modal/modal.component';
+import {OffCanvasComponent} from './components/offcanvas/off-canvas.component';
+import {ColorpickerComponent} from './components/colorpicker/colorpicker.component';
 
 
 @NgModule({
-  declarations: [VisualizerComponent, CastPipe, ModalComponent, OffCanvasComponent],
+  declarations: [VisualizerComponent, CastPipe, ModalComponent, OffCanvasComponent, ColorpickerComponent],
   imports: [
     RouterModule,
     CommonModule,
     FontAwesomeModule
   ],
-  exports: [RouterModule, VisualizerComponent, CastPipe, ModalComponent, OffCanvasComponent]
+  exports: [RouterModule, VisualizerComponent, CastPipe, ModalComponent, OffCanvasComponent, ColorpickerComponent]
 })
 export class SharedModule {
 }
