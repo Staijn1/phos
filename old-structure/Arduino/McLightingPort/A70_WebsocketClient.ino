@@ -21,9 +21,13 @@ void runWebsocketClient() {
 void webSocketClientEvent(socketIOmessageType_t type, uint8_t * payload, size_t length) {
   switch (type) {
     case sIOtype_DISCONNECT:
+      //disable LED when disconnected from server to indicate disabled state
+      digitalWrite(BUILTIN_LED, LOW);
       Serial.printf("[WSc] Disconnected from server!\n");
       break;
     case sIOtype_CONNECT:
+      //enable LED when connected from server to indicate enabled state
+      digitalWrite(BUILTIN_LED, HIGH);
       Serial.printf("[WSc]Connected to url: %s\n", payload);
       socketIO.send(sIOtype_CONNECT, "/");
       break;
@@ -33,6 +37,8 @@ void webSocketClientEvent(socketIOmessageType_t type, uint8_t * payload, size_t 
         break;
       }
     case sIOtype_ERROR:
+      //disable LED when disconnected from server to indicate disabled state
+      digitalWrite(BUILTIN_LED, LOW);
       Serial.printf("[WSc] Error occured: %s", payload);
       break;
     case sIOtype_ACK:
@@ -61,6 +67,7 @@ void checkpayloadclient(uint8_t* payload, size_t inputLength) {
     main_color.red = number >> 16;
     main_color.green = number >> 8 & 0xFF;
     main_color.blue = number & 0xFF;
+    strip->setColor(main_color.red, main_color.green, main_color.blue);
     Serial.printf("Set main color to: R: [%u] G: [%u] B: [%u]\n",  main_color.red, main_color.green, main_color.blue);
     return;
 

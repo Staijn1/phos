@@ -95,9 +95,6 @@ void connectToWifi() {
 
 
   ticker.detach();
-
-  //keep LED on
-  digitalWrite(BUILTIN_LED, HIGH);
 }
 
 
