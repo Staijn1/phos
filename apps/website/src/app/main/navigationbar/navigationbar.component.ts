@@ -21,7 +21,7 @@ import {
   faWalking,
   faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons'
-import {ConnectionService} from '../../services/connection/connection.service'
+import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 
 @Component({
   selector: 'app-navigationbar',
@@ -53,7 +53,7 @@ export class NavigationbarComponent implements OnInit {
   timeline = gsap.timeline();
 
   constructor(
-    public connection: ConnectionService,
+    public connection: LedstripCommandService,
     private router: Router,
     private renderer: Renderer2
   ) {

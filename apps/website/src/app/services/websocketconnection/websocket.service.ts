@@ -54,7 +54,7 @@ export class WebsocketService extends LedstripConnection {
     this.send('FFT', mappedValue.toString())
   }
 
-  send(event: string, payload: string): void {
+  send(event: string, payload?: string): void {
     if (this.isOpen()) {
       this.socket.emit(event, payload)
     }
@@ -65,19 +65,19 @@ export class WebsocketService extends LedstripConnection {
   }
 
   decreaseBrightness(): void {
-    throw new Error('Method not implemented.')
+    this.send('decreaseBrightness', undefined)
   }
 
   increaseBrightness(): void {
-    throw new Error('Method not implemented.')
+    this.send('increaseBrightness', undefined)
   }
 
   decreaseSpeed(): void {
-    throw new Error('Method not implemented.')
+    this.send('decreaseSpeed', undefined)
   }
 
   increaseSpeed(): void {
-    throw new Error('Method not implemented.')
+    this.send('increaseSpeed', undefined)
   }
 
   getModes(): Promise<ModeInformation[]> {

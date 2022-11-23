@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core'
 import {Options} from 'audiomotion-analyzer'
 import {SettingsService} from '../../services/settings/settings.service'
-import {ConnectionService} from '../../services/connection/connection.service'
+import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {faAngleLeft, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave'
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
@@ -39,7 +39,7 @@ export class GradientEditorPageComponent implements OnDestroy {
   basicGradients: GradientInformation[] = []
 
   constructor(
-    private connection: ConnectionService,
+    private connection: LedstripCommandService,
     private settingsService: SettingsService,
   ) {
     this.init()

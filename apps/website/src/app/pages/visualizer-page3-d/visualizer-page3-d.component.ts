@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core'
 import {SphereScene} from './scenes/SphereScene'
 import {BaseScene} from './scenes/BaseScene'
-import {ConnectionService} from '../../services/connection/connection.service'
+import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {SettingsService} from '../../services/settings/settings.service'
 import {SphereLightScene} from './scenes/SphereLightScene'
 
@@ -16,7 +16,7 @@ export class VisualizerPage3DComponent implements AfterViewInit, OnDestroy {
   scenes: { name: string, action: BaseScene }[] = []
   selectedScene = 0;
 
-  constructor(private readonly connection: ConnectionService, private readonly settingsService: SettingsService) {
+  constructor(private readonly connection: LedstripCommandService, private readonly settingsService: SettingsService) {
   }
 
   ngAfterViewInit(): void {

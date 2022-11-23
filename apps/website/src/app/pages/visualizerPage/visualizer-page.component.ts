@@ -4,7 +4,7 @@ import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand'
 import {faCheck, faLightbulb, faList, faSliders, faWrench} from '@fortawesome/free-solid-svg-icons'
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
 import {SettingsService} from '../../services/settings/settings.service'
-import {ConnectionService} from '../../services/connection/connection.service'
+import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {TimelineMax} from 'gsap'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
 import {GradientInformation} from "@angulon/interfaces";
@@ -76,7 +76,7 @@ export class VisualizerPageComponent implements OnDestroy {
   sliderIcon = faSliders;
 
   constructor(
-    private connection: ConnectionService,
+    private connection: LedstripCommandService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService,
   ) {

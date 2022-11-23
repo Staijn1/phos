@@ -22,19 +22,29 @@ export class WebsocketClientsManagerService {
   }
 
   /**
-   * Set the brightness of all clients
-   * @param brightness
+   * Receive a hex color to set on all ledstrips
+   * @param payload
    */
-  setBrightness(brightness: number): void {
-    this.sendAllClients('%', brightness.toString())
+  setColor(payload: string) {
+    // If the payload contains a #, remove it
+    if (payload.includes('#')) payload = payload.replace('#', '');
+    this.sendAllClients('#', payload)
   }
 
-  /**
-   * Set the speed of the ledstrips
-   * @param {number} speed
-   */
-  setSpeed(speed: number): void {
-    this.sendAllClients('?', speed.toString())
+  decreaseSpeed() {
+    this.sendAllClients('?', undefined)
+  }
+
+  increaseSpeed() {
+    this.sendAllClients('!', undefined)
+  }
+
+  increaseBrightness() {
+    this.sendAllClients('+', undefined)
+  }
+
+  decreaseBrightness() {
+    this.sendAllClients('-', undefined)
   }
 
   /**
@@ -49,15 +59,6 @@ export class WebsocketClientsManagerService {
     }
   }
 
-  /**
-   * Receive a hex color to set on all ledstrips
-   * @param payload
-   */
-  setColor(payload: string) {
-    // If the payload contains a #, remove it
-    if (payload.includes('#')) payload = payload.replace('#', '');
-    this.sendAllClients('#', payload)
-  }
 
   /**
    * Update the server variable so we have access to all the connected clients
@@ -66,4 +67,6 @@ export class WebsocketClientsManagerService {
   setServer(server: Server) {
     this.server = server;
   }
+
+
 }

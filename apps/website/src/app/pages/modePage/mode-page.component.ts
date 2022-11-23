@@ -9,7 +9,7 @@ import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fi
 import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state'
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state'
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
-import {ConnectionService} from '../../services/connection/connection.service'
+import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
 import {
   VisualizerBrightnessState
@@ -41,7 +41,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
   selectedMode = 0;
 
   constructor(
-    private readonly connection: ConnectionService,
+    private readonly connection: LedstripCommandService,
     private readonly chromaService: ChromaEffectService) {
   }
 

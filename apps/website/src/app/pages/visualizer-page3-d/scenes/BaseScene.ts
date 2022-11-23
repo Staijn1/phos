@@ -3,7 +3,7 @@ import {PerspectiveCamera, Scene, WebGLRenderer} from 'three'
 import {ElementRef} from '@angular/core'
 import {OrbitControls} from 'three/examples/jsm/controls/OrbitControls'
 import {SimplexNoise} from 'three/examples/jsm/math/SimplexNoise'
-import {ConnectionService} from '../../../services/connection/connection.service'
+import {LedstripCommandService} from '../../../services/ledstrip-command/ledstrip-command.service'
 import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
 import {SettingsService} from '../../../services/settings/settings.service'
 import {GUI} from 'dat.gui'
@@ -29,7 +29,7 @@ export abstract class BaseScene {
   }
   protected audioMotion: AudioMotionAnalyzer | undefined;
 
-  public constructor(protected threeContainer: ElementRef, protected readonly connection: ConnectionService, protected readonly settingsService: SettingsService) {
+  public constructor(protected threeContainer: ElementRef, protected readonly connection: LedstripCommandService, protected readonly settingsService: SettingsService) {
     Object.freeze(this.frequencyLimits)
   }
 

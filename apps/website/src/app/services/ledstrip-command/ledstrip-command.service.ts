@@ -9,7 +9,7 @@ import {GradientInformation, GradientInformationExtended, ModeInformation} from 
 @Injectable({
   providedIn: 'root'
 })
-export class ConnectionService extends LedstripConnection {
+export class LedstripCommandService extends LedstripConnection {
 
   constructor(
     private websocketService: WebsocketService,
@@ -20,7 +20,7 @@ export class ConnectionService extends LedstripConnection {
 
   decreaseBrightness(): void {
     try {
-      this.apiService.decreaseBrightness()
+      this.websocketService.decreaseBrightness()
     } catch (error: any) {
       this.errorService.setMessage(error)
     }
@@ -28,7 +28,7 @@ export class ConnectionService extends LedstripConnection {
 
   decreaseSpeed(): void {
     try {
-      this.apiService.decreaseSpeed()
+      this.websocketService.decreaseSpeed()
     } catch (error: any) {
       this.errorService.setMessage(error)
     }
@@ -36,7 +36,7 @@ export class ConnectionService extends LedstripConnection {
 
   increaseBrightness(): void {
     try {
-      this.apiService.increaseBrightness()
+      this.websocketService.increaseBrightness()
     } catch (error: any) {
       this.errorService.setMessage(error)
     }
@@ -44,14 +44,10 @@ export class ConnectionService extends LedstripConnection {
 
   increaseSpeed(): void {
     try {
-      this.apiService.increaseSpeed()
+      this.websocketService.increaseSpeed()
     } catch (error: any) {
       this.errorService.setMessage(error)
     }
-  }
-
-  protected send(command: string): void {
-    throw Error('Not implemented')
   }
 
   setColor(colors: iro.Color[] | string[]): void {
