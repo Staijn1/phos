@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core'
 import iro from '@jaames/iro'
 import {IroColorPicker} from '@jaames/iro/dist/ColorPicker'
-import {SettingsService} from "../../../services/settings/settings.service";
+import {SettingsService} from "../../services/settings/settings.service";
 import Color = iro.Color;
-import {ChromaEffectService} from "../../../services/chromaEffect/chroma-effect.service";
-import {ConnectionService} from "../../../services/connection/connection.service";
+import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.service";
+import {ConnectionService} from "../../services/connection/connection.service";
 
 @Component({
   selector: 'app-colorpicker',

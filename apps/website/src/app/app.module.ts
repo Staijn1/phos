@@ -9,6 +9,7 @@ import {NavigationbarComponent} from './main/navigationbar/navigationbar.compone
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
+import {ColorpickerComponent} from './main/colorpicker/colorpicker.component';
 
 @NgModule({
   imports: [
@@ -28,6 +29,7 @@ import {environment} from '../environments/environment';
   declarations: [
     AppComponent,
     NavigationbarComponent,
+    ColorpickerComponent
   ],
   bootstrap: [AppComponent],
   providers: [],
