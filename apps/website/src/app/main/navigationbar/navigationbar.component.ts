@@ -64,6 +64,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.router.events.subscribe((val) => {
+      // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if(val instanceof NavigationStart){
         gsap.set('#cover', {autoAlpha: 1, duration: 0})
       }
@@ -119,6 +120,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   }
 
   private animate(): void {
+    // Animate the cover to fade out, revealing the page.
     gsap.to('#cover', {
       ease: 'power4.inOut',
       alpha: 1,
