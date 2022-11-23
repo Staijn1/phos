@@ -4,19 +4,19 @@ import {Message} from '../../messages/Message';
 @Injectable({
   providedIn: 'root'
 })
-export class ErrorService {
-  private _errors: Message[] = [];
+export class MessageService {
+  private _messages: Message[] = [];
 
-  public setError(error: Error) {
+  public setMessage(error: Error) {
     const mappedError = this.mapError(error)
-    this._errors.push(mappedError)
+    this._messages.push(mappedError)
     setTimeout(() => {
-      this._errors.shift()
+      this._messages.shift()
     }, 5000)
   }
 
-  public getErrors(): Message[] {
-    return this._errors
+  public getMessages(): Message[] {
+    return this._messages
   }
 
   /**
