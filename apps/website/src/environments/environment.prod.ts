@@ -1,6 +1,6 @@
 export const environment = {
   production: true,
   saveSettings: true,
-  url: 'https://waalstraat.steinjonker.nl:5000',
-  websockUrl: 'wss://waalstraat.steinjonker.nl:5001'
+  url: 'http://192.168.2.249',
+  websockUrl: 'https://api.angulon.steinjonker.nl'
 }

@@ -34,8 +34,8 @@ void saveConfig() {
   const String serverip = server.arg("serverip");
   const int ledpin = server.arg("ledPin").toInt();
   const int ledCount = server.arg("ledCount").toInt();
-
-  if (ssid == "" || password == "" || ledpin < 0 || ledCount < 0) {
+  const int serverPort = server.arg("serverport").toInt();
+  if (ssid == "" || password == "" || ledpin < 0 || ledCount < 0 || serverip == "" || serverPort < 0) {
     server.send(400, "text/plain", "Invalid parameters");
     return;
   }
@@ -45,6 +45,7 @@ void saveConfig() {
   preferences.putString("serverip", serverip);
   preferences.putInt("ledpin", ledpin);
   preferences.putInt("ledCount", ledCount);
+  preferences.putInt("serverport", serverPort);
   preferences.putBool("configured", true);
 
   server.send(204, "text/plain");
@@ -94,9 +95,6 @@ void connectToWifi() {
 
 
   ticker.detach();
-
-  //keep LED on
-  digitalWrite(BUILTIN_LED, HIGH);
 }
 
 
@@ -104,8 +102,4 @@ void resetConfig() {
   Serial.println("Resetting ESP, rebooting");
   preferences.remove("configured");
   ESP.restart();
-}
-
-bool isConfiguredAsClient() {
-  return preferences.getString("serverip") != "";
 }

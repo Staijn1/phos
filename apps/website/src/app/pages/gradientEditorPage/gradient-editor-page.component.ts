@@ -8,7 +8,7 @@ import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
 import iro from '@jaames/iro'
 import {LoremIpsum} from 'lorem-ipsum'
 import {GradientInformation, GradientInformationExtended} from '@angulon/interfaces'
-
+import * as slider from '@angular-slider/ngx-slider';
 
 @Component({
   selector: 'app-gradient-editor-page',
@@ -26,11 +26,11 @@ export class GradientEditorPageComponent implements OnDestroy {
   collapseIcon = faAngleLeft
   currentActiveGradientID = 0
 
-  private defaultSliderOptions = {
+  private defaultSliderOptions: slider.Options = {
     animate: true,
-    start: 0,
-    range: {min: 0, max: 1},
-    connect: [true, false],
+    floor: 0,
+    ceil: 1,
+    noSwitching: true,
   }
   addIcon = faPlus
   jsonEnabled = false
@@ -184,7 +184,8 @@ export class GradientEditorPageComponent implements OnDestroy {
     }).then(() => this.changeGradient(newGradient))
   }
 
-  onNameChange(innerHTML: EventTarget, gradient: GradientInformationExtended) {
+  onNameChange(innerHTML: EventTarget | null, gradient: GradientInformationExtended) {
+    if (!innerHTML) return
     gradient.name = (innerHTML as HTMLElement).innerHTML
   }
 }

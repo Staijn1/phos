@@ -4,8 +4,7 @@ import {WebsocketService} from '../websocketconnection/websocket.service'
 import {HTTPConnectionService} from '../httpconnection/httpconnection.service'
 import iro from '@jaames/iro'
 import {ErrorService} from '../error/error.service'
-import {gradientList} from '../../data/gradients';
-import {GradientInformation, GradientInformationExtended, ModeInformation} from "@angulon/interfaces";
+import {GradientInformation, GradientInformationExtended, ModeInformation} from '@angulon/interfaces';
 
 @Injectable({
   providedIn: 'root'
@@ -81,7 +80,7 @@ export class ConnectionService extends Connection {
    */
   setMode(mode: number): void {
     try {
-      this.apiService.setMode(mode)
+      this.websocketService.setMode(mode)
     } catch (error: any) {
       this.errorService.setError(error)
     }
@@ -92,12 +91,7 @@ export class ConnectionService extends Connection {
    * @return {Promise<ModeInformation[]>}
    */
   async getModes(): Promise<ModeInformation[]> {
-    try {
-      return await this.apiService.getModes()
-    } catch (error: any) {
-      this.errorService.setError(error)
-      return []
-    }
+    return this.websocketService.getModes();
   }
 
   /**
@@ -106,7 +100,7 @@ export class ConnectionService extends Connection {
    */
   async getGradients(): Promise<GradientInformation[]> {
     try {
-      return Promise.resolve(gradientList as GradientInformation[])
+      return this.websocketService.getGradients();
     } catch (error: any) {
       this.errorService.setError(error)
       return []

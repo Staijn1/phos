@@ -1,6 +1,10 @@
 /* You can add global styles to this file, and also import other style files */
 @import '_variables.scss';
 
+.offcanvas-backdrop.show {
+  opacity: 0 !important;
+}
+
 /*--------------------------------------------------------------
 # Scrollbar
 --------------------------------------------------------------*/
@@ -322,7 +326,9 @@ section {
   @include theme($key, $value);
 }
 
-@import "~nouislider/distribute/nouislider.min.css";
+.tabset, .tab-content, .tab-pane, .tabbable {
+  height: 100% !important;
+}
 
 /* Importing Bootstrap SCSS file. */
 @import '~bootstrap/scss/bootstrap';

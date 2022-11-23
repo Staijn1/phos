@@ -19,12 +19,15 @@
         "inlineStyleLanguage": "scss",
         "assets": [
           "apps/website/src/favicon.ico",
-          "apps/website/src/assets"
+          "apps/website/src/assets",
+          "apps/website/src/manifest.webmanifest"
         ],
         "styles": [
           "apps/website/src/styles.scss"
         ],
-        "scripts": []
+        "scripts": [],
+        "serviceWorker": true,
+        "ngswConfigPath": "apps/website/ngsw-config.json"
       },
       "configurations": {
         "production": {
@@ -32,7 +35,7 @@
             {
               "type": "initial",
               "maximumWarning": "500kb",
-              "maximumError": "1mb"
+              "maximumError": "2mb"
             },
             {
               "type": "anyComponentStyle",

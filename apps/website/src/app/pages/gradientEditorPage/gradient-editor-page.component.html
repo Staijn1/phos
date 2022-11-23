@@ -1,5 +1,3 @@
-<h1>This page is under construction</h1>
-<!--
 <div class="d-md-none text-center d-flex flex-column justify-content-center min-vh-100 p-3">
   <h1 class="text-danger">Sorry!</h1>
   <p>For the optimal experience, please open this page on a tablet or desktop!</p>
@@ -64,7 +62,7 @@
                     </button>
                   </div>
                 </div>
-                <div [ngbCollapse]='gradient.collapsed'>
+                <div [ngbCollapse]='gradient.collapsed!'>
                   <div class='row'>
                     <div class='col'>
                       <p>Background color: {{gradient.bgColor}}</p>
@@ -89,13 +87,9 @@
                     <tr *ngFor='let stop of gradient.colorStops;let stopIndex = index'>
                       <th scope='row'>{{stopIndex + 1}}</th>
                       <td colspan='1'>
-                        <nouislider
-                          [name]="'sliderinput' + stopIndex"
-                          [config]='gradient.sliderOptions'
-                          [(ngModel)]='stop.pos'
-                          (slide)='updateOptions()'
-                          #slider
-                        ></nouislider>
+                        <ngx-slider [options]="gradient.sliderOptions"
+                                    [(ngModel)]="stop.pos"
+                                    (userChange)="updateOptions()"></ngx-slider>
                         <div class='small'>{{stop.pos}}</div>
                       </td>
                       <td class='text-center'>
@@ -140,4 +134,3 @@
     </div>
   </div>
 </div>
--->

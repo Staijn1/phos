@@ -8,22 +8,34 @@ networks:
     driver: bridge
 
 services:
+  api:
+    container_name: api
+    build:
+      context: ./
+      cache_from:
+        - staijn/angulon:nx-base
+      dockerfile: ./apps/api/Dockerfile
+    image: staijn/angulon:api
+    ports:
+      - 7001:3333
+    environment:
+      PORT: 3333
+    networks:
+      - corp
+    restart: on-failure
+
   website:
-    container_name: website
+    container_name: angulon
     build:
       context: ./
       cache_from:
         - nginx:1.19.2
       dockerfile: ./apps/website/Dockerfile
-      args:
-        NODE_ENV: 'development'
-        BUILD_FLAG: ''
     image: staijn/angulon:website
     ports:
-      - 4900:80
+      - 7000:80
     environment:
-      NODE_ENV: 'development'
-      PORT: 4900
+      PORT: 7000
     networks:
       - corp
     restart: on-failure

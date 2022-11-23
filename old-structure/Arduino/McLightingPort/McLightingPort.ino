@@ -13,8 +13,8 @@
 #include <WiFi.h>
 #include <WebServer.h>
 #include <WebSockets.h>           //https://github.com/Links2004/arduinoWebSockets
-#include <WebSocketsServer.h>
 #include <WebSocketsClient.h>
+#include <SocketIOclient.h>
 #include <EEPROM.h>
 #include<Preferences.h> //https://github.com/espressif/arduino-esp32/tree/master/libraries/Preferences
 /**
@@ -37,30 +37,17 @@ void setup() {
 
   if (isConfigured) {
     connectToWifi();
-    setupWebserver();
     setupLedstrip();
-    if (isConfiguredAsClient()) {
-      Serial.println("[SETUP] This device is configured as a client. A websocket server will not be created on this instance.");
-      setupWebsocketClient();
-    } else {
-      setupWebsocketServer();
-    }
-  } else {
-    setupWebserver();
+    setupWebsocketClient();
   }
+  setupWebserver();
 }
 
 void loop() {
   runWebserver();
 
   if (isConfigured) {
-    if (isConfiguredAsClient()) {
-      runWebsocketClient();
-    } else {
-      runWebsocketServer();
-    }
-
-
+    runWebsocketClient();
     runLedstrip();
   }
 }

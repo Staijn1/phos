@@ -1,217 +1,232 @@
-<div class='vh-100' id='wrapper'>
-  <div class='h-50'>
-    <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
-  </div>
-  <div id='overlay' class='d-flex justify-content-center align-content-center'>
-    <section id='section05' class='w-100 d-flex flex-column justify-content-center align-items-center'>
-      <h3 (click)='scroll(settings)'><span></span>Settings</h3>
-      <button class='btn btn-sm btn-primary' (click)='dismissOverlay()'>Okay</button>
-    </section>
-  </div>
-  <div class='container mt-5'>
-    <div class='card'>
-      <div class='card-header d-flex justify-content-between bg-primary text-white align-content-center'
-           #settings>
-        <h5 class='text-white'>Settings</h5>
-        <div>
-          <a (click)='updateLedstrip()' class='btn btn-primary'>
-            <fa-icon [icon]='modeIcon' size='1x'></fa-icon>
-          </a>
-          <a class='btn btn-primary'>
-            <fa-icon (click)='fullscreen()' [icon]='fullscreenIcon' size='1x'></fa-icon>
-          </a>
-          <a class='btn btn-primary'>
-            <fa-icon (click)='saveOptions()' [icon]='saveIcon' size='1x'></fa-icon>
-          </a>
-          <a class='btn btn-primary'>
-            <fa-icon (click)='loadOptions()' [icon]='load' size='1x'></fa-icon>
-          </a>
-        </div>
-      </div>
-      <div class='card-body text-dark'>
-        <div class='row'>
-          <!--                Gradient-->
-          <div class='col'>
-            <div class='input-group mb-3'>
-              <div class='input-group-prepend'>
-                <label class='input-group-text bg-secondary text-white'
-                       for='gradientSelect'>Gradient</label>
-              </div>
-              <!--<select (change)='changeGradient($event.target.value)' class='form-select'
-                      id='gradientSelect'>
-                <option *ngFor='let gradient of gradients; let gradientIndex = index'
-                        [value]='gradientIndex'>
-                  {{gradient.name}}
-                </option>
-              </select>-->
-            </div>
-          </div>
-          <!--                FFT Size-->
-          <div class='col'>
-            <div class='input-group mb-3'>
-              <div class='input-group-prepend'>
-                <label class='input-group-text bg-secondary text-white' for='fftSize'>FFT Size</label>
-              </div>
-              <select (change)='updateOptions()' [(ngModel)]='visualizerOptions.fftSize'
-                      class='form-select'
-                      id='fftSize'>
-                <option value='512'>512</option>
-                <option value='1024'>1024</option>
-                <option value='2048'>2048</option>
-                <option value='4096'>4096</option>
-                <option selected value='8192'>8192</option>
-                <option value='16384'>16384</option>
-                <option value='32768'>32768</option>
-              </select>
-            </div>
-          </div>
-          <!--                Smooth slider-->
-          <div class='col d-flex flex-column'>
-            <!--            <nouislider (update)='updateOptions()' [(ngModel)]='visualizerOptions.smoothing'-->
-            <!--                        [config]='smoothingConfig'></nouislider>-->
-            <p class='small text-dark'>Smoothing: {{visualizerOptions.smoothing}}</p>
-          </div>
-        </div>
-        <div class='row'>
-          <!--              Mode-->
-          <div class='col'>
-            <div class='input-group mb-3'>
-              <div class='input-group-prepend'>
-                <label class='input-group-text bg-secondary text-white'
-                       for='gradientSelect'>Mode</label>
-              </div>
-              <select #modeSelect (change)='updateMode($event)' class='form-select'
-                      id='modeSelect'>
-                <option *ngFor='let mode of modes;'
-                        [selected]='mode.value === visualizerOptions.mode'
-                        [value]='mode.value'
-                >
-                  {{mode.text}}
-                </option>
-              </select>
-            </div>
-          </div>
-          <!--                Reflex-->
-          <div class='col'>
-            <div class='input-group mb-3'>
-              <div class='input-group-prepend'>
-                <label class='input-group-text bg-secondary text-white'
-                       for='reflex'>Reflex</label>
-              </div>
-              <select (change)='changeReflex($event)' class='form-select' id='reflex'>
-                <option value='0'>Off</option>
-                <option value='1'>On</option>
-                <option value='2'>Mirrored Vertically</option>
-              </select>
-            </div>
-          </div>
-          <!--                Frequency slider-->
-          <div class='col flex-column'>
-            <!--            <nouislider (slide)='changeFrequencyLimit()' [(ngModel)]='frequencyLimits'-->
-            <!--                        [config]='frequencyLimitsConfig'></nouislider>-->
-            <p class='small text-dark'>Minimum: {{frequencyLimits[0]}}</p>
-            <p class='small text-dark'>Maximum: {{frequencyLimits[1]}}</p>
-          </div>
-        </div>
-        <div class='row'>
-          <!--                    Spin speed if radial is active-->
-          <div class='col-4 offset-8'>
-            <!--            <nouislider (slide)='updateOptions()' *ngIf='this.visualizerOptions.radial'-->
-            <!--                        [(ngModel)]='this.visualizerOptions.spinSpeed'-->
-            <!--                        [config]='spinSpeedConfig'></nouislider>-->
-            <p *ngIf='this.visualizerOptions.radial' class='small text-dark'>Spin
-              speed: {{this.visualizerOptions.spinSpeed}}</p>
-          </div>
-        </div>
-
-        <div class='row'>
-          <div *ngIf="modeSelect.value === '11'" class='col-4 offset-8'>
-            <!--            <nouislider (slide)='updateOptions()'-->
-            <!--                        [(ngModel)]='this.visualizerOptions.lineWidth'-->
-            <!--                        [config]='lineWidthConfig'></nouislider>-->
-            <p class='small text-dark'>
-              Line width: {{this.visualizerOptions.lineWidth}}</p>
-          </div>
-        </div>
-        <div class='row'>
-          <div *ngIf="modeSelect.value === '11'" class='col-4 offset-8'>
-            <!--            <nouislider (slide)='updateOptions()'-->
-            <!--                        [(ngModel)]='this.visualizerOptions.fillAlpha'-->
-            <!--                        [config]='bgAlphaConfig'></nouislider>-->
-            <p class='small text-dark'>
-              Fill opacity: {{this.visualizerOptions.fillAlpha}}</p>
-          </div>
-        </div>
-        <div class='row'>
-          <!--              Scale-->
-          <div class='col'>
-            <div class='input-group mb-3'>
-              <div class='input-group-prepend'>
-                <label class='input-group-text bg-secondary text-white'
-                       for='scaleSelect'>Scale</label>
-              </div>
-              <select (change)='changeShowScale($event)' class='form-select'
-                      id='scaleSelect'>
-                <option selected value='0'>None</option>
-                <option value='1'>Frequency</option>
-                <option value='2'>Level (dB)</option>
-                <option value='3'>Both</option>
-              </select>
-            </div>
-          </div>
-          <div class='col'>
-            <div class='input-group mb-3'>
-              <div class='input-group-prepend'>
-                <label class='input-group-text bg-secondary text-white'
-                       for='mirrorSelect'>Mirror</label>
-              </div>
-              <select class='form-select' id='mirrorSelect' [(ngModel)]='visualizerOptions.mirror'
-                      (ngModelChange)='updateOptions()'>
-                <option selected [value]='0'>None</option>
-                <option [value]='-1'>Mirror left</option>
-                <option [value]='1'>Mirror Right</option>
-              </select>
-            </div>
-          </div>
-          <!-- Display modePage (leds, radial) -->
-          <div class='col d-flex justify-content-center py-2'>
-            <div class='btn-group' role='group' aria-label='Basic radio toggle button group'>
-              <input type='radio' class='btn-check' name='options' id='leds'
-                     (change)='changeDisplay($event)' autocomplete='off'
-              >
-              <label class='btn btn-outline-primary' for='leds'>Leds</label>
-
-              <input type='radio' class='btn-check' name='options' id='lumi'
-                     (change)='changeDisplay($event)' autocomplete='off'
-              >
-              <label class='btn btn-outline-primary' for='lumi'>Lumi</label>
-
-              <input type='radio' class='btn-check' name='options' id='radial'
-                     (change)='changeDisplay($event)' autocomplete='off'
-              >
-              <label class='btn btn-outline-primary' for='radial'>Radial</label>
-
-              <input type='radio' class='btn-check' name='options' id='normal'
-                     (change)='changeDisplay($event)' autocomplete='off'
-              >
-              <label class='btn btn-outline-primary' for='normal'>Normal</label>
-            </div>
-          </div>
-        </div>
-        <div class='row'>
-          <!--              Scale-->
-          <div class='col'>
-          </div>
-          <div class='col'></div>
-          <!-- General settingsPage (fps, lo res) -->
-          <div class='col d-flex  py-2'>
-            <input type='checkbox' class='form-check' name='options' id='peaks'
-                   (change)='changeGeneralSettings($event)' autocomplete='off'
-            >
-            <label class='form-check-label ms-2' for='peaks'>Peaks</label>
-          </div>
-        </div>
+<div class='vh-100 d-flex flex-column bg-black' id='wrapper'>
+  <div class="toolbar-container">
+    <div class="toolbar">
+      <!--      Button group-->
+      <div class="btn-group">
+        <button type="button" class="btn btn-primary" (click)="openSettingsWindow()">
+          <fa-icon [icon]="settingsIcon" (click)="openSettingsWindow()"></fa-icon>
+        </button>
+        <button class='btn btn-primary' (click)='fullscreen()'>
+          <fa-icon [icon]='fullscreenIcon'></fa-icon>
+        </button>
+        <button class='btn btn-primary' (click)='updateLedstrip()'>
+          <fa-icon [icon]='modeIcon'></fa-icon>
+        </button>
       </div>
     </div>
   </div>
+  <div class='h-75'>
+    <app-shared-visualizer (ready)="init()" (registeredGradients)="readSettings()" [options]='visualizerOptions'
+                           [gradients]='gradients'></app-shared-visualizer>
+  </div>
 </div>
+<app-offcanvas>
+  <div header class="p-1"><h3>Settings</h3></div>
+  <div body class="p-3 h-100">
+    <!--    Create tabs-->
+    <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+      <li [ngbNavItem]="0">
+        <a ngbNavLink>
+          <fa-icon [icon]="listIcon"></fa-icon>
+        </a>
+        <ng-template ngbNavContent>
+          <div>
+            <!--    Select box for the gradients-->
+            <div class="form-group">
+              <label for="gradients">Gradient</label>
+              <select class="form-control" id="gradients" (change)="applySettings()"
+                      [(ngModel)]="visualizerOptions.gradient">
+                <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
+              </select>
+            </div>
+            <!--    Select box for the display modes-->
+            <div class="form-group">
+              <label for="modes">Display Mode</label>
+              <select class="form-control" id="modes" (change)="applySettings()" [(ngModel)]="visualizerOptions.mode">
+                <option *ngFor="let mode of modes" [ngValue]="mode.value">{{mode.text}}</option>
+              </select>
+            </div>
+            <!--    Selectbox for mirror. Accepted values are -1 for mirror left, 0 for no mirror and 1 for mirror right-->
+            <div class="form-group">
+              <label for="mirror">Mirror</label>
+              <select class="form-control" id="mirror" (change)="applySettings()"
+                      [(ngModel)]="visualizerOptions.mirror">
+                <option [ngValue]="-1">Left</option>
+                <option [ngValue]="0">None</option>
+                <option [ngValue]="1">Right</option>
+              </select>
+            </div>
+            <!--    Selectbox for FFT bin size-->
+            <div class="form-group">
+              <label for="fftBinSize">FFT Bin Size</label>
+              <select class="form-control" id="fftBinSize" (change)="applySettings()"
+                      [(ngModel)]="visualizerOptions.fftSize">
+                <option [ngValue]="512">512</option>
+                <option [ngValue]="1024">1024</option>
+                <option [ngValue]="2048">2048</option>
+                <option [ngValue]="4096">4096</option>
+                <option [ngValue]="8192">8192</option>
+                <option [ngValue]="16384">16384</option>
+                <option [ngValue]="32768">32768</option>
+              </select>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="1">
+        <a ngbNavLink>
+          <fa-icon [icon]="checkboxIcon"></fa-icon>
+        </a>
+        <ng-template ngbNavContent>
+          <div>
+            <!--    Checkbox for alpha bars-->
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="alphaBars" (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.alphaBars">
+              <label class="form-check-label" for="alphaBars">Alpha Bars</label>
+            </div>
+            <!--Checkbox for led bars -->
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="ledBars" (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.ledBars">
+              <label class="form-check-label" for="ledBars">Led Bars</label>
+            </div>
+            <!-- Checkbox for luminance bars -->
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="luminanceBars" (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.lumiBars">
+              <label class="form-check-label" for="luminanceBars">Luminance Bars</label>
+            </div>
+            <!--Checkbox for showing peaks-->
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="showPeaks" (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.showPeaks">
+              <label class="form-check-label" for="showPeaks">Show Peaks</label>
+            </div>
+            <!--    Checkbox for showing outline bars. Only works when mode is on of the octave bands-->
+            <div class="form-check">
+              <input type="checkbox" class="form-check-input" id="showOutline"
+                     title="Only works when mode is one of the octave bands"
+                     (change)="applySettings()"
+                     [disabled]="!isOctaveBandMode"
+                     [(ngModel)]="visualizerOptions.outlineBars">
+              <label class="form-check-label" for="showOutline">Show Outline</label>
+            </div>
+            <!--    Checkbox for show scale on X axis-->
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="showScaleX"
+                     (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.showScaleX">
+              <label class="form-check-label" for="showScaleX">
+                Show scale on X axis
+              </label>
+            </div>
+            <!--    Checkbox for show scale on Y axis-->
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="showScaleY"
+                     (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.showScaleY">
+              <label class="form-check-label" for="showScaleY">
+                Show scale on Y axis
+              </label>
+            </div>
+            <!--    Checkbox for radial-->
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="radial"
+                     (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.radial">
+              <label class="form-check-label" for="radial">
+                Radial
+              </label>
+            </div>
+            <!--    Checkbox for stereo mode-->
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="stereo"
+                     (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.stereo">
+              <label class="form-check-label" for="stereo">
+                Stereo
+              </label>
+            </div>
+            <!--    When stereo is enabled, show a checkbox to split gradient-->
+            <div class="form-check">
+              <input class="form-check-input" type="checkbox" id="splitGradient"
+                     [disabled]="!visualizerOptions.stereo"
+                     (change)="applySettings()"
+                     [(ngModel)]="visualizerOptions.splitGradient">
+              <label class="form-check-label" for="splitGradient">
+                Split Gradient
+              </label>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+      <li [ngbNavItem]="2">
+        <a ngbNavLink>
+          <fa-icon [icon]="sliderIcon"></fa-icon>
+        </a>
+        <ng-template ngbNavContent>
+          <!--      Simple slider for smoothing-->
+          <div>
+            Smoothing
+            <ngx-slider *ngIf="visualizerOptions.smoothing" (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.smoothing"
+                        [options]="smoothingSliderOptions"></ngx-slider>
+          </div>
+          <!--Simple slider for rotation speed, only visible when radial is true-->
+          <div>
+            Rotation Speed
+            <ngx-slider *ngIf="visualizerOptions.spinSpeed !== undefined" (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.spinSpeed"
+                        [options]="spinSpeedSliderOptions"></ngx-slider>
+          </div>
+          <!--      Range slider for min and max frequency-->
+          <div>
+            Min Frequency
+            <ngx-slider *ngIf="visualizerOptions.minFreq !== undefined && visualizerOptions.maxFreq !== undefined"
+                        (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.minFreq"
+                        [(highValue)]="visualizerOptions.maxFreq"
+                        [options]="frequencySliderOptions"></ngx-slider>
+          </div>
+          <!--      Simple slider for line width-->
+          <div>
+            Line Width
+            <ngx-slider *ngIf="visualizerOptions.lineWidth !== undefined" (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.lineWidth"
+                        [options]="lineWidthSliderOptions"></ngx-slider>
+          </div>
+          <!--      Simple slider for fill alpha-->
+          <div>
+            Fill Alpha
+            <ngx-slider *ngIf="visualizerOptions.fillAlpha !== undefined" (valueChange)="applySettings()"
+                        [(value)]="visualizerOptions.fillAlpha"
+                        [options]="fillAlphaSliderOptions"></ngx-slider>
+          </div>
+          <!--            Create three vertical sliders next to each other for all reflex controls: reflexRatio, reflexAlpha and reflexBright-->
+          <div class="row h-25">
+            <div class="col-4">
+              Reflex Ratio
+              <ngx-slider *ngIf="visualizerOptions.reflexRatio !== undefined" (valueChange)="applySettings()"
+                          [(value)]="visualizerOptions.reflexRatio"
+                          [options]="reflexSliderOptions"></ngx-slider>
+            </div>
+            <div class="col-4">
+              Reflex Alpha
+              <ngx-slider *ngIf="visualizerOptions.reflexAlpha !== undefined" (valueChange)="applySettings()"
+                          [(value)]="visualizerOptions.reflexAlpha"
+                          [options]="reflexSliderOptions"></ngx-slider>
+            </div>
+            <div class="col-4">
+              Reflex Bright
+              <ngx-slider *ngIf="visualizerOptions.reflexBright !== undefined" (valueChange)="applySettings()"
+                          [(value)]="visualizerOptions.reflexBright"
+                          [options]="reflexSliderOptions"></ngx-slider>
+            </div>
+          </div>
+        </ng-template>
+      </li>
+    </ul>
+    <div [ngbNavOutlet]="nav" class="mt-2 h-100"></div>
+  </div>
+</app-offcanvas>

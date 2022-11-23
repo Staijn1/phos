@@ -1,30 +1,38 @@
 import {Injectable} from '@angular/core'
 import {map} from '../../shared/functions'
 import {Connection} from '../../shared/interfaces/Connection'
-import ReconnectingWebSocket from 'reconnecting-websocket'
 import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
 import {ErrorService} from '../error/error.service'
-import * as Events from 'reconnecting-websocket/events'
+import {io, Socket} from 'socket.io-client'
+import {GradientInformation, ModeInformation} from '@angulon/interfaces';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService extends Connection {
   websocketUrl = environment.websockUrl
-  private socket: ReconnectingWebSocket;
+  private socket: Socket;
   private colorTimeout!: NodeJS.Timeout;
 
   constructor(errorService: ErrorService) {
     super()
-    this.socket = new ReconnectingWebSocket(this.websocketUrl)
-    this.socket.onopen = (ev: any) => {
-      console.log(`Opened websocket at`, (ev.currentTarget as WebSocket).url)
-    }
-    this.socket.onerror = (ev: Events.ErrorEvent) => {
-      console.log(`Error on websocket`, ev)
-      errorService.setError(new Error('Failed to connect'))
-    }
+    this.socket = io(environment.websockUrl, {
+      transports: ['websocket'],
+    });
+    this.socket.on('connect', () => {
+      console.log(`Opened websocket at`, this.websocketUrl)
+    });
+
+    this.socket.on('disconnect', () => {
+      console.log(`Disconnected from websocket at ${this.websocketUrl}`)
+    });
+
+    this.socket.on('connect_error', (error: Error) => {
+      console.log(`Failed to connect to websocket at ${this.websocketUrl}`)
+      console.error(error)
+      errorService.setError(error)
+    });
   }
 
   setColor(colors: iro.Color[] | string[]): void {
@@ -33,42 +41,58 @@ export class WebsocketService extends Connection {
     this.colorTimeout = setTimeout(() => {
       const color = colors[0]
       const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
-      this.send(colorstring)
+      this.send('color', colorstring)
     }, 10)
   }
 
-  send(payload: string): void {
-    if (this.isOpen()) {
-      this.socket.send(payload)
-    }
-  }
-
   setMode(modeNumber: number): void {
-    this.send(`m ${modeNumber}`)
-  }
-
-  isOpen(): boolean {
-    return this.socket.readyState === this.socket.OPEN
-  }
-
-  decreaseBrightness(): void {
-    this.send('b')
-  }
-
-  increaseBrightness(): void {
-    this.send('B')
-  }
-
-  increaseSpeed(): void {
-    this.send('S')
-  }
-
-  decreaseSpeed(): void {
-    this.send('s')
+    this.send('mode', modeNumber.toString())
   }
 
   setLeds(value: number): void {
     const mappedValue = map(value, 0, 1, 0, 255)
-    this.send(`.${mappedValue}`)
+    this.send('FFT', mappedValue.toString())
+  }
+
+  send(event: string, payload: string): void {
+    if (this.isOpen()) {
+      this.socket.emit(event, payload)
+    }
+  }
+
+  isOpen(): boolean {
+    return this.socket.connected
+  }
+
+  decreaseBrightness(): void {
+    throw new Error('Method not implemented.')
+  }
+
+  increaseBrightness(): void {
+    throw new Error('Method not implemented.')
+  }
+
+  decreaseSpeed(): void {
+    throw new Error('Method not implemented.')
+  }
+
+  increaseSpeed(): void {
+    throw new Error('Method not implemented.')
+  }
+
+  getModes(): Promise<ModeInformation[]> {
+    return new Promise((resolve, reject) => {
+      this.socket.emit('getModes', (data: ModeInformation[]) => {
+        resolve(data)
+      })
+    });
+  }
+
+  getGradients(): Promise<GradientInformation[]> {
+    return new Promise((resolve, reject) => {
+      this.socket.emit('getGradients', (data: GradientInformation[]) => {
+        resolve(data)
+      })
+    });
   }
 }
