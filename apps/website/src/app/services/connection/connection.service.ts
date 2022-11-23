@@ -1,5 +1,5 @@
 import {Injectable} from '@angular/core'
-import {Connection} from '../../shared/interfaces/Connection'
+import {LedstripConnection} from '../../shared/interfaces/LedstripConnection'
 import {WebsocketService} from '../websocketconnection/websocket.service'
 import {HTTPConnectionService} from '../httpconnection/httpconnection.service'
 import iro from '@jaames/iro'
@@ -9,7 +9,7 @@ import {GradientInformation, GradientInformationExtended, ModeInformation} from 
 @Injectable({
   providedIn: 'root'
 })
-export class ConnectionService extends Connection {
+export class ConnectionService extends LedstripConnection {
 
   constructor(
     private websocketService: WebsocketService,
