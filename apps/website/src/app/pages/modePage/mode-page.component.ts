@@ -49,14 +49,16 @@ export class ModePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-
     this.connection.getModes().then(modes => {
       this.modes = modes
     })
   }
 
-
-  onChangeSegment($event: MouseEvent): void {
+  /**
+   * Fired when the user clicks on a mode button
+   * @param {MouseEvent} $event
+   */
+  onModeSelect($event: MouseEvent): void {
     const id = parseInt(($event.currentTarget as HTMLElement).id, 10)
     this.selectedMode = id
 
