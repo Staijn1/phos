@@ -5,8 +5,6 @@ import {BlinkState} from '../../services/chromaEffect/state/blink-state/blink-st
 import {SingleDynamicState} from '../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state'
 import {MultiDynamicState} from '../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state'
 import {RainbowState} from '../../services/chromaEffect/state/rainbow-state/rainbow-state'
-import {gsap} from 'gsap'
-import {ScrollTrigger} from 'gsap/ScrollTrigger'
 import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fire2012-state'
 import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state'
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state'
@@ -44,7 +42,6 @@ export class ModePageComponent implements OnInit, OnDestroy {
   constructor(
     private readonly connection: ConnectionService,
     private readonly chromaService: ChromaEffectService) {
-    gsap.registerPlugin(ScrollTrigger)
   }
 
   ngOnDestroy(): void {
@@ -52,25 +49,6 @@ export class ModePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnInit(): void {
-    const anim = gsap.to('.fade-up', {
-      y: 0,
-      opacity: 1,
-      duration: 1,
-      ease: 'power2.inOut',
-      paused: true
-    })
-
-    ScrollTrigger.create({
-      trigger: '.fade-up',
-      start: 'top bottom',
-      onEnter: () => anim.play()
-    })
-
-    ScrollTrigger.create({
-      trigger: '.fade-up',
-      start: 'top bottom',
-      onLeaveBack: () => anim.pause(0)
-    })
 
     this.connection.getModes().then(modes => {
       this.modes = modes

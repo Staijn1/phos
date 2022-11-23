@@ -1,7 +1,7 @@
 import {AfterViewInit, Component, EventEmitter, OnInit, Output, Renderer2} from '@angular/core'
 import {faSquare} from '@fortawesome/free-regular-svg-icons'
-import {TimelineLite} from 'gsap'
-import {NavigationEnd, Router} from '@angular/router'
+import {TimelineLite, gsap} from 'gsap'
+import {NavigationEnd, NavigationStart, Router} from '@angular/router'
 
 import {
   faBars,
@@ -64,6 +64,9 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
   ngOnInit(): void {
     this.router.events.subscribe((val) => {
+      if(val instanceof NavigationStart){
+        gsap.set('#cover', {autoAlpha: 1, duration: 0})
+      }
       if (val instanceof NavigationEnd) {
         this.animate()
         this.closeMobileMenu()
@@ -116,6 +119,11 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   }
 
   private animate(): void {
+    gsap.to('#cover', {
+      ease: 'power4.inOut',
+      alpha: 1,
+    })
+
     this.timeline = new TimelineLite({
       defaults: {
         ease: 'power4.inOut'
@@ -123,7 +131,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
       onComplete: () => {
         this.fireEvent()
       }
-    }).set('#cover', {autoAlpha: 1})
+    })
 
     switch (this.animationMode) {
       case 0:
