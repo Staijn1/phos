@@ -1,6 +1,6 @@
-import {AfterViewInit, Component, EventEmitter, OnInit, Output, Renderer2} from '@angular/core'
+import {Component, OnInit, Renderer2} from '@angular/core'
 import {faSquare} from '@fortawesome/free-regular-svg-icons'
-import {TimelineLite, gsap} from 'gsap'
+import {gsap} from 'gsap'
 import {NavigationEnd, NavigationStart, Router} from '@angular/router'
 
 import {
@@ -28,7 +28,7 @@ import {ConnectionService} from '../../services/connection/connection.service'
   templateUrl: './navigationbar.component.html',
   styleUrls: ['./navigationbar.component.scss']
 })
-export class NavigationbarComponent implements OnInit, AfterViewInit {
+export class NavigationbarComponent implements OnInit {
   cog = faCog;
   home = faHome;
   mode = faList;
@@ -50,10 +50,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   visualizer3D = faCubes;
   // private window: Electron.BrowserWindow | undefined;
   private animationMode = 0;
-  private timeline!: TimelineLite;
-
-  @Output() animationEnd = new EventEmitter<void>();
-
+  timeline = gsap.timeline();
 
   constructor(
     public connection: ConnectionService,
@@ -66,17 +63,13 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if(val instanceof NavigationStart){
-        gsap.set('#cover', {autoAlpha: 1, duration: 0})
+        gsap.set('#cover', {autoAlpha: 1, duration: 0.3})
       }
       if (val instanceof NavigationEnd) {
         this.animate()
         this.closeMobileMenu()
       }
     })
-  }
-
-  ngAfterViewInit(): void {
-    this.animate()
   }
 
   mobileNav(): void {
@@ -99,85 +92,65 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.isOpen = true
   }
 
-  private animationFromLeft(anime: TimelineLite): TimelineLite {
-    anime.to('.from-left .tile', {
+  private animationFromLeft(): void {
+    // First we transform the tiles from the left to the right, staggered.
+    this.timeline.to('.from-left .tile', {
       duration: 0.4,
       width: '100%',
       left: '0%',
-      delay: 0.2,
+      delay: 0,
       stagger: 0.05,
     })
-    anime.to('.from-left .tile', {
+    // After that animation has finished, we transform the tiles from the right to the left, staggered.
+    this.timeline.to('.from-left .tile', {
       duration: 0.4,
       width: '100%',
       left: '100%',
-      delay: 0.2,
+      delay: 0,
       stagger: -0.05,
     })
-    anime.set('.from-left .tile', {left: '0', width: '0'})
-
-    return anime
+    gsap.set('.from-left .tile', {left: '0', width: '0'})
   }
 
   private animate(): void {
     // Animate the cover to fade out, revealing the page.
-    gsap.to('#cover', {
-      ease: 'power4.inOut',
-      alpha: 1,
-    })
-
-    this.timeline = new TimelineLite({
-      defaults: {
-        ease: 'power4.inOut'
-      },
-      onComplete: () => {
-        this.fireEvent()
-      }
-    })
 
     switch (this.animationMode) {
       case 0:
-        this.animateFromTop(this.timeline)
+        this.animateFromTop()
         break
       case 1:
-        this.animationFromLeft(this.timeline)
+        this.animationFromLeft()
         break
     }
 
+    this.timeline.to('#cover', {duration: 0.6, opacity: 0, ease: 'power4.inOut'})
     this.animationMode = ++this.animationMode % 2
   }
 
-  private animateFromTop(anime: TimelineLite): TimelineLite {
-    anime.to('.from-top .tile', {
+  private animateFromTop(): void {
+    // Fist we transform the tiles from the top to the bottom, staggered.
+    this.timeline.to('.from-top .tile', {
       duration: 0.4,
       height: '100%',
       top: '0%',
       delay: 0,
       stagger: 0.05,
-    }).to('.from-top .tile', {
+    });
+    // After that animation has finished, we transform the tiles from the bottom to the top, staggered.
+    this.timeline.to('.from-top .tile', {
       duration: 0.4,
       height: '100%',
       top: '100%',
       delay: 0,
       stagger: -0.05,
-    }).set('.from-top .tile', {top: '0', height: '0'})
-    return anime
-  }
-
-  private fireEvent(): void {
-    const anime: TimelineLite = new TimelineLite()
-    anime.to('#cover', {
-      duration: 0.8,
-      autoAlpha: 0,
-      ease: 'power2.inOut'
     })
-    this.animationEnd.emit()
+    gsap.set('.from-top .tile', {top: '0', height: '0'})
   }
 
   turnOff(): void {
-    this.timeline
-      .to('#powerOff', 0.6, {color: 'white', background: 'var(--bs-danger)'})
-      .to('#powerOff', 1.2, {clearProps: 'background,color'})
+    this.timeline.to('#powerOff',  {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
+    this.timeline.to('#powerOff',  {duration: 1.2, clearProps: 'background,color'});
 
     this.connection.setColor(['#000000', '#000000', '#000000'])
     this.connection.setMode(0)
