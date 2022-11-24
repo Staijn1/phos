@@ -17,3 +17,5 @@ export const themes = [
   'walnut',
   'elderberry'
 ];
+
+export const visualizerModeId = 72;
