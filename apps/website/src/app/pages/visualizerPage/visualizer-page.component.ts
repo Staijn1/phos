@@ -10,6 +10,7 @@ import {VisualizerComponent} from '../../shared/components/visualizer/visualizer
 import {GradientInformation} from "@angulon/interfaces";
 import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
 import * as slider from '@angular-slider/ngx-slider';
+import {InformationService} from "../../services/information-service/information.service";
 
 @Component({
   selector: 'app-visualizer',
@@ -77,6 +78,7 @@ export class VisualizerPageComponent implements OnDestroy {
 
   constructor(
     private connection: LedstripCommandService,
+    private information: InformationService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService,
   ) {
@@ -102,7 +104,7 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   init(): void {
-    this.connection.getGradients().then((gradients) => {
+    this.information.getGradients().then((gradients) => {
       this.gradients = gradients
       // this.chromaEffect.state = new VisualizerBrightnessState()
     });
