@@ -1,7 +1,7 @@
 import {Injectable} from '@angular/core'
 import {LedstripConnection} from '../../shared/interfaces/LedstripConnection'
 import {WebsocketService} from '../websocketconnection/websocket.service'
-import {HTTPConnectionService} from '../httpconnection/httpconnection.service'
+import {InformationService} from '../information-service/information.service'
 import iro from '@jaames/iro'
 import {MessageService} from '../error/message.service'
 import {GradientInformation, GradientInformationExtended, ModeInformation} from '@angulon/interfaces';
@@ -13,7 +13,6 @@ export class LedstripCommandService extends LedstripConnection {
 
   constructor(
     private websocketService: WebsocketService,
-    private apiService: HTTPConnectionService,
     private errorService: MessageService) {
     super()
   }
@@ -88,59 +87,5 @@ export class LedstripCommandService extends LedstripConnection {
    */
   async getModes(): Promise<ModeInformation[]> {
     return this.websocketService.getModes();
-  }
-
-  /**
-   * Retrieve all the different gradients from the server. Gradients are used in the audiomotion visualizer
-   * @return {Promise<GradientInformation[]>}
-   */
-  async getGradients(): Promise<GradientInformation[]> {
-    try {
-      return this.websocketService.getGradients();
-    } catch (error: any) {
-      this.errorService.setMessage(error)
-      return []
-    }
-  }
-
-  /**
-   * Edit a gradient
-   * @param {GradientInformationExtended} gradient - The gradient to edit with its new values
-   * @return {Promise<void>}
-   */
-  async editGradient(gradient: GradientInformationExtended): Promise<void> {
-    try {
-      await this.apiService.editGradient(gradient as GradientInformation)
-    } catch (error: any) {
-      this.errorService.setMessage(error)
-    }
-  }
-
-  /***
-   * Delete a gradient
-   * @param {GradientInformationExtended} gradient
-   * @return {Promise<GradientInformation[]>}
-   */
-  async removeGradient(gradient: GradientInformationExtended): Promise<GradientInformation[]> {
-    try {
-      return await this.apiService.removeGradient(gradient as GradientInformation)
-    } catch (error: any) {
-      this.errorService.setMessage(error)
-      return this.getGradients()
-    }
-  }
-
-  /**
-   * Create a new gradient
-   * @param {GradientInformationExtended} newGradient
-   * @return {Promise<GradientInformation[]>}
-   */
-  async addGradient(newGradient: GradientInformationExtended): Promise<GradientInformation[]> {
-    try {
-      return await this.apiService.addGradient(newGradient as GradientInformation)
-    } catch (error: any) {
-      this.errorService.setMessage(error)
-      return this.getGradients();
-    }
   }
 }

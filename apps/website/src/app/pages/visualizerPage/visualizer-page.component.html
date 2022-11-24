@@ -4,7 +4,7 @@
       <!--      Button group-->
       <div class="btn-group">
         <button type="button" class="btn btn-primary" (click)="openSettingsWindow()">
-          <fa-icon [icon]="settingsIcon" (click)="openSettingsWindow()"></fa-icon>
+          <fa-icon [icon]="settingsIcon"></fa-icon>
         </button>
         <button class='btn btn-primary' (click)='fullscreen()'>
           <fa-icon [icon]='fullscreenIcon'></fa-icon>
@@ -21,7 +21,10 @@
   </div>
 </div>
 <app-offcanvas>
-  <div header class="p-1"><h3>Settings</h3></div>
+  <div header class="p-1 d-flex justify-content-between w-100">
+    <h3>Settings</h3>
+    <button type="button" class="btn-close" aria-label="Close" (click)="closeOffcanvas()"></button>
+  </div>
   <div body class="p-3 h-100">
     <!--    Create tabs-->
     <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">

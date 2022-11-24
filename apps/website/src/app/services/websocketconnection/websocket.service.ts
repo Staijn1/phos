@@ -11,13 +11,13 @@ import {GradientInformation, ModeInformation} from '@angulon/interfaces';
   providedIn: 'root'
 })
 export class WebsocketService extends LedstripConnection {
-  websocketUrl = environment.websockUrl
+  websocketUrl = environment.url
   private socket: Socket;
   private colorTimeout!: NodeJS.Timeout;
 
   constructor(errorService: MessageService) {
     super()
-    this.socket = io(environment.websockUrl, {
+    this.socket = io(this.websocketUrl, {
       transports: ['websocket'],
     });
     this.socket.on('connect', () => {
