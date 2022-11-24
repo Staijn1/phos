@@ -17,42 +17,19 @@ export class InformationService {
     return this.websocket.getGradients();
   }
 
-  async editGradient(gradient: GradientInformation) {
-    const response = await fetch(`${this.url}/visualizer/gradients/${gradient.id}`, {
-      method: 'PUT',
-      headers: {
-        'Content-Type': 'application/json',
-      },
-      body: JSON.stringify(gradient),
-    })
-
-    this.handleError(response)
-    return response.json()
+  async editGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
+    this.messageService.setMessage(new Error("This action is not implemented"))
+    return this.getGradients()
   }
 
-  async removeGradient(gradient: GradientInformation) {
-    const response = await fetch(`${this.url}/visualizer/gradients/${gradient.id}`, {
-      method: 'DELETE',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-
-    this.handleError(response)
-    return response.json()
+  async removeGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
+    this.messageService.setMessage(new Error("This action is not implemented"))
+    return this.getGradients()
   }
 
   async addGradient(newGradient: GradientInformation): Promise<GradientInformation[]> {
-    const response = await fetch(`${this.url}/visualizer/gradients/`, {
-      method: 'POST',
-      body: JSON.stringify(newGradient),
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    })
-
-    this.handleError(response)
-    return response.json()
+    this.messageService.setMessage(new Error("This action is not implemented"))
+    return this.getGradients()
   }
 
   private handleError(response: Response): void {
