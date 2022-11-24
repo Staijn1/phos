@@ -6,6 +6,7 @@ import {environment} from '../../../environments/environment';
 import {Message} from '../../messages/Message';
 import {swipeRight} from '@angulon/interfaces';
 import * as AOS from 'aos';
+import {interval} from "rxjs";
 
 @Component({
   selector: 'app-root',
@@ -19,9 +20,11 @@ export class AppComponent implements OnInit {
 
     // Service worker update, but only in production. During development, the service worker is disabled which results in an error.
     // Enabling the service worker would result in a lot of caching, which is not desired during development because it would be hard to test changes.
-    if (environment.production) {
-      updates.checkForUpdate().then(() => {
-        this.errorService.setMessage(new Message('info', 'New update available! Click here to update.', () => this.update()))
+    if (updates.isEnabled) {
+      updates.checkForUpdate().then((hasUpdate) => {
+        if (hasUpdate) {
+          this.errorService.setMessage(new Message('info', 'New update available! Click here to update.', () => this.update()))
+        }
       })
     }
   }
