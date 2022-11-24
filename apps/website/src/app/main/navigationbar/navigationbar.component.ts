@@ -29,16 +29,12 @@ import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-c
   styleUrls: ['./navigationbar.component.scss']
 })
 export class NavigationbarComponent implements OnInit {
-  cog = faCog;
   home = faHome;
   mode = faList;
   visualizer = faChartBar;
   colorpicker = faEyeDropper;
   mobileMenu = faBars;
   isOpen = false;
-  minimize = faWindowMinimize;
-  maximize = faSquare;
-  exit = faTimes;
   powerOff = faPowerOff;
   controls = faSlidersH;
   settings = faCog;
