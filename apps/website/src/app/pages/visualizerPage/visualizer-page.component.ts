@@ -139,4 +139,8 @@ export class VisualizerPageComponent implements OnDestroy {
     const mode = this.modes.find((mode) => mode.value === currentMode)
     return mode?.text.includes('octave')
   }
+
+  closeOffcanvas() {
+    this.offcanvas.close()
+  }
 }

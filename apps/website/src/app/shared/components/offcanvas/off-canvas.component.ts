@@ -32,6 +32,7 @@ export class OffCanvasComponent {
   close(): void {
     if (this.offcanvas) {
       this.offcanvas.close();
+      this.offcanvasService.dismiss();
     }
   }
 }
