@@ -71,7 +71,7 @@
                       <app-colorpicker
                         [id]='"bgColor"+gradientIndex'
                         (colorChange)='changeBackgroundColor($event, gradient)'
-                        [color]='[gradient.bgColor]'></app-colorpicker>
+                        [initialColor]='[gradient.bgColor]'></app-colorpicker>
                     </div>
                   </div>
                   <table class='table' aria-label='Colorstops'>
@@ -96,7 +96,7 @@
                         <app-colorpicker
                           (colorChange)='changeStopColor($event, gradient, stopIndex)'
                           [id]="gradient.name.split(' ').join('') + stopIndex"
-                          [color]='[stop.color]'
+                          [initialColor]='[stop.color]'
                         ></app-colorpicker>
                         {{stop.color}}
                       </td>
