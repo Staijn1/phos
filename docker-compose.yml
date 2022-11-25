@@ -23,6 +23,8 @@ services:
     networks:
       - corp
     restart: on-failure
+    depends_on:
+      - database
 
   website:
     container_name: angulon
@@ -39,3 +41,18 @@ services:
     networks:
       - corp
     restart: on-failure
+
+  database:
+    container_name: angulon_db
+    image: postgres:15.1
+    ports:
+      - 7002:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: angulon
+volumes:
+  db_data:
+    driver: local

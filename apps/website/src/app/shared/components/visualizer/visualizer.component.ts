@@ -1,6 +1,6 @@
 import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core'
 import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
-import {GradientInformation} from "@angulon/interfaces";
+import {GradientInformation} from '@angulon/interfaces';
 
 
 @Component({
