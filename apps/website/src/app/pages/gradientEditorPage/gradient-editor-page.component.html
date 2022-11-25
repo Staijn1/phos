@@ -87,16 +87,18 @@
                     <tr *ngFor='let stop of gradient.colorStops;let stopIndex = index'>
                       <th scope='row'>{{stopIndex + 1}}</th>
                       <td colspan='1'>
-                        <ngx-slider [options]="gradient.sliderOptions"
-                                    [(ngModel)]="stop.pos"
-                                    (userChange)="updateOptions()"></ngx-slider>
+                        <ngx-slider
+                          [options]="gradient.sliderOptions"
+                          [(ngModel)]="stop.pos"
+                          (userChange)="updateOptions()"></ngx-slider>
                         <div class='small'>{{stop.pos}}</div>
+                        <pre>{{stop | json}}</pre>
                       </td>
                       <td class='text-center'>
                         <app-colorpicker
                           (colorChange)='changeStopColor($event, gradient, stopIndex)'
                           [id]="gradient.name.split(' ').join('') + stopIndex"
-                          [initialColor]='[stop.color]'
+                          [initialColor]='convertColor(stop.color)'
                         ></app-colorpicker>
                         {{stop.color}}
                       </td>

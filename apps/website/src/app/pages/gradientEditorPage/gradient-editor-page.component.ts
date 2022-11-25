@@ -1,14 +1,14 @@
 import {Component, OnDestroy} from '@angular/core'
 import {Options} from 'audiomotion-analyzer'
 import {SettingsService} from '../../services/settings/settings.service'
-import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {faAngleLeft, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave'
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
-import iro from '@jaames/iro'
 import {LoremIpsum} from 'lorem-ipsum'
 import {GradientInformation, GradientInformationExtended} from '@angulon/interfaces'
 import * as slider from '@angular-slider/ngx-slider';
+import {InformationService} from '../../services/information-service/information.service';
+import {ColorpickerEvent} from '../../shared/components/colorpicker/colorpicker.component';
 
 @Component({
   selector: 'app-gradient-editor-page',
@@ -30,6 +30,7 @@ export class GradientEditorPageComponent implements OnDestroy {
     animate: true,
     floor: 0,
     ceil: 1,
+    step: 0.1,
     noSwitching: true,
   }
   addIcon = faPlus
@@ -39,7 +40,7 @@ export class GradientEditorPageComponent implements OnDestroy {
   basicGradients: GradientInformation[] = []
 
   constructor(
-    private connection: LedstripCommandService,
+    private connection: InformationService,
     private settingsService: SettingsService,
   ) {
     this.init()
@@ -135,8 +136,8 @@ export class GradientEditorPageComponent implements OnDestroy {
     lastColorstop.pos -= 0.1
   }
 
-  changeStopColor(newColor: iro.Color, gradient: GradientInformationExtended, stopIndex: number) {
-    (gradient.colorStops[stopIndex] as any).color = newColor.hexString
+  changeStopColor(newColor: ColorpickerEvent, gradient: GradientInformationExtended, stopIndex: number) {
+    (gradient.colorStops[stopIndex] as any).color = newColor.color.hexString
     this.updateOptions()
   }
 
@@ -157,8 +158,8 @@ export class GradientEditorPageComponent implements OnDestroy {
     this.gradients = [...this.gradients]
   }
 
-  changeBackgroundColor(newColor: iro.Color, gradient: GradientInformationExtended) {
-    gradient.bgColor = newColor.hexString
+  changeBackgroundColor(newColor: ColorpickerEvent, gradient: GradientInformationExtended) {
+    gradient.bgColor = newColor.color.hexString
 
     this.updateGradients()
   }
@@ -187,5 +188,9 @@ export class GradientEditorPageComponent implements OnDestroy {
   onNameChange(innerHTML: EventTarget | null, gradient: GradientInformationExtended) {
     if (!innerHTML) return
     gradient.name = (innerHTML as HTMLElement).innerHTML
+  }
+
+  convertColor(color: string): string[] {
+    return [color]
   }
 }
