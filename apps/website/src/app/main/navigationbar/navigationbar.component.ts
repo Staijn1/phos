@@ -25,7 +25,7 @@ import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-c
 import {GeneralSettings} from '../../shared/types/types';
 import {SettingsService} from '../../services/settings/settings.service';
 import iro from '@jaames/iro';
-import {ColorpickerEvent} from '../colorpicker/colorpicker.component';
+import {ColorpickerEvent} from '../../shared/components/colorpicker/colorpicker.component';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 
 @Component({
