@@ -13,20 +13,28 @@ export class GradientsService {
     return this.configurationService.writeGradients(gradients.filter((gradient) => gradient.id !== payload.id));
   }
 
+  /**
+   * Generate a new random with a random name based on LoremIpsum.
+   * The gradient also has two colors with random values.
+   * @returns {Promise<AddGradientResponse>}
+   */
   async addGradient(): Promise<AddGradientResponse> {
     const loremIpsumName = new LoremIpsum().generateWords(1)
+    const generateRandomHexColor = () => '#' + Math.floor(Math.random() * 16777215).toString(16);
+    const gradients = await this.configurationService.getGradients();
+
     const newGradient: GradientInformation = {
-      id: Math.floor(Math.random() * 1000),
+      // The highest gradient id + 1
+      id: gradients.map((gradient) => gradient.id).reduce((a, b) => Math.max(a, b), 0) + 1,
       name: loremIpsumName,
       dir: 'h',
       colorStops: [
-        {pos: 0, color: '#fff'},
-        {pos: 1, color: '#ff0000'},
+        {pos: 0, color: generateRandomHexColor()},
+        {pos: 1, color: generateRandomHexColor()},
       ],
-      bgColor: '#000',
+      bgColor: generateRandomHexColor(),
     }
 
-    const gradients = await this.configurationService.getGradients();
     gradients.push(newGradient)
 
     await this.configurationService.writeGradients(gradients);
