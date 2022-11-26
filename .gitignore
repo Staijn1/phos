@@ -124,3 +124,5 @@ Front-End/release-builds
 /Front-End/out/
 /Arduino/esp32/config.h
 .angular/**/*
+
+.angular
