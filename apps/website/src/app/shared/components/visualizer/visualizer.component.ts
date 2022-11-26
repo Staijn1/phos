@@ -1,4 +1,4 @@
-import {Component, EventEmitter, Input, OnDestroy, OnInit, Output} from '@angular/core'
+import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core'
 import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
 import {GradientInformation} from '@angulon/interfaces';
 
@@ -8,7 +8,8 @@ import {GradientInformation} from '@angulon/interfaces';
   templateUrl: './visualizer.component.html',
   styleUrls: ['./visualizer.component.scss'],
 })
-export class VisualizerComponent implements OnInit, OnDestroy {
+export class VisualizerComponent implements OnDestroy, AfterViewInit {
+  @ViewChild('container') container!: ElementRef<HTMLDivElement>
   @Output() ready: EventEmitter<AudioMotionAnalyzer> = new EventEmitter<AudioMotionAnalyzer>();
   @Output() registeredGradients: EventEmitter<GradientInformation[]> = new EventEmitter<GradientInformation[]>();
   private audioMotion: AudioMotionAnalyzer | undefined
@@ -29,11 +30,6 @@ export class VisualizerComponent implements OnInit, OnDestroy {
     this.registerGradients()
   }
 
-
-  ngOnInit(): void {
-    this.init()
-  }
-
   ngOnDestroy(): void {
     this.audioMotion?.toggleAnalyzer()
     this._gradients = []
@@ -41,8 +37,7 @@ export class VisualizerComponent implements OnInit, OnDestroy {
   }
 
   private init(): void {
-    const elem = document.getElementById('visualizer')
-    this.audioMotion = new AudioMotionAnalyzer(elem as HTMLElement, this._options)
+    this.audioMotion = new AudioMotionAnalyzer(this.container.nativeElement, this._options)
     this.setSource()
     this.ready.emit(this.audioMotion)
   }
@@ -79,5 +74,9 @@ export class VisualizerComponent implements OnInit, OnDestroy {
 
   toggleFullscreen() {
     this.audioMotion?.toggleFullscreen()
+  }
+
+  ngAfterViewInit(): void {
+    this.init();
   }
 }
