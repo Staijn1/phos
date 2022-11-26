@@ -9,15 +9,9 @@ import {Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {WebsocketClientsManagerService} from './websocket-clients-manager.service';
 import {ConfigurationService} from '../configuration/configuration.service';
-import {
-  AddGradientResponse,
-  GradientInformation,
-  GradientInformationExtended,
-  ModeInformation
-} from '@angulon/interfaces';
+import {AddGradientResponse, GradientInformation, ModeInformation} from '@angulon/interfaces';
 import {ModeStatisticsDbService} from '../database/mode-statistics/mode-statistics-db.service';
 import {GradientsService} from '../gradients/gradients.service';
-import {LoremIpsum} from 'lorem-ipsum';
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -87,13 +81,19 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   @SubscribeMessage('gradients/get')
   async onGetGradients(): Promise<GradientInformation[]> {
-    return this.configurationService.getGradients();
+    return this.gradientsService.getGradients();
+  }
+
+  @SubscribeMessage('gradients/edit')
+  async onGradientsEdit(client: Socket, payload: GradientInformation): Promise<GradientInformation[]> {
+    await this.gradientsService.editGradient(payload);
+    return this.gradientsService.getGradients();
   }
 
   @SubscribeMessage('gradients/delete')
   async onDeleteGradient(client: Socket, payload: { id: number }): Promise<GradientInformation[]> {
     await this.gradientsService.deleteGradient(payload);
-    return this.configurationService.getGradients();
+    return this.gradientsService.getGradients();
   }
 
   @SubscribeMessage('gradients/add')

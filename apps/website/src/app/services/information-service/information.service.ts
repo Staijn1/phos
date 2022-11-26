@@ -18,8 +18,7 @@ export class InformationService {
   }
 
   async editGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    this.messageService.setMessage(new Error('This action is not implemented'))
-    return this.getGradients()
+    return this.websocket.editGradient(gradient);
   }
 
   async deleteGradient(gradient: GradientInformation): Promise<GradientInformation[]> {

@@ -111,4 +111,12 @@ export class WebsocketService extends LedstripConnection {
       })
     })
   }
+
+  editGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
+    return new Promise((resolve, reject) => {
+      this.socket.emit('gradients/edit', gradient, (data: GradientInformation[]) => {
+        resolve(data)
+      })
+    })
+  }
 }

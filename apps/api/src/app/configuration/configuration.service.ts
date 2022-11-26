@@ -22,6 +22,7 @@ export class ConfigurationService {
 
   /**
    * Read the gradients.json file in the assets folder
+   * @deprecated - Should be replaced with the getGradients() method in the GradientsService
    * @returns {Promise<GradientInformation[]>}
    */
   async getGradients(): Promise<GradientInformation[]> {

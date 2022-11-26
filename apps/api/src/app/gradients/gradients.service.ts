@@ -8,6 +8,11 @@ export class GradientsService {
   constructor(private readonly configurationService: ConfigurationService) {
   }
 
+  /**
+   * Get all gradients from the configuration file, filter the gradient with the given id out and write the remaining gradients to the configuration file.
+   * @param {{id: number}} payload
+   * @returns {Promise<void>}
+   */
   async deleteGradient(payload: { id: number }) {
     const gradients = await this.configurationService.getGradients();
     return this.configurationService.writeGradients(gradients.filter((gradient) => gradient.id !== payload.id));
@@ -39,5 +44,21 @@ export class GradientsService {
 
     await this.configurationService.writeGradients(gradients);
     return {gradients: gradients, gradient: newGradient}
+  }
+
+  /**
+   * Get the configured gradients from the configuration file.
+   * todo: move reading and parsing of the file to this function. The configuration service should only be used to read and write a set of files
+   * @returns {Promise<GradientInformation[]>}
+   */
+  getGradients() {
+    return this.configurationService.getGradients();
+  }
+
+  async editGradient(payload: GradientInformation) {
+    const gradients = await this.getGradients();
+    const gradientIndex = gradients.findIndex((gradient) => gradient.id === payload.id);
+    gradients[gradientIndex] = payload;
+    return this.configurationService.writeGradients(gradients);
   }
 }
