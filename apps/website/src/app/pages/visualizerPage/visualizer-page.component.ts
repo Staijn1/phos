@@ -56,6 +56,8 @@ export class VisualizerPageComponent implements OnDestroy {
   frequencySliderOptions: slider.Options = {
     floor: 20,
     ceil: 22000,
+    minRange: 10,
+    pushRange: true,
     noSwitching: true
   };
   lineWidthSliderOptions: slider.Options = {
