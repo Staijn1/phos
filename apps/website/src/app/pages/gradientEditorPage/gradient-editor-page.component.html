@@ -71,7 +71,7 @@
                       <app-colorpicker
                         [id]='"bgColor"+gradientIndex'
                         (colorChange)='changeBackgroundColor($event, gradient)'
-                        [color]='[gradient.bgColor]'></app-colorpicker>
+                        [initialColor]='[gradient.bgColor]'></app-colorpicker>
                     </div>
                   </div>
                   <table class='table' aria-label='Colorstops'>
@@ -87,16 +87,17 @@
                     <tr *ngFor='let stop of gradient.colorStops;let stopIndex = index'>
                       <th scope='row'>{{stopIndex + 1}}</th>
                       <td colspan='1'>
-                        <ngx-slider [options]="gradient.sliderOptions"
-                                    [(ngModel)]="stop.pos"
-                                    (userChange)="updateOptions()"></ngx-slider>
+                        <ngx-slider
+                          [options]="gradient.sliderOptions"
+                          [(ngModel)]="stop.pos"
+                          (userChange)="updateOptions()"></ngx-slider>
                         <div class='small'>{{stop.pos}}</div>
                       </td>
                       <td class='text-center'>
                         <app-colorpicker
                           (colorChange)='changeStopColor($event, gradient, stopIndex)'
                           [id]="gradient.name.split(' ').join('') + stopIndex"
-                          [color]='[stop.color]'
+                          [initialColor]='convertColor(stop.color)'
                         ></app-colorpicker>
                         {{stop.color}}
                       </td>
@@ -120,7 +121,7 @@
     </div>
     <div class='col d-flex flex-column'>
       <div class='vh-50 py-5 position-sticky sticky-top'>
-        <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
+        <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients' (registeredGradients)="onGradientsRegistered()"></app-shared-visualizer>
       </div>
     </div>
   </div>

@@ -15,7 +15,8 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@angulon/interfaces": ["libs/interfaces/src/index.ts"]
+      "@angulon/interfaces": ["libs/interfaces/src/index.ts"],
+      "@angulon/ui": ["libs/ui/src/index.ts"]
     }
   },
   "exclude": ["node_modules", "tmp"]

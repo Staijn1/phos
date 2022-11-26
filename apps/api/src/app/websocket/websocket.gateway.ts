@@ -9,7 +9,9 @@ import {Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {WebsocketClientsManagerService} from './websocket-clients-manager.service';
 import {ConfigurationService} from '../configuration/configuration.service';
-import {GradientInformation, ModeInformation} from '@angulon/interfaces';
+import {AddGradientResponse, GradientInformation, ModeInformation} from '@angulon/interfaces';
+import {ModeStatisticsDbService} from '../database/mode-statistics/mode-statistics-db.service';
+import {GradientsService} from '../gradients/gradients.service';
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -17,13 +19,23 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   private server: Server;
   private logger: Logger = new Logger('WebsocketGateway');
 
-  constructor(private readonly websocketClientsManagerService: WebsocketClientsManagerService, private configurationService: ConfigurationService) {
+  constructor(
+    private readonly websocketClientsManagerService: WebsocketClientsManagerService,
+    private readonly configurationService: ConfigurationService,
+    private readonly modeStatisticsService: ModeStatisticsDbService,
+    private readonly gradientsService: GradientsService) {
   }
 
   @SubscribeMessage('mode')
-  onModeCommand(client: Socket, payload: number): string {
-    this.websocketClientsManagerService.setMode(payload);
-    return 'OK';
+  async onModeCommand(client: Socket, payload: string): Promise<string> {
+    try {
+      const mode = parseInt(payload, 10);
+      this.websocketClientsManagerService.setMode(mode);
+      await this.modeStatisticsService.registerModeChange(mode);
+      return 'OK';
+    } catch (e) {
+      return 'ERROR';
+    }
   }
 
   @SubscribeMessage('color')
@@ -67,9 +79,26 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return this.configurationService.getModes();
   }
 
-  @SubscribeMessage('getGradients')
+  @SubscribeMessage('gradients/get')
   async onGetGradients(): Promise<GradientInformation[]> {
-    return this.configurationService.getGradients();
+    return this.gradientsService.getGradients();
+  }
+
+  @SubscribeMessage('gradients/edit')
+  async onGradientsEdit(client: Socket, payload: GradientInformation): Promise<GradientInformation[]> {
+    await this.gradientsService.editGradient(payload);
+    return this.gradientsService.getGradients();
+  }
+
+  @SubscribeMessage('gradients/delete')
+  async onDeleteGradient(client: Socket, payload: { id: number }): Promise<GradientInformation[]> {
+    await this.gradientsService.deleteGradient(payload);
+    return this.gradientsService.getGradients();
+  }
+
+  @SubscribeMessage('gradients/add')
+  async onAddGradient(): Promise<AddGradientResponse> {
+    return this.gradientsService.addGradient();
   }
 
   /**

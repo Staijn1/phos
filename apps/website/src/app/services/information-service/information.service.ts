@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core'
-import {GradientInformation} from "@angulon/interfaces";
-import {MessageService} from "../error/message.service";
-import {environment} from "../../../environments/environment";
-import {WebsocketService} from "../websocketconnection/websocket.service";
+import {AddGradientResponse, GradientInformation} from '@angulon/interfaces';
+import {MessageService} from '../error/message.service';
+import {environment} from '../../../environments/environment';
+import {WebsocketService} from '../websocketconnection/websocket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,18 +18,20 @@ export class InformationService {
   }
 
   async editGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    this.messageService.setMessage(new Error("This action is not implemented"))
-    return this.getGradients()
+    return this.websocket.editGradient(gradient);
   }
 
-  async removeGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    this.messageService.setMessage(new Error("This action is not implemented"))
-    return this.getGradients()
+  async deleteGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
+    return this.websocket.deleteGradient(gradient.id)
   }
 
-  async addGradient(newGradient: GradientInformation): Promise<GradientInformation[]> {
-    this.messageService.setMessage(new Error("This action is not implemented"))
-    return this.getGradients()
+  /**
+   * Create a new gradient. It is generated on the server.
+   * The server returns the full list of gradients and the newly generated gradient.
+   * @returns {Promise<{gradients: GradientInformation[], gradient: GradientInformation}[]>}
+   */
+  async addGradient(): Promise<AddGradientResponse> {
+   return this.websocket.addGradient();
   }
 
   private handleError(response: Response): void {

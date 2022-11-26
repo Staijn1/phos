@@ -4,6 +4,7 @@ import {BaseScene} from './scenes/BaseScene'
 import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {SettingsService} from '../../services/settings/settings.service'
 import {SphereLightScene} from './scenes/SphereLightScene'
+import {visualizerModeId} from "../../shared/constants";
 
 @Component({
   selector: 'app-visualizer-page3-d',
@@ -30,7 +31,7 @@ export class VisualizerPage3DComponent implements AfterViewInit, OnDestroy {
     ]
     this.scene = this.scenes[this.selectedScene].action
     this.scene.init()
-    this.connection.setMode(56)
+    this.connection.setMode(visualizerModeId)
   }
 
   ngOnDestroy(): void {

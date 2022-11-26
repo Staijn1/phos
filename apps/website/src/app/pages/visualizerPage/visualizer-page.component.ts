@@ -11,6 +11,7 @@ import {GradientInformation} from "@angulon/interfaces";
 import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
 import * as slider from '@angular-slider/ngx-slider';
 import {InformationService} from "../../services/information-service/information.service";
+import {visualizerModeId} from "../../shared/constants";
 
 @Component({
   selector: 'app-visualizer',
@@ -54,7 +55,10 @@ export class VisualizerPageComponent implements OnDestroy {
   }
   frequencySliderOptions: slider.Options = {
     floor: 20,
-    ceil: 22000
+    ceil: 22000,
+    minRange: 10,
+    pushRange: true,
+    noSwitching: true
   };
   lineWidthSliderOptions: slider.Options = {
     floor: 0,
@@ -90,7 +94,7 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   updateLedstrip(): void {
-    this.connection.setMode(72)
+    this.connection.setMode(visualizerModeId)
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {

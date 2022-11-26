@@ -2,11 +2,9 @@ import {Component, OnInit} from '@angular/core'
 import {SwUpdate} from '@angular/service-worker'
 import {MessageService} from '../../services/error/message.service'
 import {ThemeService} from '../../services/theme/theme.service';
-import {environment} from '../../../environments/environment';
 import {Message} from '../../messages/Message';
-import {swipeRight} from '@angulon/interfaces';
+import {swipeRight} from '@angulon/ui';
 import * as AOS from 'aos';
-import {interval} from "rxjs";
 
 @Component({
   selector: 'app-root',

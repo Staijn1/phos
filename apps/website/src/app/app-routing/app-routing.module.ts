@@ -11,10 +11,10 @@ const routes: Routes = [
   {path: 'home', loadChildren: () => import('../pages/homePage/home-page.module').then(m => m.HomePageModule)},
   {path: 'visualizer', component: VisualizerPageComponent},
   {path: 'mode', component: ModePageComponent},
-  /*{
+  {
     path: 'gradients-editor',
     loadChildren: () => import('../pages/gradientEditorPage/gradient-editor.module').then(m => m.GradientEditorModule)
-  },*/
+  },
   {path: 'settings', component: SettingsPageComponent},
   {path: 'visualizer3d', component: VisualizerPage3DComponent}
 ] // sets up routes constant where you define your routes

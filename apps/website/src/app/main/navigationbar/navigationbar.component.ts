@@ -22,6 +22,11 @@ import {
   faWindowMinimize
 } from '@fortawesome/free-solid-svg-icons'
 import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
+import {GeneralSettings} from '../../shared/types/types';
+import {SettingsService} from '../../services/settings/settings.service';
+import iro from '@jaames/iro';
+import {ColorpickerEvent} from '../../shared/components/colorpicker/colorpicker.component';
+import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 
 @Component({
   selector: 'app-navigationbar',
@@ -29,40 +34,40 @@ import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-c
   styleUrls: ['./navigationbar.component.scss']
 })
 export class NavigationbarComponent implements OnInit {
-  cog = faCog;
-  home = faHome;
-  mode = faList;
-  visualizer = faChartBar;
-  colorpicker = faEyeDropper;
-  mobileMenu = faBars;
-  isOpen = false;
-  minimize = faWindowMinimize;
-  maximize = faSquare;
-  exit = faTimes;
-  powerOff = faPowerOff;
-  controls = faSlidersH;
-  settings = faCog;
+  homeIcon = faHome;
+  modeIcon = faList;
+  visualizerIcon = faChartBar;
+  colorpickerIcon = faEyeDropper;
+  mobileMenuIcon = faBars;
+  powerOffIcon = faPowerOff;
+  controlsIcon = faSlidersH;
+  settingsIcon = faCog;
   decreaseBrightnessIcon = faMinus;
   increaseBrightnessIcon = faPlus;
   speedIncreaseIcon = faRunning;
   speedDecreaseIcon = faWalking;
-  editor = faEdit
-  visualizer3D = faCubes;
-  // private window: Electron.BrowserWindow | undefined;
+  editorIcon = faEdit
+  visualizer3DIcon = faCubes;
+
   private animationMode = 0;
   timeline = gsap.timeline();
+  isOpen = false;
+  settings!: GeneralSettings;
 
   constructor(
     public connection: LedstripCommandService,
     private router: Router,
-    private renderer: Renderer2
+    private renderer: Renderer2,
+    private chromaEffect: ChromaEffectService,
+    private settingsService: SettingsService
   ) {
   }
 
   ngOnInit(): void {
+    this.settings = this.settingsService.readGeneralSettings()
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
-      if(val instanceof NavigationStart){
+      if (val instanceof NavigationStart) {
         gsap.set('#cover', {autoAlpha: 1, duration: 0.3})
       }
       if (val instanceof NavigationEnd) {
@@ -81,13 +86,13 @@ export class NavigationbarComponent implements OnInit {
   }
 
   private closeMobileMenu() {
-    this.mobileMenu = faBars
+    this.mobileMenuIcon = faBars
     this.renderer.removeClass(document.body, 'mobile-nav-active')
     this.isOpen = false
   }
 
   private openMobileMenu() {
-    this.mobileMenu = faTimes
+    this.mobileMenuIcon = faTimes
     this.renderer.addClass(document.body, 'mobile-nav-active')
     this.isOpen = true
   }
@@ -149,10 +154,27 @@ export class NavigationbarComponent implements OnInit {
   }
 
   turnOff(): void {
-    this.timeline.to('#powerOff',  {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
-    this.timeline.to('#powerOff',  {duration: 1.2, clearProps: 'background,color'});
+    this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
+    this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
 
     this.connection.setColor(['#000000', '#000000', '#000000'])
     this.connection.setMode(0)
+  }
+
+  onColorpickerColorInit(event: ColorpickerEvent) {
+    if (this.settingsService.readGeneralSettings().initialColor) {
+      this.connection.setColor(event.colorpicker.colors)
+    }
+    this.chromaEffect.setColors = event.colorpicker.colors
+  }
+
+  onColorpickerColorChange(event: ColorpickerEvent) {
+    this.connection.setColor(event.colorpicker.colors)
+    this.chromaEffect.setColors = event.colorpicker.colors
+  }
+
+  onColorpickerColorEnd(event: ColorpickerEvent) {
+    this.settings.colors = this.settingsService.convertColors(event.colorpicker.colors)
+    this.settingsService.saveGeneralSettings(this.settings)
   }
 }
