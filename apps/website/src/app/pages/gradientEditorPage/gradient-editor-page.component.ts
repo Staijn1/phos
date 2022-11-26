@@ -107,7 +107,7 @@ export class GradientEditorPageComponent implements OnDestroy {
   removeGradient(gradient: GradientInformationExtended): void {
     if (this.currentActiveGradientID == gradient.id) return
 
-    this.connection.removeGradient(gradient).then((gradients => this.getGradients(gradients))).then(() => {
+    this.connection.deleteGradient(gradient).then((gradients => this.getGradients(gradients))).then(() => {
       this.changeGradient(this.gradients[0])
     })
   }

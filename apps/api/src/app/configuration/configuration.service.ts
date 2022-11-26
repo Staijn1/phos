@@ -2,6 +2,7 @@ import {Injectable} from '@nestjs/common';
 import {GradientInformation, ModeInformation} from '@angulon/interfaces';
 import path = require('path');
 import * as fs from 'fs';
+
 @Injectable()
 export class ConfigurationService {
   private readonly assetPath: string;
@@ -26,5 +27,14 @@ export class ConfigurationService {
   async getGradients(): Promise<GradientInformation[]> {
     const contents = await fs.promises.readFile(path.join(this.assetPath, 'gradients.json'));
     return JSON.parse(contents.toString());
+  }
+
+  /**
+   * Write the array of gradients to the gradients.json file in the assets folder
+   * @param {GradientInformation[]} gradients
+   * @returns {Promise<void>}
+   */
+  async writeGradients(gradients: GradientInformation[]): Promise<void> {
+    await fs.promises.writeFile(path.join(this.assetPath, 'gradients.json'), JSON.stringify(gradients, null, 2));
   }
 }

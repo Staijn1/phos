@@ -11,6 +11,7 @@ import {WebsocketClientsManagerService} from './websocket-clients-manager.servic
 import {ConfigurationService} from '../configuration/configuration.service';
 import {GradientInformation, ModeInformation} from '@angulon/interfaces';
 import {ModeStatisticsDbService} from '../database/mode-statistics/mode-statistics-db.service';
+import {GradientsService} from '../gradients/gradients.service';
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -20,8 +21,9 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
-    private configurationService: ConfigurationService,
-    private modeStatisticsService: ModeStatisticsDbService) {
+    private readonly configurationService: ConfigurationService,
+    private readonly modeStatisticsService: ModeStatisticsDbService,
+    private readonly gradientsService: GradientsService) {
   }
 
   @SubscribeMessage('mode')
@@ -77,8 +79,14 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return this.configurationService.getModes();
   }
 
-  @SubscribeMessage('getGradients')
+  @SubscribeMessage('gradients/get')
   async onGetGradients(): Promise<GradientInformation[]> {
+    return this.configurationService.getGradients();
+  }
+
+  @SubscribeMessage('gradients/delete')
+  async onDeleteGradient(client: Socket, payload: { id: number }): Promise<GradientInformation[]> {
+    await this.gradientsService.deleteGradient(payload);
     return this.configurationService.getGradients();
   }
 

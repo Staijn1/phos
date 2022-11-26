@@ -90,7 +90,15 @@ export class WebsocketService extends LedstripConnection {
 
   getGradients(): Promise<GradientInformation[]> {
     return new Promise((resolve, reject) => {
-      this.socket.emit('getGradients', (data: GradientInformation[]) => {
+      this.socket.emit('gradients/get', (data: GradientInformation[]) => {
+        resolve(data)
+      })
+    });
+  }
+
+  deleteGradient(id: number): Promise<GradientInformation[]> {
+    return new Promise((resolve, reject) => {
+      this.socket.emit('gradients/delete', {id}, (data: GradientInformation[]) => {
         resolve(data)
       })
     });

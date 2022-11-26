@@ -1,8 +1,8 @@
 import {Injectable} from '@angular/core'
-import {GradientInformation} from "@angulon/interfaces";
-import {MessageService} from "../error/message.service";
-import {environment} from "../../../environments/environment";
-import {WebsocketService} from "../websocketconnection/websocket.service";
+import {GradientInformation} from '@angulon/interfaces';
+import {MessageService} from '../error/message.service';
+import {environment} from '../../../environments/environment';
+import {WebsocketService} from '../websocketconnection/websocket.service';
 
 @Injectable({
   providedIn: 'root',
@@ -18,17 +18,16 @@ export class InformationService {
   }
 
   async editGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    this.messageService.setMessage(new Error("This action is not implemented"))
+    this.messageService.setMessage(new Error('This action is not implemented'))
     return this.getGradients()
   }
 
-  async removeGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    this.messageService.setMessage(new Error("This action is not implemented"))
-    return this.getGradients()
+  async deleteGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
+    return this.websocket.deleteGradient(gradient.id)
   }
 
   async addGradient(newGradient: GradientInformation): Promise<GradientInformation[]> {
-    this.messageService.setMessage(new Error("This action is not implemented"))
+    this.messageService.setMessage(new Error('This action is not implemented'))
     return this.getGradients()
   }
 
