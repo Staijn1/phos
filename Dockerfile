@@ -7,6 +7,8 @@ ARG BUILD_FLAGWORKDIR /app/builder
 
 COPY . .
 
+# Necessary to change dotenv file. See https://www.prisma.io/docs/guides/development-environment/environment-variables/using-multiple-env-files
+RUN npm install -g dotenv-cli
 RUN npm i --legacy-peer-deps
 
 # docker build . -t staijn/angulon:nx-base

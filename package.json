@@ -8,7 +8,9 @@
     "start:website": "nx run website:serve",
     "start:api": "nx run api:serve",
     "build": "nx build",
-    "test": "nx test"
+    "test": "nx test",
+    "db:migrate:dev": "dotenv -e .env.development -- npx prisma migrate dev --name postgres-init",
+    "db:migrate:prod": "dotenv -e .env.production -- npx prisma migrate deploy"
   },
   "private": true,
   "dependencies": {
