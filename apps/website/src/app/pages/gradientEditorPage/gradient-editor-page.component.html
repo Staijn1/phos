@@ -121,7 +121,7 @@
     </div>
     <div class='col d-flex flex-column'>
       <div class='vh-50 py-5 position-sticky sticky-top'>
-        <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients'></app-shared-visualizer>
+        <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients' (registeredGradients)="onGradientsRegistered()"></app-shared-visualizer>
       </div>
     </div>
   </div>

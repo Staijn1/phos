@@ -6,3 +6,4 @@ export * from './lib/ModeInformation';
 export * from './lib/SpeedInformation';
 export * from './lib/ArrayTwoOrMore';
 export * from './lib/Animations';
+export * from './lib/Responses';

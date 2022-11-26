@@ -4,8 +4,7 @@ import {SettingsService} from '../../services/settings/settings.service'
 import {faAngleLeft, faPlus, faTrash} from '@fortawesome/free-solid-svg-icons'
 import {faSave} from '@fortawesome/free-solid-svg-icons/faSave'
 import {faFileDownload} from '@fortawesome/free-solid-svg-icons/faFileDownload'
-import {LoremIpsum} from 'lorem-ipsum'
-import {GradientInformation, GradientInformationExtended} from '@angulon/interfaces'
+import {AddGradientResponse, GradientInformation, GradientInformationExtended} from '@angulon/interfaces'
 import * as slider from '@angular-slider/ngx-slider';
 import {InformationService} from '../../services/information-service/information.service';
 import {ColorpickerEvent} from '../../shared/components/colorpicker/colorpicker.component';
@@ -50,7 +49,13 @@ export class GradientEditorPageComponent implements OnDestroy {
     this.gradients = []
   }
 
-  changeGradient(gradient: GradientInformation): void {
+  changeGradient(gradient: GradientInformation | number): void {
+    if (typeof gradient === 'number') {
+      const foundGradient = this.gradients.find(g => g.id === gradient)
+      if (!foundGradient) return
+      gradient = foundGradient
+    }
+
     this.visualizerOptions.gradient = gradient?.name || 'classic'
     this.currentActiveGradientID = gradient.id
 
@@ -165,24 +170,10 @@ export class GradientEditorPageComponent implements OnDestroy {
   }
 
   addGradient() {
-    const loremIpsumName = new LoremIpsum().generateWords(1)
-    const newGradient: GradientInformationExtended = {
-      id: Math.floor(Math.random() * 1000),
-      name: loremIpsumName,
-      dir: 'h',
-      sliderOptions: this.defaultSliderOptions,
-      collapsed: true,
-      colorStops: [
-        {pos: 0, color: '#fff'},
-        {pos: 1, color: '#ff0000'},
-      ],
-      bgColor: '#000',
-    }
-    this.gradients.unshift(newGradient)
-    this.updateGradients()
-    this.connection.addGradient(newGradient).then((gradients) => {
-      return this.getGradients(gradients)
-    }).then(() => this.changeGradient(newGradient))
+    this.connection.addGradient().then((retval: AddGradientResponse) => {
+      this.currentActiveGradientID = retval.gradient.id;
+      return this.getGradients(retval.gradients)
+    })
   }
 
   onNameChange(innerHTML: EventTarget | null, gradient: GradientInformationExtended) {
@@ -192,5 +183,15 @@ export class GradientEditorPageComponent implements OnDestroy {
 
   convertColor(color: string): string[] {
     return [color]
+  }
+
+  /**
+   * After registering gradients, check if there is already a gradient active.
+   * If there is, select the gradient with this ID in the visualizer
+   */
+  onGradientsRegistered() {
+    if (this.currentActiveGradientID) {
+      this.changeGradient(this.currentActiveGradientID)
+    }
   }
 }

@@ -9,9 +9,15 @@ import {Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {WebsocketClientsManagerService} from './websocket-clients-manager.service';
 import {ConfigurationService} from '../configuration/configuration.service';
-import {GradientInformation, ModeInformation} from '@angulon/interfaces';
+import {
+  AddGradientResponse,
+  GradientInformation,
+  GradientInformationExtended,
+  ModeInformation
+} from '@angulon/interfaces';
 import {ModeStatisticsDbService} from '../database/mode-statistics/mode-statistics-db.service';
 import {GradientsService} from '../gradients/gradients.service';
+import {LoremIpsum} from 'lorem-ipsum';
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -88,6 +94,11 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   async onDeleteGradient(client: Socket, payload: { id: number }): Promise<GradientInformation[]> {
     await this.gradientsService.deleteGradient(payload);
     return this.configurationService.getGradients();
+  }
+
+  @SubscribeMessage('gradients/add')
+  async onAddGradient(): Promise<AddGradientResponse> {
+    return this.gradientsService.addGradient();
   }
 
   /**
