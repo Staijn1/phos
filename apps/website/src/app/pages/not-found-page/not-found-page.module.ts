@@ -5,7 +5,7 @@ import {NotFoundPageComponent} from './not-found-page.component';
 
 
 @NgModule({
-  declarations: [],
+  declarations: [NotFoundPageComponent],
   imports: [
     RouterModule.forChild([
       {
