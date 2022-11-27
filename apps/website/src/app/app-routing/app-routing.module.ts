@@ -16,10 +16,13 @@ const routes: Routes = [
     loadChildren: () => import('../pages/gradient-editor-page/gradient-editor.module').then(m => m.GradientEditorModule)
   },
   {path: 'settings', component: SettingsPageComponent},
-  {path: 'visualizer3d', component: VisualizerPage3DComponent}
-] // sets up routes constant where you define your routes
+  {path: 'visualizer3d', component: VisualizerPage3DComponent},
+  {
+    path: '**',
+    loadChildren: () => import('../pages/not-found-page/not-found-page.module').then(m => m.NotFoundPageModule)
+  },
+]
 
-// configures NgModule imports and exports
 @NgModule({
   imports: [RouterModule.forRoot(routes, {relativeLinkResolution: 'legacy'})],
   exports: [RouterModule]
