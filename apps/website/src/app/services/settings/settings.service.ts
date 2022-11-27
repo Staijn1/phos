@@ -2,6 +2,7 @@ import {Injectable} from '@angular/core'
 import {GeneralSettings} from '../../shared/types/types'
 import {Options} from 'audiomotion-analyzer'
 import iro from '@jaames/iro'
+import {MessageService} from '../error/message.service';
 
 
 @Injectable({
@@ -38,6 +39,10 @@ export class SettingsService {
     spinSpeed: 0,
   };
 
+  constructor(private readonly messageService: MessageService) {
+    this.setDefaults()
+  }
+
   private readonly defaultGeneralSettings: GeneralSettings = {
     chroma: false,
     colors: ['#ff0000', '#00ff00', '#0000ff'],
@@ -51,7 +56,47 @@ export class SettingsService {
   }
 
   readVisualizerOptions(): Options {
-    return this.readSettings('visualizerSettings')
+    return this.readSettings('visualizerSettings') as Options
+  }
+
+  saveGeneralSettings(settings: GeneralSettings): void {
+    this.saveSettings(settings, 'generalSettings')
+  }
+
+  readGeneralSettings(): GeneralSettings {
+    return this.readSettings('generalSettings') as GeneralSettings
+  }
+
+  private readSettings(name: 'generalSettings' | 'visualizerSettings'): GeneralSettings | Options {
+    const savedItem = localStorage.getItem(name)
+    try {
+      return JSON.parse(savedItem as string)
+    } catch (e: any) {
+      this.messageService.setMessage(e)
+      switch (name) {
+        case 'generalSettings':
+          return this.defaultGeneralSettings
+        case 'visualizerSettings':
+          return this.defaultVisualizerOptions
+      }
+    }
+  }
+
+  private saveSettings(settings: any, name: 'generalSettings' | 'visualizerSettings'): void {
+    localStorage.setItem(name, JSON.stringify(settings))
+  }
+
+  /**
+   * Sets the default settings if no settings are saved
+   * @private
+   */
+  private setDefaults(): void {
+    if (!this.readSettings('generalSettings')) {
+      this.saveGeneralSettings(this.defaultGeneralSettings)
+    }
+    if (!this.readSettings('visualizerSettings')) {
+      this.saveVisualizerOptions(this.defaultVisualizerOptions)
+    }
   }
 
   convertColors(colors: iro.Color[]): string[] {
@@ -62,30 +107,4 @@ export class SettingsService {
     return convertedColors
   }
 
-  saveGeneralSettings(settings: GeneralSettings): void {
-    this.saveSettings(settings, 'generalSettings')
-  }
-
-  readGeneralSettings(): GeneralSettings {
-    return this.readSettings('generalSettings')
-  }
-
-  readSettings(name: string): any {
-    const savedItem = localStorage.getItem(name)
-    if (savedItem) {
-      return JSON.parse(savedItem)
-    } else {
-      this.setDefaults()
-      return undefined
-    }
-  }
-
-  saveSettings(settings: any, name: 'generalSettings' | 'visualizerSettings'): void {
-    localStorage.setItem(name, JSON.stringify(settings))
-  }
-
-  private setDefaults(): void {
-    this.saveSettings(this.defaultGeneralSettings, 'generalSettings')
-    this.saveSettings(this.defaultVisualizerOptions, 'visualizerSettings')
-  }
 }

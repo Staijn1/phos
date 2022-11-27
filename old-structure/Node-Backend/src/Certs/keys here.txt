@@ -1,2 +1,0 @@
-Name the cert cert.pem & the key key.pem.
-Keep the key private at all times!
