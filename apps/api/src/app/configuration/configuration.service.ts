@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {GradientInformation, ModeInformation} from '@angulon/interfaces';
-import path = require('path');
 import * as fs from 'fs';
+import path = require('path');
 
 @Injectable()
 export class ConfigurationService {

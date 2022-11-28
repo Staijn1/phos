@@ -86,12 +86,12 @@
     <div class="row">
       <ng-container *ngIf="modes.length > 0; else noModes">
         <div
-          class="col-lg-3 col-md-4 d-flex align-items-stretch"
-          data-aos="fade-up"
           (click)="onModeSelect($event)"
           *ngFor="let mode of modes; let indexOfelement=index"
+          [id]="mode.mode"
           [ngClass]="{'active': selectedMode === mode.mode}"
-          [id]="mode.mode">
+          class="col-lg-3 col-md-4 d-flex align-items-stretch"
+          data-aos="fade-up">
           <!--        Assign one of the classes in the classes array to generate different colors-->
           <!--        The modulo operator makes sure the index does not go out of bounds, because there are more modes than colors-->
           <div [ngClass]="'icon-box-' + classes[indexOfelement % classes.length]"

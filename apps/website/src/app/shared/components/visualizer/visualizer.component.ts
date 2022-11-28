@@ -14,7 +14,6 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
   @Output() registeredGradients: EventEmitter<GradientInformation[]> = new EventEmitter<GradientInformation[]>();
   private audioMotion: AudioMotionAnalyzer | undefined
   private _options!: Options
-  private _gradients!: GradientInformation[]
 
   @Input() set options(options: Options) {
     this._options = {
@@ -24,6 +23,7 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
     this.updateOptions()
   }
 
+  private _gradients!: GradientInformation[]
 
   @Input() set gradients(gradients: GradientInformation[]) {
     this._gradients = gradients
@@ -34,6 +34,20 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
     this.audioMotion?.toggleAnalyzer()
     this._gradients = []
     this.audioMotion = undefined
+  }
+
+  updateOptions(): void {
+    if (this.audioMotion) {
+      this.audioMotion.setOptions(this._options)
+    }
+  }
+
+  toggleFullscreen() {
+    this.audioMotion?.toggleFullscreen()
+  }
+
+  ngAfterViewInit(): void {
+    this.init();
   }
 
   private init(): void {
@@ -56,12 +70,6 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
       })
   }
 
-  updateOptions(): void {
-    if (this.audioMotion) {
-      this.audioMotion.setOptions(this._options)
-    }
-  }
-
   private registerGradients(): void {
     if (this._gradients.length === 0) return;
     if (!this.audioMotion) throw Error('No visualizer!')
@@ -70,13 +78,5 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
       this.audioMotion.registerGradient(gradient.name, {...gradient})
     }
     this.registeredGradients.emit(this._gradients)
-  }
-
-  toggleFullscreen() {
-    this.audioMotion?.toggleFullscreen()
-  }
-
-  ngAfterViewInit(): void {
-    this.init();
   }
 }

@@ -1,7 +1,7 @@
 <div class='vh-100'>
   <div class="row">
     <div class="col p-0">
-      <canvas class="w-100 h-100 p-0" #threeContainer></canvas>
+      <canvas #threeContainer class="w-100 h-100 p-0"></canvas>
     </div>
   </div>
   <div class="row ml-2 justify-content-center mt-2">
@@ -12,16 +12,16 @@
         </div>
         <div class="card-body">
           <div class="row">
-            <div class="col" *ngFor="let scene of scenes;let i = index">
+            <div *ngFor="let scene of scenes;let i = index" class="col">
               <div class="form-check">
                 <input
-                  class="form-check-input"
-                  type="radio"
-                  name="scene"
-                  [id]="scene.name"
+                  (change)="changeScene(i)"
                   [checked]="this.selectedScene === i"
-                  (change)="changeScene(i)">
-                <label class="form-check-label" [for]="scene.name">
+                  [id]="scene.name"
+                  class="form-check-input"
+                  name="scene"
+                  type="radio">
+                <label [for]="scene.name" class="form-check-label">
                   {{scene.name}}
                 </label>
               </div>

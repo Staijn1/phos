@@ -9,7 +9,6 @@ import {SettingsService} from '../../../services/settings/settings.service'
 import {GUI} from 'dat.gui'
 
 export abstract class BaseScene {
-  private renderer: WebGLRenderer | undefined;
   protected scene: Scene | undefined;
   protected readonly frequencyLimits = {
     bass: [20, 140],
@@ -21,16 +20,45 @@ export abstract class BaseScene {
   protected camera!: PerspectiveCamera;
   protected gui!: GUI;
   protected noise!: SimplexNoise
+  protected audioMotion: AudioMotionAnalyzer | undefined;
+  private renderer: WebGLRenderer | undefined;
   private isActive = false;
   private _options: Options = {
     volume: 0,
     useCanvas: false,
     smoothing: this.settingsService.readVisualizerOptions().smoothing
   }
-  protected audioMotion: AudioMotionAnalyzer | undefined;
 
   public constructor(protected threeContainer: ElementRef, protected readonly connection: LedstripCommandService, protected readonly settingsService: SettingsService) {
     Object.freeze(this.frequencyLimits)
+  }
+
+  get bass(): number {
+    return this.audioMotion?.getEnergy('bass') || 0
+  }
+
+  get lowMid(): number {
+    return this.audioMotion?.getEnergy('lowMid') || 0
+  }
+
+  get mid(): number {
+    return this.audioMotion?.getEnergy('mid') || 0
+  }
+
+  get highMid(): number {
+    return this.audioMotion?.getEnergy('highMid') || 0
+  }
+
+  get treble(): number {
+    return this.audioMotion?.getEnergy('treble') || 0
+  }
+
+  get width(): number {
+    return window.innerWidth
+  }
+
+  get height(): number {
+    return window.innerHeight * 0.7
   }
 
   onResize(event: any) {
@@ -39,10 +67,6 @@ export abstract class BaseScene {
     this.camera.aspect = this.width / this.height
     this.camera.updateProjectionMatrix()
   }
-
-  protected abstract setup(): any
-
-  protected abstract animate(): any
 
   public init(): void {
     this.noise = new SimplexNoise()
@@ -72,6 +96,19 @@ export abstract class BaseScene {
       })
   }
 
+  public uninit(): void {
+    this.gui.destroy()
+    this.audioMotion?.toggleAnalyzer(false)
+    this.scene = undefined
+    this.renderer = undefined
+    this.isActive = false
+    this.audioMotion = undefined
+  }
+
+  protected abstract setup(): any
+
+  protected abstract animate(): any
+
   private render() {
     this.animate()
     this.renderer?.render(this.scene as Scene, this.camera)
@@ -87,15 +124,6 @@ export abstract class BaseScene {
     return navigator.mediaDevices.getUserMedia({audio: true, video: false})
   }
 
-  public uninit(): void {
-    this.gui.destroy()
-    this.audioMotion?.toggleAnalyzer(false)
-    this.scene = undefined
-    this.renderer = undefined
-    this.isActive = false
-    this.audioMotion = undefined
-  }
-
   private sendFFTData() {
     this.connection.setLeds(this.bass)
   }
@@ -106,33 +134,5 @@ export abstract class BaseScene {
     const micInput = audioCtx.createMediaStreamSource(stream)
     this.audioMotion.disconnectInput()
     this.audioMotion.connectInput(micInput)
-  }
-
-  get bass(): number {
-    return this.audioMotion?.getEnergy('bass') || 0
-  }
-
-  get lowMid(): number {
-    return this.audioMotion?.getEnergy('lowMid') || 0
-  }
-
-  get mid(): number {
-    return this.audioMotion?.getEnergy('mid') || 0
-  }
-
-  get highMid(): number {
-    return this.audioMotion?.getEnergy('highMid') || 0
-  }
-
-  get treble(): number {
-    return this.audioMotion?.getEnergy('treble') || 0
-  }
-
-  get width(): number {
-    return window.innerWidth
-  }
-
-  get height(): number {
-    return window.innerHeight * 0.7
   }
 }

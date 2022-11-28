@@ -9,6 +9,19 @@ export class SphereScene extends BaseScene {
   private bottomPane!: Mesh<PlaneGeometry, MeshLambertMaterial>;
   private ball!: Mesh<IcosahedronGeometry, MeshLambertMaterial>;
 
+  protected setup() {
+    this.setupBall()
+    this.setupLights()
+    this.setupPanes()
+    this.setupCamera()
+  }
+
+  protected animate() {
+    this.animateBall(this.ball)
+    this.animatePlane(this.upperPane, this.treble)
+    this.animatePlane(this.bottomPane, this.lowMid)
+  }
+
   private setupPanes(): void {
     // Objects
     const planeGeometry = new THREE.PlaneGeometry(800, 800, 20, 20)
@@ -101,23 +114,10 @@ export class SphereScene extends BaseScene {
     mesh.geometry.attributes['position'].needsUpdate = true // required after the first render
   }
 
-  protected setup() {
-    this.setupBall()
-    this.setupLights()
-    this.setupPanes()
-    this.setupCamera()
-  }
-
   private setupCamera() {
     if (!this.scene) return
     this.camera.position.set(0, 4, 64)
     this.camera.lookAt(this.scene.position)
     this.scene.add(this.camera)
-  }
-
-  protected animate() {
-    this.animateBall(this.ball)
-    this.animatePlane(this.upperPane, this.treble)
-    this.animatePlane(this.bottomPane, this.lowMid)
   }
 }

@@ -5,16 +5,12 @@ import iro from '@jaames/iro'
 export abstract class State {
   protected _context!: ChromaEffectService;
 
-  protected update(newState: State): void {
-    this._context.state = newState
+  get context(): ChromaEffectService {
+    return this._context
   }
 
   set context(newContext: ChromaEffectService) {
     this._context = newContext
-  }
-
-  get context(): ChromaEffectService {
-    return this._context
   }
 
   abstract handle(colors: iro.Color[]): void;
@@ -22,5 +18,9 @@ export abstract class State {
   abstract onExit(): void;
 
   abstract onEntry(): void;
+
+  protected update(newState: State): void {
+    this._context.state = newState
+  }
 
 }

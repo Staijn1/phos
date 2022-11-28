@@ -13,11 +13,15 @@ import {visualizerModeId} from "../../shared/constants";
 })
 export class VisualizerPage3DComponent implements AfterViewInit, OnDestroy {
   @ViewChild('threeContainer') threeContainer!: ElementRef;
-  private scene: BaseScene | undefined;
   scenes: { name: string, action: BaseScene }[] = []
   selectedScene = 0;
+  private scene: BaseScene | undefined;
 
   constructor(private readonly connection: LedstripCommandService, private readonly settingsService: SettingsService) {
+  }
+
+  private get currentScene() {
+    return this.scenes[this.selectedScene]
   }
 
   ngAfterViewInit(): void {
@@ -43,10 +47,6 @@ export class VisualizerPage3DComponent implements AfterViewInit, OnDestroy {
     this.currentScene.action.uninit()
     this.selectedScene = newSceneIndex
     this.currentScene.action.init()
-  }
-
-  private get currentScene() {
-    return this.scenes[this.selectedScene]
   }
 }
 

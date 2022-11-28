@@ -10,24 +10,20 @@ import {VisualizerState} from './state/visualizer-state/visualizer-state'
   providedIn: 'root'
 })
 export class ChromaEffectService extends ChromaSDKService {
-  _setColors: iro.Color[] = [];
-  private _state: State;
-  private _speed = 1000;
-
   constructor(settingsService: SettingsService) {
     super(settingsService)
     this._state = new StaticState()
     this._state.context = this
   }
 
+  _setColors: iro.Color[] = [];
+
   set setColors(newColors: iro.Color[]) {
     this._setColors = newColors
     this.update()
   }
 
-  private update(): void {
-    this._state.handle(this._setColors)
-  }
+  private _state: State;
 
   set state(state: State) {
     this._state.onExit()
@@ -37,11 +33,10 @@ export class ChromaEffectService extends ChromaSDKService {
     this.update()
   }
 
-  set intensity(value: number) {
-    if (this._state instanceof VisualizerState) {
-      this._state.intensity = value
-      this.update()
-    }
+  private _speed = 1000;
+
+  get speed(): number {
+    return this._speed
   }
 
   set speed(value: number) {
@@ -51,7 +46,14 @@ export class ChromaEffectService extends ChromaSDKService {
     }
   }
 
-  get speed(): number {
-    return this._speed
+  set intensity(value: number) {
+    if (this._state instanceof VisualizerState) {
+      this._state.intensity = value
+      this.update()
+    }
+  }
+
+  private update(): void {
+    this._state.handle(this._setColors)
   }
 }

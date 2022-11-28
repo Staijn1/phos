@@ -1,8 +1,8 @@
-<div id="settingsWrapper" class="bg-warning"></div>
+<div class="bg-warning" id="settingsWrapper"></div>
 <div class="row m-0 vh-100" id="settings">
   <div class="col-6 d-none d-sm-block"></div>
   <div class="col-sm-6 col-xl-4 m-0 d-flex flex-column justify-content-center">
-    <form class="card" #form="ngForm" (ngSubmit)="saveSettings()">
+    <form #form="ngForm" (ngSubmit)="saveSettings()" class="card">
       <div class="card-body">
         <div class="card-title border-bottom">
           <h1 class="text-center">Settings</h1>
@@ -11,9 +11,9 @@
           <div class="col">
             <div class="input-group mb-3">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" [(ngModel)]="settings.chroma"
-                       id="chromaSupport"
-                       name="chromaSupport">
+                <input [(ngModel)]="settings.chroma" class="form-check-input" id="chromaSupport"
+                       name="chromaSupport"
+                       type="checkbox">
                 <label class="form-check-label" for="chromaSupport">
                   Enable chroma support
                 </label>
@@ -25,9 +25,9 @@
           <div class="col">
             <div class="input-group mb-3">
               <div class="form-check">
-                <input class="form-check-input" type="checkbox" [(ngModel)]="settings.initialColor"
-                       id="initialColor"
-                       name="initialColor">
+                <input [(ngModel)]="settings.initialColor" class="form-check-input" id="initialColor"
+                       name="initialColor"
+                       type="checkbox">
                 <label class="form-check-label" for="initialColor">
                   Set colors on startup
                 </label>
@@ -40,10 +40,10 @@
             Primary color:
             <div class="row justify-content-center">
               <div
+                (click)="setTheme(theme, i)"
                 *ngFor="let theme of themes;let i = index"
                 [class.active]="i === selectedTheme"
                 [ngClass]="theme"
-                (click)="setTheme(theme, i)"
                 class="color-option col-4 col-sm-2 rounded d-flex justify-content-center align-items-center m-2 text-capitalize"
               >
                 {{theme}}
@@ -53,7 +53,7 @@
         </div>
         <div class="row">
           <div class="col-4 text-right">
-            <button type="submit" class="btn btn-primary">
+            <button class="btn btn-primary" type="submit">
               <fa-icon [icon]="saveIcon"></fa-icon>
             </button>
           </div>

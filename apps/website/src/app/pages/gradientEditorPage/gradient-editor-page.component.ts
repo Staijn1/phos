@@ -24,7 +24,11 @@ export class GradientEditorPageComponent implements OnDestroy {
   deleteIcon = faTrash
   collapseIcon = faAngleLeft
   currentActiveGradientID = 0
-
+  addIcon = faPlus
+  jsonEnabled = false
+  readonly amountClickLimit = 10
+  clicked = 0
+  basicGradients: GradientInformation[] = []
   private defaultSliderOptions: slider.Options = {
     animate: true,
     floor: 0,
@@ -32,11 +36,6 @@ export class GradientEditorPageComponent implements OnDestroy {
     step: 0.1,
     noSwitching: true,
   }
-  addIcon = faPlus
-  jsonEnabled = false
-  readonly amountClickLimit = 10
-  clicked = 0
-  basicGradients: GradientInformation[] = []
 
   constructor(
     private connection: InformationService,
@@ -81,22 +80,6 @@ export class GradientEditorPageComponent implements OnDestroy {
   saveOptions(): void {
     this.settingsService.saveVisualizerOptions(this.visualizerOptions)
   }
-
-  private async getGradients(gradientsPreFetched?: GradientInformation[]): Promise<void> {
-    const gradients = (gradientsPreFetched || await this.connection.getGradients()) as GradientInformationExtended[]
-    for (const gradient of gradients) {
-      gradient.sliderOptions = this.defaultSliderOptions
-      gradient.collapsed = true
-    }
-    this.gradients = gradients
-  }
-
-  private init(): void {
-    this.getGradients().then(() => {
-      this.loadOptions()
-    })
-  }
-
 
   updateOptions(): void {
     this.visualizerOptions = Object.assign({}, this.visualizerOptions)
@@ -193,5 +176,20 @@ export class GradientEditorPageComponent implements OnDestroy {
     if (this.currentActiveGradientID) {
       this.changeGradient(this.currentActiveGradientID)
     }
+  }
+
+  private async getGradients(gradientsPreFetched?: GradientInformation[]): Promise<void> {
+    const gradients = (gradientsPreFetched || await this.connection.getGradients()) as GradientInformationExtended[]
+    for (const gradient of gradients) {
+      gradient.sliderOptions = this.defaultSliderOptions
+      gradient.collapsed = true
+    }
+    this.gradients = gradients
+  }
+
+  private init(): void {
+    this.getGradients().then(() => {
+      this.loadOptions()
+    })
   }
 }

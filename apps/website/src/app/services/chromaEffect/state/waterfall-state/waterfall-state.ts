@@ -3,9 +3,9 @@ import {calculateBGRInteger, ColdColor, map, qadd8, qsub8, randomInteger} from '
 import iro from '@jaames/iro'
 
 export class WaterfallState extends State {
-  private interval!: NodeJS.Timeout;
   readonly COOLING = 55;
   readonly SPARKING = 120;
+  private interval!: NodeJS.Timeout;
   private G_REVERSE_DIRECTION = false;
   private heatKeyboard: number[] = [];
   private heatMouse: number[] = [];

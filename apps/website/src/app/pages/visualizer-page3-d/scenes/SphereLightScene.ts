@@ -7,6 +7,17 @@ export class SphereLightScene extends BaseScene {
   private ball!: Mesh<SphereGeometry, MeshStandardMaterial>;
   private normalTexture!: Texture;
 
+  protected setup() {
+    this.loadTextures()
+    this.setupSphere()
+    this.setupLights()
+    this.setupCamera()
+  }
+
+  protected animate() {
+    this.animateBall(this.ball)
+  }
+
   private loadTextures(): void {
     const textureLoader = new THREE.TextureLoader()
     this.normalTexture = textureLoader.load('../../../../assets/normal-maps/dimples.png')
@@ -51,21 +62,10 @@ export class SphereLightScene extends BaseScene {
     mesh.rotateZ(degToRad(0.07))
   }
 
-  protected setup() {
-    this.loadTextures()
-    this.setupSphere()
-    this.setupLights()
-    this.setupCamera()
-  }
-
   private setupCamera() {
     if (!this.scene) return;
     this.camera.position.set(0, 4, 64)
     this.camera.lookAt(this.scene.position)
     this.scene.add(this.camera)
-  }
-
-  protected animate() {
-    this.animateBall(this.ball)
   }
 }

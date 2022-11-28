@@ -62,6 +62,7 @@ export class ChromaSDKService {
     category: 'application'
   };
   private timerId!: NodeJS.Timeout;
+  private initializedApiURL: string | undefined;
 
   constructor(private settingsService: SettingsService) {
     if (this.isChromaSupport()) {
@@ -74,8 +75,6 @@ export class ChromaSDKService {
         })
     }
   }
-
-  private initializedApiURL: string | undefined;
 
   public async init(): Promise<any> {
     const response = await fetch(`${this.API_URL}/`, {

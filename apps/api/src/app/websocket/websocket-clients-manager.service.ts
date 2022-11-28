@@ -48,6 +48,14 @@ export class WebsocketClientsManagerService {
   }
 
   /**
+   * Update the server variable so we have access to all the connected clients
+   * @param {Server} server
+   */
+  setServer(server: Server) {
+    this.server = server;
+  }
+
+  /**
    * Send a command to all ledstrips
    * @param {string} payload
    * @private
@@ -57,15 +65,6 @@ export class WebsocketClientsManagerService {
     for (const [id, client] of clients) {
       client.emit(event, payload)
     }
-  }
-
-
-  /**
-   * Update the server variable so we have access to all the connected clients
-   * @param {Server} server
-   */
-  setServer(server: Server) {
-    this.server = server;
   }
 
 

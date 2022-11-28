@@ -31,7 +31,7 @@ export class InformationService {
    * @returns {Promise<{gradients: GradientInformation[], gradient: GradientInformation}[]>}
    */
   async addGradient(): Promise<AddGradientResponse> {
-   return this.websocket.addGradient();
+    return this.websocket.addGradient();
   }
 
   private handleError(response: Response): void {
