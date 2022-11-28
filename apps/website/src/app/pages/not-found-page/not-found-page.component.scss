@@ -1,0 +1,32 @@
+#sparks {
+  animation: spark 1s infinite alternate;
+}
+
+#left-character {
+  animation: wiggle 4s infinite ease alternate;
+}
+
+#right-character {
+  animation: wiggle 4s infinite ease alternate;
+  animation-delay: 1s;
+}
+
+// Animation to make an element wiggle from left to right, back and forth
+@keyframes wiggle {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(-10px);
+  }
+}
+
+// Animate the opacity for the sparks
+@keyframes spark {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
