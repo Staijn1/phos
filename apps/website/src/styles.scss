@@ -271,6 +271,17 @@ section {
     color: $color;
   }
 
+  #not-found-#{$name} {
+    .fill-lighten {
+      fill: $color;
+      opacity: 0.5;
+    }
+
+    .fill-full {
+      fill: $color;
+    }
+  }
+
   .icon-box-#{$name} {
     border: 3px solid $color;
 
@@ -294,7 +305,7 @@ section {
       background: $color !important;
     }
 
-    #text, #Light_Bulb {
+    #ledcontroltext, #Light_Bulb {
       stroke: $color !important;
     }
 

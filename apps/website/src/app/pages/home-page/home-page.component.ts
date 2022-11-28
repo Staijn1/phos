@@ -36,6 +36,6 @@ export class HomePageComponent implements OnInit {
     this.timeline.to('#Light_Bulb', {duration: 0.7, y: -40, ease: 'power.out'}, '-=1.9')
     this.timeline.to('#Light_Bulb .reflection', {duration: 0.5, strokeWidth: 4}, '-=2.2')
 
-    this.timeline.to('#text', {strokeDashoffset: 0, duration: 4}, '+=1.5')
+    this.timeline.to('#ledcontroltext', {strokeDashoffset: 0, duration: 4}, '+=1.5')
   }
 }
