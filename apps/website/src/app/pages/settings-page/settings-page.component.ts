@@ -1,5 +1,5 @@
 import {Component} from '@angular/core'
-import {faSave} from '@fortawesome/free-solid-svg-icons'
+import {faBroom, faSave} from '@fortawesome/free-solid-svg-icons'
 import {SettingsService} from '../../services/settings/settings.service'
 import {GeneralSettings} from '../../shared/types/types'
 import {ThemeService} from "../../services/theme/theme.service";
@@ -15,6 +15,7 @@ export class SettingsPageComponent {
   saveIcon = faSave;
   themes = themes;
   selectedTheme = 0;
+  clearSettingsIcon = faBroom;
 
   constructor(private settingsService: SettingsService, private readonly theme: ThemeService) {
     this.settings = this.settingsService.readGeneralSettings()
@@ -29,5 +30,10 @@ export class SettingsPageComponent {
     this.selectedTheme = index
     this.settings.theme = this.themes[this.selectedTheme]
     this.theme.setTheme(this.settings.theme)
+  }
+
+  clearSettings(): void {
+    this.settingsService.clearSettings()
+    location.reload()
   }
 }
