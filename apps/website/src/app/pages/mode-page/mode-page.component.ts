@@ -16,6 +16,7 @@ import {
 } from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
 import {ModeInformation} from "@angulon/interfaces";
 import {themes} from '../../shared/constants';
+import {ThemeService} from "../../services/theme/theme.service";
 
 
 @Component({
@@ -42,7 +43,8 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
   constructor(
     private readonly connection: LedstripCommandService,
-    private readonly chromaService: ChromaEffectService) {
+    private readonly chromaService: ChromaEffectService,
+    public readonly themeService: ThemeService) {
   }
 
   ngOnDestroy(): void {

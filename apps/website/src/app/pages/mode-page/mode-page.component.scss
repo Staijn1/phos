@@ -78,3 +78,47 @@
     }
   }
 }
+
+#LineGraph1 path {
+  transform: scaleY(0.5);
+  animation: heightAnimation 5s ease-in-out infinite alternate;
+  transform-origin: 0 41%;
+}
+
+#LineGraph2 path {
+  transform: scaleY(0.5);
+  animation: heightAnimation 6s ease-in-out infinite alternate;
+  animation-delay: 2s;
+  transform-origin: 0 41%;
+}
+
+
+#LineGraph3 path {
+  transform: scaleY(0.5);
+  animation: heightAnimation 3s ease-in-out infinite alternate;
+  animation-delay: 1s;
+  transform-origin: 0 41%;
+}
+
+#LowerArmGroup {
+  transform-origin: 58% 50%;
+  animation: moveArm 3s infinite alternate;
+}
+
+@keyframes heightAnimation {
+  0% {
+    transform: scaleY(0.5);
+  }
+  100% {
+    transform: scaleY(1);
+  }
+}
+
+@keyframes moveArm {
+  from {
+    transform: rotate(-3deg);
+  }
+  to {
+    transform: rotate(3deg);
+  }
+}
