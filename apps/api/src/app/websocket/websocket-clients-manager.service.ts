@@ -25,10 +25,16 @@ export class WebsocketClientsManagerService {
    * Receive a hex color to set on all ledstrips
    * @param payload
    */
-  setColor(payload: string) {
-    // If the payload contains a #, remove it
-    if (payload.includes('#')) payload = payload.replace('#', '');
-    this.sendAllClients('#', payload)
+  setColor(payload: string[]) {
+    const formattedPayload = [];
+    for (const rawColor of payload) {
+      let formattedColor = rawColor;
+      // If the payload contains a #, remove it
+      if (rawColor.includes('#')) formattedColor = rawColor.replace('#', '');
+      formattedPayload.push(formattedColor);
+    }
+
+    this.sendAllClients('#', formattedPayload[0])
   }
 
   decreaseSpeed() {
