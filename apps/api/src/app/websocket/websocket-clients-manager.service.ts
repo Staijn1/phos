@@ -4,6 +4,7 @@ import {Server} from 'socket.io';
 @Injectable()
 export class WebsocketClientsManagerService {
   private server!: Server;
+  private colorTimeout: NodeJS.Timeout;
 
   /**
    * Set the mode of all clients
@@ -34,7 +35,9 @@ export class WebsocketClientsManagerService {
       formattedPayload.push(formattedColor);
     }
 
-    this.sendAllClients('#', formattedPayload[0])
+    clearTimeout(this.colorTimeout);
+    // The server sends messages so quickly, the ledstrips can't keep up so we have to slow it down
+    this.colorTimeout = setTimeout(() => this.sendAllClients('#', formattedPayload[0]), 10)
   }
 
   decreaseSpeed() {

@@ -36,13 +36,12 @@ export class WebsocketService extends LedstripConnection {
   }
 
   setColor(colors: iro.Color[] | string[]): void {
-    // We need to slow this down because the cute little chip cant handle the SPEEED
-    clearTimeout(this.colorTimeout)
-    this.colorTimeout = setTimeout(() => {
-      const color = colors[0]
-      const colorstring: string = (color as iro.Color).hexString ? (color as iro.Color).hexString : color as string
-      this.send('color', colorstring)
-    }, 10)
+    const colorStrings = []
+    for (const rawColor of colors) {
+      const color = typeof rawColor === 'string' ? rawColor : rawColor.hexString
+      colorStrings.push(color)
+    }
+    this.send('color', colorStrings)
   }
 
   setMode(modeNumber: number): void {
@@ -54,7 +53,7 @@ export class WebsocketService extends LedstripConnection {
     this.send('FFT', mappedValue.toString())
   }
 
-  send(event: string, payload?: string): void {
+  send(event: string, payload?: string | string[]): void {
     if (this.isOpen()) {
       this.socket.emit(event, payload)
     }
