@@ -1,9 +1,13 @@
 #include <Arduino.h>
+#include "Angulon.h"
+
+Angulon angulon;
 
 void setup() {
-    Serial.begin(115200);
-    Serial.println("Test");
+    angulon.setup();
 }
 
 void loop() {
+    angulon.loop();
 }
+
