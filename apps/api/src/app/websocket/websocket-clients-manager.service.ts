@@ -37,7 +37,7 @@ export class WebsocketClientsManagerService {
 
     clearTimeout(this.colorTimeout);
     // The server sends messages so quickly, the ledstrips can't keep up so we have to slow it down
-    this.colorTimeout = setTimeout(() => this.sendAllClients('#', formattedPayload[0]), 10)
+    this.colorTimeout = setTimeout(() => this.sendAllClients('#', formattedPayload), 10)
   }
 
   decreaseSpeed() {
@@ -69,12 +69,10 @@ export class WebsocketClientsManagerService {
    * @param {string} payload
    * @private
    */
-  private sendAllClients(event: string, payload: string): void {
+  private sendAllClients(event: string, payload: string | string[]): void {
     const clients = this.server.sockets.sockets;
     for (const [id, client] of clients) {
       client.emit(event, payload)
     }
   }
-
-
 }

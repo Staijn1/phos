@@ -49,7 +49,7 @@ void webSocketClientEvent(socketIOmessageType_t type, uint8_t * payload, size_t 
 }
 
 void checkpayloadclient(uint8_t* payload, size_t inputLength) {
-  StaticJsonDocument<64> doc;
+  StaticJsonDocument<128> doc;
 
   DeserializationError error = deserializeJson(doc, payload);
 
@@ -62,12 +62,16 @@ void checkpayloadclient(uint8_t* payload, size_t inputLength) {
   const char* event = doc[0]; // The first element holds the code corrosponding to the action (set color, mode, fft etc)
   // # ==> Set main color
   if (*event == '#') {
-    long number = (long) strtol( (const char*) doc[1], NULL, 16 );
-
-    main_color.red = number >> 16;
-    main_color.green = number >> 8 & 0xFF;
-    main_color.blue = number & 0xFF;
-    strip->setColor(main_color.red, main_color.green, main_color.blue);
+    JsonArray colorArray = doc[1];
+    uint32_t color1 = (uint32_t) strtol( (const char*) colorArray[0], NULL, 16 ); // "0xff00ff"
+    uint32_t color2 = (uint32_t) strtol( (const char*) colorArray[1], NULL, 16 );
+    uint32_t color3 = (uint32_t) strtol( (const char*) colorArray[2], NULL, 16 );
+    uint32_t convertedColors[] = { color1, color2, color3};
+    main_color.red = color1 >> 16;
+    main_color.green = color1 >> 8 & 0xFF;
+    main_color.blue = color1 & 0xFF;
+    uint32_t arr[] = { 0xFF00FF, 0xFF0000, 0x0000FF };
+    strip->setColors(0, convertedColors);
     Serial.printf("Set main color to: R: [%u] G: [%u] B: [%u]\n",  main_color.red, main_color.green, main_color.blue);
     return;
 
@@ -100,7 +104,7 @@ void checkpayloadclient(uint8_t* payload, size_t inputLength) {
     Serial.printf("WS: Set brightness to: [%u]\n", ws2812fx_brightness);
     return;
   }
-  
+
   // ? ==> Decrease speed
   if (*event == '?') {
     // The speed is an interval (or delay). The lower the interval/delay is, the faster it goes.
