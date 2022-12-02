@@ -7,6 +7,9 @@
 
 #include <Preferences.h>
 #include <WebServer.h>
+#include "hardware/Button.h"
+
+#define NETWORK_TIMEOUT 10000
 
 /**
  * This class manages the configuration of this ledstrip.
@@ -17,16 +20,21 @@
  */
 class ConfigurationManager {
 private:
-    WebServer* server = new WebServer(80);
+    WebServer *server = new WebServer(80);
     Preferences preferences;
+    Button *bootButton = new Button(0);
+
     const char *hotspotPassword = "ESP32-Configure";
     const char *hotspotName = "ESP32-Access-Point";
+
     bool isConfigured = false;
     unsigned long lastTimeConnected = 0L;
-    #define NETWORK_TIMEOUT 10000
+    int countButtonPressed = 0;
 
     void setupWebserver();
+
     void setupWiFi();
+
 public:
     void setup();
 
@@ -36,4 +44,5 @@ public:
 
     void run();
 };
+
 #endif //ANGULON_LEDSTRIP_CONFIGURATIONMANAGER_H
