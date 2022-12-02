@@ -38,17 +38,16 @@ export class SettingsService {
     smoothing: 0.7,
     spinSpeed: 0,
   };
-
-  constructor(private readonly messageService: MessageService) {
-    this.setDefaults()
-  }
-
   private readonly defaultGeneralSettings: GeneralSettings = {
     chroma: false,
     colors: ['#ff0000', '#00ff00', '#0000ff'],
     initialColor: false,
     theme: 'default'
   };
+
+  constructor(private readonly messageService: MessageService) {
+    this.setDefaults()
+  }
 
   saveVisualizerOptions(options: Options): void {
     delete options.onCanvasDraw
@@ -65,6 +64,14 @@ export class SettingsService {
 
   readGeneralSettings(): GeneralSettings {
     return this.readSettings('generalSettings') as GeneralSettings
+  }
+
+  convertColors(colors: iro.Color[]): string[] {
+    const convertedColors: string[] = []
+    for (const item of colors) {
+      convertedColors.push(item.hexString)
+    }
+    return convertedColors
   }
 
   private readSettings(name: 'generalSettings' | 'visualizerSettings'): GeneralSettings | Options {
@@ -90,21 +97,16 @@ export class SettingsService {
    * Sets the default settings if no settings are saved
    * @private
    */
-  private setDefaults(): void {
-    if (!this.readSettings('generalSettings')) {
+  private setDefaults(force?:boolean): void {
+    if (!this.readSettings('generalSettings') && !force) {
       this.saveGeneralSettings(this.defaultGeneralSettings)
     }
-    if (!this.readSettings('visualizerSettings')) {
+    if (!this.readSettings('visualizerSettings') && !force) {
       this.saveVisualizerOptions(this.defaultVisualizerOptions)
     }
   }
 
-  convertColors(colors: iro.Color[]): string[] {
-    const convertedColors: string[] = []
-    for (const item of colors) {
-      convertedColors.push(item.hexString)
-    }
-    return convertedColors
+  clearSettings() {
+    this.setDefaults(true)
   }
-
 }

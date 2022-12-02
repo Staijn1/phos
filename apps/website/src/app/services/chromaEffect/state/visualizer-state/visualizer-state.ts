@@ -3,11 +3,17 @@ import {calculateBGRInteger, map} from '../../../../shared/functions'
 import iro from '@jaames/iro'
 
 export class VisualizerState extends State {
-  protected _intensity = 0;
   protected visualizerCounter = 0;
   protected _BGRIntegerForeground!: number;
   protected _previousBGRIntegerForeground!: number;
   protected _previousIntensity!: number;
+
+  protected _intensity = 0;
+
+  set intensity(value: number) {
+    this._previousIntensity = this._intensity
+    this._intensity = value
+  }
 
   handle(colors: iro.Color[]): void {
     if (!colors) return
@@ -29,6 +35,12 @@ export class VisualizerState extends State {
     this.createMouseVisualizer(backgroundColor)
 
     this._previousBGRIntegerForeground = this._BGRIntegerForeground
+  }
+
+  onEntry(): void {
+  }
+
+  onExit(): void {
   }
 
   protected createMouseVisualizer(backgroundColor: number) {
@@ -88,16 +100,5 @@ export class VisualizerState extends State {
     if (this._BGRIntegerForeground !== this._previousBGRIntegerForeground) {
       this._context.createHeadsetEffect('CHROMA_STATIC', this._BGRIntegerForeground).then()
     }
-  }
-
-  set intensity(value: number) {
-    this._previousIntensity = this._intensity
-    this._intensity = value
-  }
-
-  onEntry(): void {
-  }
-
-  onExit(): void {
   }
 }

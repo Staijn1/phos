@@ -5,13 +5,18 @@ import {SettingsService} from "../settings/settings.service";
   providedIn: 'root'
 })
 export class ThemeService {
+  theme!: string;
 
   constructor(private settingsService: SettingsService) {
   }
 
-  loadTheme() {
-    const currentSettings = this.settingsService.readGeneralSettings()
-    document.body.className = currentSettings.theme
+  loadTheme(theme?: string) {
+    if (!theme) {
+      const currentSettings = this.settingsService.readGeneralSettings()
+      theme = currentSettings.theme
+    }
+    document.body.className = theme
+    this.theme = theme
   }
 
   setTheme(theme: string) {

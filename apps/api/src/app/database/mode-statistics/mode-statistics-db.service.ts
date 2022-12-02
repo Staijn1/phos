@@ -12,7 +12,7 @@ export class ModeStatisticsDbService extends DatabaseConnection {
    */
   async registerModeChange(mode: number) {
     // todo: Disable in production for now, because prisma can't connect to postgres in Docker.. :(
-    if (environment.production) return
+    if (!environment.statistics) return
     this.connect();
 
     await this.client.modeStatistics.updateMany({

@@ -2,11 +2,11 @@
 <router-outlet></router-outlet>
 
 <div class="alert-container w-50-s">
-  <div class="alert" @swipeRight *ngFor="let error of errorService.getMessages()"
+  <div (click)="onAlertClick(error)" *ngFor="let error of errorService.getMessages()" @swipeRight
        [class.alert-danger]="error.severity === 'error'"
-       [class.alert-warning]="error.severity === 'warning'"
        [class.alert-info]="error.severity === 'info'"
-       (click)="onAlertClick(error)">
+       [class.alert-warning]="error.severity === 'warning'"
+       class="alert">
     <p>{{error.message}}</p>
   </div>
 </div>

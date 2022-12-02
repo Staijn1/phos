@@ -42,7 +42,6 @@ export class VisualizerPageComponent implements OnDestroy {
   settingsIcon = faWrench;
   fullscreenIcon = faExpand
   modeIcon = faLightbulb
-  private timeline: TimelineMax
   smoothingSliderOptions: slider.Options = {
     floor: 0,
     ceil: 1,
@@ -79,6 +78,7 @@ export class VisualizerPageComponent implements OnDestroy {
   listIcon = faList;
   checkboxIcon = faCheck;
   sliderIcon = faSliders;
+  private timeline: TimelineMax
 
   constructor(
     private connection: LedstripCommandService,
@@ -87,6 +87,16 @@ export class VisualizerPageComponent implements OnDestroy {
     private chromaEffect: ChromaEffectService,
   ) {
     this.timeline = new TimelineMax()
+  }
+
+  /**
+   * For the current selected mode, find the corresponding mode object
+   * If the name of the mode includes octave then return true
+   */
+  get isOctaveBandMode() {
+    const currentMode = this.visualizerOptions.mode
+    const mode = this.modes.find((mode) => mode.value === currentMode)
+    return mode?.text.includes('octave')
   }
 
   ngOnDestroy(): void {
@@ -134,16 +144,6 @@ export class VisualizerPageComponent implements OnDestroy {
   applySettings() {
     this.visualizerOptions = Object.assign({}, this.visualizerOptions)
     this.settingsService.saveVisualizerOptions(this.visualizerOptions)
-  }
-
-  /**
-   * For the current selected mode, find the corresponding mode object
-   * If the name of the mode includes octave then return true
-   */
-  get isOctaveBandMode() {
-    const currentMode = this.visualizerOptions.mode
-    const mode = this.modes.find((mode) => mode.value === currentMode)
-    return mode?.text.includes('octave')
   }
 
   closeOffcanvas() {

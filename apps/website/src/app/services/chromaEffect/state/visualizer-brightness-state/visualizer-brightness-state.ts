@@ -4,6 +4,11 @@ import {calculateBGRInteger, map} from '../../../../shared/functions'
 
 export class VisualizerBrightnessState extends VisualizerState {
 
+  override set intensity(value: number) {
+    this._previousIntensity = this._intensity
+    this._intensity = value
+  }
+
   override handle(colors: iro.Color[]): void {
     if (!colors) return
 
@@ -76,11 +81,6 @@ export class VisualizerBrightnessState extends VisualizerState {
     if (this._BGRIntegerForeground !== this._previousBGRIntegerForeground) {
       this._context.createHeadsetEffect('CHROMA_STATIC', this._BGRIntegerForeground).then()
     }
-  }
-
-  override set intensity(value: number) {
-    this._previousIntensity = this._intensity
-    this._intensity = value
   }
 
   override onEntry(): void {

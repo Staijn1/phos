@@ -26,15 +26,6 @@ export class RainbowCycleState extends State {
     this._context.createMouseEffect('CHROMA_CUSTOM2', this._context.mouseColors).then()
   }
 
-  private setColor(colors: number[][]): void {
-    // eslint-disable-next-line @typescript-eslint/prefer-for-of
-    for (let row = 0; row < colors.length; row++) {
-      for (let column = 0; column < colors[0].length; column++) {
-        colors[row][column] = color_wheel(((column * 256 / this._context.keyboard.columns) + this.counter) & 0xFF)
-      }
-    }
-  }
-
   onEntry(): void {
     clearInterval(this.effect)
     this.effect = undefined
@@ -44,5 +35,14 @@ export class RainbowCycleState extends State {
     clearInterval(this.effect)
     this.effect = undefined
     this.counter = 0
+  }
+
+  private setColor(colors: number[][]): void {
+    // eslint-disable-next-line @typescript-eslint/prefer-for-of
+    for (let row = 0; row < colors.length; row++) {
+      for (let column = 0; column < colors[0].length; column++) {
+        colors[row][column] = color_wheel(((column * 256 / this._context.keyboard.columns) + this.counter) & 0xFF)
+      }
+    }
   }
 }

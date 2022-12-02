@@ -17,8 +17,8 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   @Output() colorInit = new EventEmitter<ColorpickerEvent>()
   @Output() colorChange = new EventEmitter<ColorpickerEvent>()
   @Output() inputEnd = new EventEmitter<ColorpickerEvent>();
-  private picker!: IroColorPicker
   id!: string;
+  private picker!: IroColorPicker
 
   ngOnInit(): void {
     this.generateElementId();

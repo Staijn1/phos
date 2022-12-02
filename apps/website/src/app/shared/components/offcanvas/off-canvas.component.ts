@@ -1,5 +1,5 @@
 import {Component, ElementRef, ViewChild} from '@angular/core';
-import {NgbModalOptions, NgbOffcanvas, NgbOffcanvasOptions, NgbOffcanvasRef} from '@ng-bootstrap/ng-bootstrap';
+import {NgbOffcanvas, NgbOffcanvasOptions, NgbOffcanvasRef} from '@ng-bootstrap/ng-bootstrap';
 
 @Component({
   selector: 'app-offcanvas',

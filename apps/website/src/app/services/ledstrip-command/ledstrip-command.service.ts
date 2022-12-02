@@ -1,10 +1,9 @@
 import {Injectable} from '@angular/core'
 import {LedstripConnection} from '../../shared/interfaces/LedstripConnection'
 import {WebsocketService} from '../websocketconnection/websocket.service'
-import {InformationService} from '../information-service/information.service'
 import iro from '@jaames/iro'
 import {MessageService} from '../error/message.service'
-import {GradientInformation, GradientInformationExtended, ModeInformation} from '@angulon/interfaces';
+import {ModeInformation} from '@angulon/interfaces';
 
 @Injectable({
   providedIn: 'root'

@@ -7,44 +7,44 @@
     <div class='col-12 col-md-6 mt-5'>
       <div class='card'>
         <div
-          class='card-header d-flex justify-content-between bg-primary text-white align-content-center'
-          (click)='handleClickOnHeader()'>
+          (click)='handleClickOnHeader()'
+          class='card-header d-flex justify-content-between bg-primary text-white align-content-center'>
           <h5 class='text-white'>Gradients overview</h5>
-          <button type='button' class='btn btn-info text-white' (click)='addGradient()'>
+          <button (click)='addGradient()' class='btn btn-info text-white' type='button'>
             <fa-icon [icon]='addIcon'></fa-icon>
           </button>
         </div>
         <div class='card-body text-dark'>
 
-          <div class='my-3' *ngFor='let gradient of gradients; let gradientIndex = index'>
+          <div *ngFor='let gradient of gradients; let gradientIndex = index' class='my-3'>
             <div class='card'>
               <div
-                class='card-header d-flex justify-content-between'
                 #gradientCard
                 [id]='gradient.id'
-                [ngClass]='gradientCard.id === currentActiveGradientID.toString() ? "bg-secondary text-white" : ""'>
-                <h3 contenteditable (input)='onNameChange($event.target, gradient)'>{{gradient.name}}</h3>
+                [ngClass]='gradientCard.id === currentActiveGradientID.toString() ? "bg-secondary text-white" : ""'
+                class='card-header d-flex justify-content-between'>
+                <h3 (input)='onNameChange($event.target, gradient)' contenteditable>{{gradient.name}}</h3>
                 <div class='d-flex'>
                   <button
-                    class='btn mx-1 text-dark rotate'
                     (click)='handleCollapsable(gradient)'
                     [attr.aria-expanded]='!gradient.collapsed'
                     [ngClass]="[
                                  gradientCard.id === currentActiveGradientID.toString() ? 'text-white' : 'text-dark',
                                  gradient.collapsed ? 'left' : 'down'
                     ]"
+                    class='btn mx-1 text-dark rotate'
                   >
                     <fa-icon
                       [icon]='collapseIcon'>
                     </fa-icon>
                   </button>
                   <button
-                    class='btn mx-1 btn-info text-white'
                     (click)='submitGradient(gradient)'
+                    class='btn mx-1 btn-info text-white'
                   >
                     <fa-icon [icon]='saveIcon'></fa-icon>
                   </button>
-                  <button class='btn mx-1 btn-danger' (click)='removeGradient(gradient)'>
+                  <button (click)='removeGradient(gradient)' class='btn mx-1 btn-danger'>
                     <fa-icon [icon]='deleteIcon'></fa-icon>
                   </button>
                 </div>
@@ -57,7 +57,7 @@
                     </p>
                   </div>
                   <div class='col d-flex justify-content-end'>
-                    <button type='button' class='btn btn-success' (click)='addColorStopToGradient(gradient)'>
+                    <button (click)='addColorStopToGradient(gradient)' class='btn btn-success' type='button'>
                       <fa-icon [icon]='addIcon'></fa-icon>
                     </button>
                   </div>
@@ -69,12 +69,12 @@
                     </div>
                     <div class='col'>
                       <app-colorpicker
-                        [id]='"bgColor"+gradientIndex'
                         (colorChange)='changeBackgroundColor($event, gradient)'
+                        [id]='"bgColor"+gradientIndex'
                         [initialColor]='[gradient.bgColor]'></app-colorpicker>
                     </div>
                   </div>
-                  <table class='table' aria-label='Colorstops'>
+                  <table aria-label='Colorstops' class='table'>
                     <thead>
                     <tr>
                       <th scope='col'>#</th>
@@ -88,9 +88,9 @@
                       <th scope='row'>{{stopIndex + 1}}</th>
                       <td colspan='1'>
                         <ngx-slider
-                          [options]="gradient.sliderOptions"
+                          (userChange)="updateOptions()"
                           [(ngModel)]="stop.pos"
-                          (userChange)="updateOptions()"></ngx-slider>
+                          [options]="gradient.sliderOptions"></ngx-slider>
                         <div class='small'>{{stop.pos}}</div>
                       </td>
                       <td class='text-center'>
@@ -103,8 +103,8 @@
                       </td>
                       <td class=''>
                         <div class='d-flex justify-content-end'>
-                          <button class='btn btn-danger'
-                                  (click)='removeColorStop(gradient, stopIndex)'>
+                          <button (click)='removeColorStop(gradient, stopIndex)'
+                                  class='btn btn-danger'>
                             <fa-icon [icon]='deleteIcon'></fa-icon>
                           </button>
                         </div>
@@ -121,12 +121,13 @@
     </div>
     <div class='col d-flex flex-column'>
       <div class='vh-50 py-5 position-sticky sticky-top'>
-        <app-shared-visualizer [options]='visualizerOptions' [gradients]='gradients' (registeredGradients)="onGradientsRegistered()"></app-shared-visualizer>
+        <app-shared-visualizer (registeredGradients)="onGradientsRegistered()" [gradients]='gradients'
+                               [options]='visualizerOptions'></app-shared-visualizer>
       </div>
     </div>
   </div>
 
-  <div class='container mt-5' *ngIf='jsonEnabled'>
+  <div *ngIf='jsonEnabled' class='container mt-5'>
     <div class='card '>
       <div class='card-header bg-primary text-white'>JSON</div>
       <div class='card-body'>

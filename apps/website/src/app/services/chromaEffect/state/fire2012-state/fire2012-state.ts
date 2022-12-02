@@ -3,9 +3,9 @@ import {calculateBGRInteger, map, qadd8, qsub8, randomInteger, WarmColor} from '
 import iro from '@jaames/iro'
 
 export class Fire2012State extends State {
-  private interval: string | number | NodeJS.Timer | undefined;
   readonly COOLING = 55;
   readonly SPARKING = 120;
+  private interval: string | number | NodeJS.Timer | undefined;
   private G_REVERSE_DIRECTION = false;
   private heatKeyboard: number[] = [];
   private heatMouse: number[] = []

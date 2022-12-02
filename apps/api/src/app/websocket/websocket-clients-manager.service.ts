@@ -4,6 +4,7 @@ import {Server} from 'socket.io';
 @Injectable()
 export class WebsocketClientsManagerService {
   private server!: Server;
+  private colorTimeout: NodeJS.Timeout;
 
   /**
    * Set the mode of all clients
@@ -25,10 +26,18 @@ export class WebsocketClientsManagerService {
    * Receive a hex color to set on all ledstrips
    * @param payload
    */
-  setColor(payload: string) {
-    // If the payload contains a #, remove it
-    if (payload.includes('#')) payload = payload.replace('#', '');
-    this.sendAllClients('#', payload)
+  setColor(payload: string[]) {
+    const formattedPayload = [];
+    for (const rawColor of payload) {
+      let formattedColor = rawColor;
+      // If the payload contains a #, remove it
+      if (rawColor.includes('#')) formattedColor = rawColor.replace('#', '');
+      formattedPayload.push(formattedColor);
+    }
+
+    clearTimeout(this.colorTimeout);
+    // The server sends messages so quickly, the ledstrips can't keep up so we have to slow it down
+    this.colorTimeout = setTimeout(() => this.sendAllClients('#', formattedPayload), 10)
   }
 
   decreaseSpeed() {
@@ -48,19 +57,6 @@ export class WebsocketClientsManagerService {
   }
 
   /**
-   * Send a command to all ledstrips
-   * @param {string} payload
-   * @private
-   */
-  private sendAllClients(event: string, payload: string): void {
-    const clients = this.server.sockets.sockets;
-    for (const [id, client] of clients) {
-      client.emit(event, payload)
-    }
-  }
-
-
-  /**
    * Update the server variable so we have access to all the connected clients
    * @param {Server} server
    */
@@ -68,5 +64,15 @@ export class WebsocketClientsManagerService {
     this.server = server;
   }
 
-
+  /**
+   * Send a command to all ledstrips
+   * @param {string} payload
+   * @private
+   */
+  private sendAllClients(event: string, payload: string | string[]): void {
+    const clients = this.server.sockets.sockets;
+    for (const [id, client] of clients) {
+      client.emit(event, payload)
+    }
+  }
 }

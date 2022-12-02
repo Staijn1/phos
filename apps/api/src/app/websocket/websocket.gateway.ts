@@ -39,7 +39,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage('color')
-  onColorCommand(client: Socket, payload: string): string {
+  onColorCommand(client: Socket, payload: string[]): string {
     this.websocketClientsManagerService.setColor(payload);
     return 'OK';
   }

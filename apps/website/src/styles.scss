@@ -148,16 +148,6 @@ section {
   background-size: cover;
   position: relative;
 
-  &:before {
-    content: "";
-    //background: rgba(255, 255, 255, 0.8);
-    position: absolute;
-    bottom: 0;
-    top: 0;
-    left: 0;
-    right: 0;
-  }
-
   h1 {
     margin: 0;
     font-weight: 700;
@@ -267,8 +257,25 @@ section {
 @mixin theme($name, $color) {
   $transition: 0.15s ease-in-out;
 
+  #mode-page-illustration-#{$name} {
+    #Board, #CheckboxLeft, #CheckboxRight, #CheckboxBottomRight {
+      fill: $color;
+    }
+  }
+
   .mobile-nav-active .mobile-nav-toggle fa-icon {
     color: $color;
+  }
+
+  #not-found-#{$name} {
+    .fill-lighten {
+      fill: $color;
+      opacity: 0.5;
+    }
+
+    .fill-full {
+      fill: $color;
+    }
   }
 
   .icon-box-#{$name} {
@@ -294,7 +301,7 @@ section {
       background: $color !important;
     }
 
-    #text, #Light_Bulb {
+    #ledcontroltext, #Light_Bulb {
       stroke: $color !important;
     }
 

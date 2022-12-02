@@ -1,5 +1,4 @@
 import {Component, OnInit, Renderer2} from '@angular/core'
-import {faSquare} from '@fortawesome/free-regular-svg-icons'
 import {gsap} from 'gsap'
 import {NavigationEnd, NavigationStart, Router} from '@angular/router'
 
@@ -18,13 +17,11 @@ import {
   faRunning,
   faSlidersH,
   faTimes,
-  faWalking,
-  faWindowMinimize
+  faWalking
 } from '@fortawesome/free-solid-svg-icons'
 import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {GeneralSettings} from '../../shared/types/types';
 import {SettingsService} from '../../services/settings/settings.service';
-import iro from '@jaames/iro';
 import {ColorpickerEvent} from '../../shared/components/colorpicker/colorpicker.component';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 
@@ -48,11 +45,10 @@ export class NavigationbarComponent implements OnInit {
   speedDecreaseIcon = faWalking;
   editorIcon = faEdit
   visualizer3DIcon = faCubes;
-
-  private animationMode = 0;
   timeline = gsap.timeline();
   isOpen = false;
   settings!: GeneralSettings;
+  private animationMode = 0;
 
   constructor(
     public connection: LedstripCommandService,
@@ -83,6 +79,31 @@ export class NavigationbarComponent implements OnInit {
     } else {
       this.closeMobileMenu()
     }
+  }
+
+  turnOff(): void {
+    this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
+    this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
+
+    this.connection.setColor(['#000000', '#000000', '#000000'])
+    this.connection.setMode(0)
+  }
+
+  onColorpickerColorInit(event: ColorpickerEvent) {
+    if (this.settingsService.readGeneralSettings().initialColor) {
+      this.connection.setColor(event.colorpicker.colors)
+    }
+    this.chromaEffect.setColors = event.colorpicker.colors
+  }
+
+  onColorpickerColorChange(event: ColorpickerEvent) {
+    this.connection.setColor(event.colorpicker.colors)
+    this.chromaEffect.setColors = event.colorpicker.colors
+  }
+
+  onColorpickerColorEnd(event: ColorpickerEvent) {
+    this.settings.colors = this.settingsService.convertColors(event.colorpicker.colors)
+    this.settingsService.saveGeneralSettings(this.settings)
   }
 
   private closeMobileMenu() {
@@ -151,30 +172,5 @@ export class NavigationbarComponent implements OnInit {
       stagger: -0.05,
     })
     gsap.set('.from-top .tile', {top: '0', height: '0'})
-  }
-
-  turnOff(): void {
-    this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
-    this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
-
-    this.connection.setColor(['#000000', '#000000', '#000000'])
-    this.connection.setMode(0)
-  }
-
-  onColorpickerColorInit(event: ColorpickerEvent) {
-    if (this.settingsService.readGeneralSettings().initialColor) {
-      this.connection.setColor(event.colorpicker.colors)
-    }
-    this.chromaEffect.setColors = event.colorpicker.colors
-  }
-
-  onColorpickerColorChange(event: ColorpickerEvent) {
-    this.connection.setColor(event.colorpicker.colors)
-    this.chromaEffect.setColors = event.colorpicker.colors
-  }
-
-  onColorpickerColorEnd(event: ColorpickerEvent) {
-    this.settings.colors = this.settingsService.convertColors(event.colorpicker.colors)
-    this.settingsService.saveGeneralSettings(this.settings)
   }
 }
