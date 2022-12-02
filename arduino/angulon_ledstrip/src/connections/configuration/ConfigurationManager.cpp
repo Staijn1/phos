@@ -6,7 +6,8 @@
 #include "ConfigurationManager.h"
 #include "utils/Logger.h"
 
-char angulon_index_html[] PROGMEM = R"=====(
+char angulon_index_html[]
+        PROGMEM = R"=====(
 <!doctype html>
 <html lang='en' dir='ltr'>
 <head>
@@ -58,22 +59,24 @@ void ConfigurationManager::setup() {
 
     if (!isConfigured) {
         ConfigurationManager::startConfigurationMode();
+    } else {
+        this->setupWiFi();
     }
 }
 
 void ConfigurationManager::startConfigurationMode() {
     Logger::log("ConfigurationManager", "Starting access point for configuration...");
 
-    WiFi.softAP(hotspotName, password);
+    WiFi.softAP(hotspotName, hotspotPassword);
     IPAddress IP = WiFi.softAPIP();
 
-    setupWebserver();
+    this->setupWebserver();
 
     Logger::log("ConfigurationManager", "Access point started");
-// Log the hotspot name + password where you should connect to
+// Log the hotspot name + hotspotPassword where you should connect to
     Logger::log("ConfigurationManager", "Connect to the hotspot with the following credentials:");
     Logger::log("ConfigurationManager", hotspotName);
-    Logger::log("ConfigurationManager", password);
+    Logger::log("ConfigurationManager", hotspotPassword);
     Logger::log("ConfigurationManager", "After connecting, navigate to:");
     Logger::log("ConfigurationManager", IP.toString().c_str());
 
@@ -83,10 +86,71 @@ void ConfigurationManager::setupWebserver() {
     server->on("/", [this]() {
         server->send(200, "text/html", angulon_index_html);
     });
+    server->on("/configure", [this]() {
+        this->configureDevice();
+    });
+
+    server->begin();
+}
+
+/**
+ * Handler the submit of the configuration formm
+ */
+void ConfigurationManager::configureDevice() {
+    const String ssid = server->arg("ssid");
+    const String password = server->arg("password");
+    const String serverip = server->arg("serverip");
+    const int ledpin = server->arg("ledPin").toInt();
+    const int ledCount = server->arg("ledCount").toInt();
+    const int serverPort = server->arg("serverport").toInt();
+
+    // Check if all the right values are set
+    if (ssid == "" || password == "" || ledpin < 0 || ledCount < 0 || serverip == "" || serverPort < 0) {
+        server->send(400, "text/plain", "Invalid parameters");
+        return;
+    }
+
+    preferences.putString("ssid", ssid);
+    preferences.putString("password", password);
+    preferences.putString("serverip", serverip);
+    preferences.putInt("ledpin", ledpin);
+    preferences.putInt("ledCount", ledCount);
+    preferences.putInt("serverport", serverPort);
+    preferences.putBool("isConfigured", true);
+
+    server->send(204, "text/plain");
+    Logger::log("ConfigurationManager", "Saved configuration!");
+    Logger::log("ConfigurationManager", "Rebooting to apply configuration");
+    ESP.restart();
+}
+
+void ConfigurationManager::setupWiFi() {
+    Logger::log("ConfigurationManager", "Connecting to WiFi...");
+
+    const char *ssid = preferences.getString("ssid").c_str();
+    const char *password = preferences.getString("password").c_str();
+    unsigned long startedAt = millis();
+
+    WiFi.begin(ssid, password);
+
+    // Try to connect to the Wi-Fi with a delay of 500 ms each time. If it does not connect after NETWORK_TIMEOUT, it will start configure mode
+    while (WiFiClass::status() != WL_CONNECTED) {
+        delay(500);
+        Logger::log("ConfigurationManager", ".");
+
+        if (millis() - startedAt >= NETWORK_TIMEOUT) {
+            Logger::log("ConfigurationManager", "Failed to connect to WiFi");
+            ConfigurationManager::startConfigurationMode();
+            return;
+        }
+    }
+    Logger::log("ConfigurationManager", "Connected to WiFi");
+    Logger::log("ConfigurationManager", "IP address: ");
+    Logger::log("ConfigurationManager", WiFi.localIP().toString().c_str());
 }
 
 void ConfigurationManager::run() {
-    if (WiFi.status() != WL_CONNECTED && isConfigured) {
+    if (WiFiClass::status() != WL_CONNECTED && isConfigured) {
         unsigned long now = millis();
         if (now - lastTimeConnected >= NETWORK_TIMEOUT) {
             ESP.restart();
@@ -97,4 +161,3 @@ void ConfigurationManager::run() {
 
     server->handleClient();
 }
-

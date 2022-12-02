@@ -19,13 +19,14 @@ class ConfigurationManager {
 private:
     WebServer* server = new WebServer(80);
     Preferences preferences;
-    const char *password = "ESP32-Configure";
+    const char *hotspotPassword = "ESP32-Configure";
     const char *hotspotName = "ESP32-Access-Point";
     bool isConfigured = false;
-
-    void setupWebserver();
     unsigned long lastTimeConnected = 0L;
     #define NETWORK_TIMEOUT 10000
+
+    void setupWebserver();
+    void setupWiFi();
 public:
     void setup();
 
