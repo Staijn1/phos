@@ -126,3 +126,9 @@ Front-End/release-builds
 .angular/**/*
 
 .angular
+
+
+# Arduino (Platform.io) stuff
+/**/*/.pio
+/**/*/CMakeListsPrivate.txt
+/**/*/cmake-build-*/
