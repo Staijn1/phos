@@ -7,10 +7,11 @@
 
 
 #include "utils/Logger.h"
+#include "connections/configuration/ConfigurationManager.h"
 
 class Angulon {
 private:
-    Logger logger;
+    ConfigurationManager configuration;
 public:
     void setup();
 

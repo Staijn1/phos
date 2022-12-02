@@ -24,3 +24,7 @@ void Logger::log(const char *className, const char *message) {
     Serial.print("] ");
     Serial.println(message);
 }
+
+void Logger::log(const char *className, const String& message) {
+    Logger::log(className, message.c_str());
+}

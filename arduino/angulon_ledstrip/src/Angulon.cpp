@@ -6,8 +6,9 @@
 
 
 void Angulon::setup() {
-    logger.setup();
-    logger.log("Angulon::setup()", "setup");
+    Logger::setup();
+    configuration.setup();
+    Logger::log("Angulon", "Setup finished");
 }
 
 

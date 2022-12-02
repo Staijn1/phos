@@ -8,8 +8,9 @@
 
 class Logger {
 public:
-    void setup();
-    void log(const char className[], const char message[]);
+    static void setup();
+    static void log(const char className[], const char message[]);
+    static void log(const char className[], const String& message);
 };
 
 
