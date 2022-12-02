@@ -6,7 +6,7 @@
 #define ANGULON_LEDSTRIP_CONFIGURATIONMANAGER_H
 
 #include <Preferences.h>
-#include "utils/Logger.h"
+#include <WebServer.h>
 
 /**
  * This class manages the configuration of this ledstrip.
@@ -17,16 +17,22 @@
  */
 class ConfigurationManager {
 private:
-    const char *hotspotName = "ESP32-Access-Point";
-    const char *password = "ESP32-Configure";
+    WebServer* server = new WebServer(80);
     Preferences preferences;
+    const char *password = "ESP32-Configure";
+    const char *hotspotName = "ESP32-Access-Point";
+    bool isConfigured = false;
+
+    void setupWebserver();
+    unsigned long lastTimeConnected = 0L;
+    #define NETWORK_TIMEOUT 10000
 public:
     void setup();
 
     void startConfigurationMode();
 
     void configureDevice();
+
+    void run();
 };
-
-
 #endif //ANGULON_LEDSTRIP_CONFIGURATIONMANAGER_H

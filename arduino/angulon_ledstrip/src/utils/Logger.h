@@ -4,13 +4,12 @@
 
 #ifndef ANGULON_LEDSTRIP_LOGGER_H
 #define ANGULON_LEDSTRIP_LOGGER_H
-
+#include "string"
 
 class Logger {
 public:
     static void setup();
     static void log(const char className[], const char message[]);
-    static void log(const char className[], const String& message);
 };
 
 

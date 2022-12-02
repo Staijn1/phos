@@ -13,6 +13,6 @@ void Angulon::setup() {
 
 
 void Angulon::loop() {
-
+    configuration.run();
 }
 
