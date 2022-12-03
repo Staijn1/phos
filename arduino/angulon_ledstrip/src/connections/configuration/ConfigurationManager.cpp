@@ -126,10 +126,10 @@ void ConfigurationManager::configureDevice() {
 
 void ConfigurationManager::setupWiFi() {
     Logger::log("ConfigurationManager", "Connecting to WiFi...");
-
+Serial.println(preferences.getString("password"));
+Serial.println(preferences.getString("ssid"));
     const char *ssid = preferences.getString("ssid").c_str();
     const char *password = preferences.getString("password").c_str();
-    unsigned long startedAt = millis();
 
     WiFi.begin(ssid, password);
 
@@ -138,10 +138,12 @@ void ConfigurationManager::setupWiFi() {
         delay(500);
         Logger::log("ConfigurationManager", ".");
 
-        if (millis() - startedAt >= NETWORK_TIMEOUT) {
-            Logger::log("ConfigurationManager", "Failed to connect to WiFi");
-            ConfigurationManager::startConfigurationMode();
-            return;
+        if (bootButton->isPressed()) {
+            countButtonPressed++;
+        }
+
+        if (countButtonPressed >= 3) {
+            this->resetConfig();
         }
     }
     Logger::log("ConfigurationManager", "Connected to WiFi");
@@ -160,4 +162,10 @@ void ConfigurationManager::run() {
     }
 
     server->handleClient();
+}
+
+void ConfigurationManager::resetConfig() {
+    Logger::log("ConfigurationManager", "Resetting ESP, rebooting");
+    preferences.remove("isConfigured");
+    ESP.restart();
 }

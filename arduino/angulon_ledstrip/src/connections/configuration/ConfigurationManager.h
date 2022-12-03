@@ -43,6 +43,8 @@ public:
     void configureDevice();
 
     void run();
+
+    void resetConfig();
 };
 
 #endif //ANGULON_LEDSTRIP_CONFIGURATIONMANAGER_H
