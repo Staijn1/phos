@@ -74,6 +74,11 @@ export class SettingsService {
     return convertedColors
   }
 
+  clearSettings() {
+    this.setDefaults(true)
+    location.reload()
+  }
+
   private readSettings(name: 'generalSettings' | 'visualizerSettings'): GeneralSettings | Options {
     const savedItem = localStorage.getItem(name)
     try {
@@ -104,10 +109,5 @@ export class SettingsService {
     if (!this.readSettings('visualizerSettings') || force) {
       this.saveVisualizerOptions(this.defaultVisualizerOptions)
     }
-  }
-
-  clearSettings() {
-    this.setDefaults(true)
-    location.reload()
   }
 }

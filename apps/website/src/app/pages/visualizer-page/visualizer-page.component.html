@@ -84,31 +84,36 @@
           <div>
             <!--    Checkbox for alpha bars-->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.alphaBars" class="form-check-input" id="alphaBars"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.alphaBars" class="form-check-input"
+                     id="alphaBars"
                      type="checkbox">
               <label class="form-check-label" for="alphaBars">Alpha Bars</label>
             </div>
             <!--Checkbox for led bars -->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.ledBars" class="form-check-input" id="ledBars"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.ledBars" class="form-check-input"
+                     id="ledBars"
                      type="checkbox">
               <label class="form-check-label" for="ledBars">Led Bars</label>
             </div>
             <!-- Checkbox for luminance bars -->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.lumiBars" class="form-check-input" id="luminanceBars"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.lumiBars" class="form-check-input"
+                     id="luminanceBars"
                      type="checkbox">
               <label class="form-check-label" for="luminanceBars">Luminance Bars</label>
             </div>
             <!--Checkbox for showing peaks-->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.showPeaks" class="form-check-input" id="showPeaks"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.showPeaks" class="form-check-input"
+                     id="showPeaks"
                      type="checkbox">
               <label class="form-check-label" for="showPeaks">Show Peaks</label>
             </div>
             <!--    Checkbox for showing outline bars. Only works when mode is on of the octave bands-->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.outlineBars" [disabled]="!isOctaveBandMode"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.outlineBars"
+                     [disabled]="!isOctaveBandMode"
                      class="form-check-input"
                      id="showOutline"
                      title="Only works when mode is one of the octave bands"
@@ -153,7 +158,8 @@
             </div>
             <!--    When stereo is enabled, show a checkbox to split gradient-->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.splitGradient" [disabled]="!visualizerOptions.stereo"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.splitGradient"
+                     [disabled]="!visualizerOptions.stereo"
                      class="form-check-input"
                      id="splitGradient"
                      type="checkbox">

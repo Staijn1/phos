@@ -27,4 +27,5 @@ import {NgxSliderModule} from '@angular-slider/ngx-slider';
   ],
   exports: [],
 })
-export class PagesModule {}
+export class PagesModule {
+}
