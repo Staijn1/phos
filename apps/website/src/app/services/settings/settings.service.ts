@@ -97,16 +97,17 @@ export class SettingsService {
    * Sets the default settings if no settings are saved
    * @private
    */
-  private setDefaults(force?:boolean): void {
-    if (!this.readSettings('generalSettings') && !force) {
+  private setDefaults(force?: boolean): void {
+    if (!this.readSettings('generalSettings') || force) {
       this.saveGeneralSettings(this.defaultGeneralSettings)
     }
-    if (!this.readSettings('visualizerSettings') && !force) {
+    if (!this.readSettings('visualizerSettings') || force) {
       this.saveVisualizerOptions(this.defaultVisualizerOptions)
     }
   }
 
   clearSettings() {
     this.setDefaults(true)
+    location.reload()
   }
 }

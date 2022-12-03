@@ -34,6 +34,5 @@ export class SettingsPageComponent {
 
   clearSettings(): void {
     this.settingsService.clearSettings()
-    location.reload()
   }
 }
