@@ -10,13 +10,14 @@ import {AddGradientResponse, GradientInformation, ModeInformation} from '@angulo
   providedIn: 'root'
 })
 export class WebsocketService {
-  websocketUrl = environment.url
+  private websocketUrl = environment.url
   private socket: Socket;
 
   constructor(errorService: MessageService) {
     this.socket = io(this.websocketUrl, {
       transports: ['websocket'],
     });
+
     this.socket.on('connect', () => {
       console.log(`Opened websocket at`, this.websocketUrl)
     });
