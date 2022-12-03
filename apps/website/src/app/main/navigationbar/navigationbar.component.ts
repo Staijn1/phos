@@ -19,11 +19,11 @@ import {
   faTimes,
   faWalking
 } from '@fortawesome/free-solid-svg-icons'
-import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {GeneralSettings} from '../../shared/types/types';
 import {SettingsService} from '../../services/settings/settings.service';
 import {ColorpickerEvent} from '../../shared/components/colorpicker/colorpicker.component';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 
 @Component({
   selector: 'app-navigationbar',
@@ -51,7 +51,7 @@ export class NavigationbarComponent implements OnInit {
   private animationMode = 0;
 
   constructor(
-    public connection: LedstripCommandService,
+    public connection: WebsocketService,
     private router: Router,
     private renderer: Renderer2,
     private chromaEffect: ChromaEffectService,

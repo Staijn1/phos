@@ -4,14 +4,13 @@ import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand'
 import {faCheck, faLightbulb, faList, faSliders, faWrench} from '@fortawesome/free-solid-svg-icons'
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
 import {SettingsService} from '../../services/settings/settings.service'
-import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
-import {TimelineMax} from 'gsap'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
-import {GradientInformation} from "@angulon/interfaces";
-import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
+import {GradientInformation} from '@angulon/interfaces';
+import {OffCanvasComponent} from '../../shared/components/offcanvas/off-canvas.component';
 import * as slider from '@angular-slider/ngx-slider';
-import {InformationService} from "../../services/information-service/information.service";
-import {visualizerModeId} from "../../shared/constants";
+import {InformationService} from '../../services/information-service/information.service';
+import {visualizerModeId} from '../../shared/constants';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 
 @Component({
   selector: 'app-visualizer',
@@ -78,15 +77,13 @@ export class VisualizerPageComponent implements OnDestroy {
   listIcon = faList;
   checkboxIcon = faCheck;
   sliderIcon = faSliders;
-  private timeline: TimelineMax
 
   constructor(
-    private connection: LedstripCommandService,
+    private connection: WebsocketService,
     private information: InformationService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService,
   ) {
-    this.timeline = new TimelineMax()
   }
 
   /**

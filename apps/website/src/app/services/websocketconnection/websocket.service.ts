@@ -1,6 +1,5 @@
 import {Injectable} from '@angular/core'
 import {map} from '../../shared/functions'
-import {LedstripConnection} from '../../shared/interfaces/LedstripConnection'
 import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
 import {MessageService} from '../error/message.service'
@@ -10,13 +9,11 @@ import {AddGradientResponse, GradientInformation, ModeInformation} from '@angulo
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketService extends LedstripConnection {
+export class WebsocketService {
   websocketUrl = environment.url
   private socket: Socket;
-  private colorTimeout!: NodeJS.Timeout;
 
   constructor(errorService: MessageService) {
-    super()
     this.socket = io(this.websocketUrl, {
       transports: ['websocket'],
     });
