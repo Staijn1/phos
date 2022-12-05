@@ -126,12 +126,12 @@ void ConfigurationManager::configureDevice() {
 
 void ConfigurationManager::setupWiFi() {
     Logger::log("ConfigurationManager", "Connecting to WiFi...");
-Serial.println(preferences.getString("password"));
-Serial.println(preferences.getString("ssid"));
-    const char *ssid = preferences.getString("ssid").c_str();
-    const char *password = preferences.getString("password").c_str();
 
-    WiFi.begin(ssid, password);
+    // todo: why the fuck is c_str() returning nothing?
+    const char *ssidChar = preferences.getString("ssid").c_str();
+    const char *passwordChar = preferences.getString("password").c_str();
+
+    WiFi.begin("De Koffieclub", "DouweEgberts");
 
     // Try to connect to the Wi-Fi with a delay of 500 ms each time. If it does not connect after NETWORK_TIMEOUT, it will start configure mode
     while (WiFiClass::status() != WL_CONNECTED) {
