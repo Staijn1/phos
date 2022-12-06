@@ -30,4 +30,4 @@ add_custom_target(
     WORKING_DIRECTORY ${CMAKE_CURRENT_SOURCE_DIR}
 )
 
-add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/Angulon.cpp src/Angulon.h src/utils/Logger.cpp src/utils/Logger.h src/connections/configuration/ConfigurationManager.cpp src/connections/configuration/ConfigurationManager.h src/hardware/Button.cpp src/hardware/Button.h)
+add_executable(Z_DUMMY_TARGET ${SRC_LIST} src/Angulon.cpp src/Angulon.h src/utils/Logger.cpp src/utils/Logger.h src/connections/configuration/ConfigurationManager.cpp src/connections/configuration/ConfigurationManager.h src/hardware/button/Button.cpp src/hardware/button/Button.h src/connections/websocket/Websocket.cpp src/connections/websocket/Websocket.h src/hardware/led/Led.cpp src/hardware/led/Led.h)

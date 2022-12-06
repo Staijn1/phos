@@ -152,7 +152,7 @@ void ConfigurationManager::setupWiFi() {
 }
 
 void ConfigurationManager::run() {
-    if (WiFiClass::status() != WL_CONNECTED && isConfigured) {
+    if (WiFiClass::status() != WL_CONNECTED) {
         unsigned long now = millis();
         if (now - lastTimeConnected >= NETWORK_TIMEOUT) {
             ESP.restart();
@@ -161,6 +161,7 @@ void ConfigurationManager::run() {
         lastTimeConnected = millis();
     }
 
+    if (isConfigured) return;
     server->handleClient();
 }
 
