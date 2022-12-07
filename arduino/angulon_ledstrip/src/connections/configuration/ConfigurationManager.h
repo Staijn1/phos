@@ -8,6 +8,8 @@
 #include <Preferences.h>
 #include <WebServer.h>
 #include "hardware/button/Button.h"
+#include "../../../.pio/libdeps/esp32dev/ArduinoJson/examples/JsonConfigFile/JsonConfigFile.ino"
+#include "LedstripConfiguration.h"
 
 #define NETWORK_TIMEOUT 10000
 
@@ -46,6 +48,7 @@ public:
     void run();
 
     void resetConfig();
-};
 
+    LedstripConfiguration getConfig();
+};
 #endif //ANGULON_LEDSTRIP_CONFIGURATIONMANAGER_H

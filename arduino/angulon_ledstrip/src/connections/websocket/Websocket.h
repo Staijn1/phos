@@ -18,11 +18,28 @@ private:
 
     void webSocketClientEvent(socketIOmessageType_t type, uint8_t *payload, size_t length);
 
+    int speed = 1000;
 public:
 
     void setup();
 
     void run();
+
+    void handleEvent(uint8_t *payload, size_t length);
+
+    void handleBangEvent();
+
+    void handleQuestionEvent();
+
+    void handleHashEvent();
+
+    void handlePlusEvent();
+
+    void handleSlashEvent();
+
+    void handleDotEvent();
+
+    void handleUnknownEvent();
 };
 
 #endif //ANGULON_LEDSTRIP_WEBSOCKET_H

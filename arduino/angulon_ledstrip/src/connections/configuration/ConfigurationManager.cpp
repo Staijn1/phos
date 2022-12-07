@@ -52,6 +52,8 @@ char angulon_index_html[]
 </html>
 )=====";
 
+
+
 void ConfigurationManager::setup() {
     Logger::log("ConfigurationManager", "Checking configuration...");
     preferences.begin("configuration", false);
@@ -169,4 +171,15 @@ void ConfigurationManager::resetConfig() {
     Logger::log("ConfigurationManager", "Resetting ESP, rebooting");
     preferences.remove("isConfigured");
     ESP.restart();
+}
+
+LedstripConfiguration ConfigurationManager::getConfig(){
+    LedstripConfiguration config{};
+    config.ssid = preferences.getString("ssid").c_str();
+    config.password = preferences.getString("password").c_str();
+    config.serverip = preferences.getString("serverip").c_str();
+    config.ledpin = preferences.getInt("ledpin");
+    config.ledcount = preferences.getInt("ledcount");
+    config.serverport = preferences.getInt("serverport");
+    return config;
 }
