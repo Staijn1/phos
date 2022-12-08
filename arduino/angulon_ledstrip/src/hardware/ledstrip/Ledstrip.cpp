@@ -16,7 +16,7 @@ void Ledstrip::setup() {
     strip->setMode(FX_MODE_STATIC);
     strip->setSpeed(speed);
     strip->setBrightness(brightness);
-    strip->setColor(0x000000);
+    strip->setColor(0xFF0000);
     strip->start();
 }
 
@@ -26,14 +26,35 @@ void Ledstrip::run() {
 
 void Ledstrip::setMode(int mode) {
     strip->setMode(mode);
+
+    Logger::log("Ledstrip", "Setting mode to: " + String(mode));
 }
 
 void Ledstrip::increaseBrightness() {
     brightness = constrain(brightness * 1.1, 0, 255);
     strip->setBrightness(brightness);
+    Logger::log("Ledstrip", "Setting brightness to: " + String(brightness));
 }
 
 void Ledstrip::decreaseBrightness() {
     brightness = constrain(brightness * 0.9, 0, 255);
     strip->setBrightness(brightness);
+    Logger::log("Ledstrip", "Setting brightness to: " + String(brightness));
+}
+
+void Ledstrip::increaseSpeedDelay() {
+    speed = constrain(speed * 1.1, SPEED_MIN, SPEED_MAX);
+    strip->setSpeed(speed);
+    Logger::log("Ledstrip", "Setting speed to: " + String(speed));
+}
+
+void Ledstrip::decreaseSpeedDelay() {
+    speed = constrain(speed * 0.9, SPEED_MIN, SPEED_MAX);
+    strip->setSpeed(speed);
+    Logger::log("Ledstrip", "Setting speed to: " + String(speed));
+}
+
+void Ledstrip::setColors(int i, uint32_t *colors) {
+    strip->setColors(i, colors);
+    Logger::log("Ledstrip", "Setting colors");
 }
