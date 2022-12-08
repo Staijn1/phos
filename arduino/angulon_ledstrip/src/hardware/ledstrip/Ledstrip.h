@@ -13,10 +13,19 @@ class Ledstrip {
 private:
     ConfigurationManager configurationManager;
     WS2812FX *strip;
+
+    int brightness = 196;
+    int speed = 1000;
 public:
     void setup();
 
     void run();
+
+    void setMode(int mode);
+
+    void increaseBrightness();
+
+    void decreaseBrightness();
 };
 
 

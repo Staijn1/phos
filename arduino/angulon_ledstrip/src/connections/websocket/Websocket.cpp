@@ -5,7 +5,6 @@
 #include <map>
 #include "Websocket.h"
 #include "utils/Logger.h"
-#include <ArduinoJson.h>
 
 void Websocket::setup() {
     Logger::log("Websocket", "Setting up websocket connection");
@@ -78,55 +77,61 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
         return;
     }
 
-    const char* event = doc[0]; // The first element holds the code corrosponding to the action (set color, mode, fft etc)
+    const char *event = doc[0]; // The first element holds the code corrosponding to the action (set color, mode, fft etc)
 
     // Handle the different events
     if (event == "!") {
-        handleBangEvent();
+        handleBangEvent(payload, doc);
     } else if (event == "#") {
-        handleHashEvent();
+        handleHashEvent(payload, doc);
     } else if (event == "+") {
-        handlePlusEvent();
+        handlePlusEvent(payload, doc);
+    } else if (event == "-") {
+        handleMinusEvent(payload, doc);
     } else if (event == "?") {
-        handleQuestionEvent();
+        handleQuestionEvent(payload, doc);
     } else if (event == "/") {
-        handleSlashEvent();
+        handleSlashEvent(payload, doc);
     } else if (event == ".") {
-        handleDotEvent();
+        handleDotEvent(payload, doc);
     } else {
         // Handle invalid or unknown event
-        handleUnknownEvent();
+        handleUnknownEvent(payload, doc);
     }
 }
 
 // Event handlers for the different events
-void Websocket::handleBangEvent() {
-    // Increase the speed of the LED strip here
-    speed += 10;
+void Websocket::handleBangEvent(uint8_t *payload, const JsonDocument &_doc) {
+//    this->ledstrip->increaseSpeedDelay();
 }
 
-void Websocket::handleQuestionEvent() {
-    // Decrease the speed of the LED strip here
-    speed -= 10;
+void Websocket::handleQuestionEvent(uint8_t *payload, const JsonDocument &_doc) {
+//    this->ledstrip->decreaseSpeedDelay();
 }
 
 // Other event handlers
-void Websocket::handleHashEvent() {
+void Websocket::handleHashEvent(uint8_t *payload, const JsonDocument &_doc) {
     // Handle "#" event here
 }
 
-void Websocket::handlePlusEvent() {
+void Websocket::handlePlusEvent(uint8_t *payload, const JsonDocument &_doc) {
     // Handle "+" event here
+    this->ledstrip->increaseBrightness();
 }
 
-void Websocket::handleSlashEvent() {
+void Websocket::handleMinusEvent(uint8_t *payload, const JsonDocument &_doc) {
+    // Handle "+" event here
+    this->ledstrip->decreaseBrightness();
+}
+
+void Websocket::handleSlashEvent(uint8_t *payload, const JsonDocument &_doc) {
     // Handle "/" event here
 }
 
-void Websocket::handleDotEvent() {
+void Websocket::handleDotEvent(uint8_t *payload, const JsonDocument &_doc) {
     // Handle "." event here
 }
 
-void Websocket::handleUnknownEvent() {
+void Websocket::handleUnknownEvent(uint8_t *payload, const JsonDocument &_doc) {
     // Handle unknown or invalid event here
 }
