@@ -24,3 +24,10 @@ void Logger::log(const char *className, const char *message) {
     Serial.print("] ");
     Serial.println(message);
 }
+
+void Logger::log(const char *className, String message) {
+    Serial.print("[");
+    Serial.print(className);
+    Serial.print("] ");
+    Serial.println(message);
+}

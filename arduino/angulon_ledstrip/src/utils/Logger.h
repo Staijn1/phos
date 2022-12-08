@@ -4,12 +4,15 @@
 
 #ifndef ANGULON_LEDSTRIP_LOGGER_H
 #define ANGULON_LEDSTRIP_LOGGER_H
-#include "string"
+
+#include "Arduino.h"
 
 class Logger {
 public:
     static void setup();
     static void log(const char className[], const char message[]);
+
+    static void log(const char *className, String message);
 };
 
 
