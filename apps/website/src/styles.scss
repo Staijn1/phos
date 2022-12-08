@@ -356,3 +356,9 @@ section {
 /* Importing Bootstrap SCSS file. */
 @import 'bootstrap/scss/bootstrap';
 @import "aos/dist/aos.css";
+
+@media screen and (max-width: map-get($grid-breakpoints, 'sm')){
+  html {
+    user-select: none;
+  }
+}
