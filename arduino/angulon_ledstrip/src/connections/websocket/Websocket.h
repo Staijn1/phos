@@ -33,17 +33,17 @@ public:
 
     void handleQuestionEvent(uint8_t *payload, const JsonDocument &_doc);
 
-    void handleHashEvent(uint8_t *payload, const JsonDocument &_doc);
+    void handleHashEvent(const JsonArray colors);
 
     void handlePlusEvent(uint8_t *payload, const JsonDocument &_doc);
 
     void handleMinusEvent(uint8_t *payload, const JsonDocument &_doc);
 
-    void handleSlashEvent(uint8_t *payload, const JsonDocument &_doc);
-
     void handleDotEvent(uint8_t *payload, const JsonDocument &_doc);
 
     void handleUnknownEvent(uint8_t *payload, const JsonDocument &_doc);
+
+    void handleSlashEvent(int mode);
 };
 
 #endif //ANGULON_LEDSTRIP_WEBSOCKET_H

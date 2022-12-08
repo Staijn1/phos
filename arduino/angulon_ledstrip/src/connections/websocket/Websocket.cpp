@@ -76,23 +76,26 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
         Serial.println(error.c_str());
         return;
     }
-
-    const char *event = doc[0]; // The first element holds the code corrosponding to the action (set color, mode, fft etc)
-
+    Serial.printf("%s\n", payload);
+    Serial.println("Here");
+    const char *event = doc[0];// The first element holds the code corrosponding to the action (set color, mode, fft etc)
+    Serial.println("Here 2");
     // Handle the different events
-    if (event == "!") {
+    if (*event == '!') {
         handleBangEvent(payload, doc);
-    } else if (event == "#") {
-        handleHashEvent(payload, doc);
-    } else if (event == "+") {
+    } else if (*event == '#') {
+        Serial.println("Here 3");
+        JsonArray colors = doc[1];
+        handleHashEvent(colors);
+    } else if (*event == '+') {
         handlePlusEvent(payload, doc);
-    } else if (event == "-") {
+    } else if (*event == '-') {
         handleMinusEvent(payload, doc);
-    } else if (event == "?") {
+    } else if (*event == '?') {
         handleQuestionEvent(payload, doc);
-    } else if (event == "/") {
-        handleSlashEvent(payload, doc);
-    } else if (event == ".") {
+    } else if (*event == '/') {
+        handleSlashEvent(doc[1]);
+    } else if (*event == '.') {
         handleDotEvent(payload, doc);
     } else {
         // Handle invalid or unknown event
@@ -102,16 +105,32 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
 
 // Event handlers for the different events
 void Websocket::handleBangEvent(uint8_t *payload, const JsonDocument &_doc) {
-//    this->ledstrip->increaseSpeedDelay();
+    this->ledstrip->decreaseSpeedDelay();
 }
 
 void Websocket::handleQuestionEvent(uint8_t *payload, const JsonDocument &_doc) {
-//    this->ledstrip->decreaseSpeedDelay();
+    this->ledstrip->increaseSpeedDelay();
 }
 
 // Other event handlers
-void Websocket::handleHashEvent(uint8_t *payload, const JsonDocument &_doc) {
-    // Handle "#" event here
+void Websocket::handleHashEvent(const JsonArray colors) {
+    // The output values
+    uint32_t convertedColors[MAX_NUM_COLORS];
+    int index = 0;
+    // Loop over the hexadecimal strings
+    for (auto color: colors) {
+        // Get the string value at the current index
+        std::string hex_str = color.as<std::string>();
+
+        // Remove the prefix from the hexadecimal string
+        std::string hex_str_without_prefix = hex_str.substr(1);
+
+        // Convert the hexadecimal string to a uint32_t value
+        convertedColors[index] = strtoul(hex_str_without_prefix.c_str(), nullptr, 16);
+        index++;
+    }
+
+    ledstrip->setColors(0, convertedColors);
 }
 
 void Websocket::handlePlusEvent(uint8_t *payload, const JsonDocument &_doc) {
@@ -124,14 +143,16 @@ void Websocket::handleMinusEvent(uint8_t *payload, const JsonDocument &_doc) {
     this->ledstrip->decreaseBrightness();
 }
 
-void Websocket::handleSlashEvent(uint8_t *payload, const JsonDocument &_doc) {
-    // Handle "/" event here
+void Websocket::handleSlashEvent(int mode) {
+    this->ledstrip->setMode(mode);
 }
 
 void Websocket::handleDotEvent(uint8_t *payload, const JsonDocument &_doc) {
     // Handle "." event here
+    Logger::log("Websocket", ". event not implemented");
 }
 
 void Websocket::handleUnknownEvent(uint8_t *payload, const JsonDocument &_doc) {
     // Handle unknown or invalid event here
+    Logger::log("Websocket", "Unknown event");
 }
