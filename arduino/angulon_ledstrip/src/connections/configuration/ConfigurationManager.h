@@ -7,7 +7,8 @@
 
 #include <Preferences.h>
 #include <WebServer.h>
-#include "hardware/Button.h"
+#include "hardware/button/Button.h"
+#include "LedstripConfiguration.h"
 
 #define NETWORK_TIMEOUT 10000
 
@@ -27,7 +28,6 @@ private:
     const char *hotspotPassword = "ESP32-Configure";
     const char *hotspotName = "ESP32-Access-Point";
 
-    bool isConfigured = false;
     unsigned long lastTimeConnected = 0L;
     int countButtonPressed = 0;
 
@@ -36,6 +36,8 @@ private:
     void setupWiFi();
 
 public:
+    bool isConfigured = false;
+
     void setup();
 
     void startConfigurationMode();
@@ -45,6 +47,7 @@ public:
     void run();
 
     void resetConfig();
-};
 
+    LedstripConfiguration getConfig();
+};
 #endif //ANGULON_LEDSTRIP_CONFIGURATIONMANAGER_H

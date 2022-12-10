@@ -52,6 +52,8 @@ char angulon_index_html[]
 </html>
 )=====";
 
+
+
 void ConfigurationManager::setup() {
     Logger::log("ConfigurationManager", "Checking configuration...");
     preferences.begin("configuration", false);
@@ -126,12 +128,12 @@ void ConfigurationManager::configureDevice() {
 
 void ConfigurationManager::setupWiFi() {
     Logger::log("ConfigurationManager", "Connecting to WiFi...");
-Serial.println(preferences.getString("password"));
-Serial.println(preferences.getString("ssid"));
-    const char *ssid = preferences.getString("ssid").c_str();
-    const char *password = preferences.getString("password").c_str();
 
-    WiFi.begin(ssid, password);
+    // todo: why the fuck is c_str() returning nothing?
+    const char *ssidChar = preferences.getString("ssid").c_str();
+    const char *passwordChar = preferences.getString("password").c_str();
+
+    WiFi.begin("De Koffieclub", "DouweEgberts");
 
     // Try to connect to the Wi-Fi with a delay of 500 ms each time. If it does not connect after NETWORK_TIMEOUT, it will start configure mode
     while (WiFiClass::status() != WL_CONNECTED) {
@@ -152,7 +154,7 @@ Serial.println(preferences.getString("ssid"));
 }
 
 void ConfigurationManager::run() {
-    if (WiFiClass::status() != WL_CONNECTED && isConfigured) {
+    if (WiFiClass::status() != WL_CONNECTED) {
         unsigned long now = millis();
         if (now - lastTimeConnected >= NETWORK_TIMEOUT) {
             ESP.restart();
@@ -161,6 +163,7 @@ void ConfigurationManager::run() {
         lastTimeConnected = millis();
     }
 
+    if (isConfigured) return;
     server->handleClient();
 }
 
@@ -168,4 +171,15 @@ void ConfigurationManager::resetConfig() {
     Logger::log("ConfigurationManager", "Resetting ESP, rebooting");
     preferences.remove("isConfigured");
     ESP.restart();
+}
+
+LedstripConfiguration ConfigurationManager::getConfig(){
+    LedstripConfiguration config{};
+    config.ssid = preferences.getString("ssid").c_str();
+    config.password = preferences.getString("password").c_str();
+    config.serverip = preferences.getString("serverip").c_str();
+    config.ledpin = preferences.getInt("ledpin");
+    config.ledcount = preferences.getInt("ledcount");
+    config.serverport = preferences.getInt("serverport");
+    return config;
 }

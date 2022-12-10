@@ -8,7 +8,7 @@
 
 class Button {
 public:
-    Button(int pin);
+    explicit Button(int pin);
 
     bool isPressed();
 

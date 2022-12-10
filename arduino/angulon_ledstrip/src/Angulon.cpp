@@ -8,11 +8,20 @@
 void Angulon::setup() {
     Logger::setup();
     configuration.setup();
+
+    if (configuration.isConfigured) {
+        websocket.setup();
+    }
+
     Logger::log("Angulon", "Setup finished");
 }
 
 
 void Angulon::loop() {
     configuration.run();
+
+    if (configuration.isConfigured) {
+        websocket.run();
+    }
 }
 

@@ -8,10 +8,12 @@
 
 #include "utils/Logger.h"
 #include "connections/configuration/ConfigurationManager.h"
+#include "connections/websocket/Websocket.h"
 
 class Angulon {
 private:
     ConfigurationManager configuration;
+    Websocket websocket;
 public:
     void setup();
 
