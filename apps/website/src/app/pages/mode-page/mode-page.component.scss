@@ -1,4 +1,4 @@
-@import '../../../variables';
+@import "../../../styles/variables";
 
 .section-title {
   text-align: center;
@@ -10,7 +10,7 @@
     margin-bottom: 20px;
     padding-bottom: 20px;
     position: relative;
-    color: getColor('secondary');
+    color: $secondary;
   }
 
   h4::before {
@@ -37,7 +37,7 @@
 }
 
 .active > div {
-  background-color: darken(getColor("secondary"), 20%);
+  background-color: darken($secondary, 20%);
 
   h4 {
     color: white;
@@ -58,7 +58,7 @@
     margin: 10px 0 15px 0;
 
     a {
-      color: getColor("secondary");
+      color: $secondary;
       transition: ease-in-out 0.3s;
     }
   }
@@ -70,7 +70,7 @@
   }
 
   &:hover {
-    background-color: darken(getColor("secondary"), 20%);
+    background-color: darken($secondary, 20%);
     box-shadow: 0 0 35px 0 rgba(0, 0, 0, 0.08);
 
     h4 {
@@ -147,7 +147,7 @@
     font-family: "Poppins", sans-serif;
 
     span {
-      color: getColor('primary');
+      color: $primary;
       letter-spacing: 1px;
     }
   }
@@ -164,7 +164,7 @@
       transition: 0.3s;
 
       &:hover {
-        color: getColor('primary');
+        color: $primary;
       }
     }
   }

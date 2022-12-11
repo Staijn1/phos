@@ -1,6 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
-@import '_variables.scss';
-
+@import './styles/_variables.scss';
+@import "./styles/bootstrap";
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
@@ -11,10 +11,10 @@ body {
 }
 
 a {
-  color: getColor('primary');
+  color: $primary;
 
   &:hover {
-    color: getColor('primary');
+    color: $primary;
     text-decoration: none !important;
   }
 }
@@ -75,7 +75,7 @@ section {
       display: block;
       width: 40px;
       height: 3px;
-      background: getColor('primary');
+      background: $primary;
       bottom: 0;
       left: calc(50% - 20px);
     }
@@ -192,12 +192,11 @@ section {
   @include theme($key, $value);
 }
 
-/* Importing Bootstrap SCSS file. */
-@import 'bootstrap/scss/bootstrap';
-@import "aos/dist/aos.css";
 
 @media screen and (max-width: map-get($grid-breakpoints, 'sm')){
   html {
     user-select: none;
   }
 }
+
+@import "aos/dist/aos.css";

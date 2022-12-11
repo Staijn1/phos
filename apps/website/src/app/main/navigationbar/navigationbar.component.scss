@@ -1,8 +1,8 @@
-@import '../../../variables';
+@import '../../../styles/variables';
 
 // Active navigation
 .active {
-  background: getColor('primary') !important;
+  background: $primary !important;
   color: white !important;
 }
 
@@ -23,7 +23,7 @@
     align-items: center;
 
     text-decoration: none;
-    color: getColor('secondary');
+    color: $secondary;
     padding: 10px 18px;
     font-size: 15px;
 
@@ -55,13 +55,13 @@
 
     &:hover {
       color: #fff;
-      background: getColor('primary');
+      background: $primary;
     }
   }
 
   .active > a, li:hover > a {
     color: #fff;
-    background: getColor('primary');
+    background: $primary;
   }
 
   a:hover span, .active > a span, li:hover > a span {
@@ -109,7 +109,7 @@
   text-align: right;
 
   fa-icon {
-    color: getColor('secondary');
+    color: $secondary;
   }
 }
 
