@@ -1,27 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import '_variables.scss';
 
-.offcanvas-backdrop.show {
-  opacity: 0 !important;
-}
-
-/*--------------------------------------------------------------
-# Scrollbar
---------------------------------------------------------------*/
-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-body::-webkit-scrollbar-track {
-  background: none;
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: getColor('secondary');
-  border-radius: 10px;
-  border: 1px solid darken(getColor('secondary'), 5%);
-}
-
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
@@ -70,15 +49,6 @@ h2 {
   transition: all 0.5s;
   padding: 15px;
   overflow-y: auto;
-}
-
-@media (max-width: 992px) {
-  #header {
-    width: 300px;
-    background: #fff;
-    border-right: 1px solid #e6e9ec;
-    left: -300px;
-  }
 }
 
 @media (min-width: 992px) {
@@ -135,112 +105,6 @@ section {
   p {
     margin-bottom: 0;
   }
-}
-
-/*--------------------------------------------------------------
-# Hero Section
---------------------------------------------------------------*/
-
-#hero {
-  width: 100%;
-  height: 100vh;
-  //background: url("../../../assets/hero-bg.jpg") top right no-repeat;
-  background-size: cover;
-  position: relative;
-
-  h1 {
-    margin: 0;
-    font-weight: 700;
-    line-height: 56px;
-    color: #45505b;
-  }
-
-  p {
-    color: #45505b;
-    margin: 15px 0 0 0;
-    font-family: "Poppins", sans-serif;
-
-    span {
-      color: getColor('primary');
-      letter-spacing: 1px;
-    }
-  }
-
-  .social-links {
-    margin-top: 30px;
-
-    a {
-      font-size: 24px;
-      display: inline-block;
-      color: #45505b;
-      line-height: 1;
-      margin-right: 20px;
-      transition: 0.3s;
-
-      &:hover {
-        color: getColor('primary');
-      }
-    }
-  }
-}
-
-@media (min-width: 992px) {
-  #hero {
-    padding-left: 160px;
-  }
-}
-
-@media (max-width: 992px) {
-  #hero {
-    text-align: center;
-
-    h1 {
-      font-size: 32px;
-      line-height: 36px;
-    }
-
-    p {
-      margin-top: 10px;
-      font-size: 20px;
-      line-height: 24px;
-    }
-  }
-}
-
-/* Mobile Navigation */
-
-.mobile-nav-toggle {
-  position: fixed;
-  right: 15px;
-  top: 15px;
-  z-index: 9998;
-  border: 0;
-  background: none;
-  font-size: 24px;
-  transition: all 0.4s;
-  outline: none !important;
-  line-height: 1;
-  cursor: pointer;
-  text-align: right;
-
-  fa-icon {
-    color: getColor('secondary');
-  }
-}
-
-.mobile-nav-active {
-  overflow: hidden;
-
-  #header {
-    left: 0;
-  }
-}
-
-/*--------------------------------------------------------------
-# No UI Slider
---------------------------------------------------------------*/
-.noUi-connect {
-  background-color: getColor('secondary') !important;
 }
 
 @function setTextColor($color) {

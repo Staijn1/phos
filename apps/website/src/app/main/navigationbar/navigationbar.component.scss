@@ -1,57 +1,5 @@
 @import '../../../variables';
 
-
-.container {
-  height: calc(100vh - 30px);
-}
-
-#close-btn:hover {
-  background: rgb(255, 0, 0);
-}
-
-.transition-container {
-  position: fixed;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  z-index: 1030;
-  pointer-events: none;
-
-  span {
-    position: relative;
-  }
-
-  &.from-left {
-    flex-direction: column;
-    margin: -5px, -5px, -5px, -5px;
-
-    span {
-      background: rgb(79, 91, 255);
-      height: 100%;
-      width: 0;
-    }
-  }
-
-  &.from-top {
-    span {
-      background: rgb(170, 79, 255);
-      height: 0;
-      width: 100%;
-    }
-  }
-}
-
-#cover {
-  background: white;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  z-index: 9;
-}
-
 // Active navigation
 .active {
   background: getColor('primary') !important;
@@ -59,7 +7,6 @@
 }
 
 /* Desktop Navigation */
-
 .nav-menu {
   > ul {
     list-style: none;
@@ -146,11 +93,81 @@
   }
 }
 
+// Mobile navigation
+.mobile-nav-toggle {
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  z-index: 9998;
+  border: 0;
+  background: none;
+  font-size: 24px;
+  transition: all 0.4s;
+  outline: none !important;
+  line-height: 1;
+  cursor: pointer;
+  text-align: right;
 
-/*
-Navigation animations
+  fa-icon {
+    color: getColor('secondary');
+  }
+}
+
+.mobile-nav-active #header {
+  left: 0;
+}
+
+@media (max-width: 992px) {
+  #header {
+    width: 300px;
+    background: #fff;
+    border-right: 1px solid #e6e9ec;
+    left: -300px;
+  }
+}
+
+/**
+CSS Required for the page transitions
  */
+.transition-container {
+  position: fixed;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  z-index: 1030;
+  pointer-events: none;
 
-.tile {
-  background: black;
+  span {
+    position: relative;
+  }
+
+  &.from-left {
+    flex-direction: column;
+    margin: -5px, -5px, -5px, -5px;
+
+    span {
+      background: rgb(79, 91, 255);
+      height: 100%;
+      width: 0;
+    }
+  }
+
+  &.from-top {
+    span {
+      background: rgb(170, 79, 255);
+      height: 0;
+      width: 100%;
+    }
+  }
+}
+
+#cover {
+  background: white;
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  left: 0;
+  top: 0;
+  z-index: 9;
 }
