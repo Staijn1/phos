@@ -1,6 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
 @import './styles/_variables.scss';
-@import "./styles/bootstrap";
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
@@ -192,6 +191,7 @@ section {
   @include theme($key, $value);
 }
 
+@import "./styles/bootstrap";
 
 @media screen and (max-width: map-get($grid-breakpoints, 'sm')){
   html {
