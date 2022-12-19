@@ -73,6 +73,11 @@ export class VisualizerPageComponent implements OnDestroy {
     step: 0.1,
     vertical: true
   };
+  linearBoostSliderOptions: slider.Options = {
+    floor: 1,
+    ceil: 5,
+    step: 0.1
+  }
   activeTab = 0;
   listIcon = faList;
   checkboxIcon = faCheck;

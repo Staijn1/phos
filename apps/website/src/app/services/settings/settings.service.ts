@@ -1,12 +1,12 @@
-import {Injectable} from '@angular/core'
-import {GeneralSettings} from '../../shared/types/types'
-import {Options} from 'audiomotion-analyzer'
-import iro from '@jaames/iro'
-import {MessageService} from '../error/message.service';
+import { Injectable } from "@angular/core";
+import { GeneralSettings } from "../../shared/types/types";
+import { Options } from "audiomotion-analyzer";
+import iro from "@jaames/iro";
+import { MessageService } from "../error/message.service";
 
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class SettingsService {
   readonly defaultVisualizerOptions: Options = {
@@ -14,7 +14,7 @@ export class SettingsService {
     bgAlpha: 0.7,
     fftSize: 8192,
     fillAlpha: 1,
-    gradient: 'classic',
+    gradient: "classic",
     lineWidth: 0,
     loRes: false,
     lumiBars: false,
@@ -31,71 +31,74 @@ export class SettingsService {
     reflexRatio: 0.5,
     showBgColor: true,
     showFPS: false,
-    showLeds: false,
+    linearAmplitude: false,
+    linearBoost: 1,
+    ledBars: false,
     showPeaks: false,
     showScaleX: false,
     showScaleY: false,
     smoothing: 0.7,
     spinSpeed: 0,
+    weightingFilter: ""
   };
   private readonly defaultGeneralSettings: GeneralSettings = {
     chroma: false,
-    colors: ['#ff0000', '#00ff00', '#0000ff'],
+    colors: ["#ff0000", "#00ff00", "#0000ff"],
     initialColor: false,
-    theme: 'default'
+    theme: "default"
   };
 
   constructor(private readonly messageService: MessageService) {
-    this.setDefaults()
+    this.setDefaults();
   }
 
   saveVisualizerOptions(options: Options): void {
-    delete options.onCanvasDraw
-    this.saveSettings(options, 'visualizerSettings')
+    delete options.onCanvasDraw;
+    this.saveSettings(options, "visualizerSettings");
   }
 
   readVisualizerOptions(): Options {
-    return this.readSettings('visualizerSettings') as Options
+    return this.readSettings("visualizerSettings") as Options;
   }
 
   saveGeneralSettings(settings: GeneralSettings): void {
-    this.saveSettings(settings, 'generalSettings')
+    this.saveSettings(settings, "generalSettings");
   }
 
   readGeneralSettings(): GeneralSettings {
-    return this.readSettings('generalSettings') as GeneralSettings
+    return this.readSettings("generalSettings") as GeneralSettings;
   }
 
   convertColors(colors: iro.Color[]): string[] {
-    const convertedColors: string[] = []
+    const convertedColors: string[] = [];
     for (const item of colors) {
-      convertedColors.push(item.hexString)
+      convertedColors.push(item.hexString);
     }
-    return convertedColors
+    return convertedColors;
   }
 
   clearSettings() {
-    this.setDefaults(true)
-    location.reload()
+    this.setDefaults(true);
+    location.reload();
   }
 
-  private readSettings(name: 'generalSettings' | 'visualizerSettings'): GeneralSettings | Options {
-    const savedItem = localStorage.getItem(name)
+  private readSettings(name: "generalSettings" | "visualizerSettings"): GeneralSettings | Options {
+    const savedItem = localStorage.getItem(name);
     try {
-      return JSON.parse(savedItem as string)
+      return JSON.parse(savedItem as string);
     } catch (e: any) {
-      this.messageService.setMessage(e)
+      this.messageService.setMessage(e);
       switch (name) {
-        case 'generalSettings':
-          return this.defaultGeneralSettings
-        case 'visualizerSettings':
-          return this.defaultVisualizerOptions
+        case "generalSettings":
+          return this.defaultGeneralSettings;
+        case "visualizerSettings":
+          return this.defaultVisualizerOptions;
       }
     }
   }
 
-  private saveSettings(settings: any, name: 'generalSettings' | 'visualizerSettings'): void {
-    localStorage.setItem(name, JSON.stringify(settings))
+  private saveSettings(settings: any, name: "generalSettings" | "visualizerSettings"): void {
+    localStorage.setItem(name, JSON.stringify(settings));
   }
 
   /**
@@ -103,11 +106,11 @@ export class SettingsService {
    * @private
    */
   private setDefaults(force?: boolean): void {
-    if (!this.readSettings('generalSettings') || force) {
-      this.saveGeneralSettings(this.defaultGeneralSettings)
+    if (!this.readSettings("generalSettings") || force) {
+      this.saveGeneralSettings(this.defaultGeneralSettings);
     }
-    if (!this.readSettings('visualizerSettings') || force) {
-      this.saveVisualizerOptions(this.defaultVisualizerOptions)
+    if (!this.readSettings("visualizerSettings") || force) {
+      this.saveVisualizerOptions(this.defaultVisualizerOptions);
     }
   }
 }
