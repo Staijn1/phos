@@ -8,6 +8,7 @@
 // 2. Include any default variable overrides here
 
 // 3. Include remainder of required Bootstrap stylesheets
+@import "variables";
 @import "bootstrap/scss/variables";
 // 4. Include any default map overrides here
 
@@ -61,3 +62,98 @@
 // Utilities
 @import "bootstrap/scss/utilities/api";
 
+// Helper theme mixin
+// @param $name: name of the theme (HTML class)
+// @param $color: color of the theme
+@mixin theme($name, $color) {
+  $transition: 0.15s ease-in-out;
+
+  #mode-page-illustration-#{$name} {
+    #Board, #CheckboxLeft, #CheckboxRight, #CheckboxBottomRight {
+      fill: $color;
+    }
+  }
+
+  .mobile-nav-active .mobile-nav-toggle fa-icon {
+    color: $color;
+  }
+
+  #not-found-#{$name} {
+    .fill-lighten {
+      fill: $color;
+      opacity: 0.5;
+    }
+
+    .fill-full {
+      fill: $color;
+    }
+  }
+
+  .icon-box-#{$name} {
+    border: 3px solid $color;
+
+    h4:after {
+      background: $color;
+    }
+
+    path {
+      fill: $color;
+    }
+  }
+
+  .#{$name}.color-option {
+    background: $color !important;
+    color: color-contrast($color);
+  }
+
+  .#{$name} {
+    #menu-bar {
+      transition: background-color $transition;
+      background: $color !important;
+    }
+
+    #ledcontroltext, #Light_Bulb {
+      stroke: $color !important;
+    }
+
+    .bg-primary, .btn-primary {
+      background: $color !important;
+    }
+
+    .btn-primary {
+      color: color-contrast($color);
+      border-color: darken($color, 5%);
+
+      &:hover, &:focus {
+        border-color: darken($color, 10%) !important;
+      }
+
+      &:focus {
+        box-shadow: 0 0 0 0.25rem transparentize($color, 0.5)
+      }
+    }
+
+    .nav-menu {
+      a span fa-icon:hover {
+        background: darken($color, 10%) !important;
+      }
+
+      ul > li {
+        .active {
+          color: color-contrast($color);
+          background: $color !important;
+        }
+
+        > a:hover {
+          background: $color !important;
+        }
+      }
+    }
+  }
+}
+
+// Including themes
+// By looping through the $themes map
+@each $key, $value in $themes {
+  @include theme($key, $value);
+}
