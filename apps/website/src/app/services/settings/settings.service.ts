@@ -3,13 +3,14 @@ import { GeneralSettings } from "../../shared/types/types";
 import { Options } from "audiomotion-analyzer";
 import iro from "@jaames/iro";
 import { MessageService } from "../error/message.service";
+import { AngulonVisualizerOptions } from "@angulon/interfaces";
 
 
 @Injectable({
   providedIn: "root"
 })
 export class SettingsService {
-  readonly defaultVisualizerOptions: Options = {
+  readonly defaultVisualizerOptions: AngulonVisualizerOptions = {
     barSpace: 0.1,
     bgAlpha: 0.7,
     fftSize: 8192,
@@ -39,7 +40,8 @@ export class SettingsService {
     showScaleY: false,
     smoothing: 0.7,
     spinSpeed: 0,
-    weightingFilter: ""
+    weightingFilter: "",
+    energyPreset: "bass"
   };
   private readonly defaultGeneralSettings: GeneralSettings = {
     chroma: false,
@@ -57,8 +59,8 @@ export class SettingsService {
     this.saveSettings(options, "visualizerSettings");
   }
 
-  readVisualizerOptions(): Options {
-    return this.readSettings("visualizerSettings") as Options;
+  readVisualizerOptions(): AngulonVisualizerOptions {
+    return this.readSettings("visualizerSettings") as AngulonVisualizerOptions;
   }
 
   saveGeneralSettings(settings: GeneralSettings): void {
@@ -84,16 +86,22 @@ export class SettingsService {
 
   private readSettings(name: "generalSettings" | "visualizerSettings"): GeneralSettings | Options {
     const savedItem = localStorage.getItem(name);
+    let defaultVal;
+    switch (name) {
+      case "generalSettings":
+        defaultVal = this.defaultGeneralSettings;
+        break;
+      case "visualizerSettings":
+        defaultVal = this.defaultVisualizerOptions;
+        break;
+    }
+
     try {
-      return JSON.parse(savedItem as string);
+      const parsed = JSON.parse(savedItem as string);
+      return { ...defaultVal, ...parsed };
     } catch (e: any) {
       this.messageService.setMessage(e);
-      switch (name) {
-        case "generalSettings":
-          return this.defaultGeneralSettings;
-        case "visualizerSettings":
-          return this.defaultVisualizerOptions;
-      }
+      return defaultVal;
     }
   }
 

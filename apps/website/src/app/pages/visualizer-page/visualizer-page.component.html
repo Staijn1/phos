@@ -86,6 +86,19 @@
                 <option [ngValue]="'468'">ITU-R 468 weighting</option>
               </select>
             </div>
+            <!--    Selectbox energy preset, determining which values to send over the wire-->
+            <div class="form-group">
+              <label for="energyPreset">Energy Preset</label>
+              <select (change)="applySettings()" [(ngModel)]="visualizerOptions.energyPreset" class="form-control"
+                      id="energyPreset">
+                <option [ngValue]="'peak'">Peaks</option>
+                <option [ngValue]="'bass'">Bass</option>
+                <option [ngValue]="'lowMid'">Low Mid</option>
+                <option [ngValue]="'mid'">Mid</option>
+                <option [ngValue]="'highMid'">High Mid</option>
+                <option [ngValue]="'treble'">Treble</option>
+              </select>
+            </div>
           </div>
         </ng-template>
       </li>
