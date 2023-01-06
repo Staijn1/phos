@@ -1,6 +1,6 @@
-import {Injectable} from '@nestjs/common';
-import {DatabaseConnection} from '../database/DatabaseConnection';
-import {environment} from '../../../environments/environment';
+import { Injectable } from "@nestjs/common";
+import { DatabaseConnection } from "../database/DatabaseConnection";
+import { environment } from "../../../environments/environment";
 
 @Injectable()
 export class ModeStatisticsDbService extends DatabaseConnection {
@@ -11,8 +11,7 @@ export class ModeStatisticsDbService extends DatabaseConnection {
    * @param {number} mode
    */
   async registerModeChange(mode: number) {
-    // todo: Disable in production for now, because prisma can't connect to postgres in Docker.. :(
-    if (!environment.statistics) return
+    if (!environment.statistics) return;
     this.connect();
 
     await this.client.modeStatistics.updateMany({
@@ -20,8 +19,8 @@ export class ModeStatisticsDbService extends DatabaseConnection {
         disabledAt: null
       },
       data: {
-        disabledAt: new Date(),
-      },
+        disabledAt: new Date()
+      }
     });
 
     await this.client.modeStatistics.create({
