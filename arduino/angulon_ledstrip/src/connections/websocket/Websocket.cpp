@@ -8,9 +8,10 @@
 
 void Websocket::setup() {
     Logger::log("Websocket", "Setting up websocket connection");
-
-    socketIO.begin("192.168.2.4", 3333, "/socket.io/?EIO=4");
+    LedstripConfiguration configuration = configurationManager->getConfig();
+    socketIO.begin(configuration.serverip, configuration.serverport, "/socket.io/?EIO=4");
     socketIO.onEvent([&](socketIOmessageType_t type, uint8_t *payload, size_t length) {
+        Serial.printf("[IOc] get event: %s\n", payload);
         this->webSocketClientEvent(type, payload, length);
     });
     socketIO.setReconnectInterval(5000);
@@ -77,15 +78,13 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
         return;
     }
     Serial.printf("%s\n", payload);
-    Serial.println("Here");
     const char *event = doc[0];// The first element holds the code corrosponding to the action (set color, mode, fft etc)
-    Serial.println("Here 2");
     // Handle the different events
     if (*event == '!') {
         handleBangEvent(payload, doc);
     } else if (*event == '#') {
-        Serial.println("Here 3");
         JsonArray colors = doc[1];
+        Serial.println("Here");
         handleHashEvent(colors);
     } else if (*event == '+') {
         handlePlusEvent(payload, doc);
@@ -118,13 +117,11 @@ void Websocket::handleHashEvent(const JsonArray colors) {
     uint32_t convertedColors[MAX_NUM_COLORS];
     int index = 0;
     // Loop over the hexadecimal strings
-    for (auto color: colors) {
+    for (JsonVariant color: colors) {
         // Get the string value at the current index
         std::string hex_str = color.as<std::string>();
-
         // Remove the prefix from the hexadecimal string
         std::string hex_str_without_prefix = hex_str.substr(1);
-
         // Convert the hexadecimal string to a uint32_t value
         convertedColors[index] = strtoul(hex_str_without_prefix.c_str(), nullptr, 16);
         index++;
