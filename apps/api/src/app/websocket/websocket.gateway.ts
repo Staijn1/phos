@@ -4,20 +4,21 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer
-} from '@nestjs/websockets';
-import {Logger} from '@nestjs/common';
-import {Server, Socket} from 'socket.io';
-import {WebsocketClientsManagerService} from './websocket-clients-manager.service';
-import {ConfigurationService} from '../configuration/configuration.service';
-import {AddGradientResponse, GradientInformation, ModeInformation} from '@angulon/interfaces';
-import {ModeStatisticsDbService} from '../database/mode-statistics/mode-statistics-db.service';
-import {GradientsService} from '../gradients/gradients.service';
+} from "@nestjs/websockets";
+import { Logger } from "@nestjs/common";
+import { Server, Socket } from "socket.io";
+import { WebsocketClientsManagerService } from "./websocket-clients-manager.service";
+import { ConfigurationService } from "../configuration/configuration.service";
+import { AddGradientResponse, GradientInformation, ModeInformation } from "@angulon/interfaces";
+import { ModeStatisticsDbService } from "../database/mode-statistics/mode-statistics-db.service";
+import { GradientsService } from "../gradients/gradients.service";
+import { logger } from "nx/src/utils/logger";
 
-@WebSocketGateway(undefined, {cors: true})
+@WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private server: Server;
-  private logger: Logger = new Logger('WebsocketGateway');
+  private logger: Logger = new Logger("WebsocketGateway");
 
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
@@ -26,77 +27,78 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     private readonly gradientsService: GradientsService) {
   }
 
-  @SubscribeMessage('mode')
+  @SubscribeMessage("mode")
   async onModeCommand(client: Socket, payload: string): Promise<string> {
     try {
       const mode = parseInt(payload, 10);
       this.websocketClientsManagerService.setMode(mode);
       await this.modeStatisticsService.registerModeChange(mode);
-      return 'OK';
+      return "OK";
     } catch (e) {
-      return 'ERROR';
+      this.logger.error(e);
+      return "ERROR";
     }
   }
 
-  @SubscribeMessage('color')
+  @SubscribeMessage("color")
   onColorCommand(client: Socket, payload: string[]): string {
     this.websocketClientsManagerService.setColor(payload);
-    return 'OK';
+    return "OK";
   }
 
-  @SubscribeMessage('FFT')
+  @SubscribeMessage("FFT")
   onFFTCommand(client: Socket, payload: number): string {
     this.websocketClientsManagerService.setFFTValue(payload);
-    return 'OK';
+    return "OK";
   }
 
-  @SubscribeMessage('increaseBrightness')
+  @SubscribeMessage("increaseBrightness")
   onIncreaseBrightnessCommand(): string {
     this.websocketClientsManagerService.increaseBrightness();
-    return 'OK';
+    return "OK";
   }
 
-  @SubscribeMessage('increaseSpeed')
+  @SubscribeMessage("increaseSpeed")
   onIncreaseSpeedCommand(): string {
     this.websocketClientsManagerService.increaseSpeed();
-    return 'OK';
+    return "OK";
   }
 
-  @SubscribeMessage('decreaseBrightness')
+  @SubscribeMessage("decreaseBrightness")
   onDecreaseBrightnessCommand(): string {
     this.websocketClientsManagerService.decreaseBrightness();
-    return 'OK';
+    return "OK";
   }
 
-  @SubscribeMessage('decreaseSpeed')
+  @SubscribeMessage("decreaseSpeed")
   onDecreaseSpeedCommand(): string {
     this.websocketClientsManagerService.decreaseSpeed();
-    return 'OK';
+    return "OK";
   }
 
-  @SubscribeMessage('getModes')
+  @SubscribeMessage("getModes")
   async onGetModes(): Promise<ModeInformation[]> {
     return this.configurationService.getModes();
   }
 
-  @SubscribeMessage('gradients/get')
+  @SubscribeMessage("gradients/get")
   async onGetGradients(): Promise<GradientInformation[]> {
     return this.gradientsService.getGradients();
   }
 
-  @SubscribeMessage('gradients/edit')
+  @SubscribeMessage("gradients/edit")
   async onGradientsEdit(client: Socket, payload: GradientInformation): Promise<GradientInformation[]> {
     await this.gradientsService.editGradient(payload);
     return this.gradientsService.getGradients();
   }
 
-  @SubscribeMessage('gradients/delete')
+  @SubscribeMessage("gradients/delete")
   async onDeleteGradient(client: Socket, payload: { id: number }): Promise<GradientInformation[]> {
     await this.gradientsService.deleteGradient(payload);
     return this.gradientsService.getGradients();
   }
 
-  @SubscribeMessage('gradients/add')
+  @SubscribeMessage("gradients/add")
   async onAddGradient(): Promise<AddGradientResponse> {
     return this.gradientsService.addGradient();
   }

@@ -36,7 +36,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
     {name: 'Fire2012', state: new Fire2012State()},
     {name: 'Waterfall', state: new WaterfallState()},
     {name: 'VuMeter', state: new VisualizerState()},
-    {name: 'VuMeter Brightness', state: new VisualizerBrightnessState()},
+    {name: 'VuMeter Brightness', state: new VisualizerState()},
   ];
   classes = themes;
   selectedMode = 0;

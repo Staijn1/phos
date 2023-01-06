@@ -1,7 +1,3 @@
-@function getColor($key) {
-  @return map-get($theme-colors, $key);
-}
-
 @mixin background-opacity($color, $opacity: 0.3) {
   background: $color; /* The Fallback */
   background: rgba($color, $opacity);
@@ -9,12 +5,12 @@
 
 @font-face {
   font-family: "Comfortaa";
-  src: url('assets/fonts/comfortaa/Comfortaa-VariableFont_wght.ttf');
+  src: url('../assets/fonts/comfortaa/Comfortaa-VariableFont_wght.ttf');
 }
 
 @font-face {
   font-family: "RajdhaniMedium";
-  src: url('assets/fonts/Rajdhani/Rajdhani-Medium.ttf');
+  src: url('../assets/fonts/Rajdhani/Rajdhani-Medium.ttf');
 }
 
 $font-family-base: "Comfortaa";
@@ -36,18 +32,12 @@ $themes: (
   'elderberry':#cb5845
 );
 
-$theme-colors: (
-  "primary": #3e92cc,
-  "secondary": #3A4454,
-  "danger": #D8315B,
-  "info": #0dcaf0,
-  "warning": #ffc107,
-  "success": #198754,
-  "dark" : #1E1B18
-);
+$primary:  #3e92cc;
+$secondary: #3A4454;
+$success: #198754;
+$danger: #D8315B;
+$warning: #ffc107;
+$info: #0dcaf0;
+$light: #f8f9fa;
+$dark: #1E1B18;
 
-$menu-bar-height: 30px;
-
-.btn-primary {
-  color: white;
-}

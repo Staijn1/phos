@@ -1,14 +1,146 @@
-@import '../../../variables';
+@import '../../../styles/variables';
 
-
-.container {
-  height: calc(100vh - 30px);
+// Active navigation
+.active {
+  background: $primary !important;
+  color: white !important;
 }
 
-#close-btn:hover {
-  background: rgb(255, 0, 0);
+/* Desktop Navigation */
+.nav-menu {
+  > ul {
+    list-style: none;
+    padding: 0;
+
+    li {
+      position: relative;
+      white-space: nowrap;
+    }
+  }
+
+  a {
+    display: flex;
+    align-items: center;
+
+    text-decoration: none;
+    color: $secondary;
+    padding: 10px 18px;
+    font-size: 15px;
+
+    // Create some space between each nav item
+    margin-top: 4px;
+    margin-bottom: 8px;
+
+    border-radius: 50px;
+    background: #f2f3f5;
+    height: 56px;
+    width: 100%;
+    overflow: hidden;
+    transition: 0.3s;
+
+    fa-icon {
+      font-size: 20px;
+    }
+
+    span {
+      padding: 0 5px 0 7px;
+
+      fa-icon {
+        transition: background-color 0.3s;
+        padding: 0.75em;
+        height: 56px;
+        border-radius: 50px;
+      }
+    }
+
+    &:hover {
+      color: #fff;
+      background: $primary;
+    }
+  }
+
+  .active > a, li:hover > a {
+    color: #fff;
+    background: $primary;
+  }
+
+  a:hover span, .active > a span, li:hover > a span {
+    color: #fff;
+  }
+
+  a:hover, li:hover > a {
+    width: 100%;
+    color: #fff;
+  }
+
+  a:hover span, li:hover > a span {
+    display: block;
+  }
+
+  .colorpicker:hover {
+    height: 250px;
+  }
 }
 
+@media (min-width: 992px) {
+  .nav-menu a {
+    width: 56px;
+
+    span {
+      display: none;
+      color: #fff;
+    }
+  }
+}
+
+// Mobile navigation
+.mobile-nav-toggle {
+  position: fixed;
+  right: 15px;
+  top: 15px;
+  z-index: 9998;
+  border: 0;
+  background: none;
+  font-size: 24px;
+  transition: all 0.4s;
+  outline: none !important;
+  line-height: 1;
+  cursor: pointer;
+  text-align: right;
+
+  fa-icon {
+    color: $secondary;
+  }
+}
+
+.mobile-nav-active #header {
+  left: 0;
+}
+
+#header {
+  position: fixed;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  z-index: 9997;
+  transition: all 0.5s;
+  padding: 15px;
+  overflow-y: auto;
+}
+
+@media (max-width: 992px) {
+  #header {
+    width: 300px;
+    background: #fff;
+    border-right: 1px solid #e6e9ec;
+    left: -300px;
+  }
+}
+
+
+/**
+CSS Required for the page transitions
+ */
 .transition-container {
   position: fixed;
   left: 0;
@@ -50,107 +182,4 @@
   left: 0;
   top: 0;
   z-index: 9;
-}
-
-// Active navigation
-.active {
-  background: getColor('primary') !important;
-  color: white !important;
-}
-
-/* Desktop Navigation */
-
-.nav-menu {
-  > ul {
-    list-style: none;
-    padding: 0;
-
-    li {
-      position: relative;
-      white-space: nowrap;
-    }
-  }
-
-  a {
-    display: flex;
-    align-items: center;
-
-    text-decoration: none;
-    color: getColor('secondary');
-    padding: 10px 18px;
-    font-size: 15px;
-
-    // Create some space between each nav item
-    margin-top: 4px;
-    margin-bottom: 8px;
-
-    border-radius: 50px;
-    background: #f2f3f5;
-    height: 56px;
-    width: 100%;
-    overflow: hidden;
-    transition: 0.3s;
-
-    fa-icon {
-      font-size: 20px;
-    }
-
-    span {
-      padding: 0 5px 0 7px;
-
-      fa-icon {
-        transition: background-color 0.3s;
-        padding: 0.75em;
-        height: 56px;
-        border-radius: 50px;
-      }
-    }
-
-    &:hover {
-      color: #fff;
-      background: getColor('primary');
-    }
-  }
-
-  .active > a, li:hover > a {
-    color: #fff;
-    background: getColor('primary');
-  }
-
-  a:hover span, .active > a span, li:hover > a span {
-    color: #fff;
-  }
-
-  a:hover, li:hover > a {
-    width: 100%;
-    color: #fff;
-  }
-
-  a:hover span, li:hover > a span {
-    display: block;
-  }
-
-  .colorpicker:hover {
-    height: 250px;
-  }
-}
-
-@media (min-width: 992px) {
-  .nav-menu a {
-    width: 56px;
-
-    span {
-      display: none;
-      color: #fff;
-    }
-  }
-}
-
-
-/*
-Navigation animations
- */
-
-.tile {
-  background: black;
 }

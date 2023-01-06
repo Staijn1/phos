@@ -5,7 +5,7 @@ import {faCheck, faLightbulb, faList, faSliders, faWrench} from '@fortawesome/fr
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
 import {SettingsService} from '../../services/settings/settings.service'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
-import {GradientInformation} from '@angulon/interfaces';
+import { AngulonVisualizerOptions, GradientInformation } from "@angulon/interfaces";
 import {OffCanvasComponent} from '../../shared/components/offcanvas/off-canvas.component';
 import * as slider from '@angular-slider/ngx-slider';
 import {InformationService} from '../../services/information-service/information.service';
@@ -20,7 +20,7 @@ import {WebsocketService} from '../../services/websocketconnection/websocket.ser
 export class VisualizerPageComponent implements OnDestroy {
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent
   @ViewChild(OffCanvasComponent) offcanvas!: OffCanvasComponent;
-  visualizerOptions: Options = {}
+  visualizerOptions: AngulonVisualizerOptions = {}
 
   // Gradient definitions
   gradients: GradientInformation[] = []
@@ -73,6 +73,11 @@ export class VisualizerPageComponent implements OnDestroy {
     step: 0.1,
     vertical: true
   };
+  linearBoostSliderOptions: slider.Options = {
+    floor: 1,
+    ceil: 5,
+    step: 0.1
+  }
   activeTab = 0;
   listIcon = faList;
   checkboxIcon = faCheck;
@@ -105,7 +110,7 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
-    const value = instance.getEnergy('bass')
+    const value = instance.getEnergy(this.visualizerOptions.energyPreset)
     this.connection.setLeds(value)
     this.chromaEffect.intensity = value
   }
