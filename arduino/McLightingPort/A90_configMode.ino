@@ -1,5 +1,5 @@
 const char* hotspotName = "ESP32-Access-Point";
-const char* password = "ESP32";
+const char* password = "ESP32-configure";
 
 void initializeConfigMode() {
   preferences.begin("config", false);

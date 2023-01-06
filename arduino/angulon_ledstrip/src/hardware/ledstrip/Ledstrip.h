@@ -26,6 +26,12 @@ public:
     void increaseBrightness();
 
     void decreaseBrightness();
+
+    void increaseSpeedDelay();
+
+    void decreaseSpeedDelay();
+
+    void setColors(int i, uint32_t colors[3]);
 };
 
 

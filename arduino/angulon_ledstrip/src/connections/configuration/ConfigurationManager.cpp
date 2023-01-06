@@ -53,7 +53,6 @@ char angulon_index_html[]
 )=====";
 
 
-
 void ConfigurationManager::setup() {
     Logger::log("ConfigurationManager", "Checking configuration...");
     preferences.begin("configuration", false);
@@ -128,16 +127,16 @@ void ConfigurationManager::configureDevice() {
 
 void ConfigurationManager::setupWiFi() {
     Logger::log("ConfigurationManager", "Connecting to WiFi...");
-
+    LedstripConfiguration configuration = ConfigurationManager::getConfig();
     // todo: why the fuck is c_str() returning nothing?
     const char *ssidChar = preferences.getString("ssid").c_str();
     const char *passwordChar = preferences.getString("password").c_str();
 
-    WiFi.begin("De Koffieclub", "DouweEgberts");
+    WiFi.begin(configuration.ssid, configuration.password);
 
     // Try to connect to the Wi-Fi with a delay of 500 ms each time. If it does not connect after NETWORK_TIMEOUT, it will start configure mode
     while (WiFiClass::status() != WL_CONNECTED) {
-        delay(500);
+        delay(750);
         Logger::log("ConfigurationManager", ".");
 
         if (bootButton->isPressed()) {
@@ -173,13 +172,13 @@ void ConfigurationManager::resetConfig() {
     ESP.restart();
 }
 
-LedstripConfiguration ConfigurationManager::getConfig(){
+LedstripConfiguration ConfigurationManager::getConfig() {
     LedstripConfiguration config{};
-    config.ssid = preferences.getString("ssid").c_str();
-    config.password = preferences.getString("password").c_str();
-    config.serverip = preferences.getString("serverip").c_str();
-    config.ledpin = preferences.getInt("ledpin");
-    config.ledcount = preferences.getInt("ledcount");
-    config.serverport = preferences.getInt("serverport");
+    config.ssid = "De Koffieclub";//preferences.getString("ssid").c_str();
+    config.password = "DouweEgberts";//preferences.getString("password").c_str();
+    config.serverip = "192.168.2.4";//preferences.getString("serverip").c_str();
+    config.ledpin = 26;//preferences.getInt("ledpin");
+    config.ledcount = 60;//preferences.getInt("ledcount");
+    config.serverport = 3333;//preferences.getInt("serverport");
     return config;
 }

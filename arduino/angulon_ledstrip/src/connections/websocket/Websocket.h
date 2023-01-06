@@ -18,7 +18,7 @@ private:
     SocketIOclient socketIO;
     Led *led = new Led(BUILTIN_LED);
     Ledstrip *ledstrip;
-
+    ConfigurationManager *configurationManager;
     void webSocketClientEvent(socketIOmessageType_t type, uint8_t *payload, size_t length);
 
 public:
@@ -33,17 +33,17 @@ public:
 
     void handleQuestionEvent(uint8_t *payload, const JsonDocument &_doc);
 
-    void handleHashEvent(uint8_t *payload, const JsonDocument &_doc);
+    void handleHashEvent(const JsonArray colors);
 
     void handlePlusEvent(uint8_t *payload, const JsonDocument &_doc);
 
     void handleMinusEvent(uint8_t *payload, const JsonDocument &_doc);
 
-    void handleSlashEvent(uint8_t *payload, const JsonDocument &_doc);
-
     void handleDotEvent(uint8_t *payload, const JsonDocument &_doc);
 
     void handleUnknownEvent(uint8_t *payload, const JsonDocument &_doc);
+
+    void handleSlashEvent(int mode);
 };
 
 #endif //ANGULON_LEDSTRIP_WEBSOCKET_H
