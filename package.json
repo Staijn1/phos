@@ -44,7 +44,6 @@
     "dat.gui": "^0.7.9",
     "gsap": "^3.7.1",
     "lorem-ipsum": "^2.0.3",
-    "ngx-device-detector": "^4.0.1",
     "pg": "^8.8.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "~7.5.0",

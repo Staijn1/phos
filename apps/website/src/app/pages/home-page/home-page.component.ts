@@ -1,6 +1,5 @@
 import {Component, OnInit} from '@angular/core'
 import {TimelineLite} from 'gsap'
-import {DeviceDetectorService} from 'ngx-device-detector'
 
 @Component({
   selector: 'app-home',
@@ -10,21 +9,11 @@ import {DeviceDetectorService} from 'ngx-device-detector'
 export class HomePageComponent implements OnInit {
   timeline!: TimelineLite;
 
-  constructor(private readonly deviceService: DeviceDetectorService) {
+  constructor() {
   }
 
   ngOnInit(): void {
     this.timeline = new TimelineLite()
-
-    if (this.deviceService.isTablet() || this.deviceService.isDesktop()) {
-      this.timeline.fromTo('#Light_Bulb .bulb', 4, {
-        strokeDashoffset: 0
-      }, {
-        strokeDashoffset: 500, delay: 1, repeat: -1, yoyo: true
-      })
-    } else {
-      this.timeline.set('#Light_Bulb .bulb', {strokeDashoffset: 'initial', strokeDasharray: 'initial'})
-    }
 
     this.timeline.fromTo('#introcover', {background: 'black'},
       {
