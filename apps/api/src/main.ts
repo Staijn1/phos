@@ -18,21 +18,6 @@ async function bootstrap() {
   Logger.log(
     `🚀 Application is running on: http://localhost:${port}/${globalPrefix}`
   );
-
-  const client = new Client({
-    user: 'postgres',
-    host: 'angulon_db',
-    database: 'angulon',
-    password: 'postgres',
-    schema: 'public',
-    port: 7002,
-  })
-  client.connect()
-  client.query('SELECT * FROM pg_catalog.pg_tables', (err, res) => {
-    console.log("Error", err)
-    console.log("Res", res)
-    client.end()
-  })
 }
 
 bootstrap();
