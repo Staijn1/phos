@@ -152,21 +152,21 @@
   }
 }
 
+$dark-background: #202124;
+$text-dark: lightgray;
+$text-bright: white;
+
+@media (max-width: 992px) {
+  .dark #header{
+    background: $dark-background;
+  }
+}
+
 .dark {
-  $dark-background: #202124;
-  $text-dark: lightgray;
-  $text-bright: white;
+
   background: $dark-background !important;
 
-  #cover {
-    background: $dark-background !important;
-  }
-
-  section, .form-control {
-    background: $dark-background !important;
-  }
-
-  .card, .offcanvas-body {
+  section, .form-control, #cover, .card, .offcanvas-body {
     background: $dark-background !important;
   }
 
@@ -174,6 +174,7 @@
     background: $dark-background !important;
     border-color: $text-dark !important;
   }
+
   .ngx-slider .ngx-slider-bar {
     background: $text-dark !important;
   }
@@ -182,8 +183,12 @@
     color: $text-dark !important;
   }
 
-  h1, h2, h3, h4, h5, h6 {
+  h1, h2, h3, h4, h5, h6, .mobile-nav-toggle fa-icon {
     color: $text-bright !important;
+  }
+
+  .alert p {
+    color: $body-color !important;
   }
 
   .nav-menu {
