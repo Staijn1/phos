@@ -1,4 +1,4 @@
-@import '../../../variables';
+@import "../../../styles/variables";
 
 .section-title {
   text-align: center;
@@ -10,7 +10,7 @@
     margin-bottom: 20px;
     padding-bottom: 20px;
     position: relative;
-    color: getColor('secondary');
+    color: $secondary;
   }
 
   h4::before {
@@ -37,7 +37,7 @@
 }
 
 .active > div {
-  background-color: darken(getColor("secondary"), 20%);
+  background-color: darken($secondary, 20%);
 
   h4 {
     color: white;
@@ -58,7 +58,7 @@
     margin: 10px 0 15px 0;
 
     a {
-      color: getColor("secondary");
+      color: $secondary;
       transition: ease-in-out 0.3s;
     }
   }
@@ -70,7 +70,7 @@
   }
 
   &:hover {
-    background-color: darken(getColor("secondary"), 20%);
+    background-color: darken($secondary, 20%);
     box-shadow: 0 0 35px 0 rgba(0, 0, 0, 0.08);
 
     h4 {
@@ -120,5 +120,75 @@
   }
   to {
     transform: rotate(3deg);
+  }
+}
+
+/*--------------------------------------------------------------
+# Hero Section
+--------------------------------------------------------------*/
+
+#hero {
+  width: 100%;
+  height: 100vh;
+  //background: url("../../../assets/hero-bg.jpg") top right no-repeat;
+  background-size: cover;
+  position: relative;
+
+  h1 {
+    margin: 0;
+    font-weight: 700;
+    line-height: 56px;
+    color: #45505b;
+  }
+
+  p {
+    color: #45505b;
+    margin: 15px 0 0 0;
+    font-family: "Poppins", sans-serif;
+
+    span {
+      color: $primary;
+      letter-spacing: 1px;
+    }
+  }
+
+  .social-links {
+    margin-top: 30px;
+
+    a {
+      font-size: 24px;
+      display: inline-block;
+      color: #45505b;
+      line-height: 1;
+      margin-right: 20px;
+      transition: 0.3s;
+
+      &:hover {
+        color: $primary;
+      }
+    }
+  }
+}
+
+@media (min-width: 992px) {
+  #hero {
+    padding-left: 160px;
+  }
+}
+
+@media (max-width: 992px) {
+  #hero {
+    text-align: center;
+
+    h1 {
+      font-size: 32px;
+      line-height: 36px;
+    }
+
+    p {
+      margin-top: 10px;
+      font-size: 20px;
+      line-height: 24px;
+    }
   }
 }

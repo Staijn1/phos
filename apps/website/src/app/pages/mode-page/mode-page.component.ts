@@ -9,14 +9,14 @@ import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fi
 import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state'
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state'
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
-import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
 import {
   VisualizerBrightnessState
-} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
-import {ModeInformation} from "@angulon/interfaces";
+} from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
+import {ModeInformation} from '@angulon/interfaces';
 import {themes} from '../../shared/constants';
-import {ThemeService} from "../../services/theme/theme.service";
+import {ThemeService} from '../../services/theme/theme.service';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 
 
 @Component({
@@ -36,13 +36,13 @@ export class ModePageComponent implements OnInit, OnDestroy {
     {name: 'Fire2012', state: new Fire2012State()},
     {name: 'Waterfall', state: new WaterfallState()},
     {name: 'VuMeter', state: new VisualizerState()},
-    {name: 'VuMeter Brightness', state: new VisualizerBrightnessState()},
+    {name: 'VuMeter Brightness', state: new VisualizerState()},
   ];
   classes = themes;
   selectedMode = 0;
 
   constructor(
-    private readonly connection: LedstripCommandService,
+    private readonly connection: WebsocketService,
     private readonly chromaService: ChromaEffectService,
     public readonly themeService: ThemeService) {
   }

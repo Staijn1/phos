@@ -1,4 +1,4 @@
-@import "../../../variables";
+@import "../../../styles/variables";
 
 $transition: all ease-in 0.25s;
 
@@ -25,5 +25,5 @@ $transition: all ease-in 0.25s;
 }
 
 [contenteditable] {
-  border-bottom: 1px dotted getColor('secondary');
+  border-bottom: 1px dotted $secondary;
 }

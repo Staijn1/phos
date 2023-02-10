@@ -1,27 +1,5 @@
 /* You can add global styles to this file, and also import other style files */
-@import '_variables.scss';
-
-.offcanvas-backdrop.show {
-  opacity: 0 !important;
-}
-
-/*--------------------------------------------------------------
-# Scrollbar
---------------------------------------------------------------*/
-body::-webkit-scrollbar {
-  width: 8px;
-}
-
-body::-webkit-scrollbar-track {
-  background: none;
-}
-
-body::-webkit-scrollbar-thumb {
-  background-color: getColor('secondary');
-  border-radius: 10px;
-  border: 1px solid darken(getColor('secondary'), 5%);
-}
-
+@import './styles/_variables.scss';
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
@@ -32,10 +10,10 @@ body {
 }
 
 a {
-  color: getColor('primary');
+  color: $primary;
 
   &:hover {
-    color: getColor('primary');
+    color: $primary;
     text-decoration: none !important;
   }
 }
@@ -54,36 +32,6 @@ h2 {
 @media screen and (max-width: 768px) {
   [data-aos-delay] {
     transition-delay: 0s !important;
-  }
-}
-
-/*--------------------------------------------------------------
-# Header
---------------------------------------------------------------*/
-
-#header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 9997;
-  transition: all 0.5s;
-  padding: 15px;
-  overflow-y: auto;
-}
-
-@media (max-width: 992px) {
-  #header {
-    width: 300px;
-    background: #fff;
-    border-right: 1px solid #e6e9ec;
-    left: -300px;
-  }
-}
-
-@media (min-width: 992px) {
-  #main {
-    margin-left: 100px;
   }
 }
 
@@ -126,7 +74,7 @@ section {
       display: block;
       width: 40px;
       height: 3px;
-      background: getColor('primary');
+      background: $primary;
       bottom: 0;
       left: calc(50% - 20px);
     }
@@ -137,222 +85,12 @@ section {
   }
 }
 
-/*--------------------------------------------------------------
-# Hero Section
---------------------------------------------------------------*/
+@import "./styles/bootstrap";
 
-#hero {
-  width: 100%;
-  height: 100vh;
-  //background: url("../../../assets/hero-bg.jpg") top right no-repeat;
-  background-size: cover;
-  position: relative;
-
-  h1 {
-    margin: 0;
-    font-weight: 700;
-    line-height: 56px;
-    color: #45505b;
-  }
-
-  p {
-    color: #45505b;
-    margin: 15px 0 0 0;
-    font-family: "Poppins", sans-serif;
-
-    span {
-      color: getColor('primary');
-      letter-spacing: 1px;
-    }
-  }
-
-  .social-links {
-    margin-top: 30px;
-
-    a {
-      font-size: 24px;
-      display: inline-block;
-      color: #45505b;
-      line-height: 1;
-      margin-right: 20px;
-      transition: 0.3s;
-
-      &:hover {
-        color: getColor('primary');
-      }
-    }
+@media screen and (max-width: map-get($grid-breakpoints, 'sm')){
+  html {
+    user-select: none;
   }
 }
 
-@media (min-width: 992px) {
-  #hero {
-    padding-left: 160px;
-  }
-}
-
-@media (max-width: 992px) {
-  #hero {
-    text-align: center;
-
-    h1 {
-      font-size: 32px;
-      line-height: 36px;
-    }
-
-    p {
-      margin-top: 10px;
-      font-size: 20px;
-      line-height: 24px;
-    }
-  }
-}
-
-/* Mobile Navigation */
-
-.mobile-nav-toggle {
-  position: fixed;
-  right: 15px;
-  top: 15px;
-  z-index: 9998;
-  border: 0;
-  background: none;
-  font-size: 24px;
-  transition: all 0.4s;
-  outline: none !important;
-  line-height: 1;
-  cursor: pointer;
-  text-align: right;
-
-  fa-icon {
-    color: getColor('secondary');
-  }
-}
-
-.mobile-nav-active {
-  overflow: hidden;
-
-  #header {
-    left: 0;
-  }
-}
-
-/*--------------------------------------------------------------
-# No UI Slider
---------------------------------------------------------------*/
-.noUi-connect {
-  background-color: getColor('secondary') !important;
-}
-
-@function setTextColor($color) {
-  @if (lightness($color) > 50) {
-    @return #212529FF; // Lighter background, return dark color
-  } @else {
-    @return white; // Darker background, return light color
-  }
-}
-
-// Helper theme mixin
-// @param $name: name of the theme (HTML class)
-// @param $color: color of the theme
-@mixin theme($name, $color) {
-  $transition: 0.15s ease-in-out;
-
-  #mode-page-illustration-#{$name} {
-    #Board, #CheckboxLeft, #CheckboxRight, #CheckboxBottomRight {
-      fill: $color;
-    }
-  }
-
-  .mobile-nav-active .mobile-nav-toggle fa-icon {
-    color: $color;
-  }
-
-  #not-found-#{$name} {
-    .fill-lighten {
-      fill: $color;
-      opacity: 0.5;
-    }
-
-    .fill-full {
-      fill: $color;
-    }
-  }
-
-  .icon-box-#{$name} {
-    border: 3px solid $color;
-
-    h4:after {
-      background: $color;
-    }
-
-    path {
-      fill: $color;
-    }
-  }
-
-  .#{$name}.color-option {
-    background: $color !important;
-    color: setTextColor($color);
-  }
-
-  .#{$name} {
-    #menu-bar {
-      transition: background-color $transition;
-      background: $color !important;
-    }
-
-    #ledcontroltext, #Light_Bulb {
-      stroke: $color !important;
-    }
-
-    .bg-primary, .btn-primary {
-      background: $color !important;
-    }
-
-    .btn-primary {
-      border-color: darken($color, 5%);
-
-      &:hover, &:focus {
-        border-color: darken($color, 10%) !important;
-      }
-
-      &:focus {
-        box-shadow: 0 0 0 0.25rem transparentize($color, 0.5)
-      }
-    }
-
-    .nav-menu {
-      .active > a, li:hover > a {
-        background: $color !important;
-      }
-
-      a span fa-icon:hover {
-        background: darken($color, 10%) !important;
-      }
-
-      ul > li {
-        .active {
-          background: $color !important;
-        }
-
-        > a:hover {
-          background: $color !important;
-        }
-      }
-    }
-  }
-}
-
-// Including themes
-// By looping through the $themes map
-@each $key, $value in $themes {
-  @include theme($key, $value);
-}
-
-.tabset, .tab-content, .tab-pane, .tabbable {
-  height: 100% !important;
-}
-
-/* Importing Bootstrap SCSS file. */
-@import '~bootstrap/scss/bootstrap';
-@import "~aos/dist/aos.css";
+@import "aos/dist/aos.css";

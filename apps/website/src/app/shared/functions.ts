@@ -1,5 +1,5 @@
 import {GlobalVars} from './constants'
-import {RGBObject} from "./types/types";
+import {RGBObject} from './types/types';
 
 /**
  * Map a value from one scale to another. This function is the same as the map() function from arduino.

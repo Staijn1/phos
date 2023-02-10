@@ -2,7 +2,7 @@ import {Component} from '@angular/core'
 import {faBroom, faSave} from '@fortawesome/free-solid-svg-icons'
 import {SettingsService} from '../../services/settings/settings.service'
 import {GeneralSettings} from '../../shared/types/types'
-import {ThemeService} from "../../services/theme/theme.service";
+import {ThemeService} from '../../services/theme/theme.service';
 import {themes} from '../../shared/constants';
 
 @Component({
@@ -34,6 +34,5 @@ export class SettingsPageComponent {
 
   clearSettings(): void {
     this.settingsService.clearSettings()
-    location.reload()
   }
 }

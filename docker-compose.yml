@@ -8,8 +8,8 @@ networks:
     driver: bridge
 
 services:
-  api:
-    container_name: api
+  angulon_api:
+    container_name: angulon_api
     build:
       context: ./
       cache_from:
@@ -26,8 +26,8 @@ services:
     depends_on:
       - angulon_db
 
-  website:
-    container_name: angulon
+  angulon_website:
+    container_name: angulon_website
     build:
       context: ./
       cache_from:

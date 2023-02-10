@@ -1,7 +1,6 @@
-@import "../../../variables";
+@import "../../../styles/variables";
 
 #introcover {
-  background: black;
   display: flex;
   justify-content: center;
   width: 100%;
@@ -11,13 +10,13 @@
     stroke-dasharray: 100%;
     stroke-dashoffset: 100%;
     fill: none;
-    stroke: getColor('primary');
+    stroke: $primary;
     stroke-width: 2px;
     stroke-linejoin: round;
   }
 
   #Light_Bulb {
-    stroke: getColor('primary');
+    stroke: $primary;
     stroke-width: 7px;
     fill: none;
 
@@ -28,7 +27,7 @@
 
     .reflection {
       stroke-width: 0;
-      stroke: getColor('secondary');
+      stroke: $primary;
     }
 
     .light {

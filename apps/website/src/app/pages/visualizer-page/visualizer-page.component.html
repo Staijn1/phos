@@ -1,4 +1,4 @@
-<div class='vh-100 d-flex flex-column bg-black' id='wrapper'>
+<div class="vh-100 d-flex flex-column bg-black" id="wrapper">
   <div class="toolbar-container">
     <div class="toolbar">
       <!--      Button group-->
@@ -6,18 +6,18 @@
         <button (click)="openSettingsWindow()" class="btn btn-primary" type="button">
           <fa-icon [icon]="settingsIcon"></fa-icon>
         </button>
-        <button (click)='fullscreen()' class='btn btn-primary'>
-          <fa-icon [icon]='fullscreenIcon'></fa-icon>
+        <button (click)="fullscreen()" class="btn btn-primary">
+          <fa-icon [icon]="fullscreenIcon"></fa-icon>
         </button>
-        <button (click)='updateLedstrip()' class='btn btn-primary'>
-          <fa-icon [icon]='modeIcon'></fa-icon>
+        <button (click)="updateLedstrip()" class="btn btn-primary">
+          <fa-icon [icon]="modeIcon"></fa-icon>
         </button>
       </div>
     </div>
   </div>
-  <div class='h-75'>
-    <app-shared-visualizer (ready)="init()" (registeredGradients)="readSettings()" [gradients]='gradients'
-                           [options]='visualizerOptions'></app-shared-visualizer>
+  <div class="h-75">
+    <app-shared-visualizer (ready)="init()" (registeredGradients)="readSettings()" [gradients]="gradients"
+                           [options]="visualizerOptions"></app-shared-visualizer>
   </div>
 </div>
 <app-offcanvas>
@@ -73,6 +73,32 @@
                 <option [ngValue]="32768">32768</option>
               </select>
             </div>
+            <!--    Selectbox for FFT bin size-->
+            <div class="form-group">
+              <label for="weightingFilter">Weighting Filter</label>
+              <select (change)="applySettings()" [(ngModel)]="visualizerOptions.weightingFilter" class="form-control"
+                      id="weightingFilter">
+                <option [ngValue]="''">None</option>
+                <option [ngValue]="'A'">A-weighting</option>
+                <option [ngValue]="'B'">B-weighting</option>
+                <option [ngValue]="'C'">C-weighting</option>
+                <option [ngValue]="'D'">D-weighting</option>
+                <option [ngValue]="'468'">ITU-R 468 weighting</option>
+              </select>
+            </div>
+            <!--    Selectbox energy preset, determining which values to send over the wire-->
+            <div class="form-group">
+              <label for="energyPreset">Energy Preset</label>
+              <select (change)="applySettings()" [(ngModel)]="visualizerOptions.energyPreset" class="form-control"
+                      id="energyPreset">
+                <option [ngValue]="'peak'">Peaks</option>
+                <option [ngValue]="'bass'">Bass</option>
+                <option [ngValue]="'lowMid'">Low Mid</option>
+                <option [ngValue]="'mid'">Mid</option>
+                <option [ngValue]="'highMid'">High Mid</option>
+                <option [ngValue]="'treble'">Treble</option>
+              </select>
+            </div>
           </div>
         </ng-template>
       </li>
@@ -84,31 +110,36 @@
           <div>
             <!--    Checkbox for alpha bars-->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.alphaBars" class="form-check-input" id="alphaBars"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.alphaBars" class="form-check-input"
+                     id="alphaBars"
                      type="checkbox">
               <label class="form-check-label" for="alphaBars">Alpha Bars</label>
             </div>
             <!--Checkbox for led bars -->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.ledBars" class="form-check-input" id="ledBars"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.ledBars" class="form-check-input"
+                     id="ledBars"
                      type="checkbox">
               <label class="form-check-label" for="ledBars">Led Bars</label>
             </div>
             <!-- Checkbox for luminance bars -->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.lumiBars" class="form-check-input" id="luminanceBars"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.lumiBars" class="form-check-input"
+                     id="luminanceBars"
                      type="checkbox">
               <label class="form-check-label" for="luminanceBars">Luminance Bars</label>
             </div>
             <!--Checkbox for showing peaks-->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.showPeaks" class="form-check-input" id="showPeaks"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.showPeaks" class="form-check-input"
+                     id="showPeaks"
                      type="checkbox">
               <label class="form-check-label" for="showPeaks">Show Peaks</label>
             </div>
             <!--    Checkbox for showing outline bars. Only works when mode is on of the octave bands-->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.outlineBars" [disabled]="!isOctaveBandMode"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.outlineBars"
+                     [disabled]="!isOctaveBandMode"
                      class="form-check-input"
                      id="showOutline"
                      title="Only works when mode is one of the octave bands"
@@ -142,6 +173,15 @@
                 Radial
               </label>
             </div>
+            <!--            Checkbox for linearAmplitude-->
+            <div class="form-check">
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.linearAmplitude" class="form-check-input"
+                     id="linearAmplitude"
+                     type="checkbox">
+              <label class="form-check-label" for="linearAmplitude">
+                Linear Amplitude
+              </label>
+            </div>
             <!--    Checkbox for stereo mode-->
             <div class="form-check">
               <input (change)="applySettings()" [(ngModel)]="visualizerOptions.stereo" class="form-check-input"
@@ -153,7 +193,8 @@
             </div>
             <!--    When stereo is enabled, show a checkbox to split gradient-->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.splitGradient" [disabled]="!visualizerOptions.stereo"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.splitGradient"
+                     [disabled]="!visualizerOptions.stereo"
                      class="form-check-input"
                      id="splitGradient"
                      type="checkbox">
@@ -205,6 +246,13 @@
             <ngx-slider (valueChange)="applySettings()" *ngIf="visualizerOptions.fillAlpha !== undefined"
                         [(value)]="visualizerOptions.fillAlpha"
                         [options]="fillAlphaSliderOptions"></ngx-slider>
+          </div>
+          <!--      Simple slider for linearBoost -->
+          <div>
+            Linear Boost
+            <ngx-slider (valueChange)="applySettings()" *ngIf="visualizerOptions.linearAmplitude && visualizerOptions.linearBoost"
+                        [(value)]="visualizerOptions.linearBoost"
+                        [options]="linearBoostSliderOptions"></ngx-slider>
           </div>
           <!--            Create three vertical sliders next to each other for all reflex controls: reflexRatio, reflexAlpha and reflexBright-->
           <div class="row h-25">

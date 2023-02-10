@@ -1,6 +1,6 @@
 <div class="bg-warning" id="settingsWrapper"></div>
 <div class="row m-0 vh-100" id="settings">
-  <div class="col-6 d-none d-sm-block"></div>
+  <div class="col-6"></div>
   <div class="col-sm-6 col-xl-4 m-0 d-flex flex-column justify-content-center">
     <form #form="ngForm" (ngSubmit)="saveSettings()" class="card">
       <div class="card-body">
@@ -37,6 +37,20 @@
         </div>
         <div class="row">
           <div class="col">
+            <div class="input-group mb-3">
+              <div class="form-check">
+                <input [(ngModel)]="settings.darkmodeEnabled" class="form-check-input" id="darkMode"
+                       name="darkMode"
+                       type="checkbox">
+                <label class="form-check-label" for="darkMode">
+                  Enable dark mode
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
             Primary color:
             <div class="row justify-content-center">
               <div
@@ -55,8 +69,9 @@
           <button class="btn btn-primary" type="submit">
             <fa-icon [icon]="saveIcon"></fa-icon>
           </button>
-          <button class="btn btn-seconday" type="button" (click)="clearSettings()">
-            <fa-icon [icon]="clearSettingsIcon"></fa-icon> Clear settings
+          <button (click)="clearSettings()" class="btn btn-seconday" type="button">
+            <fa-icon [icon]="clearSettingsIcon"></fa-icon>
+            Clear settings
           </button>
         </div>
       </div>

@@ -1,10 +1,10 @@
 import {AfterViewInit, Component, ElementRef, OnDestroy, ViewChild} from '@angular/core'
 import {SphereScene} from './scenes/SphereScene'
 import {BaseScene} from './scenes/BaseScene'
-import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
 import {SettingsService} from '../../services/settings/settings.service'
 import {SphereLightScene} from './scenes/SphereLightScene'
-import {visualizerModeId} from "../../shared/constants";
+import {visualizerModeId} from '../../shared/constants';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 
 @Component({
   selector: 'app-visualizer-page3-d',
@@ -17,7 +17,7 @@ export class VisualizerPage3DComponent implements AfterViewInit, OnDestroy {
   selectedScene = 0;
   private scene: BaseScene | undefined;
 
-  constructor(private readonly connection: LedstripCommandService, private readonly settingsService: SettingsService) {
+  constructor(private readonly connection: WebsocketService, private readonly settingsService: SettingsService) {
   }
 
   private get currentScene() {

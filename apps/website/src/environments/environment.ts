@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   saveSettings: false,
-  url: 'localhost:3333'
+  url: 'http://localhost:3333'
 }
 
 export const AppConfig = {

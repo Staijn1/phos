@@ -4,14 +4,13 @@ import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand'
 import {faCheck, faLightbulb, faList, faSliders, faWrench} from '@fortawesome/free-solid-svg-icons'
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
 import {SettingsService} from '../../services/settings/settings.service'
-import {LedstripCommandService} from '../../services/ledstrip-command/ledstrip-command.service'
-import {TimelineMax} from 'gsap'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
-import {GradientInformation} from "@angulon/interfaces";
-import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
+import { AngulonVisualizerOptions, GradientInformation } from "@angulon/interfaces";
+import {OffCanvasComponent} from '../../shared/components/offcanvas/off-canvas.component';
 import * as slider from '@angular-slider/ngx-slider';
-import {InformationService} from "../../services/information-service/information.service";
-import {visualizerModeId} from "../../shared/constants";
+import {InformationService} from '../../services/information-service/information.service';
+import {visualizerModeId} from '../../shared/constants';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 
 @Component({
   selector: 'app-visualizer',
@@ -21,7 +20,7 @@ import {visualizerModeId} from "../../shared/constants";
 export class VisualizerPageComponent implements OnDestroy {
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent
   @ViewChild(OffCanvasComponent) offcanvas!: OffCanvasComponent;
-  visualizerOptions: Options = {}
+  visualizerOptions: AngulonVisualizerOptions = {}
 
   // Gradient definitions
   gradients: GradientInformation[] = []
@@ -74,19 +73,22 @@ export class VisualizerPageComponent implements OnDestroy {
     step: 0.1,
     vertical: true
   };
+  linearBoostSliderOptions: slider.Options = {
+    floor: 1,
+    ceil: 5,
+    step: 0.1
+  }
   activeTab = 0;
   listIcon = faList;
   checkboxIcon = faCheck;
   sliderIcon = faSliders;
-  private timeline: TimelineMax
 
   constructor(
-    private connection: LedstripCommandService,
+    private connection: WebsocketService,
     private information: InformationService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService,
   ) {
-    this.timeline = new TimelineMax()
   }
 
   /**
@@ -108,7 +110,7 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
-    const value = instance.getEnergy('bass')
+    const value = instance.getEnergy(this.visualizerOptions.energyPreset)
     this.connection.setLeds(value)
     this.chromaEffect.intensity = value
   }
