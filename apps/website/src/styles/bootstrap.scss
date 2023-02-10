@@ -152,13 +152,21 @@
   }
 }
 
+$dark-background: #202124;
+$text-dark: lightgray;
+$text-bright: white;
+
+@media (max-width: 992px) {
+  .dark #header{
+    background: $dark-background;
+  }
+}
+
 .dark {
-  $dark-background: #202124;
-  $text-dark: lightgray;
-  $text-bright: white;
+
   background: $dark-background !important;
 
-  section, .form-control, #header, #cover, .card, .offcanvas-body {
+  section, .form-control, #cover, .card, .offcanvas-body {
     background: $dark-background !important;
   }
 
