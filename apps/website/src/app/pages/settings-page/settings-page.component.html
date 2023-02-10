@@ -37,6 +37,20 @@
         </div>
         <div class="row">
           <div class="col">
+            <div class="input-group mb-3">
+              <div class="form-check">
+                <input [(ngModel)]="settings.darkmodeEnabled" class="form-check-input" id="darkMode"
+                       name="darkMode"
+                       type="checkbox">
+                <label class="form-check-label" for="darkMode">
+                  Enable dark mode
+                </label>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row">
+          <div class="col">
             Primary color:
             <div class="row justify-content-center">
               <div

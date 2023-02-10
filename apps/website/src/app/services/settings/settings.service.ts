@@ -47,7 +47,8 @@ export class SettingsService {
     chroma: false,
     colors: ["#ff0000", "#00ff00", "#0000ff"],
     initialColor: false,
-    theme: "default"
+    theme: "default",
+    darkmodeEnabled: false
   };
 
   constructor(private readonly messageService: MessageService) {

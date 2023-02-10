@@ -74,10 +74,6 @@
     }
   }
 
-  .mobile-nav-active .mobile-nav-toggle fa-icon {
-    color: $color;
-  }
-
   #not-found-#{$name} {
     .fill-lighten {
       fill: $color;
@@ -112,11 +108,15 @@
       background: $color !important;
     }
 
+    .mobile-nav-active .mobile-nav-toggle fa-icon, .nav-tabs .nav-link {
+      color: $color;
+    }
+
     #ledcontroltext, #Light_Bulb {
       stroke: $color !important;
     }
 
-    .bg-primary, .btn-primary {
+    .bg-primary, .btn-primary, .ngx-slider .ngx-slider-selection, .ngx-slider .ngx-slider-pointer {
       background: $color !important;
     }
 
@@ -152,8 +152,56 @@
   }
 }
 
+.dark {
+  $dark-background: #202124;
+  $text-dark: lightgray;
+  $text-bright: white;
+  background: $dark-background !important;
+
+  #cover {
+    background: $dark-background !important;
+  }
+
+  section, .form-control {
+    background: $dark-background !important;
+  }
+
+  .card, .offcanvas-body {
+    background: $dark-background !important;
+  }
+
+  .nav-tabs .nav-link, input[type="checkbox"] {
+    background: $dark-background !important;
+    border-color: $text-dark !important;
+  }
+  .ngx-slider .ngx-slider-bar {
+    background: $text-dark !important;
+  }
+
+  .text-dark, body, p, label, div, .form-control, .ngx-slider-span {
+    color: $text-dark !important;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    color: $text-bright !important;
+  }
+
+  .nav-menu {
+    a {
+      background: #3c3e43 !important;
+      color: $text-dark !important;
+
+      &:hover {
+        color: $text-bright !important;
+      }
+    }
+  }
+}
+
 // Including themes
 // By looping through the $themes map
 @each $key, $value in $themes {
   @include theme($key, $value);
 }
+
+
