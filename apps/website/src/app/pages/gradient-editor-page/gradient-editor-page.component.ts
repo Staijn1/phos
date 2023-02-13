@@ -101,8 +101,6 @@ export class GradientEditorPageComponent implements OnDestroy {
   }
 
   removeColorStop(gradient: GradientInformationExtended, stopIndex: number) {
-    if (gradient.colorStops.length <= 2) return
-
     gradient.colorStops.splice(stopIndex, 1)
   }
 
@@ -117,7 +115,7 @@ export class GradientEditorPageComponent implements OnDestroy {
   }
 
   addColorStopToGradient(gradient: GradientInformationExtended) {
-    const lastColorstop = (gradient.colorStops[gradient.colorStops.length - 1] as any)
+    const lastColorstop = gradient.colorStops[gradient.colorStops.length - 1] || {pos: 0}
 
     const newPos = lastColorstop.pos + 0.1 > 1 ? 1 : lastColorstop.pos + 0.1
     gradient.colorStops.push({pos: newPos, color: '#FFF'})
