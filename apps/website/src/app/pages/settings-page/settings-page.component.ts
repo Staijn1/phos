@@ -19,6 +19,7 @@ export class SettingsPageComponent {
 
   constructor(private settingsService: SettingsService, private readonly theme: ThemeService) {
     this.settings = this.settingsService.readGeneralSettings()
+    this.selectedTheme = this.themes.findIndex(theme => theme === this.settings.theme)
   }
 
   saveSettings(): void {

@@ -99,7 +99,7 @@
 
   .#{$name}.color-option {
     background: $color !important;
-    color: color-contrast($color);
+    color: color-contrast($color) !important;
   }
 
   .#{$name} {
@@ -139,13 +139,13 @@
       }
 
       ul > li {
-        .active {
-          color: color-contrast($color);
+        .active, > a:hover {
+          color: color-contrast($color) !important;
           background: $color !important;
-        }
 
-        > a:hover {
-          background: $color !important;
+          > span {
+            color: color-contrast($color) !important;
+          }
         }
       }
     }
@@ -157,13 +157,12 @@ $text-dark: lightgray;
 $text-bright: white;
 
 @media (max-width: 992px) {
-  .dark #header{
-    background: $dark-background;
+  .dark #header {
+    background: $dark-background !important;
   }
 }
 
 .dark {
-
   background: $dark-background !important;
 
   section, .form-control, #cover, .card, .offcanvas-body {
