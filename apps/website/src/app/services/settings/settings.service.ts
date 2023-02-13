@@ -15,7 +15,7 @@ export class SettingsService {
     bgAlpha: 0.7,
     fftSize: 8192,
     fillAlpha: 1,
-    gradient: "classic",
+    gradientLeft: "classic",
     lineWidth: 0,
     loRes: false,
     lumiBars: false,

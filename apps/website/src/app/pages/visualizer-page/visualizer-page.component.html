@@ -34,11 +34,19 @@
         </a>
         <ng-template ngbNavContent>
           <div>
-            <!--    Select box for the gradients-->
+            <!--    Select box for the gradient, use gradientLeft because this is used when channelLayout = 'single'-->
             <div class="form-group">
-              <label for="gradients">Gradient</label>
-              <select (change)="applySettings()" [(ngModel)]="visualizerOptions.gradient" class="form-control"
-                      id="gradients">
+              <label for="gradientLeft">Gradient Left Channel</label>
+              <select (change)="applySettings()" [(ngModel)]="visualizerOptions.gradientLeft" class="form-control"
+                      id="gradientLeft">
+                <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
+              </select>
+            </div>
+<!--            Select box for the gradient right, only works when channelLayout != 'single'-->
+            <div class="form-group">
+              <label for="gradientRight">Gradient Right Channel</label>
+              <select (change)="applySettings()" [(ngModel)]="visualizerOptions.gradientRight" class="form-control"
+                      id="gradientRight">
                 <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
               </select>
             </div>
@@ -99,6 +107,16 @@
                 <option [ngValue]="'treble'">Treble</option>
               </select>
             </div>
+<!--            Selectbox for channalLayout-->
+            <div class="form-group">
+              <label for="channelLayout">Channel Layout</label>
+              <select (change)="applySettings()" [(ngModel)]="visualizerOptions.channelLayout" class="form-control"
+                      id="channelLayout">
+                <option [ngValue]="'single'">Single</option>
+                <option [ngValue]="'dualVertical'">Dual Vertical</option>
+                <option [ngValue]="'dualCombined'">Dual Combined (overlaid)</option>
+              </select>
+            </div>
           </div>
         </ng-template>
       </li>
@@ -155,6 +173,14 @@
                 Show scale on X axis
               </label>
             </div>
+            <!-- Checkbox for note labels on X axis -->
+            <div class="form-check">
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.noteLabels" class="form-check-input"
+                     id="noteLabels"
+                     type="checkbox"
+                     [disabled]="!visualizerOptions.showScaleX">
+              <label class="form-check-label" for="noteLabels">Note labels on X axis</label>
+            </div>
             <!--    Checkbox for show scale on Y axis-->
             <div class="form-check">
               <input (change)="applySettings()" [(ngModel)]="visualizerOptions.showScaleY" class="form-check-input"
@@ -180,15 +206,6 @@
                      type="checkbox">
               <label class="form-check-label" for="linearAmplitude">
                 Linear Amplitude
-              </label>
-            </div>
-            <!--    Checkbox for stereo mode-->
-            <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.stereo" class="form-check-input"
-                     id="stereo"
-                     type="checkbox">
-              <label class="form-check-label" for="stereo">
-                Stereo
               </label>
             </div>
             <!--    When stereo is enabled, show a checkbox to split gradient-->
@@ -255,7 +272,7 @@
                         [options]="linearBoostSliderOptions"></ngx-slider>
           </div>
           <!--            Create three vertical sliders next to each other for all reflex controls: reflexRatio, reflexAlpha and reflexBright-->
-          <div class="row h-25">
+          <div class="row h-50">
             <div class="col-4">
               Reflex Ratio
               <ngx-slider (valueChange)="applySettings()" *ngIf="visualizerOptions.reflexRatio !== undefined"
