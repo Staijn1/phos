@@ -1,5 +1,5 @@
 import {Component, OnDestroy, ViewChild} from '@angular/core'
-import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
+import AudioMotionAnalyzer from 'audiomotion-analyzer'
 import {faExpand} from '@fortawesome/free-solid-svg-icons/faExpand'
 import {faCheck, faLightbulb, faList, faSliders, faWrench} from '@fortawesome/free-solid-svg-icons'
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
