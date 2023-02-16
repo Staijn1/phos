@@ -9,9 +9,6 @@ import {TimelineLite} from 'gsap'
 export class HomePageComponent implements OnInit {
   timeline!: TimelineLite;
 
-  constructor() {
-  }
-
   ngOnInit(): void {
     this.timeline = new TimelineLite()
 

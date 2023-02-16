@@ -5,14 +5,13 @@ import {
   WebSocketGateway,
   WebSocketServer
 } from "@nestjs/websockets";
-import { Logger } from "@nestjs/common";
-import { Server, Socket } from "socket.io";
-import { WebsocketClientsManagerService } from "./websocket-clients-manager.service";
-import { ConfigurationService } from "../configuration/configuration.service";
-import { AddGradientResponse, GradientInformation, ModeInformation } from "@angulon/interfaces";
-import { ModeStatisticsDbService } from "../database/mode-statistics/mode-statistics-db.service";
-import { GradientsService } from "../gradients/gradients.service";
-import { logger } from "nx/src/utils/logger";
+import {Logger} from "@nestjs/common";
+import {Server, Socket} from "socket.io";
+import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
+import {ConfigurationService} from "../configuration/configuration.service";
+import {AddGradientResponse, GradientInformation, ModeInformation} from "@angulon/interfaces";
+import {ModeStatisticsDbService} from "../database/mode-statistics/mode-statistics-db.service";
+import {GradientsService} from "../gradients/gradients.service";
 
 @WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {

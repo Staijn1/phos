@@ -62,23 +62,23 @@ export class WebsocketService {
   }
 
   decreaseBrightness(): void {
-    this.send('decreaseBrightness', undefined)
+    this.send('decreaseBrightness')
   }
 
   increaseBrightness(): void {
-    this.send('increaseBrightness', undefined)
+    this.send('increaseBrightness')
   }
 
   decreaseSpeed(): void {
-    this.send('decreaseSpeed', undefined)
+    this.send('decreaseSpeed')
   }
 
   increaseSpeed(): void {
-    this.send('increaseSpeed', undefined)
+    this.send('increaseSpeed')
   }
 
   getModes(): Promise<ModeInformation[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.socket.emit('getModes', (data: ModeInformation[]) => {
         resolve(data)
       })
@@ -86,7 +86,7 @@ export class WebsocketService {
   }
 
   getGradients(): Promise<GradientInformation[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.socket.emit('gradients/get', (data: GradientInformation[]) => {
         resolve(data)
       })
@@ -94,7 +94,7 @@ export class WebsocketService {
   }
 
   deleteGradient(id: number): Promise<GradientInformation[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.socket.emit('gradients/delete', {id}, (data: GradientInformation[]) => {
         resolve(data)
       })
@@ -102,7 +102,7 @@ export class WebsocketService {
   }
 
   addGradient(): Promise<AddGradientResponse> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.socket.emit('gradients/add', (data: AddGradientResponse) => {
         resolve(data)
       })
@@ -110,7 +110,7 @@ export class WebsocketService {
   }
 
   editGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    return new Promise((resolve, reject) => {
+    return new Promise((resolve) => {
       this.socket.emit('gradients/edit', gradient, (data: GradientInformation[]) => {
         resolve(data)
       })

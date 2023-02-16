@@ -66,12 +66,13 @@ export class WebsocketClientsManagerService {
 
   /**
    * Send a command to all ledstrips
+   * @param event
    * @param {string} payload
    * @private
    */
   private sendAllClients(event: string, payload: string | string[]): void {
     const clients = this.server.sockets.sockets;
-    for (const [id, client] of clients) {
+    for (const [, client] of clients) {
       client.emit(event, payload)
     }
   }

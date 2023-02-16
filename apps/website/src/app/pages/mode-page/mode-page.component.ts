@@ -10,9 +10,6 @@ import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/
 import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state'
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
-import {
-  VisualizerBrightnessState
-} from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
 import {ModeInformation} from '@angulon/interfaces';
 import {themes} from '../../shared/constants';
 import {ThemeService} from '../../services/theme/theme.service';

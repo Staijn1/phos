@@ -6,7 +6,7 @@
 export const environment = {
   production: false,
   saveSettings: false,
-  url: 'http://localhost:3333'
+  url: 'https://api.angulon.steinjonker.nl'
 }
 
 export const AppConfig = {

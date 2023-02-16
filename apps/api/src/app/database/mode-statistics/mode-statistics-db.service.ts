@@ -1,6 +1,6 @@
-import { Injectable } from "@nestjs/common";
-import { DatabaseConnection } from "../database/DatabaseConnection";
-import { environment } from "../../../environments/environment";
+import {Injectable} from "@nestjs/common";
+import {DatabaseConnection} from "../database/DatabaseConnection";
+import {environment} from "../../../environments/environment";
 
 @Injectable()
 export class ModeStatisticsDbService extends DatabaseConnection {
