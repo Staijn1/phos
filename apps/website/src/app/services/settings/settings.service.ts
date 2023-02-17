@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { GeneralSettings } from "../../shared/types/types";
 import { Options } from "audiomotion-analyzer";
 import iro from "@jaames/iro";
-import { MessageService } from "../error/message.service";
+import { MessageService } from "../message-service/message.service";
 import { AngulonVisualizerOptions } from "@angulon/interfaces";
 
 

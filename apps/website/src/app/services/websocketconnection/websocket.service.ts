@@ -2,7 +2,7 @@ import {Injectable} from '@angular/core'
 import {map} from '../../shared/functions'
 import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
-import {MessageService} from '../error/message.service'
+import {MessageService} from '../message-service/message.service'
 import {io, Socket} from 'socket.io-client'
 import {AddGradientResponse, GradientInformation, ModeInformation} from '@angulon/interfaces';
 

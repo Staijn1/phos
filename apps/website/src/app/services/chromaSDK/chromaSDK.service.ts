@@ -1,13 +1,18 @@
 import {Injectable} from '@angular/core'
 import {SettingsService} from '../settings/settings.service'
+import {MessageService} from "../message-service/message.service";
 
-// BGR
+
+/**
+ * This class contains the necessary methods to register this application with the Razer SDK and to keep the connection alive (or destroy it)
+ * All colors sent to the Razer API must first be converted to BGR format instead of RGB
+ */
 @Injectable({
   providedIn: 'root'
 })
 export class ChromaSDKService {
-  readonly RAZER_API_PORT = 54235;
-  readonly API_URL = `http://localhost:${this.RAZER_API_PORT}/razer/chromasdk/`;
+  private readonly RAZER_API_PORT = 54235;
+  private readonly API_URL = `http://localhost:${this.RAZER_API_PORT}/razer/chromasdk/`;
 
   readonly mouse = {
     rows: 9,
@@ -64,43 +69,50 @@ export class ChromaSDKService {
   private timerId!: NodeJS.Timeout;
   private initializedApiURL: string | undefined;
 
-  constructor(private settingsService: SettingsService) {
+  constructor(private settingsService: SettingsService, private messageService: MessageService) {
     if (this.isChromaSupport()) {
       this.init()
-        .then((init) => {
-          this.initializedApiURL = init.uri
-        })
-        .catch((err) => {
-          console.log('Error! ', err)
-        })
+        .then((init) => this.initializedApiURL = init.uri)
+        .catch((err) => this.messageService.setMessage(err))
     }
   }
 
+  /**
+   * Registers the application with the Razer SDK, and starts the heartbeat beating
+   */
   public async init(): Promise<any> {
-    const response = await fetch(`${this.API_URL}/`, {
-      method: 'POST',
-      body: JSON.stringify(this.options),
-      headers: {'Content-type': 'application/json; charset=UTF-8'}
-    })
+    try {
+      const response = await fetch(`${this.API_URL}/`, {
+        method: 'POST',
+        body: JSON.stringify(this.options),
+        headers: {'Content-type': 'application/json; charset=UTF-8'}
+      })
 
-    const data = response.json()
-    if (response.ok) {
-      this.timerId = setInterval(() => {
-        this.onTimer()
-      }, 5000)
+      const data = response.json()
+      if (response.ok) {
+        this.timerId = setInterval(() => {
+          this.onTimer()
+        }, 5000)
+      }
+      return data
+    } catch (e) {
+      throw new Error("Failed to setup the connection with the Razer SDK. Is Razer Synapse installed & running?")
     }
-    return data
   }
 
+  /**
+   * This function is called every so often to keep the connection with the Razer API alive
+   */
   onTimer(): void {
     this.heartbeat().catch(err => {
+      this.messageService.setMessage(err)
       this.uninit()
     })
   }
 
-  async heartbeat(): Promise<any> {
+  heartbeat(): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null || !this.isChromaSupport()) {
-      return
+      return Promise.resolve(undefined)
     }
     return fetch(`${this.initializedApiURL}/heartbeat`, {
       method: 'OPTIONS',
@@ -211,7 +223,6 @@ export class ChromaSDKService {
 
   uninit(): void {
     this.initializedApiURL = undefined
-    throw new Error('Not implemented!')
   }
 
   private isChromaSupport(): boolean {

@@ -5,13 +5,14 @@ import {StaticState} from './state/static-state/static-state'
 import {SettingsService} from '../settings/settings.service'
 import iro from '@jaames/iro'
 import {VisualizerState} from './state/visualizer-state/visualizer-state'
+import {MessageService} from "../message-service/message.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChromaEffectService extends ChromaSDKService {
-  constructor(settingsService: SettingsService) {
-    super(settingsService)
+  constructor(settingsService: SettingsService, messageService: MessageService) {
+    super(settingsService, messageService)
     this._state = new StaticState()
     this._state.context = this
   }
