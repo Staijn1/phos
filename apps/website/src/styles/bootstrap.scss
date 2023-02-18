@@ -204,5 +204,3 @@ $text-bright: white;
 @each $key, $value in $themes {
   @include theme($key, $value);
 }
-
-
