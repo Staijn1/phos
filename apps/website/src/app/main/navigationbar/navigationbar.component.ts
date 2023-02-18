@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from "@angular/core";
-import { gsap } from "gsap";
-import { NavigationEnd, NavigationStart, Router } from "@angular/router";
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from "@angular/core";
+import {gsap} from "gsap";
+import {NavigationEnd, NavigationStart, Router} from "@angular/router";
 
 import {
   faBars,
@@ -19,11 +19,13 @@ import {
   faTimes,
   faWalking
 } from "@fortawesome/free-solid-svg-icons";
-import { GeneralSettings } from "../../shared/types/types";
-import { SettingsService } from "../../services/settings/settings.service";
-import { ColorpickerEvent } from "../../shared/components/colorpicker/colorpicker.component";
-import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
-import { WebsocketService } from "../../services/websocketconnection/websocket.service";
+import {GeneralSettings} from "../../shared/types/types";
+import {SettingsService} from "../../services/settings/settings.service";
+import {ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
+import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.service";
+import {WebsocketService} from "../../services/websocketconnection/websocket.service";
+import {Store} from "@ngrx/store";
+import {ColorpickerState} from "../../../redux/color/color.reducer";
 
 @Component({
   selector: "app-navigationbar",
@@ -56,16 +58,18 @@ export class NavigationbarComponent implements OnInit {
     private router: Router,
     private renderer: Renderer2,
     private chromaEffect: ChromaEffectService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private store: Store<{ colorpicker: ColorpickerState }>
   ) {
   }
 
   ngOnInit(): void {
     this.settings = this.settingsService.readGeneralSettings();
+
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if (val instanceof NavigationStart) {
-        gsap.set("#cover", { autoAlpha: 1, duration: 0.3 });
+        gsap.set("#cover", {autoAlpha: 1, duration: 0.3});
       }
       if (val instanceof NavigationEnd) {
         this.animate();
@@ -94,11 +98,6 @@ export class NavigationbarComponent implements OnInit {
     if (this.settingsService.readGeneralSettings().initialColor) {
       this.connection.setColor(event.colorpicker.colors);
     }
-    this.chromaEffect.setColors = event.colorpicker.colors;
-  }
-
-  onColorpickerColorChange(event: ColorpickerEvent) {
-    this.connection.setColor(event.colorpicker.colors);
     this.chromaEffect.setColors = event.colorpicker.colors;
   }
 
@@ -136,7 +135,7 @@ export class NavigationbarComponent implements OnInit {
       delay: 0,
       stagger: -0.05
     });
-    gsap.set(".from-left .tile", { left: "0", width: "0" });
+    gsap.set(".from-left .tile", {left: "0", width: "0"});
   }
 
   private animate(): void {
@@ -151,7 +150,7 @@ export class NavigationbarComponent implements OnInit {
         break;
     }
 
-    this.timeline.to("#cover", { duration: 0.6, autoAlpha: 0, ease: "power4.inOut" });
+    this.timeline.to("#cover", {duration: 0.6, autoAlpha: 0, ease: "power4.inOut"});
     this.animationMode = ++this.animationMode % 2;
   }
 
@@ -172,6 +171,6 @@ export class NavigationbarComponent implements OnInit {
       delay: 0,
       stagger: -0.05
     });
-    gsap.set(".from-top .tile", { top: "0", height: "0" });
+    gsap.set(".from-top .tile", {top: "0", height: "0"});
   }
 }

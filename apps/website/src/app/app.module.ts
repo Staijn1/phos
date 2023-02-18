@@ -10,6 +10,11 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {ServiceWorkerModule} from '@angular/service-worker';
 import {environment} from '../environments/environment';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
+import {StoreModule} from "@ngrx/store";
+import {colorpickerReducer} from "../redux/color/color.reducer";
+import {StoreDevtoolsModule} from "@ngrx/store-devtools";
+
+const StoreDevtools = !environment.production ? StoreDevtoolsModule.instrument() : [];
 
 @NgModule({
   imports: [
@@ -19,6 +24,8 @@ import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
     AppRoutingModule,
     SharedModule,
     PagesModule,
+    StoreModule.forRoot({colorpicker: colorpickerReducer}),
+    StoreDevtools,
     FontAwesomeModule,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,

@@ -1,6 +1,8 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core'
 import iro from '@jaames/iro'
 import {IroColorPicker} from '@jaames/iro/dist/ColorPicker'
+import {Store} from '@ngrx/store';
+import {ColorpickerState} from "../../../../redux/color/color.reducer";
 
 export type ColorpickerEvent = {
   color: iro.Color
@@ -19,6 +21,10 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   @Output() inputEnd = new EventEmitter<ColorpickerEvent>();
   id!: string;
   private picker!: IroColorPicker
+  private skipColorChangeEmit = false;
+
+  constructor(private store: Store<{ colorpicker: ColorpickerState }>) {
+  }
 
   ngOnInit(): void {
     this.generateElementId();
@@ -33,19 +39,15 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
         borderWidth: 2,
         borderColor: '#fff',
         wheelAngle: 90,
-        colors: this.initialColor
-      })
-      this.picker.on('color:init', (iroColor: iro.Color) => {
-        this.colorInit.emit({color: iroColor, colorpicker: this.picker})
-      })
-      this.picker.on('color:change', (iroColor: iro.Color) => {
-        this.colorChange.emit({color: iroColor, colorpicker: this.picker})
-      })
-      this.picker.on('input:end', (iroColor: iro.Color) => {
-        this.inputEnd.emit({color: iroColor, colorpicker: this.picker})
-      })
+      });
+      this.store.select('colorpicker').subscribe((state) => {
+        this.skipColorChangeEmit = true;
+        this.picker.setColors(state.colors);
+        this.skipColorChangeEmit = false;
+        console.log('colorpicker subscribe', state.colors.map(c => c.hexString))
+      });
     } catch (e) {
-      console.error(`Colorpicker creation failed for #colorpicker. Reason: `, e)
+      console.error(`Colorpicker creation failed for #colorpicker. Reason: `, e);
     }
   }
 

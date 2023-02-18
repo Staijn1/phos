@@ -64,7 +64,6 @@
             <fa-icon [icon]="colorpickerIcon"></fa-icon>
             <div class="ms-2 ms-lg-4">
               <app-colorpicker
-                (colorChange)="onColorpickerColorChange($event)"
                 (colorInit)="onColorpickerColorInit($event)"
                 (inputEnd)="onColorpickerColorEnd($event)"
                 *ngIf="settings"
