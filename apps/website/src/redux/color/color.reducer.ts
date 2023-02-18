@@ -1,11 +1,11 @@
 import iro from "@jaames/iro";
 
 export interface ColorpickerState {
-  colors: iro.Color[];
+  colors: string[];
 }
 
 const initialState: ColorpickerState = {
-  colors: [new iro.Color({r: 255, g: 0, b: 0, a: 1}), new iro.Color({r: 0, g: 0, b: 255, a: 1}), new iro.Color({r: 0, g: 255, b: 0, a: 1})],
+  colors: ["#ff0000", "#00ff00", "#0000ff"]
 };
 
 export function colorpickerReducer(state = initialState, action: any): ColorpickerState {

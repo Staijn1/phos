@@ -3,6 +3,7 @@ import iro from '@jaames/iro'
 import {IroColorPicker} from '@jaames/iro/dist/ColorPicker'
 import {Store} from '@ngrx/store';
 import {ColorpickerState} from "../../../../redux/color/color.reducer";
+import {colorChange} from "../../../../redux/color/color.action";
 
 export type ColorpickerEvent = {
   color: iro.Color
@@ -44,8 +45,14 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
         this.skipColorChangeEmit = true;
         this.picker.setColors(state.colors);
         this.skipColorChangeEmit = false;
-        console.log('colorpicker subscribe', state.colors.map(c => c.hexString))
       });
+
+      this.picker.on('color:change', (color: iro.Color) => {
+        if (!this.skipColorChangeEmit) {
+          const colors = this.picker.colors.map(c => c.hexString);
+          this.store.dispatch(colorChange(colors));
+        }
+      })
     } catch (e) {
       console.error(`Colorpicker creation failed for #colorpicker. Reason: `, e);
     }
