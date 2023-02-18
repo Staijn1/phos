@@ -19,7 +19,13 @@ export class ChromaEffectService extends ChromaSDKService {
 
   _setColors: iro.Color[] = [];
 
-  set setColors(newColors: iro.Color[]) {
+  set setColors(newColors: iro.Color[] | string[]) {
+    newColors = newColors.map(c => {
+      if (typeof c === 'string') {
+        return new iro.Color(c)
+      }
+      return c
+    });
     this._setColors = newColors
     this.update()
   }
