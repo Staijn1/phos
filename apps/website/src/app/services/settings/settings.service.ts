@@ -45,8 +45,6 @@ export class SettingsService {
   };
   private readonly defaultGeneralSettings: GeneralSettings = {
     chroma: false,
-    colors: ["#ff0000", "#00ff00", "#0000ff"],
-    initialColor: false,
     theme: "default",
     darkmodeEnabled: false
   };

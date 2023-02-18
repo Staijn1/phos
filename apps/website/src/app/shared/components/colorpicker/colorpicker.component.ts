@@ -17,58 +17,65 @@ export type ColorpickerEvent = {
 })
 export class ColorpickerComponent implements OnInit, AfterViewInit {
   @Input() initialColor!: string[]
-  @Output() colorInit = new EventEmitter<ColorpickerEvent>()
   @Output() colorChange = new EventEmitter<ColorpickerEvent>()
-  @Output() inputEnd = new EventEmitter<ColorpickerEvent>();
   id!: string;
   private picker!: IroColorPicker
   private skipColorChangeEmit = false;
   private activeColorIndex = 0;
+
+  /**
+   * Options to configure the colorpicker, there is no type for it available..
+   * See the docs for available options
+   * @see https://iro.js.org/colorPicker_api.html#options
+   * @private
+   */
+  private colorpickerOptions: any = {
+    width: 150,
+    layoutDirection: 'horizontal',
+    handleRadius: 8,
+    borderWidth: 2,
+    borderColor: '#fff',
+    wheelAngle: 90
+  }
 
   constructor(private store: Store<{ colorpicker: ColorpickerState }>) {
   }
 
   ngOnInit(): void {
     this.generateElementId();
+    if (this.controlsLedstripColor) {
+      this.colorpickerOptions.layout = [
+        {
+          component: iro.ui.Wheel,
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'value',
+            activeIndex: 0,
+          }
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'value',
+            activeIndex: 1,
+          }
+        },
+        {
+          component: iro.ui.Slider,
+          options: {
+            sliderType: 'value',
+            activeIndex: 2,
+          }
+        },
+      ]
+    }
   }
 
   ngAfterViewInit(): void {
-    try {
-      this.picker = iro.ColorPicker(`#${this.id}`, {
-        width: 150,
-        layoutDirection: 'horizontal',
-        handleRadius: 8,
-        borderWidth: 2,
-        borderColor: '#fff',
-        wheelAngle: 90,
-        layout: [
-          {
-            component: iro.ui.Wheel,
-          },
-          {
-            component: iro.ui.Slider,
-            options: {
-              sliderType: 'value',
-              activeIndex: 0,
-            }
-          },
-          {
-            component: iro.ui.Slider,
-            options: {
-              sliderType: 'value',
-              activeIndex: 1,
-            }
-          },
-          {
-            component: iro.ui.Slider,
-            options: {
-              sliderType: 'value',
-              activeIndex: 2,
-            }
-          },
-        ]
-      });
-
+    this.picker = iro.ColorPicker(`#${this.id}`, this.colorpickerOptions);
+    if (this.controlsLedstripColor) {
       this.store.select('colorpicker').subscribe((state) => {
         this.skipColorChangeEmit = true;
         this.picker.setColors(state.colors);
@@ -78,17 +85,19 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
         this.picker.setActiveColor(this.activeColorIndex)
         this.skipColorChangeEmit = false;
       });
-
-      this.picker.on('color:change', (color: iro.Color) => {
-        if (!this.skipColorChangeEmit) {
-          this.activeColorIndex = color.index
-          const colors = this.picker.colors.map(c => c.hexString);
-          this.store.dispatch(colorChange(colors));
-        }
-      })
-    } catch (e) {
-      console.error(`Colorpicker creation failed for #colorpicker. Reason: `, e);
+    } else {
+      this.picker.setColors(this.initialColor)
     }
+
+
+    this.picker.on('color:change', (color: iro.Color) => {
+      if (!this.skipColorChangeEmit && this.controlsLedstripColor) {
+        this.activeColorIndex = color.index
+        const colors = this.picker.colors.map(c => c.hexString);
+        this.store.dispatch(colorChange(colors));
+      }
+      this.colorChange.emit({color, colorpicker: this.picker})
+    })
   }
 
   /**
@@ -102,4 +111,7 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
     this.id = 'colorpicker-' + array.join('-');
   }
 
+  private get controlsLedstripColor(): boolean {
+    return this.initialColor == undefined;
+  }
 }

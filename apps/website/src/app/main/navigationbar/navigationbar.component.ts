@@ -101,18 +101,6 @@ export class NavigationbarComponent implements OnInit {
     this.connection.setMode(0);
   }
 
-  onColorpickerColorInit(event: ColorpickerEvent) {
-    if (this.settingsService.readGeneralSettings().initialColor) {
-      this.connection.setColor(event.colorpicker.colors);
-    }
-    this.chromaEffect.setColors = event.colorpicker.colors;
-  }
-
-  onColorpickerColorEnd(event: ColorpickerEvent) {
-    this.settings.colors = this.settingsService.convertColors(event.colorpicker.colors);
-    this.settingsService.saveGeneralSettings(this.settings);
-  }
-
   private closeMobileMenu() {
     this.mobileMenuIcon = faBars;
     this.renderer.removeClass(this.navContainer.nativeElement, "mobile-nav-active");
