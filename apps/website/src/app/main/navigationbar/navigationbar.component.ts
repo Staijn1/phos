@@ -26,6 +26,8 @@ import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.ser
 import {WebsocketService} from "../../services/websocketconnection/websocket.service";
 import {Store} from "@ngrx/store";
 import {ColorpickerState} from "../../../redux/color/color.reducer";
+import iro from "@jaames/iro";
+import Color = iro.Color;
 
 @Component({
   selector: "app-navigationbar",
@@ -66,6 +68,11 @@ export class NavigationbarComponent implements OnInit {
   ngOnInit(): void {
     this.settings = this.settingsService.readGeneralSettings();
 
+    this.store.select('colorpicker').subscribe((state) => {
+      this.connection.setColor(state.colors);
+      this.chromaEffect.setColors = state.colors;
+    })
+
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if (val instanceof NavigationStart) {
@@ -87,8 +94,8 @@ export class NavigationbarComponent implements OnInit {
   }
 
   turnOff(): void {
-    this.timeline.to("#powerOff", { duration: 0.6, color: "white", background: "var(--bs-danger)" });
-    this.timeline.to("#powerOff", { duration: 1.2, clearProps: "background,color" });
+    this.timeline.to("#powerOff", {duration: 0.6, color: "white", background: "var(--bs-danger)"});
+    this.timeline.to("#powerOff", {duration: 1.2, clearProps: "background,color"});
 
     this.connection.setColor(["#000000", "#000000", "#000000"]);
     this.connection.setMode(0);
