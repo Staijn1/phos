@@ -94,7 +94,7 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
       if (!this.skipColorChangeEmit && this.controlsLedstripColor) {
         this.activeColorIndex = color.index
         const colors = this.picker.colors.map(c => c.hexString);
-        this.store.dispatch(colorChange(colors));
+        this.store.dispatch(colorChange(colors, true));
       }
       this.colorChange.emit({color, colorpicker: this.picker})
     })

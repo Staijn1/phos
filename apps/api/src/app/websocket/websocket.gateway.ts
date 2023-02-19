@@ -41,7 +41,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   @SubscribeMessage("color")
   onColorCommand(client: Socket, payload: string[]): string {
-    this.websocketClientsManagerService.setColor(payload);
+    this.websocketClientsManagerService.setColor(payload, client);
     return "OK";
   }
 
@@ -100,6 +100,11 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   @SubscribeMessage("gradients/add")
   async onAddGradient(): Promise<AddGradientResponse> {
     return this.gradientsService.addGradient();
+  }
+
+  @SubscribeMessage("joinUserRoom")
+  async onJoinUserRoom(client: Socket): Promise<void> {
+    this.websocketClientsManagerService.joinUserRoom(client);
   }
 
   /**

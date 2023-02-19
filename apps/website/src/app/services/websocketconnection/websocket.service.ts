@@ -5,6 +5,9 @@ import iro from '@jaames/iro'
 import {MessageService} from '../message-service/message.service'
 import {io, Socket} from 'socket.io-client'
 import {AddGradientResponse, GradientInformation, ModeInformation} from '@angulon/interfaces';
+import {Message} from '../../shared/types/Message';
+import {Store} from '@ngrx/store';
+import {colorChange} from '../../../redux/color/color.action';
 
 @Injectable({
   providedIn: 'root'
@@ -13,15 +16,24 @@ export class WebsocketService {
   private websocketUrl = environment.url
   private socket: Socket;
 
-  constructor(errorService: MessageService) {
+  constructor(
+    messageService: MessageService,
+    private readonly store: Store,
+  ) {
     this.socket = io(this.websocketUrl, {
       transports: ['websocket'],
     });
 
     this.socket.on('connect', () => {
       console.log(`Opened websocket at`, this.websocketUrl)
+      this.socket.emit('joinUserRoom')
+      messageService.setMessage(new Message('success', 'Connected to ledstrip(s)'))
     });
 
+    this.socket.on('color-change', (colors: string[]) => {
+      console.log('Received new colors', colors)
+      this.store.dispatch(colorChange(colors, false))
+    })
     this.socket.on('disconnect', () => {
       console.log(`Disconnected from websocket at ${this.websocketUrl}`)
     });
@@ -29,7 +41,7 @@ export class WebsocketService {
     this.socket.on('connect_error', (error: Error) => {
       console.log(`Failed to connect to websocket at ${this.websocketUrl}`)
       console.error(error)
-      errorService.setMessage(error)
+      messageService.setMessage(error)
     });
   }
 

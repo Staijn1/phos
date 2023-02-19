@@ -1,4 +1,5 @@
-export const colorChange = (color: string[]) => ({
+export const colorChange = (color: string[], updateLedstrips: boolean) => ({
   type: 'COLOR_CHANGE',
-  payload: color
+  payload: color,
+  updateLedstrips,
 });

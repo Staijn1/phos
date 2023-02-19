@@ -7,7 +7,7 @@ import {Message} from '../../shared/types/Message';
 export class MessageService {
   private _messages: Message[] = [];
 
-  public setMessage(error: Error) {
+  public setMessage(error: Error | Message) {
     const mappedError = this.mapError(error)
     this._messages.push(mappedError)
     setTimeout(() => {
