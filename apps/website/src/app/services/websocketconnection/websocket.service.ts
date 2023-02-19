@@ -31,9 +31,9 @@ export class WebsocketService {
     });
 
     this.socket.on('color-change', (colors: string[]) => {
-      console.log('Received new colors', colors)
       this.store.dispatch(colorChange(colors, false))
     })
+
     this.socket.on('disconnect', () => {
       console.log(`Disconnected from websocket at ${this.websocketUrl}`)
     });
