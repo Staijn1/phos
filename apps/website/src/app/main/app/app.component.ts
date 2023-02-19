@@ -1,6 +1,6 @@
 import {Component, OnInit} from '@angular/core'
 import {SwUpdate} from '@angular/service-worker'
-import {MessageService} from '../../services/error/message.service'
+import {MessageService} from '../../services/message-service/message.service'
 import {ThemeService} from '../../services/theme/theme.service';
 import {Message} from '../../shared/types/Message';
 import {swipeRight} from '@angulon/ui';

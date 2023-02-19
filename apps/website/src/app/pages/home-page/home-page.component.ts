@@ -1,21 +1,28 @@
-import {Component, OnInit} from '@angular/core'
-import {TimelineLite} from 'gsap'
+import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core'
 
 @Component({
   selector: 'app-home',
   templateUrl: './home-page.component.html',
   styleUrls: ['./home-page.component.scss']
 })
-export class HomePageComponent implements OnInit {
-  timeline!: TimelineLite;
+export class HomePageComponent implements AfterViewInit {
+  @ViewChild('neonTextElement') neonTextElement!: ElementRef<HTMLElement>;
 
-  ngOnInit(): void {
-    this.timeline = new TimelineLite()
+  ngAfterViewInit(): void {
+    this.neonText(this.neonTextElement.nativeElement);
+  }
 
-    this.timeline.to('#Light_Bulb .light', {duration: 1, strokeOpacity: 1, fillOpacity: 1}, '-=1.9')
-    this.timeline.to('#Light_Bulb', {duration: 0.7, y: -40, ease: 'power.out'}, '-=1.9')
-    this.timeline.to('#Light_Bulb .reflection', {duration: 0.5, strokeWidth: 4}, '-=2.2')
+  neonText(target: HTMLElement){
+    const flickerLetter = (letter: any) => `<span style="animation: text-flicker-in-glow ${Math.random() * 4}s linear both ">${letter}</span>`
+    const colorLetter = (letter: any) => `<span style="color: hsla(${Math.random() * 360}, 100%, 80%, 1);">${letter}</span>`;
 
-    this.timeline.to('#ledcontroltext', {strokeDashoffset: 0, duration: 4}, '+=1.5')
+    const flickerAndColorText = (text: string) =>
+      text
+        .split('')
+        .map(flickerLetter)
+        .map(colorLetter)
+        .join('');
+
+    target.innerHTML = flickerAndColorText(target.textContent as string);
   }
 }

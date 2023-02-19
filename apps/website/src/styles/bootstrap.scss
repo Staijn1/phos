@@ -109,7 +109,7 @@
       color: $color;
     }
 
-    #ledcontroltext, #Light_Bulb {
+    #ledcontroltext, #Light_Bulb, #Light_Bulb .reflection {
       stroke: $color !important;
     }
 
@@ -204,5 +204,3 @@ $text-bright: white;
 @each $key, $value in $themes {
   @include theme($key, $value);
 }
-
-

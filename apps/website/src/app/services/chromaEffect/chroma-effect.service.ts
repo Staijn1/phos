@@ -5,20 +5,27 @@ import {StaticState} from './state/static-state/static-state'
 import {SettingsService} from '../settings/settings.service'
 import iro from '@jaames/iro'
 import {VisualizerState} from './state/visualizer-state/visualizer-state'
+import {MessageService} from "../message-service/message.service";
 
 @Injectable({
   providedIn: 'root'
 })
 export class ChromaEffectService extends ChromaSDKService {
-  constructor(settingsService: SettingsService) {
-    super(settingsService)
+  constructor(settingsService: SettingsService, messageService: MessageService) {
+    super(settingsService, messageService)
     this._state = new StaticState()
     this._state.context = this
   }
 
   _setColors: iro.Color[] = [];
 
-  set setColors(newColors: iro.Color[]) {
+  set setColors(newColors: iro.Color[] | string[]) {
+    newColors = newColors.map(c => {
+      if (typeof c === 'string') {
+        return new iro.Color(c)
+      }
+      return c
+    });
     this._setColors = newColors
     this.update()
   }

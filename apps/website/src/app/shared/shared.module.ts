@@ -14,7 +14,7 @@ import {ColorpickerComponent} from './components/colorpicker/colorpicker.compone
   imports: [
     RouterModule,
     CommonModule,
-    FontAwesomeModule
+    FontAwesomeModule,
   ],
   exports: [RouterModule, VisualizerComponent, CastPipe, ModalComponent, OffCanvasComponent, ColorpickerComponent]
 })

@@ -1,5 +1,6 @@
 import {Injectable} from '@nestjs/common';
-import {Server} from 'socket.io';
+import {Server, Socket} from 'socket.io';
+import {logger} from 'nx/src/utils/logger';
 
 @Injectable()
 export class WebsocketClientsManagerService {
@@ -11,7 +12,7 @@ export class WebsocketClientsManagerService {
    * @param mode
    */
   setMode(mode: number) {
-    this.sendAllClients('/', mode.toString());
+    this.sendAllLedstrips('/', mode.toString());
   }
 
   /**
@@ -19,14 +20,15 @@ export class WebsocketClientsManagerService {
    * @param {string}payload
    */
   setFFTValue(payload: number): void {
-    this.sendAllClients('.', payload.toString())
+    this.sendAllLedstrips('.', payload.toString())
   }
 
   /**
    * Receive a hex color to set on all ledstrips
+   * Also broadcast the color to all users except the one that sent the message so their state can be updated
    * @param payload
    */
-  setColor(payload: string[]) {
+  setColor(payload: string[], originClient: Socket) {
     const formattedPayload = [];
     for (const rawColor of payload) {
       let formattedColor = rawColor;
@@ -37,23 +39,24 @@ export class WebsocketClientsManagerService {
 
     clearTimeout(this.colorTimeout);
     // The server sends messages so quickly, the ledstrips can't keep up so we have to slow it down
-    this.colorTimeout = setTimeout(() => this.sendAllClients('#', formattedPayload), 10)
+    this.colorTimeout = setTimeout(() => this.sendAllLedstrips('#', formattedPayload), 10)
+    this.sendAllUsers('color-change', payload, originClient);
   }
 
   decreaseSpeed() {
-    this.sendAllClients('?', undefined)
+    this.sendAllLedstrips('?', undefined)
   }
 
   increaseSpeed() {
-    this.sendAllClients('!', undefined)
+    this.sendAllLedstrips('!', undefined)
   }
 
   increaseBrightness() {
-    this.sendAllClients('+', undefined)
+    this.sendAllLedstrips('+', undefined)
   }
 
   decreaseBrightness() {
-    this.sendAllClients('-', undefined)
+    this.sendAllLedstrips('-', undefined)
   }
 
   /**
@@ -65,15 +68,41 @@ export class WebsocketClientsManagerService {
   }
 
   /**
-   * Send a command to all ledstrips
+   * Send a command to all ledstrips. These are all clients that are not in the user room
    * @param event
    * @param {string} payload
    * @private
    */
-  private sendAllClients(event: string, payload: string | string[]): void {
+  private sendAllLedstrips(event: string, payload: string | string[]): void {
+
     const clients = this.server.sockets.sockets;
     for (const [, client] of clients) {
+      if (client.rooms.has('user')) continue;
       client.emit(event, payload)
+    }
+  }
+
+  /**
+   * Make the client join a room that is only for users - not ledstrips
+   * @param {Socket} client
+   */
+  joinUserRoom(client: Socket) {
+    client.join('user');
+    logger.info(`Client ${client.conn.remoteAddress} joined the user room`);
+  }
+
+  /**
+   * Send a message to all users except the one that sent the message
+   * @param {string} event
+   * @param {string[]} payload
+   * @param {Socket} originClient
+   * @private
+   */
+  private sendAllUsers(event: string, payload: string[], originClient: Socket) {
+    const clients = this.server.sockets.sockets;
+    for (const [, client] of clients) {
+      if (client.id === originClient.id || !client.rooms.has('user')) continue;
+      client.emit(event, payload);
     }
   }
 }

@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core'
 import {AddGradientResponse, GradientInformation} from '@angulon/interfaces';
-import {MessageService} from '../error/message.service';
+import {MessageService} from '../message-service/message.service';
 import {environment} from '../../../environments/environment';
 import {WebsocketService} from '../websocketconnection/websocket.service';
 

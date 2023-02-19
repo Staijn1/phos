@@ -1,6 +1,6 @@
-import { Component, ElementRef, OnInit, Renderer2, ViewChild } from "@angular/core";
-import { gsap } from "gsap";
-import { NavigationEnd, NavigationStart, Router } from "@angular/router";
+import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {gsap} from 'gsap';
+import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 
 import {
   faBars,
@@ -18,20 +18,22 @@ import {
   faSlidersH,
   faTimes,
   faWalking
-} from "@fortawesome/free-solid-svg-icons";
-import { GeneralSettings } from "../../shared/types/types";
-import { SettingsService } from "../../services/settings/settings.service";
-import { ColorpickerEvent } from "../../shared/components/colorpicker/colorpicker.component";
-import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
-import { WebsocketService } from "../../services/websocketconnection/websocket.service";
+} from '@fortawesome/free-solid-svg-icons';
+import {GeneralSettings} from '../../shared/types/types';
+import {SettingsService} from '../../services/settings/settings.service';
+import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
+import {Store} from '@ngrx/store';
+import {ColorpickerState} from '../../../redux/color/color.reducer';
+import iro from '@jaames/iro';
 
 @Component({
-  selector: "app-navigationbar",
-  templateUrl: "./navigationbar.component.html",
-  styleUrls: ["./navigationbar.component.scss"]
+  selector: 'app-navigationbar',
+  templateUrl: './navigationbar.component.html',
+  styleUrls: ['./navigationbar.component.scss']
 })
 export class NavigationbarComponent implements OnInit {
-  @ViewChild("container") navContainer!: ElementRef;
+  @ViewChild('container') navContainer!: ElementRef;
   homeIcon = faHome;
   modeIcon = faList;
   visualizerIcon = faChartBar;
@@ -56,16 +58,25 @@ export class NavigationbarComponent implements OnInit {
     private router: Router,
     private renderer: Renderer2,
     private chromaEffect: ChromaEffectService,
-    private settingsService: SettingsService
+    private settingsService: SettingsService,
+    private store: Store<{ colorpicker: ColorpickerState }>
   ) {
   }
 
   ngOnInit(): void {
     this.settings = this.settingsService.readGeneralSettings();
+
+    this.store.select('colorpicker').subscribe((state) => {
+      if (state.updateLedstrips) {
+        this.connection.setColor(state.colors);
+      }
+      this.chromaEffect.setColors = state.colors;
+    })
+
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if (val instanceof NavigationStart) {
-        gsap.set("#cover", { autoAlpha: 1, duration: 0.3 });
+        gsap.set('#cover', {autoAlpha: 1, duration: 0.3});
       }
       if (val instanceof NavigationEnd) {
         this.animate();
@@ -83,60 +94,43 @@ export class NavigationbarComponent implements OnInit {
   }
 
   turnOff(): void {
-    this.timeline.to("#powerOff", { duration: 0.6, color: "white", background: "var(--bs-danger)" });
-    this.timeline.to("#powerOff", { duration: 1.2, clearProps: "background,color" });
+    this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
+    this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
 
-    this.connection.setColor(["#000000", "#000000", "#000000"]);
+    this.connection.setColor(['#000000', '#000000', '#000000']);
     this.connection.setMode(0);
-  }
-
-  onColorpickerColorInit(event: ColorpickerEvent) {
-    if (this.settingsService.readGeneralSettings().initialColor) {
-      this.connection.setColor(event.colorpicker.colors);
-    }
-    this.chromaEffect.setColors = event.colorpicker.colors;
-  }
-
-  onColorpickerColorChange(event: ColorpickerEvent) {
-    this.connection.setColor(event.colorpicker.colors);
-    this.chromaEffect.setColors = event.colorpicker.colors;
-  }
-
-  onColorpickerColorEnd(event: ColorpickerEvent) {
-    this.settings.colors = this.settingsService.convertColors(event.colorpicker.colors);
-    this.settingsService.saveGeneralSettings(this.settings);
   }
 
   private closeMobileMenu() {
     this.mobileMenuIcon = faBars;
-    this.renderer.removeClass(this.navContainer.nativeElement, "mobile-nav-active");
+    this.renderer.removeClass(this.navContainer.nativeElement, 'mobile-nav-active');
     this.isOpen = false;
   }
 
   private openMobileMenu() {
     this.mobileMenuIcon = faTimes;
-    this.renderer.addClass(this.navContainer.nativeElement, "mobile-nav-active");
+    this.renderer.addClass(this.navContainer.nativeElement, 'mobile-nav-active');
     this.isOpen = true;
   }
 
   private animationFromLeft(): void {
     // First we transform the tiles from the left to the right, staggered.
-    this.timeline.to(".from-left .tile", {
+    this.timeline.to('.from-left .tile', {
       duration: 0.4,
-      width: "100%",
-      left: "0%",
+      width: '100%',
+      left: '0%',
       delay: 0,
       stagger: 0.05
     });
     // After that animation has finished, we transform the tiles from the right to the left, staggered.
-    this.timeline.to(".from-left .tile", {
+    this.timeline.to('.from-left .tile', {
       duration: 0.4,
-      width: "100%",
-      left: "100%",
+      width: '100%',
+      left: '100%',
       delay: 0,
       stagger: -0.05
     });
-    gsap.set(".from-left .tile", { left: "0", width: "0" });
+    gsap.set('.from-left .tile', {left: '0', width: '0'});
   }
 
   private animate(): void {
@@ -151,27 +145,27 @@ export class NavigationbarComponent implements OnInit {
         break;
     }
 
-    this.timeline.to("#cover", { duration: 0.6, autoAlpha: 0, ease: "power4.inOut" });
+    this.timeline.to('#cover', {duration: 0.6, autoAlpha: 0, ease: 'power4.inOut'});
     this.animationMode = ++this.animationMode % 2;
   }
 
   private animateFromTop(): void {
     // Fist we transform the tiles from the top to the bottom, staggered.
-    this.timeline.to(".from-top .tile", {
+    this.timeline.to('.from-top .tile', {
       duration: 0.4,
-      height: "100%",
-      top: "0%",
+      height: '100%',
+      top: '0%',
       delay: 0,
       stagger: 0.05
     });
     // After that animation has finished, we transform the tiles from the bottom to the top, staggered.
-    this.timeline.to(".from-top .tile", {
+    this.timeline.to('.from-top .tile', {
       duration: 0.4,
-      height: "100%",
-      top: "100%",
+      height: '100%',
+      top: '100%',
       delay: 0,
       stagger: -0.05
     });
-    gsap.set(".from-top .tile", { top: "0", height: "0" });
+    gsap.set('.from-top .tile', {top: '0', height: '0'});
   }
 }
