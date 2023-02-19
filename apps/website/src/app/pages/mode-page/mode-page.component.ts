@@ -13,6 +13,9 @@ import {ModeInformation} from '@angulon/interfaces';
 import {themes} from '../../shared/constants';
 import {ThemeService} from '../../services/theme/theme.service';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
+import {
+  VisualizerBrightnessState
+} from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
 
 
 @Component({
@@ -31,7 +34,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
     {name: 'Fire2012', state: new Fire2012State()},
     {name: 'Waterfall', state: new WaterfallState()},
     {name: 'VuMeter', state: new VisualizerState()},
-    {name: 'VuMeter Brightness', state: new VisualizerState()},
+    {name: 'VuMeter Brightness', state: new VisualizerBrightnessState()},
   ];
   classes = themes;
   selectedMode = 0;
