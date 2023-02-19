@@ -1,7 +1,7 @@
 import {State} from '../abstract/state'
 import {calculateBGRInteger, color_wheel} from '../../../../shared/functions'
 import iro from '@jaames/iro'
-
+import {HeadsetEffect, KeyboardEffect, MouseEffect} from '../../../chromaSDK/chromaSDK.service';
 export class RainbowCycleState extends State {
   effect: string | number | NodeJS.Timeout | undefined;
   private counter = 0;
@@ -22,8 +22,8 @@ export class RainbowCycleState extends State {
 
 
     this.counter = (this.counter + 1) & 0xFF
-    this._context.createKeyboardEffect('CHROMA_CUSTOM', this._context.keyboardColors).then()
-    this._context.createMouseEffect('CHROMA_CUSTOM2', this._context.mouseColors).then()
+    this._context.createKeyboardEffect(KeyboardEffect.CHROMA_CUSTOM, this._context.keyboardColors).then()
+    this._context.createMouseEffect(MouseEffect.CHROMA_CUSTOM2, this._context.mouseColors).then()
   }
 
   onEntry(): void {

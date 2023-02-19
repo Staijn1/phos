@@ -3,7 +3,7 @@ import {calculateBGRInteger, map} from '../../../../shared/functions'
 import iro from '@jaames/iro'
 import {HeadsetEffect, KeyboardEffect, MouseEffect} from '../../../chromaSDK/chromaSDK.service';
 
-export class VisualizerState extends State {
+export class VisualizerBrightnessState extends State {
   protected _BGRIntegerForeground = 0;
   private _BGIntegerBackground = 0;
   protected _previousBGRIntegerForeground!: number;

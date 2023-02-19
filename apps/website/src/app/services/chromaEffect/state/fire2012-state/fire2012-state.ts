@@ -1,6 +1,7 @@
 import {State} from '../abstract/state'
 import {calculateBGRInteger, map, qadd8, qsub8, randomInteger, WarmColor} from '../../../../shared/functions'
 import iro from '@jaames/iro'
+import {HeadsetEffect, KeyboardEffect, MouseEffect} from '../../../chromaSDK/chromaSDK.service';
 
 export class Fire2012State extends State {
   readonly COOLING = 55;
@@ -21,7 +22,7 @@ export class Fire2012State extends State {
         this.fire2012Mouse()
 
         const headsetColors = this._context.keyboardColors[0].splice(0, this._context.headset.amount)
-        this._context.createHeadsetEffect('CHROMA_CUSTOM', headsetColors)
+        this._context.createHeadsetEffect(HeadsetEffect.CHROMA_CUSTOM, headsetColors)
       }, this._context.speed / this._context.keyboard.columns)
     }
   }
@@ -103,7 +104,7 @@ export class Fire2012State extends State {
       }
     }
 
-    this._context.createKeyboardEffect('CHROMA_CUSTOM', this._context.keyboardColors).then()
+    this._context.createKeyboardEffect(KeyboardEffect.CHROMA_CUSTOM, this._context.keyboardColors).then()
   }
 
   private fire2012Mouse(): void {
@@ -126,7 +127,7 @@ export class Fire2012State extends State {
       }
     }
 
-    this._context.createMouseEffect('CHROMA_CUSTOM2', this._context.mouseColors).then()
+    this._context.createMouseEffect(MouseEffect.CHROMA_CUSTOM2, this._context.mouseColors).then()
   }
 
   private ignite(arrayToManipulate: number[], maxLeds: number, bottom: number): void {

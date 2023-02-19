@@ -1,7 +1,26 @@
 import {Injectable} from '@angular/core'
 import {SettingsService} from '../settings/settings.service'
-import {MessageService} from "../message-service/message.service";
+import {MessageService} from '../message-service/message.service';
 
+export enum KeyboardEffect {
+  CHROMA_CUSTOM_KEY = 'CHROMA_CUSTOM_KEY',
+  CHROMA_STATIC = 'CHROMA_STATIC',
+  CHROMA_CUSTOM = 'CHROMA_CUSTOM',
+  CHROMA_NONE = 'CHROMA_NONE',
+}
+
+export enum HeadsetEffect {
+  CHROMA_CUSTOM_KEY = 'CHROMA_CUSTOM_KEY',
+  CHROMA_STATIC = 'CHROMA_STATIC',
+  CHROMA_CUSTOM = 'CHROMA_CUSTOM',
+  CHROMA_NONE = 'CHROMA_NONE',
+}
+
+export enum MouseEffect {
+  CHROMA_NONE = 'CHROMA_NONE',
+  CHROMA_CUSTOM2 = 'CHROMA_CUSTOM2',
+  CHROMA_STATIC = 'CHROMA_STATIC',
+}
 
 /**
  * This class contains the necessary methods to register this application with the Razer SDK and to keep the connection alive (or destroy it)
@@ -96,7 +115,7 @@ export class ChromaSDKService {
       }
       return data
     } catch (e) {
-      throw new Error("Failed to setup the connection with the Razer SDK. Is Razer Synapse installed & running?")
+      throw new Error('Failed to setup the connection with the Razer SDK. Is Razer Synapse installed & running?')
     }
   }
 
@@ -121,7 +140,7 @@ export class ChromaSDKService {
     })
   }
 
-  async createKeyboardEffect(effect: string, data: any): Promise<any> {
+  async createKeyboardEffect(effect: KeyboardEffect, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return
     }
@@ -150,7 +169,7 @@ export class ChromaSDKService {
     return response.json()
   }
 
-  async createMouseEffect(effect: string, data: any): Promise<any> {
+  async createMouseEffect(effect: MouseEffect, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return
     }
@@ -177,22 +196,7 @@ export class ChromaSDKService {
     return response.json()
   }
 
-  async setEffect(id: any): Promise<any> {
-    const jsonObj = JSON.stringify({id})
-
-    const response = await fetch(`${this.initializedApiURL}/effect`, {
-      method: 'PUT',
-      body: jsonObj,
-      headers: {'Content-type': 'application/json; charset=UTF-8'}
-    })
-
-    if (!response.ok) {
-      throw new Error('error! ' + response.status)
-    }
-    return response.json()
-  }
-
-  async createHeadsetEffect(effect: string, data: any): Promise<any> {
+  async createHeadsetEffect(effect: HeadsetEffect, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return
     }
