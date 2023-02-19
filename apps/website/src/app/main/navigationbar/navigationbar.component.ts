@@ -1,4 +1,4 @@
-import {Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {gsap} from 'gsap';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 
@@ -25,15 +25,16 @@ import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.ser
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 import {Store} from '@ngrx/store';
 import {ColorpickerState} from '../../../redux/color/color.reducer';
-import iro from '@jaames/iro';
+import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
 
 @Component({
   selector: 'app-navigationbar',
   templateUrl: './navigationbar.component.html',
   styleUrls: ['./navigationbar.component.scss']
 })
-export class NavigationbarComponent implements OnInit {
+export class NavigationbarComponent implements OnInit, AfterViewInit {
   @ViewChild('container') navContainer!: ElementRef;
+  @ViewChild(ColorpickerComponent) colorpicker!: ColorpickerComponent;
   homeIcon = faHome;
   modeIcon = faList;
   visualizerIcon = faChartBar;
@@ -50,7 +51,6 @@ export class NavigationbarComponent implements OnInit {
   visualizer3DIcon = faCubes;
   timeline = gsap.timeline();
   isOpen = false;
-  settings!: GeneralSettings;
   private animationMode = 0;
 
   constructor(
@@ -58,14 +58,13 @@ export class NavigationbarComponent implements OnInit {
     private router: Router,
     private renderer: Renderer2,
     private chromaEffect: ChromaEffectService,
-    private settingsService: SettingsService,
     private store: Store<{ colorpicker: ColorpickerState }>
   ) {
   }
 
   ngOnInit(): void {
-    this.settings = this.settingsService.readGeneralSettings();
-
+    // When the colorpicker is updated, update the ledstrip colors if the updateLedstrips flag is set to true.
+    // Always update the chroma effect colors.
     this.store.select('colorpicker').subscribe((state) => {
       if (state.updateLedstrips) {
         this.connection.setColor(state.colors);
@@ -73,6 +72,7 @@ export class NavigationbarComponent implements OnInit {
       this.chromaEffect.setColors = state.colors;
     })
 
+    // Subscribe to router events so we can display a page transition animation each time the user navigates to a new page.
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if (val instanceof NavigationStart) {
@@ -84,6 +84,11 @@ export class NavigationbarComponent implements OnInit {
       }
     });
   }
+
+  ngAfterViewInit(): void {
+    this.determineColorPickerOrientation()
+  }
+
 
   mobileNav(): void {
     if (!this.isOpen) {
@@ -167,5 +172,17 @@ export class NavigationbarComponent implements OnInit {
       stagger: -0.05
     });
     gsap.set('.from-top .tile', {top: '0', height: '0'});
+  }
+
+  /**
+   * This function changes the orientation of the colorpicker depending on the screen size.
+   * If the screen is smaller than 992px (lg breakpoint in Bootstrap 5), the colorpicker will be vertical.
+   */
+  determineColorPickerOrientation() {
+    if (screen.width < 992) {
+      this.colorpicker.changeOrientation('vertical');
+    } else {
+      this.colorpicker.changeOrientation('horizontal')
+    }
   }
 }

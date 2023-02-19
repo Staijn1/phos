@@ -27,13 +27,12 @@ export class WebsocketService {
     this.socket.on('connect', () => {
       console.log(`Opened websocket at`, this.websocketUrl)
       this.socket.emit('joinUserRoom')
-      messageService.setMessage(new Message('success', 'Connected to ledstrip(s)'))
     });
 
     this.socket.on('color-change', (colors: string[]) => {
-      console.log('Received new colors', colors)
       this.store.dispatch(colorChange(colors, false))
     })
+
     this.socket.on('disconnect', () => {
       console.log(`Disconnected from websocket at ${this.websocketUrl}`)
     });

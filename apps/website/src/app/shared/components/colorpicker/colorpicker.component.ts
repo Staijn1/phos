@@ -114,4 +114,8 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   private get controlsLedstripColor(): boolean {
     return this.initialColor == undefined;
   }
+
+  changeOrientation(direction: 'horizontal' | 'vertical') {
+    this.picker.setOptions({layoutDirection: direction})
+  }
 }

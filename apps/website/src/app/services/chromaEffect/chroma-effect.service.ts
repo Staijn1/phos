@@ -5,7 +5,8 @@ import {StaticState} from './state/static-state/static-state'
 import {SettingsService} from '../settings/settings.service'
 import iro from '@jaames/iro'
 import {VisualizerState} from './state/visualizer-state/visualizer-state'
-import {MessageService} from "../message-service/message.service";
+import {MessageService} from '../message-service/message.service';
+import {VisualizerBrightnessState} from './state/visualizer-brightness-state/visualizer-brightness-state';
 
 @Injectable({
   providedIn: 'root'
@@ -54,7 +55,7 @@ export class ChromaEffectService extends ChromaSDKService {
   }
 
   set intensity(value: number) {
-    if (this._state instanceof VisualizerState) {
+    if (this._state instanceof VisualizerState || this._state instanceof VisualizerBrightnessState) {
       this._state.intensity = value
       this.update()
     }

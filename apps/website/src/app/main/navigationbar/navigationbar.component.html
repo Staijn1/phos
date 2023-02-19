@@ -1,4 +1,4 @@
-<div #container>
+<div #container (window:resize)="determineColorPickerOrientation()">
   <!-- ======= Mobile nav toggle button ======= -->
   <button (click)="mobileNav()" class="mobile-nav-toggle d-lg-none mt-4" type="button">
     <fa-icon [icon]="mobileMenuIcon"></fa-icon>

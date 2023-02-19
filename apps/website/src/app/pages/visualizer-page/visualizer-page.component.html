@@ -265,9 +265,9 @@
                         [options]="fillAlphaSliderOptions"></ngx-slider>
           </div>
           <!--      Simple slider for linearBoost -->
-          <div>
+          <div *ngIf="visualizerOptions.linearAmplitude && visualizerOptions.linearBoost">
             Linear Boost
-            <ngx-slider (valueChange)="applySettings()" *ngIf="visualizerOptions.linearAmplitude && visualizerOptions.linearBoost"
+            <ngx-slider (valueChange)="applySettings()"
                         [(value)]="visualizerOptions.linearBoost"
                         [options]="linearBoostSliderOptions"></ngx-slider>
           </div>
