@@ -3,8 +3,8 @@ import {calculateBGRInteger, map} from '../../../../shared/functions'
 import iro from '@jaames/iro'
 
 export class VisualizerState extends State {
-  protected visualizerCounter = 0;
-  protected _BGRIntegerForeground!: number;
+  protected _BGRIntegerForeground = 0;
+  private _BGIntegerBackground = 0;
   protected _previousBGRIntegerForeground!: number;
   protected _previousIntensity!: number;
 
@@ -17,24 +17,19 @@ export class VisualizerState extends State {
 
   handle(colors: iro.Color[]): void {
     if (!colors) return
-    this.createVisualizer(colors)
+    this.createVisualizer(colors[0], colors[1])
   }
 
-  createVisualizer(colors: iro.Color[], backgroundColor = 0): void {
-    this._BGRIntegerForeground = calculateBGRInteger(colors[0].red, colors[0].green, colors[0].blue)
-    this.visualizerCounter++
+  createVisualizer(foregroundColor: iro.Color, backgroundColor: iro.Color): void {
+    this._BGRIntegerForeground = calculateBGRInteger(foregroundColor.red, foregroundColor.green, foregroundColor.blue)
+    this._BGIntegerBackground = calculateBGRInteger(backgroundColor.red, backgroundColor.green, backgroundColor.blue)
 
-    if (this.visualizerCounter % 5 !== 0 || this._intensity === this._previousIntensity) {
-      return
-    } else {
-      this.visualizerCounter = 0
-    }
+    // Nothing changed so let's not waste resources to set the same effect again.
+    if (this._intensity === this._previousIntensity) return
 
     this.createHeadsetVisualizer()
-    this.createKeyBoardVisualizer(backgroundColor)
-    this.createMouseVisualizer(backgroundColor)
-
-    this._previousBGRIntegerForeground = this._BGRIntegerForeground
+    this.createKeyBoardVisualizer(this._BGIntegerBackground)
+    this.createMouseVisualizer(this._BGIntegerBackground)
   }
 
   onEntry(): void {
