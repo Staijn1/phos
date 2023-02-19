@@ -7,7 +7,6 @@ import {MultiDynamicState} from '../../services/chromaEffect/state/multi-dynamic
 import {RainbowState} from '../../services/chromaEffect/state/rainbow-state/rainbow-state'
 import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fire2012-state'
 import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state'
-import {TheaterChaseState} from '../../services/chromaEffect/state/theater-chase-state/theater-chase-state'
 import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
 import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
 import {ModeInformation} from '@angulon/interfaces';
@@ -29,7 +28,6 @@ export class ModePageComponent implements OnInit, OnDestroy {
     {name: 'Multi Dynamic', state: new MultiDynamicState()},
     {name: 'Single Dynamic', state: new SingleDynamicState()},
     {name: 'Blink', state: new BlinkState()},
-    {name: 'Theater chase', state: new TheaterChaseState()},
     {name: 'Fire2012', state: new Fire2012State()},
     {name: 'Waterfall', state: new WaterfallState()},
     {name: 'VuMeter', state: new VisualizerState()},
