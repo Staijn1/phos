@@ -104,7 +104,7 @@ export class VisualizerPageComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.gradients = []
-    this.wakeLock.release()
+    this.wakeLock?.release()
       .then()
       .catch((error: any) => console.error('Failed to release wake lock', error));
   }
