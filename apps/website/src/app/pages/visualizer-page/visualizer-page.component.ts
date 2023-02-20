@@ -5,7 +5,7 @@ import {faCheck, faLightbulb, faList, faSliders, faWrench} from '@fortawesome/fr
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
 import {SettingsService} from '../../services/settings/settings.service'
 import {VisualizerComponent} from '../../shared/components/visualizer/visualizer.component'
-import { AngulonVisualizerOptions, GradientInformation } from "@angulon/interfaces";
+import {AngulonVisualizerOptions, GradientInformation} from '@angulon/interfaces';
 import {OffCanvasComponent} from '../../shared/components/offcanvas/off-canvas.component';
 import * as slider from '@angular-slider/ngx-slider';
 import {InformationService} from '../../services/information-service/information.service';
@@ -82,6 +82,7 @@ export class VisualizerPageComponent implements OnDestroy {
   listIcon = faList;
   checkboxIcon = faCheck;
   sliderIcon = faSliders;
+  private wakeLock: any;
 
   constructor(
     private connection: WebsocketService,
@@ -103,6 +104,9 @@ export class VisualizerPageComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.gradients = []
+    this.wakeLock.release()
+      .then()
+      .catch((error: any) => console.error('Failed to release wake lock', error));
   }
 
   updateLedstrip(): void {
@@ -124,16 +128,21 @@ export class VisualizerPageComponent implements OnDestroy {
       this.gradients = gradients
       // this.chromaEffect.state = new VisualizerBrightnessState()
     });
+
+    if ('wakeLock' in navigator) {
+      const anyNavigator = navigator as any
+      anyNavigator.wakeLock.request('screen').then((lock: any) => {
+        this.wakeLock = lock;
+      }).catch((error: any) => {
+        console.error('Failed to request wake lock', error)
+      })
+    }
   }
 
   readSettings() {
     const settings = this.settingsService.readVisualizerOptions();
     settings.onCanvasDraw = this.drawCallback.bind(this)
     this.visualizerOptions = settings
-  }
-
-  updateOptions(): void {
-    this.visualizerOptions = Object.assign({}, this.visualizerOptions)
   }
 
   openSettingsWindow() {
