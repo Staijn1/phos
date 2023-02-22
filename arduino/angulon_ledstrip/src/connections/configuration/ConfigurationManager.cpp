@@ -153,17 +153,20 @@ void ConfigurationManager::setupWiFi() {
 }
 
 void ConfigurationManager::run() {
+    server->handleClient();
+
+    // We only need to perform the Wifi connection check if the system is configured
+    if (!isConfigured) return;
+
     if (WiFiClass::status() != WL_CONNECTED) {
         unsigned long now = millis();
         if (now - lastTimeConnected >= NETWORK_TIMEOUT) {
+            Logger::log("ConfigurationManager", "Could not connect to WiFi - Resetting!");
             ESP.restart();
         }
     } else {
         lastTimeConnected = millis();
     }
-
-    if (isConfigured) return;
-    server->handleClient();
 }
 
 void ConfigurationManager::resetConfig() {
@@ -175,7 +178,7 @@ void ConfigurationManager::resetConfig() {
 LedstripConfiguration ConfigurationManager::getConfig() {
     LedstripConfiguration config{};
     config.ssid = "De Koffieclub";//preferences.getString("ssid").c_str();
-    config.password = "DouweEgberts";//preferences.getString("password").c_str();
+    config.password = "IedereenWilEenLatte";//preferences.getString("password").c_str();
     config.serverip = "192.168.2.4";//preferences.getString("serverip").c_str();
     config.ledpin = 26;//preferences.getInt("ledpin");
     config.ledcount = 60;//preferences.getInt("ledcount");
