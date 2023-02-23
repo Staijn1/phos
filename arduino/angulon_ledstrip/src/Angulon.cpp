@@ -3,10 +3,13 @@
 //
 
 #include "Angulon.h"
+#include "utils/state/State.h"
 
+Ledstrip *Angulon::ledstrip = new Ledstrip();
 
 void Angulon::setup() {
     Logger::setup();
+    Angulon::ledstrip->setup();
     configuration.setup();
 
     if (configuration.isConfigured) {
@@ -14,12 +17,14 @@ void Angulon::setup() {
     }
 
     Logger::log("Angulon", "Setup finished");
+    String json = State::getStateJSON();
+    Serial.println(json);
 }
 
 
 void Angulon::loop() {
     configuration.run();
-
+    Angulon::ledstrip->run();
     if (configuration.isConfigured) {
         websocket.run();
     }

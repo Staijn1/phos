@@ -4,7 +4,7 @@
 
 #include <WiFi.h>
 #include "ConfigurationManager.h"
-#include "utils/Logger.h"
+#include "utils/logger/Logger.h"
 
 char angulon_index_html[]
         PROGMEM = R"=====(
@@ -56,8 +56,9 @@ char angulon_index_html[]
 void ConfigurationManager::setup() {
     Logger::log("ConfigurationManager", "Checking configuration...");
     preferences.begin("configuration", false);
-    isConfigured = preferences.getBool("isConfigured", false);
-
+    // todo restore this, it works but it takes too much time during testing
+//    isConfigured = preferences.getBool("isConfigured", false);
+    isConfigured = true;
     if (!isConfigured) {
         ConfigurationManager::startConfigurationMode();
     } else {
@@ -127,7 +128,7 @@ void ConfigurationManager::configureDevice() {
 
 void ConfigurationManager::setupWiFi() {
     Logger::log("ConfigurationManager", "Connecting to WiFi...");
-    LedstripConfiguration configuration = ConfigurationManager::getConfig();
+    SystemConfiguration configuration = ConfigurationManager::getConfig();
     // todo: why the fuck is c_str() returning nothing?
     const char *ssidChar = preferences.getString("ssid").c_str();
     const char *passwordChar = preferences.getString("password").c_str();
@@ -175,8 +176,8 @@ void ConfigurationManager::resetConfig() {
     ESP.restart();
 }
 
-LedstripConfiguration ConfigurationManager::getConfig() {
-    LedstripConfiguration config{};
+SystemConfiguration ConfigurationManager::getConfig() {
+    SystemConfiguration config{};
     config.ssid = "De Koffieclub";//preferences.getString("ssid").c_str();
     config.password = "IedereenWilEenLatte";//preferences.getString("password").c_str();
     config.serverip = "192.168.2.4";//preferences.getString("serverip").c_str();

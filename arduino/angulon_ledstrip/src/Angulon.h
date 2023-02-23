@@ -6,7 +6,7 @@
 #define ANGULON_LEDSTRIP_ANGULON_H
 
 
-#include "utils/Logger.h"
+#include "utils/logger/Logger.h"
 #include "connections/configuration/ConfigurationManager.h"
 #include "connections/websocket/Websocket.h"
 
@@ -18,6 +18,8 @@ public:
     void setup();
 
     void loop();
+
+    static Ledstrip *ledstrip;
 };
 
 

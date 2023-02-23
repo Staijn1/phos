@@ -21,17 +21,15 @@ public:
 
     void run();
 
-    void setMode(int mode);
+    void setColors(int segment, uint32_t colors[3]);
 
-    void increaseBrightness();
+    uint8_t getMode();
 
-    void decreaseBrightness();
+    String getModeName(uint8_t mode);
 
-    void increaseSpeedDelay();
+    uint8_t getBrightness();
 
-    void decreaseSpeedDelay();
-
-    void setColors(int i, uint32_t colors[3]);
+    uint8_t getSpeed();
 };
 
 

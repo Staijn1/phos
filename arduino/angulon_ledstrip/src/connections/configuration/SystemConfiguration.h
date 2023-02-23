@@ -2,13 +2,13 @@
 // Created by stein on 6-12-2022.
 //
 
-#ifndef ANGULON_LEDSTRIP_LEDSTRIPCONFIGURATION_H
-#define ANGULON_LEDSTRIP_LEDSTRIPCONFIGURATION_H
+#ifndef ANGULON_LEDSTRIP_SYSTEMCONFIGURATION_H
+#define ANGULON_LEDSTRIP_SYSTEMCONFIGURATION_H
 
 
 #include <cstdint>
 
-struct LedstripConfiguration {
+struct SystemConfiguration {
     const char *ssid;
     const char *password;
     const char *serverip;
@@ -18,4 +18,4 @@ struct LedstripConfiguration {
 };
 
 
-#endif //ANGULON_LEDSTRIP_LEDSTRIPCONFIGURATION_H
+#endif //ANGULON_LEDSTRIP_SYSTEMCONFIGURATION_H

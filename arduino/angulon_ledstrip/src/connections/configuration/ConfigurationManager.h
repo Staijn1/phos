@@ -8,7 +8,7 @@
 #include <Preferences.h>
 #include <WebServer.h>
 #include "hardware/button/Button.h"
-#include "LedstripConfiguration.h"
+#include "SystemConfiguration.h"
 
 #define NETWORK_TIMEOUT 10000
 
@@ -48,6 +48,6 @@ public:
 
     void resetConfig();
 
-    LedstripConfiguration getConfig();
+    SystemConfiguration getConfig();
 };
 #endif //ANGULON_LEDSTRIP_CONFIGURATIONMANAGER_H
