@@ -15,9 +15,9 @@ private:
     WS2812FX *strip;
     String colorsHexString[3] = {"#ff0000", "#00ff00", "#0000ff"};
 
+    int brightness = 200;
 
-    int brightness = 196;
-    int speed = 1000;
+    uint32_t hexStringToInt(const char* color);
 public:
     void setup();
 
@@ -25,7 +25,9 @@ public:
 
     void setColors(int segment, uint32_t colors[3]);
 
-    String * getColorsHexString();
+    void setColors(int segment, const char *color_0, const char *color_1, const char *color_2);
+
+    String *getColorsHexString();
 
     uint8_t getMode();
 
@@ -34,6 +36,12 @@ public:
     int getBrightness();
 
     int getSpeed();
+
+    void setMode(int mode);
+
+    void setSpeed(int speed);
+
+    void setBrightness(int brightness);
 };
 
 

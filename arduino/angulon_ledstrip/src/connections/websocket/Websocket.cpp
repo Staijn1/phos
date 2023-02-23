@@ -84,9 +84,10 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
     }
 
     const char *event = doc[0];// The first element holds the code corresponding to the action (set color, mode, fft etc)
+    const JsonObject object = doc[1];
     // Handle the different events
     if (*event == '!') {
-        handleBangEvent(payload, doc);
+        State::setState(object);
     } else if (*event == '#') {
         JsonArray colors = doc[1];
         handleHashEvent(colors);
@@ -96,13 +97,6 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
         // Handle invalid or unknown event
         handleUnknownEvent(payload, doc);
     }
-}
-
-/// Event that handles setting the entire state of the application.
-/// \param payload
-/// \param _doc
-void Websocket::handleBangEvent(uint8_t *payload, const JsonDocument &doc) {
-    State::setState(doc);
 }
 
 
