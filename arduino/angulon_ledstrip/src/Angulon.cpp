@@ -17,8 +17,7 @@ void Angulon::setup() {
     }
 
     Logger::log("Angulon", "Setup finished");
-    String json = State::getStateJSON();
-    Serial.println(json);
+    Serial.println( State::getStateJSON());
 }
 
 
