@@ -125,8 +125,7 @@ void Websocket::handleHashEvent(const JsonArray colors) {
 }
 
 void Websocket::handleDotEvent(uint8_t *payload, const JsonDocument &_doc) {
-    int value = constrain(_doc[1], 0, 255);
-    Angulon::ledstrip->setFFTValue(value);
+    Angulon::ledstrip->setFFTValue(constrain(_doc[1], 0, 255));
 }
 
 void Websocket::handleUnknownEvent(uint8_t *payload, const JsonDocument &_doc) {
