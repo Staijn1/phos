@@ -16,6 +16,7 @@ private:
     String colorsHexString[3] = {"#ff0000", "#00ff00", "#0000ff"};
 
     int brightness = 200;
+    int FFTValue;
 
     uint32_t hexStringToInt(const char* color);
 public:
@@ -42,6 +43,9 @@ public:
     void setSpeed(int speed);
 
     void setBrightness(int brightness);
+
+    void setFFTValue(int value);
+
 };
 
 

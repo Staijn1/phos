@@ -1,6 +1,5 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
-import {logger} from 'nx/src/utils/logger';
 import {LedstripState} from "../../types/LedstripState";
 import {constrain} from "@angulon/interfaces";
 
@@ -26,7 +25,7 @@ export class WebsocketClientsManagerService {
    */
   setFFTValue(payload: number): void {
     this.state.fftValue = payload;
-    this.setStateOnAllLedstrips()
+    this.sendEventToAllLedstrips(".", payload.toString());
   }
 
   /**
@@ -133,5 +132,18 @@ export class WebsocketClientsManagerService {
     // Convert the clients from a Map to an array
     const clients = [...this.server.sockets.sockets.values()];
     return clients.filter(client => !client.rooms.has('user'));
+  }
+
+  /**
+   * Send an event to all ledstrips with a given payload
+   * @param event
+   * @param payload
+   * @private
+   */
+  private sendEventToAllLedstrips(event: string, payload: string) {
+    const clients = this.getLedstripClients();
+    for (const client of clients) {
+      client.emit(event, payload);
+    }
   }
 }

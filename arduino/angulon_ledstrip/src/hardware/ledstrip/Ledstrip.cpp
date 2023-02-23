@@ -86,4 +86,8 @@ uint32_t Ledstrip::hexStringToInt(const char *color) {
     return intValue;
 }
 
+void Ledstrip::setFFTValue(int value) {
+    this->FFTValue = value;
+}
+
 

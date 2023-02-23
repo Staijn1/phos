@@ -6,6 +6,7 @@
 #include "Websocket.h"
 #include "utils/state/State.h"
 #include "utils/logger/Logger.h"
+#include "Angulon.h"
 
 void Websocket::setup() {
     Logger::log("Websocket", "Setting up websocket connection");
@@ -124,9 +125,8 @@ void Websocket::handleHashEvent(const JsonArray colors) {
 }
 
 void Websocket::handleDotEvent(uint8_t *payload, const JsonDocument &_doc) {
-    // todo set FFT value
-    // Handle "." event here
-    Logger::log("Websocket", ". event not implemented");
+    int value = constrain(_doc[1], 0, 255);
+    Angulon::ledstrip->setFFTValue(value);
 }
 
 void Websocket::handleUnknownEvent(uint8_t *payload, const JsonDocument &_doc) {
