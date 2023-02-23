@@ -7,6 +7,7 @@
 #include "utils/Logger.h"
 
 void Websocket::setup() {
+    Websocket::led->turnOff();
     Logger::log("Websocket", "Setting up websocket connection");
     LedstripConfiguration configuration = configurationManager->getConfig();
     socketIO.begin(configuration.serverip, configuration.serverport, "/socket.io/?EIO=4");
