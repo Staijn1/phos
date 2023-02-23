@@ -17,7 +17,7 @@ class Websocket {
 private:
     SocketIOclient socketIO;
     Led *led = new Led(BUILTIN_LED);
-    Ledstrip *ledstrip;
+    Ledstrip *ledstrip = new Ledstrip();
     ConfigurationManager *configurationManager;
     void webSocketClientEvent(socketIOmessageType_t type, uint8_t *payload, size_t length);
 

@@ -7,8 +7,10 @@
 #include "utils/Logger.h"
 
 void Websocket::setup() {
-    Websocket::led->turnOff();
     Logger::log("Websocket", "Setting up websocket connection");
+    this->ledstrip->setup();
+    Websocket::led->turnOff();
+
     LedstripConfiguration configuration = configurationManager->getConfig();
     socketIO.begin(configuration.serverip, configuration.serverport, "/socket.io/?EIO=4");
     socketIO.onEvent([&](socketIOmessageType_t type, uint8_t *payload, size_t length) {
@@ -20,6 +22,7 @@ void Websocket::setup() {
 
 void Websocket::run() {
     socketIO.loop();
+    this->ledstrip->run();
 }
 
 void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payload, size_t length) {
@@ -40,8 +43,10 @@ void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payloa
             Logger::log("Websocket", "Disconnected from server");
             break;
         case sIOtype_CONNECT:
-            Websocket::led->turnOn();
+            // Join default namespace (no auto join in Socket.IO V3)
             socketIO.send(sIOtype_CONNECT, "/");
+            Websocket::led->turnOn();
+
             Logger::log("Websocket", "Connected to server");
             break;
         case sIOtype_EVENT: {
@@ -78,14 +83,13 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
         Serial.println(error.c_str());
         return;
     }
-    Serial.printf("%s\n", payload);
-    const char *event = doc[0];// The first element holds the code corrosponding to the action (set color, mode, fft etc)
+
+    const char *event = doc[0];// The first element holds the code corresponding to the action (set color, mode, fft etc)
     // Handle the different events
     if (*event == '!') {
         handleBangEvent(payload, doc);
     } else if (*event == '#') {
         JsonArray colors = doc[1];
-        Serial.println("Here");
         handleHashEvent(colors);
     } else if (*event == '+') {
         handlePlusEvent(payload, doc);
