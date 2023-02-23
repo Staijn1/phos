@@ -9,9 +9,9 @@
 #include <cstdint>
 
 struct SystemConfiguration {
-    const char *ssid;
-    const char *password;
-    const char *serverip;
+    String ssid;
+    String password;
+    String serverip;
     int serverport;
     uint16_t ledcount;
     uint8_t ledpin;

@@ -52,16 +52,17 @@ char angulon_index_html[]
 </html>
 )=====";
 
+SystemConfiguration ConfigurationManager::systemConfiguration;
 
 void ConfigurationManager::setup() {
     Logger::log("ConfigurationManager", "Checking configuration...");
     preferences.begin("configuration", false);
-    // todo restore this, it works but it takes too much time during testing
-//    isConfigured = preferences.getBool("isConfigured", false);
-    isConfigured = true;
+    isConfigured = preferences.getBool("isConfigured", false);
+
     if (!isConfigured) {
         ConfigurationManager::startConfigurationMode();
     } else {
+        this->loadConfiguration();
         this->setupWiFi();
     }
 }
@@ -127,17 +128,16 @@ void ConfigurationManager::configureDevice() {
 }
 
 void ConfigurationManager::setupWiFi() {
-    Logger::log("ConfigurationManager", "Connecting to WiFi...");
     SystemConfiguration configuration = ConfigurationManager::getConfig();
-    // todo: why the fuck is c_str() returning nothing?
-    const char *ssidChar = preferences.getString("ssid").c_str();
-    const char *passwordChar = preferences.getString("password").c_str();
+    this->ssid = configuration.ssid.c_str();
+    this->networkPassword = configuration.password.c_str();
 
-    WiFi.begin(configuration.ssid, configuration.password);
+    WiFi.begin(this->ssid, this->networkPassword);
+    Logger::log("ConfigurationManager", "Connecting to WiFi network: " + configuration.ssid);
 
     // Try to connect to the Wi-Fi with a delay of 500 ms each time. If it does not connect after NETWORK_TIMEOUT, it will start configure mode
     while (WiFiClass::status() != WL_CONNECTED) {
-        delay(750);
+        delay(500);
         Logger::log("ConfigurationManager", ".");
 
         if (bootButton->isPressed()) {
@@ -177,12 +177,16 @@ void ConfigurationManager::resetConfig() {
 }
 
 SystemConfiguration ConfigurationManager::getConfig() {
+    return systemConfiguration;
+}
+
+void ConfigurationManager::loadConfiguration() {
     SystemConfiguration config{};
-    config.ssid = "De Koffieclub";//preferences.getString("ssid").c_str();
-    config.password = "IedereenWilEenLatte";//preferences.getString("password").c_str();
-    config.serverip = "192.168.2.4";//preferences.getString("serverip").c_str();
-    config.ledpin = 26;//preferences.getInt("ledpin");
-    config.ledcount = 60;//preferences.getInt("ledcount");
-    config.serverport = 3333;//preferences.getInt("serverport");
-    return config;
+    config.ssid = preferences.getString("ssid").c_str();
+    config.password = preferences.getString("password");
+    config.serverip = preferences.getString("serverip");
+    config.ledpin = preferences.getInt("ledpin");
+    config.ledcount = preferences.getInt("ledcount");
+    config.serverport = preferences.getInt("serverport");
+    systemConfiguration = config;
 }
