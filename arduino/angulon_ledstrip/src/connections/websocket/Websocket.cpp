@@ -41,13 +41,18 @@ void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payloa
             Websocket::led->turnOff();
             Logger::log("Websocket", "Disconnected from server");
             break;
-        case sIOtype_CONNECT:
+        case sIOtype_CONNECT: {
             // Join default namespace (no auto join in Socket.IO V3)
             socketIO.send(sIOtype_CONNECT, "/");
             Websocket::led->turnOn();
-
             Logger::log("Websocket", "Connected to server");
+
+            // Send event to update server of current ledstrip state.
+            String eventJson = State::getStateJSON();
+            socketIO.sendEVENT(eventJson);
+
             break;
+        }
         case sIOtype_EVENT: {
             Logger::log("Websocket", "Got an event from the server");
             this->handleEvent(payload, length);
@@ -91,7 +96,7 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
     } else if (*event == '#') {
         JsonArray colors = doc[1];
         handleHashEvent(colors);
-    }  else if (*event == '.') {
+    } else if (*event == '.') {
         handleDotEvent(payload, doc);
     } else {
         // Handle invalid or unknown event

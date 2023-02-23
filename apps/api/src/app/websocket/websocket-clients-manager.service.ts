@@ -1,11 +1,13 @@
 import {Injectable} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {logger} from 'nx/src/utils/logger';
+import {LedstripState} from "../../types/LedstripState";
 
 @Injectable()
 export class WebsocketClientsManagerService {
   private server!: Server;
   private colorTimeout: NodeJS.Timeout;
+  private state: LedstripState | undefined
 
   /**
    * Set the mode of all clients
@@ -74,11 +76,9 @@ export class WebsocketClientsManagerService {
    * @private
    */
   private sendAllLedstrips(event: string, payload: string | string[]): void {
-
-    const clients = this.server.sockets.sockets;
-    for (const [, client] of clients) {
-      if (client.rooms.has('user')) continue;
-      client.emit(event, payload)
+    const clients = this.getLedstripClients();
+    for (const client of clients) {
+      client.emit("!", this.state);
     }
   }
 
@@ -104,5 +104,34 @@ export class WebsocketClientsManagerService {
       if (client.id === originClient.id || !client.rooms.has('user')) continue;
       client.emit(event, payload);
     }
+  }
+
+  /**
+   * This function is called when a ledstrip submits its state to the server
+   * If one ledstrip is connected (this should be the ledstrip that submitted the state), the server will use the submitted state as its own state
+   * If more ledstrips are connected, the server will send the current state to the ledstrip that submitted the state
+   * @param client
+   * @param payload
+   */
+  syncState(client: Socket, payload: LedstripState) {
+    const ledstrips = this.getLedstripClients();
+
+    if (ledstrips.length === 1 && ledstrips.includes(client)) {
+      this.state = payload;
+      logger.info(`Updating server state to state from ${client.conn.remoteAddress}`);
+      // return;
+    }
+
+    client.emit('!', this.state);
+  }
+
+  /**
+   * Get a list of clients that are NOT in the user room, these are the ledstrips
+   * @private
+   */
+  private getLedstripClients(): Socket[] {
+    // Convert the clients from a Map to an array
+    const clients = [...this.server.sockets.sockets.values()];
+    return clients.filter(client => !client.rooms.has('user'));
   }
 }

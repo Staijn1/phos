@@ -12,7 +12,6 @@ class State {
 
 public:
     static String getStateJSON();
-
     static void setState(const JsonObject object);
 };
 

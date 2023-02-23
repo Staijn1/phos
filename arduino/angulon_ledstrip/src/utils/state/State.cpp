@@ -6,27 +6,30 @@
 #include "ArduinoJson.h"
 #include "Angulon.h"
 
-
+/// Serialize an array
+/// The first element represents the event that has to be fired on the server
+/// The second element contains the state object
+/// \return
 String State::getStateJSON() {
     uint8_t currentMode = Angulon::ledstrip->getMode();
-
-    const size_t bufferSize = JSON_ARRAY_SIZE(3) + JSON_OBJECT_SIZE(6) + 500;
-    DynamicJsonDocument jsonBuffer(bufferSize);
-    JsonObject root = jsonBuffer.to<JsonObject>();
-    root["mode"] = currentMode;
-    root["modeName"] = Angulon::ledstrip->getModeName(currentMode);
-    root["speed"] = Angulon::ledstrip->getSpeed();
-    root["brightness"] = Angulon::ledstrip->getBrightness();
-
-    JsonArray color = root.createNestedArray("color");
     const auto &colors = Angulon::ledstrip->getColorsHexString();
-    color.add(colors[0]);
-    color.add(colors[1]);
-    color.add(colors[2]);
+
+    StaticJsonDocument<192> doc;
+
+    doc.add("submitState");
+
+    JsonObject doc_1 = doc.createNestedObject();
+    doc_1["mode"] = 0;
+    doc_1["speed"] = 1000;
+    doc_1["brightness"] = 196;
+
+    JsonArray doc_1_color = doc_1.createNestedArray("color");
+    doc_1_color.add(colors[0]);
+    doc_1_color.add(colors[1]);
+    doc_1_color.add(colors[2]);
 
     String json;
-    serializeJson(root, json);
-    jsonBuffer.clear();
+    serializeJson(doc, json);
     return json;
 }
 
@@ -47,3 +50,4 @@ void State::setState(const JsonObject object) {
     Angulon::ledstrip->setSpeed(speed);
     Angulon::ledstrip->setColors(0, color_0, color_1, color_2);
 }
+

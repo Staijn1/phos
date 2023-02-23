@@ -12,6 +12,7 @@ import {ConfigurationService} from "../configuration/configuration.service";
 import {AddGradientResponse, GradientInformation, ModeInformation} from "@angulon/interfaces";
 import {ModeStatisticsDbService} from "../database/mode-statistics/mode-statistics-db.service";
 import {GradientsService} from "../gradients/gradients.service";
+import {LedstripState} from "../../types/LedstripState";
 
 @WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -107,6 +108,18 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     this.websocketClientsManagerService.joinUserRoom(client);
   }
 
+  /**
+   * This event is emitted by a ledstrip, just after it connected to the server.
+   * The websocket client manager will process this new state.
+   * If no other ledstrip is connected, it will set the state of the new ledstrip as the new state of the server.
+   * If another ledstrip is connected, it will set the state of the new ledstrip to the state of the server.
+   * @param client
+   * @param payload
+   */
+  @SubscribeMessage("submitState")
+  async onRegisterState(client: Socket, payload: LedstripState): Promise<void> {
+    this.websocketClientsManagerService.syncState(client, payload);
+  }
   /**
    * When a client connects, log its IP address.
    * Also set the server instance in the websocketClientsManagerService, so we make sure it is always up-to-date with the current server instance.
