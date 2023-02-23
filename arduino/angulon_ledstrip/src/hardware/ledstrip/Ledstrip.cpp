@@ -45,3 +45,7 @@ int Ledstrip::getBrightness() {
     return brightness;
 }
 
+String * Ledstrip::getColorsHexString() {
+    return this->colorsHexString;
+}
+

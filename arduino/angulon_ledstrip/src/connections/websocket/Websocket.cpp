@@ -4,6 +4,7 @@
 
 #include <map>
 #include "Websocket.h"
+#include "utils/state/State.h"
 #include "utils/logger/Logger.h"
 
 void Websocket::setup() {
@@ -100,8 +101,8 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
 /// Event that handles setting the entire state of the application.
 /// \param payload
 /// \param _doc
-void Websocket::handleBangEvent(uint8_t *payload, const JsonDocument &_doc) {
-//    this->ledstrip->decreaseSpeedDelay();
+void Websocket::handleBangEvent(uint8_t *payload, const JsonDocument &doc) {
+    State::setState(doc);
 }
 
 

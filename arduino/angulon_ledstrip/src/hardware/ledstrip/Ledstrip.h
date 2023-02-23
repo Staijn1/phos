@@ -13,6 +13,8 @@ class Ledstrip {
 private:
     ConfigurationManager configurationManager;
     WS2812FX *strip;
+    String colorsHexString[3] = {"#ff0000", "#00ff00", "#0000ff"};
+
 
     int brightness = 196;
     int speed = 1000;
@@ -22,6 +24,8 @@ public:
     void run();
 
     void setColors(int segment, uint32_t colors[3]);
+
+    String * getColorsHexString();
 
     uint8_t getMode();
 

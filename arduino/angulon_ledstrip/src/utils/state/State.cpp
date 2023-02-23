@@ -18,13 +18,18 @@ String State::getStateJSON() {
     root["speed"] = Angulon::ledstrip->getSpeed();
     root["brightness"] = Angulon::ledstrip->getBrightness();
 
-    /*JsonArray color = root.createNestedArray("color");
-    color.add(main_color.red);
-    color.add(main_color.green);
-    color.add(main_color.blue);*/
+    JsonArray color = root.createNestedArray("color");
+    const auto& colors = Angulon::ledstrip->getColorsHexString();
+    color.add(colors[0]);
+    color.add(colors[1]);
+    color.add(colors[2]);
 
     String json;
     serializeJson(root, json);
 
     return json;
+}
+
+void State::setState(const JsonDocument &doc) {
+
 }

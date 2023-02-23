@@ -13,7 +13,7 @@ class State {
 public:
     static String getStateJSON();
 
-    static void setState(DynamicJsonDocument *doc);
+    static void setState(const JsonDocument &doc);
 };
 
 
