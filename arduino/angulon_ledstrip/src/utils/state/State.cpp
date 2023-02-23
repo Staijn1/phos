@@ -23,7 +23,7 @@ String State::getStateJSON() {
     doc_1["speed"] = 1000;
     doc_1["brightness"] = 196;
 
-    JsonArray doc_1_color = doc_1.createNestedArray("color");
+    JsonArray doc_1_color = doc_1.createNestedArray("colors");
     doc_1_color.add(colors[0]);
     doc_1_color.add(colors[1]);
     doc_1_color.add(colors[2]);
@@ -44,7 +44,7 @@ void State::setState(const JsonObject object) {
     const char *color_0 = colors[0]; // "#ff0000"
     const char *color_1 = colors[1]; // "#00ff00"
     const char *color_2 = colors[2]; // "#0000ff"
-
+    
     Angulon::ledstrip->setMode(mode);
     Angulon::ledstrip->setBrightness(brightness);
     Angulon::ledstrip->setSpeed(speed);

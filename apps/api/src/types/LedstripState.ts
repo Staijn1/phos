@@ -1,6 +1,6 @@
 export type LedstripState = {
   mode: number;
-  color: string[];
+  colors: string[];
   brightness: number;
   speed: number;
   fftValue: number;

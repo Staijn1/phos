@@ -119,7 +119,7 @@ export class WebsocketClientsManagerService {
     if (ledstrips.length === 1 && ledstrips.includes(client)) {
       this.state = payload;
       logger.info(`Updating server state to state from ${client.conn.remoteAddress}`);
-      // return;
+      return;
     }
 
     client.emit('!', this.state);
