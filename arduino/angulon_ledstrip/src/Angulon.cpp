@@ -9,8 +9,8 @@ Ledstrip *Angulon::ledstrip = new Ledstrip();
 
 void Angulon::setup() {
     Logger::setup();
-    Angulon::ledstrip->setup();
     configuration.setup();
+    Angulon::ledstrip->setup();
 
     if (configuration.isConfigured) {
         websocket.setup();
