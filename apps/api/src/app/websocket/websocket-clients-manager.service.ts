@@ -10,6 +10,7 @@ export class WebsocketClientsManagerService {
   private colorTimeout: NodeJS.Timeout;
   private state: LedstripState | undefined
   private logger: Logger = new Logger("WebsocketClientsManagerService");
+
   /**
    * Set the mode of all clients
    * @param mode
@@ -35,15 +36,7 @@ export class WebsocketClientsManagerService {
    * @param originClient
    */
   setColor(payload: string[], originClient: Socket) {
-    const formattedPayload = [];
-    for (const rawColor of payload) {
-      let formattedColor = rawColor;
-      // If the payload contains a #, remove it
-      if (rawColor.includes('#')) formattedColor = rawColor.replace('#', '');
-      formattedPayload.push(formattedColor);
-    }
-
-    this.state.colors = formattedPayload;
+    this.state.colors = payload;
     clearTimeout(this.colorTimeout);
     // The server sends messages so quickly, the ledstrips can't keep up so we have to slow it down
     this.colorTimeout = setTimeout(() => this.setStateOnAllLedstrips(), 10)

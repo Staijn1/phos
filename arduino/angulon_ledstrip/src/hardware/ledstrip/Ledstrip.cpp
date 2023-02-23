@@ -81,11 +81,9 @@ String *Ledstrip::getColorsHexString() {
 }
 
 uint32_t Ledstrip::hexStringToInt(const char *color) {
-    std::string hex_str = color;
-    // Remove the prefix from the hexadecimal string
-    std::string hex_str_without_prefix = hex_str.substr(1);
-    // Convert the hexadecimal string to a uint32_t value
-    return strtoul(hex_str_without_prefix.c_str(), nullptr, 16);
+    char *endptr;
+    uint32_t intValue = strtol(color + 1, &endptr, 16);
+    return intValue;
 }
 
 
