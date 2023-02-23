@@ -27,9 +27,9 @@ public:
 
     String getModeName(uint8_t mode);
 
-    uint8_t getBrightness();
+    int getBrightness();
 
-    uint8_t getSpeed();
+    int getSpeed();
 };
 
 

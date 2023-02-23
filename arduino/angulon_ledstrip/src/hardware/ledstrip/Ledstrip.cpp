@@ -37,11 +37,11 @@ String Ledstrip::getModeName(uint8_t mode) {
     return strip->getModeName(mode);
 }
 
-uint8_t Ledstrip::getSpeed() {
-    return speed;
+int Ledstrip::getSpeed() {
+    return strip->getSpeed();
 }
 
-uint8_t Ledstrip::getBrightness() {
+int Ledstrip::getBrightness() {
     return brightness;
 }
 
