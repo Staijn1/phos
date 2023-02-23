@@ -44,7 +44,7 @@ void State::setState(const JsonObject object) {
     const char *color_0 = colors[0]; // "#ff0000"
     const char *color_1 = colors[1]; // "#00ff00"
     const char *color_2 = colors[2]; // "#0000ff"
-    
+
     Angulon::ledstrip->setMode(mode);
     Angulon::ledstrip->setBrightness(brightness);
     Angulon::ledstrip->setSpeed(speed);

@@ -7,3 +7,4 @@ export * from './lib/SpeedInformation';
 export * from './lib/ArrayTwoOrMore';
 export * from './lib/Responses';
 export * from './lib/AngulonVisualizerOptions';
+export * from './lib/functions';

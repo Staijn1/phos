@@ -1,20 +1,22 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {logger} from 'nx/src/utils/logger';
 import {LedstripState} from "../../types/LedstripState";
+import {constrain} from "@angulon/interfaces";
 
 @Injectable()
 export class WebsocketClientsManagerService {
   private server!: Server;
   private colorTimeout: NodeJS.Timeout;
   private state: LedstripState | undefined
-
+  private logger: Logger = new Logger("WebsocketClientsManagerService");
   /**
    * Set the mode of all clients
    * @param mode
    */
   setMode(mode: number) {
-    this.sendAllLedstrips('/', mode.toString());
+    this.state.mode = mode;
+    this.setStateOnAllLedstrips();
   }
 
   /**
@@ -22,13 +24,15 @@ export class WebsocketClientsManagerService {
    * @param {string}payload
    */
   setFFTValue(payload: number): void {
-    this.sendAllLedstrips('.', payload.toString())
+    this.state.fftValue = payload;
+    this.setStateOnAllLedstrips()
   }
 
   /**
    * Receive a hex color to set on all ledstrips
    * Also broadcast the color to all users except the one that sent the message so their state can be updated
    * @param payload
+   * @param originClient
    */
   setColor(payload: string[], originClient: Socket) {
     const formattedPayload = [];
@@ -39,26 +43,31 @@ export class WebsocketClientsManagerService {
       formattedPayload.push(formattedColor);
     }
 
+    this.state.colors = formattedPayload;
     clearTimeout(this.colorTimeout);
     // The server sends messages so quickly, the ledstrips can't keep up so we have to slow it down
-    this.colorTimeout = setTimeout(() => this.sendAllLedstrips('#', formattedPayload), 10)
+    this.colorTimeout = setTimeout(() => this.setStateOnAllLedstrips(), 10)
     this.sendAllUsers('color-change', payload, originClient);
   }
 
   decreaseSpeed() {
-    this.sendAllLedstrips('?', undefined)
+    this.state.speed = constrain(this.state.speed * 1.1, 200, 5000)
+    this.setStateOnAllLedstrips()
   }
 
   increaseSpeed() {
-    this.sendAllLedstrips('!', undefined)
+    this.state.speed = constrain(this.state.speed * 0.9, 200, 5000)
+    this.setStateOnAllLedstrips()
   }
 
   increaseBrightness() {
-    this.sendAllLedstrips('+', undefined)
+    this.state.brightness = constrain(this.state.brightness * 1.1, 10, 255)
+    this.setStateOnAllLedstrips()
   }
 
   decreaseBrightness() {
-    this.sendAllLedstrips('-', undefined)
+    this.state.brightness = constrain(this.state.brightness * 0.9, 10, 255)
+    this.setStateOnAllLedstrips()
   }
 
   /**
@@ -71,11 +80,9 @@ export class WebsocketClientsManagerService {
 
   /**
    * Send a command to all ledstrips. These are all clients that are not in the user room
-   * @param event
-   * @param {string} payload
    * @private
    */
-  private sendAllLedstrips(event: string, payload: string | string[]): void {
+  private setStateOnAllLedstrips(): void {
     const clients = this.getLedstripClients();
     for (const client of clients) {
       client.emit("!", this.state);
@@ -88,7 +95,7 @@ export class WebsocketClientsManagerService {
    */
   joinUserRoom(client: Socket) {
     client.join('user');
-    logger.info(`Client ${client.conn.remoteAddress} joined the user room`);
+    this.logger.log(`Client ${client.conn.remoteAddress} joined the user room`);
   }
 
   /**
@@ -118,7 +125,7 @@ export class WebsocketClientsManagerService {
 
     if (ledstrips.length === 1 && ledstrips.includes(client)) {
       this.state = payload;
-      logger.info(`Updating server state to state from ${client.conn.remoteAddress}`);
+      this.logger.log(`Updating server state to state from ${client.conn.remoteAddress}`);
       return;
     }
 
