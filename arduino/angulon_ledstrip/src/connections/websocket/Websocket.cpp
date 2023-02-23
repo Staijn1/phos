@@ -73,7 +73,7 @@ void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payloa
 }
 
 void Websocket::handleEvent(uint8_t *payload, size_t length) {
-    StaticJsonDocument<128> doc;
+    StaticJsonDocument<192> doc;
 
     DeserializationError error = deserializeJson(doc, payload);
 
