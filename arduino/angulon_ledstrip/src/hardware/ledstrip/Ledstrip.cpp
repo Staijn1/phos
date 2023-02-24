@@ -6,10 +6,17 @@
 #include "utils/logger/Logger.h"
 #include "../../../.pio/libdeps/esp32dev/Adafruit NeoPixel/Adafruit_NeoPixel.h"
 
+WS2812FX* Ledstrip::strip;
+int Ledstrip::FFTValue =0;
+
 void Ledstrip::setup() {
     Logger::log("Ledstrip", "Setting up ledstrip");
     SystemConfiguration config = configurationManager.getConfig();
+    this->ledcount = config.ledcount;
     strip = new WS2812FX(config.ledcount, config.ledpin, NEO_GRB + NEO_KHZ800);
+
+    Logger::log("Ledstrip", "Registering VUMeter effect");
+    strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
     strip->init();
 
 
@@ -46,7 +53,10 @@ uint8_t Ledstrip::getMode() {
 }
 
 void Ledstrip::setMode(int mode) {
-    this->strip->setMode(mode);
+    Ledstrip::strip->setMode(mode);
+    if (mode == FX_MODE_CUSTOM) {
+        strip->setSegment(0, 0, this->ledcount - 1, FX_MODE_CUSTOM, strip->getColor(), 0, NO_OPTIONS);
+    }
     Logger::log("Ledstrip", "Set mode to: " + String(mode));
 }
 
@@ -87,7 +97,25 @@ uint32_t Ledstrip::hexStringToInt(const char *color) {
 }
 
 void Ledstrip::setFFTValue(int value) {
-    this->FFTValue = value;
+    Ledstrip::FFTValue = value;
 }
 
+int Ledstrip::getFFTValue() {
+    return Ledstrip::FFTValue;
+}
 
+uint16_t Ledstrip::vuMeter(void) {
+    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
+    int ledCount = ConfigurationManager::systemConfiguration.ledcount;
+    const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledCount);
+
+    for (int index = 0; index < ledCount; index++) {
+        if (index <= amountOfLedsToShow) {
+            strip->setPixelColor(index, seg->colors[0]);
+        } else {
+            strip->setPixelColor(index, seg->colors[1]);
+        }
+    }
+
+    return seg->speed;
+}
