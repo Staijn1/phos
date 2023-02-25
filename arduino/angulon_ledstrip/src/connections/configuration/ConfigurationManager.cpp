@@ -30,12 +30,12 @@ char angulon_index_html[]
             <input type='password' class='form-control' id='password' name='password' placeholder='Password'>
         </div>
         <div class='form-group'>
-            <label for='ledPin'>LED Pin</label>
-            <input type='number' class='form-control' id='ledPin' name='ledPin' placeholder='LED Pin' min="0" value="26">
+            <label for='ledpin'>LED Pin</label>
+            <input type='number' class='form-control' id='ledpin' name='ledpin' placeholder='LED Pin' min="0" value="26">
         </div>
         <div class='form-group'>
-            <label for='ledCount'>LED Count</label>
-            <input type='number' class='form-control' id='ledCount' name='ledCount' placeholder='LED Count' min="0" value="60">
+            <label for='ledcount'>LED Count</label>
+            <input type='number' class='form-control' id='ledcount' name='ledcount' placeholder='LED Count' min="0" value="60">
         </div>
         <div class='form-group'>
             <label for='serverip'>Server API IP</label>
@@ -103,12 +103,12 @@ void ConfigurationManager::configureDevice() {
     const String ssid = server->arg("ssid");
     const String password = server->arg("password");
     const String serverip = server->arg("serverip");
-    const int ledpin = server->arg("ledPin").toInt();
-    const int ledCount = server->arg("ledCount").toInt();
+    const int ledpin = server->arg("ledpin").toInt();
+    const int ledcount = server->arg("ledcount").toInt();
     const int serverPort = server->arg("serverport").toInt();
 
     // Check if all the right values are set
-    if (ssid == "" || password == "" || ledpin < 0 || ledCount < 0 || serverip == "" || serverPort < 0) {
+    if (ssid == "" || password == "" || ledpin <= 0 || ledcount <= 0 || serverip == "" || serverPort <= 0) {
         server->send(400, "text/plain", "Invalid parameters");
         return;
     }
@@ -117,7 +117,7 @@ void ConfigurationManager::configureDevice() {
     preferences.putString("password", password);
     preferences.putString("serverip", serverip);
     preferences.putInt("ledpin", ledpin);
-    preferences.putInt("ledCount", ledCount);
+    preferences.putInt("ledcount", ledcount);
     preferences.putInt("serverport", serverPort);
     preferences.putBool("isConfigured", true);
 
