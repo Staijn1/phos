@@ -4,6 +4,7 @@
 
 #include "OTA.h"
 #include "utils/logger/Logger.h"
+#include "Angulon.h"
 #include <ArduinoOTA.h>
 
 void OTA::setup() {
@@ -20,10 +21,17 @@ void OTA::setup() {
             })
             .onEnd([]() {
                 Logger::log("OTA", "Finished flash");
+                Angulon::led->turnOff();
             })
-            .onProgress([](unsigned int progress, unsigned int total) {
+            .onProgress([this](unsigned int progress, unsigned int total) {
                 unsigned int percentage = (progress / (total / 100));
                 Logger::log("OTA", "Progress: " + String(percentage));
+                 // Blink interval in milliseconds
+                static unsigned long previousMillis = 0;
+                if (millis() - previousMillis >= this->blinkInterval) {
+                    previousMillis = millis();
+                    Angulon::led->toggle();
+                }
             })
             .onError([](ota_error_t error) {
                 Serial.printf("Error[%u]: ", error);

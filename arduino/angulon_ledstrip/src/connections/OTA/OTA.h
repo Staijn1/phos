@@ -9,9 +9,12 @@
 #include "connections/configuration/ConfigurationManager.h"
 
 class OTA {
+private:
+    const int blinkInterval = 30;
 public:
     void setup();
     void run();
+
 };
 
 

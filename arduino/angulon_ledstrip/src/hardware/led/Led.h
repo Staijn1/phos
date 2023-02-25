@@ -7,15 +7,14 @@
 
 
 class Led {
+private:
+    int pin;
 public:
     explicit Led(int pin);
 
     void turnOn();
 
     void turnOff();
-
-private:
-    int pin;
 
     void toggle();
 };
