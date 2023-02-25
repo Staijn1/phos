@@ -15,7 +15,6 @@ void Websocket::setup() {
     SystemConfiguration configuration = configurationManager->getConfig();
     socketIO.begin(configuration.serverip, configuration.serverport, "/socket.io/?EIO=4");
     socketIO.onEvent([&](socketIOmessageType_t type, uint8_t *payload, size_t length) {
-        Serial.printf("[IOc] get event: %s\n", payload);
         this->webSocketClientEvent(type, payload, length);
     });
     socketIO.setReconnectInterval(5000);
@@ -55,7 +54,6 @@ void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payloa
             break;
         }
         case sIOtype_EVENT: {
-            Logger::log("Websocket", "Got an event from the server");
             this->handleEvent(payload, length);
             break;
         }
@@ -93,35 +91,14 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
     const JsonObject object = doc[1];
     // Handle the different events
     if (*event == '!') {
+        Serial.printf("[Websocket] get event: %s\n", payload);
         State::setState(object);
-    } else if (*event == '#') {
-        JsonArray colors = doc[1];
-        handleHashEvent(colors);
     } else if (*event == '.') {
         handleDotEvent(payload, doc);
     } else {
         // Handle invalid or unknown event
         handleUnknownEvent(payload, doc);
     }
-}
-
-
-void Websocket::handleHashEvent(const JsonArray colors) {
-    // The output values
-    uint32_t convertedColors[MAX_NUM_COLORS];
-    int index = 0;
-    // Loop over the hexadecimal strings
-    for (JsonVariant color: colors) {
-        // Get the string value at the current index
-        std::string hex_str = color.as<std::string>();
-        // Remove the prefix from the hexadecimal string
-        std::string hex_str_without_prefix = hex_str.substr(1);
-        // Convert the hexadecimal string to a uint32_t value
-        convertedColors[index] = strtoul(hex_str_without_prefix.c_str(), nullptr, 16);
-        index++;
-    }
-
-//    ledstrip->setColors(0, convertedColors);
 }
 
 void Websocket::handleDotEvent(uint8_t *payload, const JsonDocument &_doc) {
