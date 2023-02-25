@@ -6,34 +6,35 @@
 #include "utils/logger/Logger.h"
 #include "../../../.pio/libdeps/esp32dev/Adafruit NeoPixel/Adafruit_NeoPixel.h"
 
-WS2812FX* Ledstrip::strip;
-int Ledstrip::FFTValue =0;
+WS2812FX *Ledstrip::strip;
+int Ledstrip::FFTValue = 0;
 
 void Ledstrip::setup() {
     Logger::log("Ledstrip", "Setting up ledstrip");
     SystemConfiguration config = configurationManager.getConfig();
-    this->ledcount = config.ledcount;
-    strip = new WS2812FX(config.ledcount, config.ledpin, NEO_GRB + NEO_KHZ800);
+    this->ledcount = ConfigurationManager::systemConfiguration.ledcount;
+    Ledstrip::strip = new WS2812FX(this->ledcount, config.ledpin, NEO_GRB + NEO_KHZ800);
 
     Logger::log("Ledstrip", "Registering VUMeter effect");
-    strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
-    strip->init();
-
-
+    Ledstrip::strip->init();
+    Ledstrip::strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
     // Todo make State set initial ledstrip state
-    strip->setMode(FX_MODE_STATIC);
-    strip->setSpeed(1000);
-    strip->setBrightness(brightness);
-    strip->setColor(0xFF0000);
-    strip->start();
+    Ledstrip::strip->setMode(FX_MODE_STATIC);
+    Ledstrip::strip->setSpeed(1000);
+    Ledstrip::strip->setBrightness(brightness);
+    Ledstrip::strip->setColor(0x000000);
+
+    Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, FX_MODE_CUSTOM, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
+
+    Ledstrip::strip->start();
 }
 
 void Ledstrip::run() {
-    strip->service();
+    Ledstrip::strip->service();
 }
 
 void Ledstrip::setColors(int segment, uint32_t *colors) {
-    strip->setColors(segment, colors);
+    Ledstrip::strip->setColors(segment, colors);
     Logger::log("Ledstrip", "Setting colors");
 }
 
@@ -49,29 +50,31 @@ void Ledstrip::setColors(int segment, const char *color_0, const char *color_1, 
 }
 
 uint8_t Ledstrip::getMode() {
-    return strip->getMode();
+    return Ledstrip::strip->getMode();
 }
 
 void Ledstrip::setMode(int mode) {
-    Ledstrip::strip->setMode(mode);
     if (mode == FX_MODE_CUSTOM) {
-        strip->setSegment(0, 0, this->ledcount - 1, FX_MODE_CUSTOM, strip->getColor(), 0, NO_OPTIONS);
+        Logger::log("Ledstrip", "Received a custom mode, setting segment");
+        Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
+    } else {
+        Ledstrip::strip->setMode(mode);
     }
     Logger::log("Ledstrip", "Set mode to: " + String(mode));
 }
 
 
 String Ledstrip::getModeName(uint8_t mode) {
-    return strip->getModeName(mode);
+    return Ledstrip::strip->getModeName(mode);
 }
 
 
 int Ledstrip::getSpeed() {
-    return strip->getSpeed();
+    return Ledstrip::strip->getSpeed();
 }
 
 void Ledstrip::setSpeed(int speed) {
-    strip->setSpeed(speed);
+    Ledstrip::strip->setSpeed(speed);
     Logger::log("Ledstrip", "Set speed to: " + String(speed));
 }
 
@@ -106,14 +109,14 @@ int Ledstrip::getFFTValue() {
 
 uint16_t Ledstrip::vuMeter(void) {
     WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
-    int ledCount = ConfigurationManager::systemConfiguration.ledcount;
-    const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledCount);
+    int ledcount = ConfigurationManager::systemConfiguration.ledcount;
+    const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledcount);
 
-    for (int index = 0; index < ledCount; index++) {
+    for (int index = 0; index < ledcount; index++) {
         if (index <= amountOfLedsToShow) {
-            strip->setPixelColor(index, seg->colors[0]);
+            Ledstrip::strip->setPixelColor(index, seg->colors[0]);
         } else {
-            strip->setPixelColor(index, seg->colors[1]);
+            Ledstrip::strip->setPixelColor(index, seg->colors[1]);
         }
     }
 
