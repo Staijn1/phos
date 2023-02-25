@@ -14,6 +14,7 @@ void Angulon::setup() {
 
     if (configuration.isConfigured) {
         websocket.setup();
+        ota.setup();
     }
 
     Logger::log("Angulon", "Setup finished");
@@ -26,6 +27,7 @@ void Angulon::loop() {
     Angulon::ledstrip->run();
     if (configuration.isConfigured) {
         websocket.run();
+        ota.run();
     }
 }
 

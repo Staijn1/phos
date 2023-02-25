@@ -16,6 +16,8 @@ public:
 
 private:
     int pin;
+
+    void toggle();
 };
 
 

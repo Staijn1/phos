@@ -9,11 +9,13 @@
 #include "utils/logger/Logger.h"
 #include "connections/configuration/ConfigurationManager.h"
 #include "connections/websocket/Websocket.h"
+#include "connections/OTA/OTA.h"
 
 class Angulon {
 private:
     ConfigurationManager configuration;
     Websocket websocket;
+    OTA ota;
 public:
     void setup();
 
