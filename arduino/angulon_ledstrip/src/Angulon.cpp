@@ -20,7 +20,7 @@ void Angulon::setup() {
 
     Logger::log("Angulon", "Setup finished");
     Serial.println( State::getStateJSON());
-    Serial.println(State::getModesJSON());
+//    Serial.println(State::getModesJSON());
 }
 
 
