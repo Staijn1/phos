@@ -65,6 +65,7 @@ void ConfigurationManager::setup() {
         this->loadConfiguration();
         this->setupWiFi();
     }
+    this->setupWebserver();
 }
 
 void ConfigurationManager::startConfigurationMode() {
@@ -72,8 +73,6 @@ void ConfigurationManager::startConfigurationMode() {
 
     WiFi.softAP(hotspotName, hotspotPassword);
     IPAddress IP = WiFi.softAPIP();
-
-    this->setupWebserver();
 
     Logger::log("ConfigurationManager", "Access point started");
 // Log the hotspot name + hotspotPassword where you should connect to
