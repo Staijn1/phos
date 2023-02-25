@@ -122,3 +122,7 @@ uint16_t Ledstrip::vuMeter(void) {
 
     return seg->speed;
 }
+
+uint8_t Ledstrip::getModeCount() {
+    return Ledstrip::strip->getModeCount();
+}

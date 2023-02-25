@@ -52,6 +52,7 @@ public:
 
     static uint16_t vuMeter(void);
 
+    uint8_t getModeCount();
 };
 
 
