@@ -17,6 +17,8 @@ private:
     Websocket websocket;
     OTA ota;
 public:
+    static Led *led;
+
     void setup();
 
     void loop();

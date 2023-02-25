@@ -6,6 +6,7 @@
 #include "utils/state/State.h"
 
 Ledstrip *Angulon::ledstrip = new Ledstrip();
+Led *Angulon::led = new Led(BUILTIN_LED);
 
 void Angulon::setup() {
     Logger::setup();

@@ -10,7 +10,7 @@
 
 void Websocket::setup() {
     Logger::log("Websocket", "Setting up websocket connection");
-    Websocket::led->turnOff();
+    Angulon::led->turnOff();
 
     SystemConfiguration configuration = configurationManager->getConfig();
     socketIO.begin(configuration.serverip, configuration.serverport, "/socket.io/?EIO=4");
@@ -38,13 +38,13 @@ void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payloa
 
     switch (type) {
         case sIOtype_DISCONNECT:
-            Websocket::led->turnOff();
+            Angulon::led->turnOff();
             Logger::log("Websocket", "Disconnected from server");
             break;
         case sIOtype_CONNECT: {
             // Join default namespace (no auto join in Socket.IO V3)
             socketIO.send(sIOtype_CONNECT, "/");
-            Websocket::led->turnOn();
+            Angulon::led->turnOn();
             Logger::log("Websocket", "Connected to server");
 
             // Send event to update server of current ledstrip state.
