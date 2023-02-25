@@ -54,7 +54,12 @@ uint8_t Ledstrip::getMode() {
 }
 
 void Ledstrip::setMode(int mode) {
-    Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
+    if (mode == FX_MODE_CUSTOM) {
+        Logger::log("Ledstrip", "Received a custom mode, setting segment");
+        Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
+    } else {
+        Ledstrip::strip->setMode(mode);
+    }
     Logger::log("Ledstrip", "Set mode to: " + String(mode));
 }
 

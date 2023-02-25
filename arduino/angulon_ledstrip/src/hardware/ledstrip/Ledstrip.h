@@ -50,7 +50,7 @@ public:
 
     static int getFFTValue();
 
-    static uint16_t vuMeter(void);
+    static uint16_t vuMeter();
 
     uint8_t getModeCount();
 };
