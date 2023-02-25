@@ -43,12 +43,12 @@ export class WebsocketClientsManagerService {
   }
 
   decreaseSpeed() {
-    this.state.speed = constrain(this.state.speed * 1.1, 200, 5000)
+    this.state.speed = constrain(this.state.speed * 1.1, 200, 10000)
     this.setStateOnAllLedstrips()
   }
 
   increaseSpeed() {
-    this.state.speed = constrain(this.state.speed * 0.9, 200, 5000)
+    this.state.speed = constrain(this.state.speed * 0.9, 200, 10000)
     this.setStateOnAllLedstrips()
   }
 
