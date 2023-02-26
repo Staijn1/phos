@@ -18,6 +18,7 @@ void Ledstrip::setup() {
     Logger::log("Ledstrip", "Registering VUMeter effect");
     Ledstrip::strip->init();
     Ledstrip::strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
+    Ledstrip::strip->setCustomMode(F("VuMeter Brightness"), Ledstrip::vuMeterBrightness);
     // Todo make State set initial ledstrip state
     Ledstrip::strip->setMode(FX_MODE_STATIC);
     Ledstrip::strip->setSpeed(1000);
@@ -54,7 +55,7 @@ uint8_t Ledstrip::getMode() {
 }
 
 void Ledstrip::setMode(int mode) {
-    if (mode == FX_MODE_CUSTOM) {
+    if (mode == FX_MODE_CUSTOM || FX_MODE_CUSTOM_0 || FX_MODE_CUSTOM_1) {
         Logger::log("Ledstrip", "Received a custom mode, setting segment");
         Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
     } else {
@@ -107,9 +108,10 @@ int Ledstrip::getFFTValue() {
     return Ledstrip::FFTValue;
 }
 
+
 uint16_t Ledstrip::vuMeter() {
     WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
-    int ledcount = ConfigurationManager::systemConfiguration.ledcount;
+    const int ledcount = ConfigurationManager::systemConfiguration.ledcount;
     const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledcount);
 
     for (int index = 0; index < ledcount; index++) {
@@ -120,6 +122,16 @@ uint16_t Ledstrip::vuMeter() {
         }
     }
 
+    return seg->speed;
+}
+
+uint16_t Ledstrip::vuMeterBrightness() {
+    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
+    const int ledcount = ConfigurationManager::systemConfiguration.ledcount;
+    for (int index = 0; index < ledcount; index++) {
+        Ledstrip::strip->setPixelColor(index, seg->colors[0]);
+    }
+    Ledstrip::strip->setBrightness(Ledstrip::getFFTValue());
     return seg->speed;
 }
 

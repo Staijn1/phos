@@ -50,9 +50,13 @@ public:
 
     static int getFFTValue();
 
-    static uint16_t vuMeter();
 
     uint8_t getModeCount();
+
+    // Custom effects
+    static uint16_t vuMeter();
+
+    static uint16_t vuMeterBrightness();
 };
 
 
