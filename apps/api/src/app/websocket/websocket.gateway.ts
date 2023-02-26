@@ -5,14 +5,13 @@ import {
   WebSocketGateway,
   WebSocketServer
 } from "@nestjs/websockets";
-import {Logger} from "@nestjs/common";
-import {Server, Socket} from "socket.io";
-import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
-import {ConfigurationService} from "../configuration/configuration.service";
-import {AddGradientResponse, GradientInformation, ModeInformation} from "@angulon/interfaces";
-import {ModeStatisticsDbService} from "../database/mode-statistics/mode-statistics-db.service";
-import {GradientsService} from "../gradients/gradients.service";
-import {LedstripState} from "../../types/LedstripState";
+import { Logger } from "@nestjs/common";
+import { Server, Socket } from "socket.io";
+import { WebsocketClientsManagerService } from "./websocket-clients-manager.service";
+import { ConfigurationService } from "../configuration/configuration.service";
+import { AddGradientResponse, GradientInformation, ModeInformation } from "@angulon/interfaces";
+import { GradientsService } from "../gradients/gradients.service";
+import { LedstripState } from "../../types/LedstripState";
 
 @WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
@@ -23,7 +22,6 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
     private readonly configurationService: ConfigurationService,
-    private readonly modeStatisticsService: ModeStatisticsDbService,
     private readonly gradientsService: GradientsService) {
   }
 
@@ -32,7 +30,6 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     try {
       const mode = parseInt(payload, 10);
       this.websocketClientsManagerService.setMode(mode);
-      await this.modeStatisticsService.registerModeChange(mode);
       return "OK";
     } catch (e) {
       this.logger.error(e);

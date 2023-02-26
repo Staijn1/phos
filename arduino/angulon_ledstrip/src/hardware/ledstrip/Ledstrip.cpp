@@ -107,7 +107,7 @@ int Ledstrip::getFFTValue() {
     return Ledstrip::FFTValue;
 }
 
-uint16_t Ledstrip::vuMeter(void) {
+uint16_t Ledstrip::vuMeter() {
     WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
     int ledcount = ConfigurationManager::systemConfiguration.ledcount;
     const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledcount);
