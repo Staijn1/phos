@@ -65,7 +65,7 @@ void ConfigurationManager::setup() {
         this->loadConfiguration();
         this->setupWiFi();
     }
-    this->setupWebserver(isConfigured);
+    this->setupWebserver();
 }
 
 void ConfigurationManager::startConfigurationMode() {
@@ -84,15 +84,15 @@ void ConfigurationManager::startConfigurationMode() {
 
 }
 
-void ConfigurationManager::setupWebserver(bool isConfigured) {
-    server->on("/", [this, &isConfigured]() {
+void ConfigurationManager::setupWebserver() {
+    server->on("/", [this]() {
         SystemConfiguration configuration = ConfigurationManager::getConfig();
-        String ssid = isConfigured ? configuration.ssid : "";
-        String password = isConfigured ? configuration.password : "";
-        String ledpin = isConfigured ? String(configuration.ledpin) : "";
-        String ledcount = isConfigured ? String(configuration.ledcount) : "";
-        String serverip = isConfigured ? configuration.serverip : "";
-        String serverport = isConfigured ? String(configuration.serverport) : "";
+        String ssid = configuration.ssid;
+        String password = configuration.password;
+        String ledpin = configuration.ledpin == (uint8_t) -1 ? "" : String(configuration.ledpin);
+        String ledcount = configuration.ledcount == (uint8_t) -1 ? "" : String(configuration.ledcount);
+        String serverip = configuration.serverip;
+        String serverport = configuration.serverport == -1 ? "" : String(configuration.serverport);
 
         String html = angulon_index_html;
         html.replace("{{ssid}}", ssid);
@@ -107,9 +107,12 @@ void ConfigurationManager::setupWebserver(bool isConfigured) {
         this->configureDevice();
     });
     server->on("/reconfigure", [this]() {
+        Logger::log("ConfigurationManager", "Reconfiguring device");
         preferences.putBool("isConfigured", false);
+        ESP.restart();
     });
     server->on("/restart", [this]() {
+        Logger::log("ConfigurationManager", "Rebooting...");
         ESP.restart();
     });
     server->begin();
@@ -201,11 +204,11 @@ SystemConfiguration ConfigurationManager::getConfig() {
 
 void ConfigurationManager::loadConfiguration() {
     SystemConfiguration config{};
-    config.ssid = preferences.getString("ssid").c_str();
-    config.password = preferences.getString("password");
-    config.serverip = preferences.getString("serverip");
-    config.ledpin = preferences.getInt("ledpin");
-    config.ledcount = preferences.getInt("ledcount");
-    config.serverport = preferences.getInt("serverport");
+    config.ssid = preferences.getString("ssid", "").c_str();
+    config.password = preferences.getString("password", "");
+    config.serverip = preferences.getString("serverip", "");
+    config.ledpin = preferences.getInt("ledpin", -1);
+    config.ledcount = preferences.getInt("ledcount", -1);
+    config.serverport = preferences.getInt("serverport", -1);
     systemConfiguration = config;
 }

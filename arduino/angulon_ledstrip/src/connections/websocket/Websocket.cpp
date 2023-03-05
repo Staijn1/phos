@@ -9,10 +9,10 @@
 #include "Angulon.h"
 
 void Websocket::setup() {
-    Logger::log("Websocket", "Setting up websocket connection");
+    SystemConfiguration configuration = configurationManager->getConfig();
+    Logger::log("Websocket", "Setting up websocket connection to " + configuration.serverip + ":" + configuration.serverport);
     Angulon::led->turnOff();
 
-    SystemConfiguration configuration = configurationManager->getConfig();
     socketIO.begin(configuration.serverip, configuration.serverport, "/socket.io/?EIO=4");
     socketIO.onEvent([&](socketIOmessageType_t type, uint8_t *payload, size_t length) {
         this->webSocketClientEvent(type, payload, length);
