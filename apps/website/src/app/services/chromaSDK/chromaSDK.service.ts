@@ -33,20 +33,6 @@ export class ChromaSDKService {
   private readonly RAZER_API_PORT = 54235;
   private readonly API_URL = `http://localhost:${this.RAZER_API_PORT}/razer/chromasdk/`;
 
-  readonly mouse = {
-    rows: 9,
-    columns: 7,
-  };
-
-  readonly keyboard = {
-    rows: 6,
-    columns: 22,
-  };
-
-  readonly headset = {
-    amount: 5,
-  };
-
   mouseColors = [
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
@@ -67,6 +53,21 @@ export class ChromaSDKService {
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
   ];
+
+  readonly mouse = {
+    rows: this.mouseColors.length,
+    columns: this.mouseColors[0].length,
+  };
+
+  readonly keyboard = {
+    rows: this.keyboardColors.length,
+    columns: this.keyboardColors[0].length
+  };
+
+  readonly headset = {
+    amount: 5,
+  };
+
 
   private readonly options = {
     title: 'Angulon',

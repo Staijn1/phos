@@ -16,8 +16,6 @@
 class Websocket {
 private:
     SocketIOclient socketIO;
-    Led *led = new Led(BUILTIN_LED);
-    Ledstrip *ledstrip;
     ConfigurationManager *configurationManager;
     void webSocketClientEvent(socketIOmessageType_t type, uint8_t *payload, size_t length);
 
@@ -29,21 +27,13 @@ public:
 
     void handleEvent(uint8_t *payload, size_t length);
 
-    void handleBangEvent(uint8_t *payload, const JsonDocument &_doc);
-
-    void handleQuestionEvent(uint8_t *payload, const JsonDocument &_doc);
+    void handleBangEvent(uint8_t *payload, const JsonDocument &doc);
 
     void handleHashEvent(const JsonArray colors);
-
-    void handlePlusEvent(uint8_t *payload, const JsonDocument &_doc);
-
-    void handleMinusEvent(uint8_t *payload, const JsonDocument &_doc);
 
     void handleDotEvent(uint8_t *payload, const JsonDocument &_doc);
 
     void handleUnknownEvent(uint8_t *payload, const JsonDocument &_doc);
-
-    void handleSlashEvent(int mode);
 };
 
 #endif //ANGULON_LEDSTRIP_WEBSOCKET_H

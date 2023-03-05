@@ -12,26 +12,51 @@
 class Ledstrip {
 private:
     ConfigurationManager configurationManager;
-    WS2812FX *strip;
+    static WS2812FX *strip;
+    String colorsHexString[3] = {"#ff0000", "#00ff00", "#0000ff"};
 
-    int brightness = 196;
-    int speed = 1000;
+    int brightness = 200;
+    static int FFTValue;
+
+    uint32_t hexStringToInt(const char *color);
+
+    uint16_t ledcount;
 public:
     void setup();
 
     void run();
 
+    void setColors(int segment, uint32_t colors[3]);
+
+    void setColors(int segment, const char *color_0, const char *color_1, const char *color_2);
+
+    String *getColorsHexString();
+
+    uint8_t getMode();
+
+    String getModeName(uint8_t mode);
+
+    int getBrightness();
+
+    int getSpeed();
+
     void setMode(int mode);
 
-    void increaseBrightness();
+    void setSpeed(int speed);
 
-    void decreaseBrightness();
+    void setBrightness(int brightness);
 
-    void increaseSpeedDelay();
+    void setFFTValue(int value);
 
-    void decreaseSpeedDelay();
+    static int getFFTValue();
 
-    void setColors(int i, uint32_t colors[3]);
+
+    uint8_t getModeCount();
+
+    // Custom effects
+    static uint16_t vuMeter();
+
+    static uint16_t vuMeterBrightness();
 };
 
 

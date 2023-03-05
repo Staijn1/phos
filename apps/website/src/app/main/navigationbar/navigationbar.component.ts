@@ -26,6 +26,7 @@ import {WebsocketService} from '../../services/websocketconnection/websocket.ser
 import {Store} from '@ngrx/store';
 import {ColorpickerState} from '../../../redux/color/color.reducer';
 import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
+import {colorChange} from "../../../redux/color/color.action";
 
 @Component({
   selector: 'app-navigationbar',

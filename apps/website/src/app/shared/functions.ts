@@ -1,3 +1,4 @@
+import { constrain } from '@angulon/interfaces';
 import {GlobalVars} from './constants'
 import {RGBObject} from './types/types';
 
@@ -22,17 +23,6 @@ export function map(value: number, start1: number, stop1: number, start2: number
   } else {
     return constrain(newval, stop2, start2)
   }
-}
-
-/**
- * Limit a number to a certain maximum.
- * @param value
- * @param low
- * @param high
- * @returns {number}
- */
-export function constrain(value: number, low: number, high: number): number {
-  return Math.max(Math.min(value, high), low)
 }
 
 /**

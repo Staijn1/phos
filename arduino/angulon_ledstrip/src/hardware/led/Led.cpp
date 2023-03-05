@@ -8,7 +8,6 @@
 Led::Led(int pin) {
     this->pin = pin;
     pinMode(pin, OUTPUT);
-
 }
 
 void Led::turnOn() {
@@ -17,4 +16,8 @@ void Led::turnOn() {
 
 void Led::turnOff() {
     digitalWrite(pin, LOW);
+}
+
+void Led::toggle(){
+    digitalWrite(pin, !digitalRead(pin));
 }

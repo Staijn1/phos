@@ -6,18 +6,24 @@
 #define ANGULON_LEDSTRIP_ANGULON_H
 
 
-#include "utils/Logger.h"
+#include "utils/logger/Logger.h"
 #include "connections/configuration/ConfigurationManager.h"
 #include "connections/websocket/Websocket.h"
+#include "connections/OTA/OTA.h"
 
 class Angulon {
 private:
     ConfigurationManager configuration;
     Websocket websocket;
+    OTA ota;
 public:
+    static Led *led;
+
     void setup();
 
     void loop();
+
+    static Ledstrip *ledstrip;
 };
 
 

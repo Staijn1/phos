@@ -9,11 +9,10 @@ import {Logger} from "@nestjs/common";
 import {Server, Socket} from "socket.io";
 import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
 import {ConfigurationService} from "../configuration/configuration.service";
-import {AddGradientResponse, GradientInformation, ModeInformation} from "@angulon/interfaces";
-import {ModeStatisticsDbService} from "../database/mode-statistics/mode-statistics-db.service";
+import {AddGradientResponse, GradientInformation, LedstripState, ModeInformation} from "@angulon/interfaces";
 import {GradientsService} from "../gradients/gradients.service";
 
-@WebSocketGateway(undefined, { cors: true })
+@WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private server: Server;
@@ -22,8 +21,12 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
     private readonly configurationService: ConfigurationService,
-    private readonly modeStatisticsService: ModeStatisticsDbService,
     private readonly gradientsService: GradientsService) {
+  }
+
+  @SubscribeMessage("getState")
+  async onGetState(): Promise<LedstripState | undefined> {
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("mode")
@@ -31,7 +34,6 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     try {
       const mode = parseInt(payload, 10);
       this.websocketClientsManagerService.setMode(mode);
-      await this.modeStatisticsService.registerModeChange(mode);
       return "OK";
     } catch (e) {
       this.logger.error(e);
@@ -105,6 +107,19 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   @SubscribeMessage("joinUserRoom")
   async onJoinUserRoom(client: Socket): Promise<void> {
     this.websocketClientsManagerService.joinUserRoom(client);
+  }
+
+  /**
+   * This event is emitted by a ledstrip, just after it connected to the server.
+   * The websocket client manager will process this new state.
+   * If no other ledstrip is connected, it will set the state of the new ledstrip as the new state of the server.
+   * If another ledstrip is connected, it will set the state of the new ledstrip to the state of the server.
+   * @param client
+   * @param payload
+   */
+  @SubscribeMessage("submitState")
+  async onRegisterState(client: Socket, payload: LedstripState): Promise<void> {
+    this.websocketClientsManagerService.syncState(client, payload);
   }
 
   /**

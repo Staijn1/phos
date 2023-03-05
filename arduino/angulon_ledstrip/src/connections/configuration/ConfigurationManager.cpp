@@ -4,7 +4,7 @@
 
 #include <WiFi.h>
 #include "ConfigurationManager.h"
-#include "utils/Logger.h"
+#include "utils/logger/Logger.h"
 
 char angulon_index_html[]
         PROGMEM = R"=====(
@@ -23,27 +23,27 @@ char angulon_index_html[]
     <form action='/configure' method='get'>
         <div class='form-group'>
             <label for='ssid'>SSID</label>
-            <input type='text' class='form-control' id='ssid' name='ssid' placeholder='SSID'>
+            <input type='text' class='form-control' id='ssid' name='ssid' placeholder='SSID' value='{{ssid}}'>
         </div>
         <div class='form-group'>
             <label for='password'>Password</label>
-            <input type='password' class='form-control' id='password' name='password' placeholder='Password'>
+            <input type='password' class='form-control' id='password' name='password' placeholder='Password' value='{{password}}'>
         </div>
         <div class='form-group'>
-            <label for='ledPin'>LED Pin</label>
-            <input type='number' class='form-control' id='ledPin' name='ledPin' placeholder='LED Pin' min="0" value="26">
+            <label for='ledpin'>LED Pin</label>
+            <input type='number' class='form-control' id='ledpin' name='ledpin' placeholder='LED Pin' min="0" value="26" value='{{ledpin}}'>
         </div>
         <div class='form-group'>
-            <label for='ledCount'>LED Count</label>
-            <input type='number' class='form-control' id='ledCount' name='ledCount' placeholder='LED Count' min="0" value="60">
+            <label for='ledcount'>LED Count</label>
+            <input type='number' class='form-control' id='ledcount' name='ledcount' placeholder='LED Count' min="0" value="{{ledcount}}">
         </div>
         <div class='form-group'>
             <label for='serverip'>Server API IP</label>
-            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP or domain of API to connect to (without port)'>
+            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP or domain of API to connect to (without port)' value='{{serverip}}'>
         </div>
         <div class='form-group'>
             <label for='serverport'>Server API Port</label>
-            <input type='number' class='form-control' id='serverport' name='serverport' placeholder='Port of the API server to connect to'>
+            <input type='number' class='form-control' id='serverport' name='serverport' placeholder='Port of the API server to connect to' value='{{serverport}}'>
         </div>
         <button type='submit' class='btn btn-primary mt-3'>Submit</button>
     </form>
@@ -52,6 +52,7 @@ char angulon_index_html[]
 </html>
 )=====";
 
+SystemConfiguration ConfigurationManager::systemConfiguration;
 
 void ConfigurationManager::setup() {
     Logger::log("ConfigurationManager", "Checking configuration...");
@@ -61,8 +62,10 @@ void ConfigurationManager::setup() {
     if (!isConfigured) {
         ConfigurationManager::startConfigurationMode();
     } else {
+        this->loadConfiguration();
         this->setupWiFi();
     }
+    this->setupWebserver();
 }
 
 void ConfigurationManager::startConfigurationMode() {
@@ -70,8 +73,6 @@ void ConfigurationManager::startConfigurationMode() {
 
     WiFi.softAP(hotspotName, hotspotPassword);
     IPAddress IP = WiFi.softAPIP();
-
-    this->setupWebserver();
 
     Logger::log("ConfigurationManager", "Access point started");
 // Log the hotspot name + hotspotPassword where you should connect to
@@ -85,12 +86,35 @@ void ConfigurationManager::startConfigurationMode() {
 
 void ConfigurationManager::setupWebserver() {
     server->on("/", [this]() {
-        server->send(200, "text/html", angulon_index_html);
+        SystemConfiguration configuration = ConfigurationManager::getConfig();
+        String ssid = configuration.ssid;
+        String password = configuration.password;
+        String ledpin = configuration.ledpin == (uint8_t) -1 ? "" : String(configuration.ledpin);
+        String ledcount = configuration.ledcount == (uint8_t) -1 ? "" : String(configuration.ledcount);
+        String serverip = configuration.serverip;
+        String serverport = configuration.serverport == -1 ? "" : String(configuration.serverport);
+
+        String html = angulon_index_html;
+        html.replace("{{ssid}}", ssid);
+        html.replace("{{password}}", password);
+        html.replace("{{ledpin}}", ledpin);
+        html.replace("{{ledcount}}", ledcount);
+        html.replace("{{serverip}}", serverip);
+        html.replace("{{serverport}}", serverport);
+        server->send(200, "text/html", html);
     });
     server->on("/configure", [this]() {
         this->configureDevice();
     });
-
+    server->on("/reconfigure", [this]() {
+        Logger::log("ConfigurationManager", "Reconfiguring device");
+        preferences.putBool("isConfigured", false);
+        ESP.restart();
+    });
+    server->on("/restart", [this]() {
+        Logger::log("ConfigurationManager", "Rebooting...");
+        ESP.restart();
+    });
     server->begin();
 }
 
@@ -101,12 +125,12 @@ void ConfigurationManager::configureDevice() {
     const String ssid = server->arg("ssid");
     const String password = server->arg("password");
     const String serverip = server->arg("serverip");
-    const int ledpin = server->arg("ledPin").toInt();
-    const int ledCount = server->arg("ledCount").toInt();
+    const int ledpin = server->arg("ledpin").toInt();
+    const int ledcount = server->arg("ledcount").toInt();
     const int serverPort = server->arg("serverport").toInt();
 
     // Check if all the right values are set
-    if (ssid == "" || password == "" || ledpin < 0 || ledCount < 0 || serverip == "" || serverPort < 0) {
+    if (ssid == "" || password == "" || ledpin <= 0 || ledcount <= 0 || serverip == "" || serverPort <= 0) {
         server->send(400, "text/plain", "Invalid parameters");
         return;
     }
@@ -115,7 +139,7 @@ void ConfigurationManager::configureDevice() {
     preferences.putString("password", password);
     preferences.putString("serverip", serverip);
     preferences.putInt("ledpin", ledpin);
-    preferences.putInt("ledCount", ledCount);
+    preferences.putInt("ledcount", ledcount);
     preferences.putInt("serverport", serverPort);
     preferences.putBool("isConfigured", true);
 
@@ -126,17 +150,16 @@ void ConfigurationManager::configureDevice() {
 }
 
 void ConfigurationManager::setupWiFi() {
-    Logger::log("ConfigurationManager", "Connecting to WiFi...");
-    LedstripConfiguration configuration = ConfigurationManager::getConfig();
-    // todo: why the fuck is c_str() returning nothing?
-    const char *ssidChar = preferences.getString("ssid").c_str();
-    const char *passwordChar = preferences.getString("password").c_str();
+    SystemConfiguration configuration = ConfigurationManager::getConfig();
+    this->ssid = configuration.ssid.c_str();
+    this->networkPassword = configuration.password.c_str();
 
-    WiFi.begin(configuration.ssid, configuration.password);
+    WiFi.begin(this->ssid, this->networkPassword);
+    Logger::log("ConfigurationManager", "Connecting to WiFi network: " + configuration.ssid);
 
     // Try to connect to the Wi-Fi with a delay of 500 ms each time. If it does not connect after NETWORK_TIMEOUT, it will start configure mode
     while (WiFiClass::status() != WL_CONNECTED) {
-        delay(750);
+        delay(500);
         Logger::log("ConfigurationManager", ".");
 
         if (bootButton->isPressed()) {
@@ -153,17 +176,20 @@ void ConfigurationManager::setupWiFi() {
 }
 
 void ConfigurationManager::run() {
+    server->handleClient();
+
+    // We only need to perform the Wifi connection check if the system is configured
+    if (!isConfigured) return;
+
     if (WiFiClass::status() != WL_CONNECTED) {
         unsigned long now = millis();
         if (now - lastTimeConnected >= NETWORK_TIMEOUT) {
+            Logger::log("ConfigurationManager", "Could not connect to WiFi - Resetting!");
             ESP.restart();
         }
     } else {
         lastTimeConnected = millis();
     }
-
-    if (isConfigured) return;
-    server->handleClient();
 }
 
 void ConfigurationManager::resetConfig() {
@@ -172,13 +198,17 @@ void ConfigurationManager::resetConfig() {
     ESP.restart();
 }
 
-LedstripConfiguration ConfigurationManager::getConfig() {
-    LedstripConfiguration config{};
-    config.ssid = "De Koffieclub";//preferences.getString("ssid").c_str();
-    config.password = "DouweEgberts";//preferences.getString("password").c_str();
-    config.serverip = "192.168.2.4";//preferences.getString("serverip").c_str();
-    config.ledpin = 26;//preferences.getInt("ledpin");
-    config.ledcount = 60;//preferences.getInt("ledcount");
-    config.serverport = 3333;//preferences.getInt("serverport");
-    return config;
+SystemConfiguration ConfigurationManager::getConfig() {
+    return systemConfiguration;
+}
+
+void ConfigurationManager::loadConfiguration() {
+    SystemConfiguration config{};
+    config.ssid = preferences.getString("ssid", "").c_str();
+    config.password = preferences.getString("password", "");
+    config.serverip = preferences.getString("serverip", "");
+    config.ledpin = preferences.getInt("ledpin", -1);
+    config.ledcount = preferences.getInt("ledcount", -1);
+    config.serverport = preferences.getInt("serverport", -1);
+    systemConfiguration = config;
 }
