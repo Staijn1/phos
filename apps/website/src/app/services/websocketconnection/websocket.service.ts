@@ -4,8 +4,7 @@ import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
 import {MessageService} from '../message-service/message.service'
 import {io, Socket} from 'socket.io-client'
-import {AddGradientResponse, GradientInformation, ModeInformation} from '@angulon/interfaces';
-import {Message} from '../../shared/types/Message';
+import {AddGradientResponse, GradientInformation, LedstripState, ModeInformation} from '@angulon/interfaces';
 import {Store} from '@ngrx/store';
 import {colorChange} from '../../../redux/color/color.action';
 
@@ -27,6 +26,9 @@ export class WebsocketService {
     this.socket.on('connect', () => {
       console.log(`Opened websocket at`, this.websocketUrl)
       this.socket.emit('joinUserRoom')
+      this.getState().then(data => {
+        this.store.dispatch(colorChange(data.colors, false))
+      })
     });
 
     this.socket.on('color-change', (colors: string[]) => {
@@ -45,11 +47,7 @@ export class WebsocketService {
   }
 
   setColor(colors: iro.Color[] | string[]): void {
-    const colorStrings = []
-    for (const rawColor of colors) {
-      const color = typeof rawColor === 'string' ? rawColor : rawColor.hexString
-      colorStrings.push(color)
-    }
+    const colorStrings = colors.map(color => typeof color === 'string' ? color : color.hexString)
     this.send('color', colorStrings)
   }
 
@@ -126,5 +124,14 @@ export class WebsocketService {
         resolve(data)
       })
     })
+  }
+
+  getState(): Promise<LedstripState> {
+    return new Promise((resolve) => {
+      this.socket.emit('getState', (data: LedstripState ) => {
+        console.log(data)
+        resolve(data)
+      })
+    });
   }
 }

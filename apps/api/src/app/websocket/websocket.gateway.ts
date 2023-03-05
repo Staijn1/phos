@@ -5,15 +5,14 @@ import {
   WebSocketGateway,
   WebSocketServer
 } from "@nestjs/websockets";
-import { Logger } from "@nestjs/common";
-import { Server, Socket } from "socket.io";
-import { WebsocketClientsManagerService } from "./websocket-clients-manager.service";
-import { ConfigurationService } from "../configuration/configuration.service";
-import { AddGradientResponse, GradientInformation, ModeInformation } from "@angulon/interfaces";
-import { GradientsService } from "../gradients/gradients.service";
-import { LedstripState } from "../../types/LedstripState";
+import {Logger} from "@nestjs/common";
+import {Server, Socket} from "socket.io";
+import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
+import {ConfigurationService} from "../configuration/configuration.service";
+import {AddGradientResponse, GradientInformation, LedstripState, ModeInformation} from "@angulon/interfaces";
+import {GradientsService} from "../gradients/gradients.service";
 
-@WebSocketGateway(undefined, { cors: true })
+@WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
   @WebSocketServer()
   private server: Server;
@@ -23,6 +22,11 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
     private readonly configurationService: ConfigurationService,
     private readonly gradientsService: GradientsService) {
+  }
+
+  @SubscribeMessage("getState")
+  async onGetState(): Promise<LedstripState | undefined> {
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("mode")
@@ -117,6 +121,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   async onRegisterState(client: Socket, payload: LedstripState): Promise<void> {
     this.websocketClientsManagerService.syncState(client, payload);
   }
+
   /**
    * When a client connects, log its IP address.
    * Also set the server instance in the websocketClientsManagerService, so we make sure it is always up-to-date with the current server instance.

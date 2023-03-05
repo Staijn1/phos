@@ -1,7 +1,6 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { Server, Socket } from "socket.io";
-import { LedstripState } from "../../types/LedstripState";
-import { constrain } from "@angulon/interfaces";
+import {Injectable, Logger} from "@nestjs/common";
+import {Server, Socket} from "socket.io";
+import {constrain, LedstripState} from "@angulon/interfaces";
 
 @Injectable()
 export class WebsocketClientsManagerService {
@@ -9,6 +8,13 @@ export class WebsocketClientsManagerService {
   private colorTimeout: NodeJS.Timeout;
   private state: LedstripState | undefined;
   private logger: Logger = new Logger("WebsocketClientsManagerService");
+
+  /**
+   * Get state of this server
+   */
+  getState(): LedstripState | undefined {
+    return this.state;
+  }
 
   /**
    * Set the mode of all clients
