@@ -33,7 +33,7 @@ private:
     unsigned long lastTimeConnected = 0L;
     int countButtonPressed = 0;
 
-    void setupWebserver();
+    void setupWebserver(bool b);
 
     void setupWiFi();
 

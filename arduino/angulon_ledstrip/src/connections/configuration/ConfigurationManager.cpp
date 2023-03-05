@@ -23,27 +23,27 @@ char angulon_index_html[]
     <form action='/configure' method='get'>
         <div class='form-group'>
             <label for='ssid'>SSID</label>
-            <input type='text' class='form-control' id='ssid' name='ssid' placeholder='SSID'>
+            <input type='text' class='form-control' id='ssid' name='ssid' placeholder='SSID' value='{{ssid}}'>
         </div>
         <div class='form-group'>
             <label for='password'>Password</label>
-            <input type='password' class='form-control' id='password' name='password' placeholder='Password'>
+            <input type='password' class='form-control' id='password' name='password' placeholder='Password' value='{{password}}'>
         </div>
         <div class='form-group'>
             <label for='ledpin'>LED Pin</label>
-            <input type='number' class='form-control' id='ledpin' name='ledpin' placeholder='LED Pin' min="0" value="26">
+            <input type='number' class='form-control' id='ledpin' name='ledpin' placeholder='LED Pin' min="0" value="26" value='{{ledpin}}'>
         </div>
         <div class='form-group'>
             <label for='ledcount'>LED Count</label>
-            <input type='number' class='form-control' id='ledcount' name='ledcount' placeholder='LED Count' min="0" value="60">
+            <input type='number' class='form-control' id='ledcount' name='ledcount' placeholder='LED Count' min="0" value="{{ledcount}}">
         </div>
         <div class='form-group'>
             <label for='serverip'>Server API IP</label>
-            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP or domain of API to connect to (without port)'>
+            <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP or domain of API to connect to (without port)' value='{{serverip}}'>
         </div>
         <div class='form-group'>
             <label for='serverport'>Server API Port</label>
-            <input type='number' class='form-control' id='serverport' name='serverport' placeholder='Port of the API server to connect to'>
+            <input type='number' class='form-control' id='serverport' name='serverport' placeholder='Port of the API server to connect to' value='{{serverport}}'>
         </div>
         <button type='submit' class='btn btn-primary mt-3'>Submit</button>
     </form>
@@ -65,7 +65,7 @@ void ConfigurationManager::setup() {
         this->loadConfiguration();
         this->setupWiFi();
     }
-    this->setupWebserver();
+    this->setupWebserver(isConfigured);
 }
 
 void ConfigurationManager::startConfigurationMode() {
@@ -84,14 +84,34 @@ void ConfigurationManager::startConfigurationMode() {
 
 }
 
-void ConfigurationManager::setupWebserver() {
-    server->on("/", [this]() {
-        server->send(200, "text/html", angulon_index_html);
+void ConfigurationManager::setupWebserver(bool isConfigured) {
+    server->on("/", [this, &isConfigured]() {
+        SystemConfiguration configuration = ConfigurationManager::getConfig();
+        String ssid = isConfigured ? configuration.ssid : "";
+        String password = isConfigured ? configuration.password : "";
+        String ledpin = isConfigured ? String(configuration.ledpin) : "";
+        String ledcount = isConfigured ? String(configuration.ledcount) : "";
+        String serverip = isConfigured ? configuration.serverip : "";
+        String serverport = isConfigured ? String(configuration.serverport) : "";
+
+        String html = angulon_index_html;
+        html.replace("{{ssid}}", ssid);
+        html.replace("{{password}}", password);
+        html.replace("{{ledpin}}", ledpin);
+        html.replace("{{ledcount}}", ledcount);
+        html.replace("{{serverip}}", serverip);
+        html.replace("{{serverport}}", serverport);
+        server->send(200, "text/html", html);
     });
     server->on("/configure", [this]() {
         this->configureDevice();
     });
-
+    server->on("/reconfigure", [this]() {
+        preferences.putBool("isConfigured", false);
+    });
+    server->on("/restart", [this]() {
+        ESP.restart();
+    });
     server->begin();
 }
 
