@@ -16,7 +16,7 @@ export class WebsocketService {
   private socket: Socket;
 
   constructor(
-    messageService: MessageService,
+    private messageService: MessageService,
     private readonly store: Store,
   ) {
     this.socket = io(this.websocketUrl, {
@@ -87,51 +87,41 @@ export class WebsocketService {
   }
 
   getModes(): Promise<ModeInformation[]> {
-    return new Promise((resolve) => {
-      this.socket.emit('getModes', (data: ModeInformation[]) => {
-        resolve(data)
-      })
-    });
+    return this.promisifyEmit('getModes')
   }
 
   getGradients(): Promise<GradientInformation[]> {
-    return new Promise((resolve) => {
-      this.socket.emit('gradients/get', (data: GradientInformation[]) => {
-        resolve(data)
-      })
-    });
+    return this.promisifyEmit('gradients/get')
   }
 
   deleteGradient(id: number): Promise<GradientInformation[]> {
-    return new Promise((resolve) => {
-      this.socket.emit('gradients/delete', {id}, (data: GradientInformation[]) => {
-        resolve(data)
-      })
-    });
+    return this.promisifyEmit("gradients/delete", {id})
   }
 
   addGradient(): Promise<AddGradientResponse> {
-    return new Promise((resolve) => {
-      this.socket.emit('gradients/add', (data: AddGradientResponse) => {
-        resolve(data)
-      })
-    })
+    return this.promisifyEmit("gradients/add")
   }
 
   editGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    return new Promise((resolve) => {
-      this.socket.emit('gradients/edit', gradient, (data: GradientInformation[]) => {
-        resolve(data)
-      })
-    })
+    return this.promisifyEmit("gradients/emit", gradient)
   }
 
   getState(): Promise<LedstripState> {
-    return new Promise((resolve) => {
-      this.socket.emit('getState', (data: LedstripState ) => {
-        console.log(data)
+    return this.promisifyEmit<LedstripState>('getState')
+  }
+
+  private promisifyEmit<T>(eventName: string, ...args: any[]): Promise<T> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        const error = new Error("Websocket response timeout exceeded")
+        this.messageService.setMessage(error)
+        reject(error)
+      }, 3000)
+
+      this.socket.emit(eventName, args, (data: T) => {
+        clearTimeout(timeout);
         resolve(data)
       })
-    });
+    })
   }
 }
