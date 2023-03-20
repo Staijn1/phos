@@ -3,10 +3,9 @@
   display: flex;
   flex-direction: column;
   align-items: flex-end;
-  width: 25%;
-  top: 3vh;
+  top: 6vh;
   right: 25px;
-  z-index: 9999;
+  z-index: 400;
 
   > .alert {
     width: 100%;
