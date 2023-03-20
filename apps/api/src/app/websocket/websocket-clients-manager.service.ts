@@ -6,13 +6,15 @@ import {constrain, LedstripState} from "@angulon/interfaces";
 export class WebsocketClientsManagerService {
   private server!: Server;
   private colorTimeout: NodeJS.Timeout;
-  private state: LedstripState | undefined;
+  private state: LedstripState = {
+    brightness: 255, colors: ["#ff0000", "#00ff00", "#0000ff"], fftValue: 0, mode: 0, speed: 1000
+  };
   private logger: Logger = new Logger("WebsocketClientsManagerService");
 
   /**
    * Get state of this server
    */
-  getState(): LedstripState | undefined {
+  getState(): LedstripState {
     return this.state;
   }
 
