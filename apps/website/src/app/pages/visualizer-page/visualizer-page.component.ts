@@ -127,6 +127,10 @@ export class VisualizerPageComponent implements OnDestroy {
     this.information.getGradients().then((gradients) => {
       this.gradients = gradients
       // this.chromaEffect.state = new VisualizerBrightnessState()
+    }).catch(e => {
+      this.readSettings();
+      this.visualizerOptions.gradientLeft = 'prism';
+      this.applySettings();
     });
 
     if ('wakeLock' in navigator) {
