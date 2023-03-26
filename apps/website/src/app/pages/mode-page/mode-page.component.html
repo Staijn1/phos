@@ -298,7 +298,8 @@
               </div>
               <ngb-accordion #acc="ngbAccordion" activeIds="ngb-panel-0">
                 <ngb-panel *ngFor="let preset of ledstripPresets; let presetIndex = index"
-                           [id]="'ngb-panel-' + presetIndex" (click)="selectedPreset = preset;">
+                           [id]="'ngb-panel-' + presetIndex"
+                           (click)="selectPreset(preset)">
                   <ng-template ngbPanelTitle>
                     <div class="d-flex justify-content-between w-100">
                       {{ preset.name }}
@@ -339,13 +340,18 @@
                     <ngx-slider [value]="selectedSegment.speed" [options]="speedSliderOptions"
                                 (userChange)="onSpeedChange($event)"></ngx-slider>
                   </div>
-                  <div class="mb-3">
-                    <h4>Mode</h4>
-                    <select class="form-select" [(ngModel)]="selectedSegment.mode">
-                      <option value="0">Static</option>
-                      <option value="1">Blink</option>
-                      <option value="11">Rainbow</option>
-                    </select>
+                  <div class="row mb-3">
+                    <div class="col">
+                      <h4>Mode</h4>
+                      <select class="form-select" [(ngModel)]="selectedSegment.mode">
+                        <option value="0">Static</option>
+                        <option value="1">Blink</option>
+                        <option value="11">Rainbow</option>
+                      </select>
+                    </div>
+                    <div class="col">
+                      <app-colorpicker [initialColor]="selectedSegment.colors" (colorChange)="onSegmentColorsChange($event)"></app-colorpicker>
+                    </div>
                   </div>
                 </div>
               </div>

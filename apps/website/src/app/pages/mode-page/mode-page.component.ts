@@ -17,6 +17,7 @@ import {
   VisualizerBrightnessState
 } from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
 import {ChangeContext, LabelType, Options} from "@angular-slider/ngx-slider";
+import {ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
 
 interface LedstripPreset {
   name: string;
@@ -114,7 +115,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
   }
 
   addPreset() {
-    const newSegment = {
+    const newPreset = {
       name: 'New Preset',
       brightness: 64,
       segments: [
@@ -123,8 +124,8 @@ export class ModePageComponent implements OnInit, OnDestroy {
     };
 
 
-    this.ledstripPresets.push(newSegment);
-    this.selectedPreset = newSegment;
+    this.ledstripPresets.push(newPreset);
+    this.selectPreset(newPreset)
   }
 
   deletePreset(preset: LedstripPreset) {
@@ -142,5 +143,15 @@ export class ModePageComponent implements OnInit, OnDestroy {
   onSpeedChange(event: ChangeContext) {
     if(!this.selectedSegment) return;
     this.selectedSegment.speed = event.value;
+  }
+
+  onSegmentColorsChange(event: ColorpickerEvent) {
+    if(!this.selectedSegment) return;
+    this.selectedSegment.colors = event.colorpicker.colors.map(color => color.hexString)
+  }
+
+  selectPreset(preset: LedstripPreset) {
+    this.selectedPreset = preset;
+    this.selectedSegment = preset.segments[0];
   }
 }
