@@ -16,7 +16,22 @@ import {WebsocketService} from '../../services/websocketconnection/websocket.ser
 import {
   VisualizerBrightnessState
 } from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
+import {ChangeContext, LabelType, Options} from "@angular-slider/ngx-slider";
 
+interface LedstripPreset {
+  name: string;
+  brightness: number;
+  segments: Segment[];
+}
+
+interface Segment {
+  start: number;
+  stop: number;
+  mode: number;
+  speed: number;
+  options: number;
+  colors: string[];
+}
 
 @Component({
   selector: 'app-mode',
@@ -38,6 +53,25 @@ export class ModePageComponent implements OnInit, OnDestroy {
   ];
   classes = themes;
   selectedMode = 0;
+  activeTab = 0;
+  selectedPreset: LedstripPreset | undefined;
+  ledstripPresets: LedstripPreset[] = []
+  brightnessSliderOptions: Options = {
+    floor: 0,
+    ceil: 255,
+    step: 1,
+  };
+  selectedSegment: Segment | undefined;
+  speedSliderOptions = {
+    floor: 0,
+    ceil: 10000,
+    step: 100
+  };
+  rangeSliderOptions: Options = {
+    floor: 0,
+    // todo the maximum should depend on the ledstrip
+    ceil: 60
+  };
 
   constructor(
     private readonly connection: WebsocketService,
@@ -72,5 +106,41 @@ export class ModePageComponent implements OnInit, OnDestroy {
     })
 
     this.chromaService.state = state === undefined ? new StaticState() : state.state
+  }
+
+  onBrightnessChange(event: ChangeContext) {
+    if (!this.selectedPreset) return;
+    this.selectedPreset.brightness = event.value;
+  }
+
+  addPreset() {
+    const newSegment = {
+      name: 'New Preset',
+      brightness: 64,
+      segments: [
+        { start: 0, stop: 9, mode: 0, speed: 1000, options: 0, colors: ['#ff0000', '#00ff00', '#0000ff'] }
+      ]
+    };
+
+
+    this.ledstripPresets.push(newSegment);
+    this.selectedPreset = newSegment;
+  }
+
+  deletePreset(preset: LedstripPreset) {
+    const index = this.ledstripPresets.indexOf(preset);
+    this.ledstripPresets.splice(index, 1);
+    this.selectedPreset = this.ledstripPresets[0];
+  }
+
+  onSegmentRangeChange(event: ChangeContext) {
+    if(!this.selectedSegment) return;
+    this.selectedSegment.start = event.value;
+    this.selectedSegment.stop = event.highValue as number;
+  }
+
+  onSpeedChange(event: ChangeContext) {
+    if(!this.selectedSegment) return;
+    this.selectedSegment.speed = event.value;
   }
 }
