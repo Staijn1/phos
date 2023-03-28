@@ -118,7 +118,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
     this.selectedPreset.brightness = event.value;
   }
 
-  addPreset() {
+  addPreset(): void {
     const newPreset = {
       name: 'New Preset',
       brightness: 64,
@@ -136,46 +136,61 @@ export class ModePageComponent implements OnInit, OnDestroy {
     }
   }
 
-  deletePreset(preset: LedstripPreset) {
+  deletePreset(preset: LedstripPreset): void {
     const index = this.ledstripPresets.indexOf(preset);
     this.ledstripPresets.splice(index, 1);
     this.selectedPreset = this.ledstripPresets[0];
   }
 
-  onSegmentRangeChange(event: ChangeContext) {
+  onSegmentRangeChange(event: ChangeContext): void {
     if (!this.selectedSegment) return;
     this.selectedSegment.start = event.value;
     this.selectedSegment.stop = event.highValue as number;
   }
 
-  onSpeedChange(event: ChangeContext) {
+  onSpeedChange(event: ChangeContext): void {
     if (!this.selectedSegment) return;
     this.selectedSegment.speed = event.value;
   }
 
-  onSegmentColorsChange(event: ColorpickerEvent) {
+  onSegmentColorsChange(event: ColorpickerEvent): void {
     if (!this.selectedSegment) return;
     this.selectedSegment.colors = event.colorpicker.colors.map(color => color.hexString)
   }
 
-  selectPreset(preset: LedstripPreset) {
+  selectPreset(preset: LedstripPreset): void {
     this.selectedPreset = preset;
     this.selectSegment(preset.segments[0])
   }
 
-  selectSegment(segment: Segment) {
+  selectSegment(segment: Segment): void {
     this.selectedSegment = segment;
     if (!this.colorpicker) return;
     this.colorpicker.updateColors(segment.colors);
   }
 
-  onPanelChange(event: NgbPanelChangeEvent) {
+  onPanelChange(event: NgbPanelChangeEvent): void {
     const panelId = event.panelId;
     const selectedPresetIndex = Number(panelId.split('.')[1]);
     this.selectPreset(this.ledstripPresets[selectedPresetIndex])
   }
 
-  removeSegment(index: number) {
+  removeSegment(index: number): void {
     this.selectedPreset?.segments.splice(index, 1);
+  }
+
+  addSegment(): void {
+    if (!this.selectedPreset) return;
+    const lastSegment = this.selectedPreset.segments[this.selectedPreset?.segments.length - 1];
+    const newSegmentStop = 60;
+    const newSegmentStart = Math.min(lastSegment.stop + 1, 60);
+    this.selectedPreset.segments.push({
+      colors: ["#ff0000", "#00ff00", "#0000ff"],
+      mode: 0,
+      options: 0,
+      speed: 1000,
+      start: newSegmentStart,
+      stop: newSegmentStop
+    })
   }
 }

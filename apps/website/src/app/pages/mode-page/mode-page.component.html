@@ -311,7 +311,7 @@
                   </ng-template>
                   <ng-template ngbPanelContent>
                     <div class="d-flex justify-content-end mb-3">
-                        <button type="button" class="btn btn-primary btn-sm">Add Segment</button>
+                        <button type="button" class="btn btn-primary btn-sm" (click)="addSegment()">Add Segment</button>
                     </div>
                     <div *ngFor="let segment of preset.segments; let segmentIndex = index"
                          [ngClass]="{'active': segment === selectedSegment}"
