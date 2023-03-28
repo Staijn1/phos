@@ -118,4 +118,8 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   changeOrientation(direction: 'horizontal' | 'vertical') {
     this.picker.setOptions({layoutDirection: direction})
   }
+
+  updateColors(colors: string[]) {
+    this.picker.setColors(colors);
+  }
 }
