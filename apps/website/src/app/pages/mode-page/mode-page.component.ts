@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core'
+import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
 import {StaticState} from '../../services/chromaEffect/state/static-state/static-state'
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
 import {BlinkState} from '../../services/chromaEffect/state/blink-state/blink-state'
@@ -16,8 +16,9 @@ import {WebsocketService} from '../../services/websocketconnection/websocket.ser
 import {
   VisualizerBrightnessState
 } from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
-import {ChangeContext, LabelType, Options} from "@angular-slider/ngx-slider";
-import {ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
+import {ChangeContext, Options} from "@angular-slider/ngx-slider";
+import {ColorpickerComponent, ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
+import {NgbAccordion, NgbPanelChangeEvent} from '@ng-bootstrap/ng-bootstrap'
 
 interface LedstripPreset {
   name: string;
@@ -40,6 +41,9 @@ interface Segment {
   styleUrls: ['./mode-page.component.scss'],
 })
 export class ModePageComponent implements OnInit, OnDestroy {
+  @ViewChild(ColorpickerComponent) colorpicker: ColorpickerComponent | undefined;
+  @ViewChild(NgbAccordion) accordion: NgbAccordion | undefined;
+
   modes: ModeInformation[] = [];
   chromaEffects = [
     {name: 'Rainbow', state: new RainbowState()},
@@ -119,13 +123,17 @@ export class ModePageComponent implements OnInit, OnDestroy {
       name: 'New Preset',
       brightness: 64,
       segments: [
-        { start: 0, stop: 9, mode: 0, speed: 1000, options: 0, colors: ['#ff0000', '#00ff00', '#0000ff'] }
+        {start: 0, stop: 9, mode: 0, speed: 1000, options: 0, colors: ['#ff0000', '#00ff00', '#0000ff']}
       ]
     };
 
-
-    this.ledstripPresets.push(newPreset);
+    // The index of the newly inserted preset is the new length of presets (returned by push) - 1
+    const index = this.ledstripPresets.push(newPreset) - 1;
     this.selectPreset(newPreset)
+    // Expand the newly created preset
+    if (this.accordion) {
+      setTimeout(() => this.accordion?.expand(`ngb-panel.${index}`), 100)
+    }
   }
 
   deletePreset(preset: LedstripPreset) {
@@ -135,23 +143,39 @@ export class ModePageComponent implements OnInit, OnDestroy {
   }
 
   onSegmentRangeChange(event: ChangeContext) {
-    if(!this.selectedSegment) return;
+    if (!this.selectedSegment) return;
     this.selectedSegment.start = event.value;
     this.selectedSegment.stop = event.highValue as number;
   }
 
   onSpeedChange(event: ChangeContext) {
-    if(!this.selectedSegment) return;
+    if (!this.selectedSegment) return;
     this.selectedSegment.speed = event.value;
   }
 
   onSegmentColorsChange(event: ColorpickerEvent) {
-    if(!this.selectedSegment) return;
+    if (!this.selectedSegment) return;
     this.selectedSegment.colors = event.colorpicker.colors.map(color => color.hexString)
   }
 
   selectPreset(preset: LedstripPreset) {
     this.selectedPreset = preset;
-    this.selectedSegment = preset.segments[0];
+    this.selectSegment(preset.segments[0])
+  }
+
+  selectSegment(segment: Segment) {
+    this.selectedSegment = segment;
+    if (!this.colorpicker) return;
+    this.colorpicker.updateColors(segment.colors);
+  }
+
+  onPanelChange(event: NgbPanelChangeEvent) {
+    const panelId = event.panelId;
+    const selectedPresetIndex = Number(panelId.split('.')[1]);
+    this.selectPreset(this.ledstripPresets[selectedPresetIndex])
+  }
+
+  removeSegment(index: number) {
+    this.selectedPreset?.segments.splice(index, 1);
   }
 }

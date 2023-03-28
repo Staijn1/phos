@@ -37,7 +37,7 @@
 }
 
 .active > div {
-  background-color: darken($secondary, 20%);
+  background-color: darken($secondary, 20%) !important;
 
   h4 {
     color: white;
@@ -191,4 +191,9 @@
       line-height: 24px;
     }
   }
+}
+
+
+.card {
+  transition: all ease-in-out 0.3s;
 }
