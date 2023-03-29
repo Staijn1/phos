@@ -1,24 +1,25 @@
-import {Component, OnDestroy, OnInit, ViewChild} from '@angular/core'
-import {StaticState} from '../../services/chromaEffect/state/static-state/static-state'
-import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service'
-import {BlinkState} from '../../services/chromaEffect/state/blink-state/blink-state'
-import {SingleDynamicState} from '../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state'
-import {MultiDynamicState} from '../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state'
-import {RainbowState} from '../../services/chromaEffect/state/rainbow-state/rainbow-state'
-import {Fire2012State} from '../../services/chromaEffect/state/fire2012-state/fire2012-state'
-import {WaterfallState} from '../../services/chromaEffect/state/waterfall-state/waterfall-state'
-import {RainbowCycleState} from '../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state'
-import {VisualizerState} from '../../services/chromaEffect/state/visualizer-state/visualizer-state'
-import {ModeInformation} from '@angulon/interfaces';
-import {themes} from '../../shared/constants';
-import {ThemeService} from '../../services/theme/theme.service';
-import {WebsocketService} from '../../services/websocketconnection/websocket.service';
+import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { StaticState } from "../../services/chromaEffect/state/static-state/static-state";
+import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
+import { BlinkState } from "../../services/chromaEffect/state/blink-state/blink-state";
+import { SingleDynamicState } from "../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state";
+import { MultiDynamicState } from "../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state";
+import { RainbowState } from "../../services/chromaEffect/state/rainbow-state/rainbow-state";
+import { Fire2012State } from "../../services/chromaEffect/state/fire2012-state/fire2012-state";
+import { WaterfallState } from "../../services/chromaEffect/state/waterfall-state/waterfall-state";
+import { RainbowCycleState } from "../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state";
+import { VisualizerState } from "../../services/chromaEffect/state/visualizer-state/visualizer-state";
+import { ModeInformation } from "@angulon/interfaces";
+import { themes } from "../../shared/constants";
+import { ThemeService } from "../../services/theme/theme.service";
+import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import {
   VisualizerBrightnessState
-} from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
-import {ChangeContext, Options} from "@angular-slider/ngx-slider";
-import {ColorpickerComponent, ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
-import {NgbAccordion, NgbPanelChangeEvent} from '@ng-bootstrap/ng-bootstrap'
+} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
+import { ChangeContext, Options } from "@angular-slider/ngx-slider";
+import { ColorpickerComponent, ColorpickerEvent } from "../../shared/components/colorpicker/colorpicker.component";
+import { NgbAccordion, NgbPanelChangeEvent } from "@ng-bootstrap/ng-bootstrap";
+import { debounceTime, distinctUntilChanged, filter, map, Observable, OperatorFunction } from "rxjs";
 
 interface LedstripPreset {
   name: string;
@@ -36,9 +37,9 @@ interface Segment {
 }
 
 @Component({
-  selector: 'app-mode',
-  templateUrl: './mode-page.component.html',
-  styleUrls: ['./mode-page.component.scss'],
+  selector: "app-mode",
+  templateUrl: "./mode-page.component.html",
+  styleUrls: ["./mode-page.component.scss"]
 })
 export class ModePageComponent implements OnInit, OnDestroy {
   @ViewChild(ColorpickerComponent) colorpicker: ColorpickerComponent | undefined;
@@ -46,25 +47,25 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
   modes: ModeInformation[] = [];
   chromaEffects = [
-    {name: 'Rainbow', state: new RainbowState()},
-    {name: 'Rainbow Cycle', state: new RainbowCycleState()},
-    {name: 'Multi Dynamic', state: new MultiDynamicState()},
-    {name: 'Single Dynamic', state: new SingleDynamicState()},
-    {name: 'Blink', state: new BlinkState()},
-    {name: 'Fire2012', state: new Fire2012State()},
-    {name: 'Waterfall', state: new WaterfallState()},
-    {name: 'VuMeter', state: new VisualizerState()},
-    {name: 'VuMeter Brightness', state: new VisualizerBrightnessState()},
+    { name: "Rainbow", state: new RainbowState() },
+    { name: "Rainbow Cycle", state: new RainbowCycleState() },
+    { name: "Multi Dynamic", state: new MultiDynamicState() },
+    { name: "Single Dynamic", state: new SingleDynamicState() },
+    { name: "Blink", state: new BlinkState() },
+    { name: "Fire2012", state: new Fire2012State() },
+    { name: "Waterfall", state: new WaterfallState() },
+    { name: "VuMeter", state: new VisualizerState() },
+    { name: "VuMeter Brightness", state: new VisualizerBrightnessState() }
   ];
   classes = themes;
   selectedMode = 0;
   activeTab = 0;
   selectedPreset: LedstripPreset | undefined;
-  ledstripPresets: LedstripPreset[] = []
+  ledstripPresets: LedstripPreset[] = [];
   brightnessSliderOptions: Options = {
     floor: 0,
     ceil: 255,
-    step: 1,
+    step: 1
   };
   selectedSegment: Segment | undefined;
   speedSliderOptions = {
@@ -78,6 +79,15 @@ export class ModePageComponent implements OnInit, OnDestroy {
     ceil: 60
   };
 
+  modeTypeaheadFormatter = (state: ModeInformation) => state.name || 'Unknown Mode Name';
+
+  search = (text$: Observable<string>) =>
+    text$.pipe(
+      debounceTime(200),
+      distinctUntilChanged(),
+      map((term) => this.modes.filter((state) => new RegExp(term, "mi").test(state.name as string)).slice(0, 10))
+    );
+
   constructor(
     private readonly connection: WebsocketService,
     private readonly chromaService: ChromaEffectService,
@@ -85,13 +95,13 @@ export class ModePageComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.modes = []
+    this.modes = [];
   }
 
   ngOnInit(): void {
     this.connection.getModes().then(modes => {
-      this.modes = modes
-    })
+      this.modes = modes;
+    });
   }
 
   /**
@@ -99,18 +109,18 @@ export class ModePageComponent implements OnInit, OnDestroy {
    * @param {MouseEvent} $event
    */
   onModeSelect($event: MouseEvent): void {
-    const id = parseInt(($event.currentTarget as HTMLElement).id, 10)
-    this.selectedMode = id
+    const id = parseInt(($event.currentTarget as HTMLElement).id, 10);
+    this.selectedMode = id;
 
-    this.connection.setMode(id)
+    this.connection.setMode(id);
 
     const state = this.chromaEffects.find(stateToCompare => {
       const mode = this.modes[id];
       if (!mode) return false;
-      return stateToCompare.name.toLowerCase() === mode.name?.toLowerCase()
-    })
+      return stateToCompare.name.toLowerCase() === mode.name?.toLowerCase();
+    });
 
-    this.chromaService.state = state === undefined ? new StaticState() : state.state
+    this.chromaService.state = state === undefined ? new StaticState() : state.state;
   }
 
   onBrightnessChange(event: ChangeContext) {
@@ -120,19 +130,19 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
   addPreset(): void {
     const newPreset = {
-      name: 'New Preset',
+      name: "New Preset",
       brightness: 64,
       segments: [
-        {start: 0, stop: 9, mode: 0, speed: 1000, options: 0, colors: ['#ff0000', '#00ff00', '#0000ff']}
+        { start: 0, stop: 9, mode: 0, speed: 1000, options: 0, colors: ["#ff0000", "#00ff00", "#0000ff"] }
       ]
     };
 
     // The index of the newly inserted preset is the new length of presets (returned by push) - 1
     const index = this.ledstripPresets.push(newPreset) - 1;
-    this.selectPreset(newPreset)
+    this.selectPreset(newPreset);
     // Expand the newly created preset
     if (this.accordion) {
-      setTimeout(() => this.accordion?.expand(`ngb-panel.${index}`), 100)
+      setTimeout(() => this.accordion?.expand(`ngb-panel.${index}`), 100);
     }
   }
 
@@ -155,12 +165,12 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
   onSegmentColorsChange(event: ColorpickerEvent): void {
     if (!this.selectedSegment) return;
-    this.selectedSegment.colors = event.colorpicker.colors.map(color => color.hexString)
+    this.selectedSegment.colors = event.colorpicker.colors.map(color => color.hexString);
   }
 
   selectPreset(preset: LedstripPreset): void {
     this.selectedPreset = preset;
-    this.selectSegment(preset.segments[0])
+    this.selectSegment(preset.segments[0]);
   }
 
   selectSegment(segment: Segment): void {
@@ -171,8 +181,8 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
   onPanelChange(event: NgbPanelChangeEvent): void {
     const panelId = event.panelId;
-    const selectedPresetIndex = Number(panelId.split('.')[1]);
-    this.selectPreset(this.ledstripPresets[selectedPresetIndex])
+    const selectedPresetIndex = Number(panelId.split(".")[1]);
+    this.selectPreset(this.ledstripPresets[selectedPresetIndex]);
   }
 
   removeSegment(index: number): void {
@@ -191,6 +201,6 @@ export class ModePageComponent implements OnInit, OnDestroy {
       speed: 1000,
       start: newSegmentStart,
       stop: newSegmentStop
-    })
+    });
   }
 }
