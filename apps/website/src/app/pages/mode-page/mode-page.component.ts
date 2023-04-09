@@ -1,25 +1,25 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
-import { StaticState } from "../../services/chromaEffect/state/static-state/static-state";
-import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
-import { BlinkState } from "../../services/chromaEffect/state/blink-state/blink-state";
-import { SingleDynamicState } from "../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state";
-import { MultiDynamicState } from "../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state";
-import { RainbowState } from "../../services/chromaEffect/state/rainbow-state/rainbow-state";
-import { Fire2012State } from "../../services/chromaEffect/state/fire2012-state/fire2012-state";
-import { WaterfallState } from "../../services/chromaEffect/state/waterfall-state/waterfall-state";
-import { RainbowCycleState } from "../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state";
-import { VisualizerState } from "../../services/chromaEffect/state/visualizer-state/visualizer-state";
-import { ModeInformation } from "@angulon/interfaces";
-import { themes } from "../../shared/constants";
-import { ThemeService } from "../../services/theme/theme.service";
-import { WebsocketService } from "../../services/websocketconnection/websocket.service";
+import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {StaticState} from "../../services/chromaEffect/state/static-state/static-state";
+import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.service";
+import {BlinkState} from "../../services/chromaEffect/state/blink-state/blink-state";
+import {SingleDynamicState} from "../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state";
+import {MultiDynamicState} from "../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state";
+import {RainbowState} from "../../services/chromaEffect/state/rainbow-state/rainbow-state";
+import {Fire2012State} from "../../services/chromaEffect/state/fire2012-state/fire2012-state";
+import {WaterfallState} from "../../services/chromaEffect/state/waterfall-state/waterfall-state";
+import {RainbowCycleState} from "../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state";
+import {VisualizerState} from "../../services/chromaEffect/state/visualizer-state/visualizer-state";
+import {ModeInformation} from "@angulon/interfaces";
+import {themes} from "../../shared/constants";
+import {ThemeService} from "../../services/theme/theme.service";
+import {WebsocketService} from "../../services/websocketconnection/websocket.service";
 import {
   VisualizerBrightnessState
 } from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
-import { ChangeContext, Options } from "@angular-slider/ngx-slider";
-import { ColorpickerComponent, ColorpickerEvent } from "../../shared/components/colorpicker/colorpicker.component";
-import { NgbAccordion, NgbPanelChangeEvent } from "@ng-bootstrap/ng-bootstrap";
-import { debounceTime, distinctUntilChanged, filter, map, Observable, OperatorFunction } from "rxjs";
+import {ChangeContext, Options} from "@angular-slider/ngx-slider";
+import {ColorpickerComponent, ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
+import {NgbAccordion, NgbPanelChangeEvent} from "@ng-bootstrap/ng-bootstrap";
+import {debounceTime, distinctUntilChanged, filter, map, Observable, OperatorFunction} from "rxjs";
 
 interface LedstripPreset {
   name: string;
@@ -47,15 +47,15 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
   modes: ModeInformation[] = [];
   chromaEffects = [
-    { name: "Rainbow", state: new RainbowState() },
-    { name: "Rainbow Cycle", state: new RainbowCycleState() },
-    { name: "Multi Dynamic", state: new MultiDynamicState() },
-    { name: "Single Dynamic", state: new SingleDynamicState() },
-    { name: "Blink", state: new BlinkState() },
-    { name: "Fire2012", state: new Fire2012State() },
-    { name: "Waterfall", state: new WaterfallState() },
-    { name: "VuMeter", state: new VisualizerState() },
-    { name: "VuMeter Brightness", state: new VisualizerBrightnessState() }
+    {name: "Rainbow", state: new RainbowState()},
+    {name: "Rainbow Cycle", state: new RainbowCycleState()},
+    {name: "Multi Dynamic", state: new MultiDynamicState()},
+    {name: "Single Dynamic", state: new SingleDynamicState()},
+    {name: "Blink", state: new BlinkState()},
+    {name: "Fire2012", state: new Fire2012State()},
+    {name: "Waterfall", state: new WaterfallState()},
+    {name: "VuMeter", state: new VisualizerState()},
+    {name: "VuMeter Brightness", state: new VisualizerBrightnessState()}
   ];
   classes = themes;
   selectedMode = 0;
@@ -78,7 +78,10 @@ export class ModePageComponent implements OnInit, OnDestroy {
     // todo the maximum should depend on the ledstrip
     ceil: 60
   };
-
+  /**
+   * This variable holds the mode to display in the custom mode selector for a segment
+   */
+  typeaheadModel: ModeInformation | undefined;
   modeTypeaheadFormatter = (state: ModeInformation) => state.name || 'Unknown Mode Name';
 
   search = (text$: Observable<string>) =>
@@ -87,6 +90,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
       distinctUntilChanged(),
       map((term) => this.modes.filter((state) => new RegExp(term, "mi").test(state.name as string)).slice(0, 10))
     );
+
 
   constructor(
     private readonly connection: WebsocketService,
@@ -133,7 +137,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
       name: "New Preset",
       brightness: 64,
       segments: [
-        { start: 0, stop: 9, mode: 0, speed: 1000, options: 0, colors: ["#ff0000", "#00ff00", "#0000ff"] }
+        {start: 0, stop: 9, mode: 0, speed: 1000, options: 0, colors: ["#ff0000", "#00ff00", "#0000ff"]}
       ]
     };
 
@@ -156,27 +160,32 @@ export class ModePageComponent implements OnInit, OnDestroy {
     if (!this.selectedSegment) return;
     this.selectedSegment.start = event.value;
     this.selectedSegment.stop = event.highValue as number;
+    this.onPresetChange()
   }
 
   onSpeedChange(event: ChangeContext): void {
     if (!this.selectedSegment) return;
     this.selectedSegment.speed = event.value;
+    this.onPresetChange()
   }
 
   onSegmentColorsChange(event: ColorpickerEvent): void {
     if (!this.selectedSegment) return;
     this.selectedSegment.colors = event.colorpicker.colors.map(color => color.hexString);
+    this.onPresetChange()
   }
 
   selectPreset(preset: LedstripPreset): void {
     this.selectedPreset = preset;
     this.selectSegment(preset.segments[0]);
+    this.onPresetChange()
   }
 
   selectSegment(segment: Segment): void {
     this.selectedSegment = segment;
     if (!this.colorpicker) return;
     this.colorpicker.updateColors(segment.colors);
+    this.setSegmentModeModel(segment.mode)
   }
 
   onPanelChange(event: NgbPanelChangeEvent): void {
@@ -194,13 +203,35 @@ export class ModePageComponent implements OnInit, OnDestroy {
     const lastSegment = this.selectedPreset.segments[this.selectedPreset?.segments.length - 1];
     const newSegmentStop = 60;
     const newSegmentStart = Math.min(lastSegment.stop + 1, 60);
+    const newSegmentMode = 0;
     this.selectedPreset.segments.push({
       colors: ["#ff0000", "#00ff00", "#0000ff"],
-      mode: 0,
+      mode: newSegmentMode,
       options: 0,
       speed: 1000,
       start: newSegmentStart,
       stop: newSegmentStop
     });
+    this.selectSegment(this.selectedPreset.segments[this.selectedPreset.segments.length - 1])
+  }
+
+  /**
+   * Update the mode number in the selectedSegment when selecting a mode using the mode selector OR
+   * Update the mode selector model based on the newly selected segment
+   * @param modeNumber
+   */
+  setSegmentModeModel(modeNumber?: number) {
+    if (modeNumber) {
+      this.typeaheadModel = this.modes.find(mode => mode.mode == modeNumber)
+    } else {
+      if (this.selectedSegment) {
+        this.selectedSegment.mode = this.typeaheadModel?.mode || 0;
+        this.onPresetChange()
+      }
+    }
+  }
+
+  private onPresetChange() {
+
   }
 }
