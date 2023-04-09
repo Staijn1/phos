@@ -6,7 +6,7 @@
 #include "ArduinoJson.h"
 #include "Angulon.h"
 
-/// Serialize an array
+/// Serialize the current state into an array to submit to the central server
 /// The first element represents the event that has to be fired on the server
 /// The second element contains the state object
 /// \return
@@ -49,6 +49,27 @@ void State::setState(const JsonObject object) {
     Angulon::ledstrip->setSpeed(speed);
     Angulon::ledstrip->setColors(0, color_0, color_1, color_2);
     Angulon::ledstrip->setMode(mode);
+}
+
+void State::setStateSegments(const JsonObject object){
+    Logger::log("State", "Updating state with segments");
+
+    int brightness = object["brightness"]; // new brightness for the ledstrip
+    Angulon::ledstrip->setBrightness(brightness);
+
+    JsonArray segments = object["segments"];
+    for (JsonVariant segment : segments) {
+        int segmentNumber = segment["segment"];
+        int start = segment["start"];
+        int stop = segment["stop"];
+        int mode = segment["mode"];
+        int speed = segment["speed"];
+
+        JsonArray colors = segment["colors"];
+        uint32_t colorArray[3] = { colors[0], colors[1], colors[2] };
+
+        Angulon::ledstrip->setSegment(segmentNumber, start, stop, mode, colorArray, speed);
+    }
 }
 
 String State::getModesJSON() {

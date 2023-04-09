@@ -14,6 +14,7 @@ public:
     static String getStateJSON();
     static String getModesJSON();
     static void setState(const JsonObject object);
+    static void setStateSegments(const JsonObject object);
 };
 
 

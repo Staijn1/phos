@@ -10,7 +10,8 @@
 
 void Websocket::setup() {
     SystemConfiguration configuration = configurationManager->getConfig();
-    Logger::log("Websocket", "Setting up websocket connection to " + configuration.serverip + ":" + configuration.serverport);
+    Logger::log("Websocket",
+                "Setting up websocket connection to " + configuration.serverip + ":" + configuration.serverport);
     Angulon::led->turnOff();
 
     socketIO.begin(configuration.serverip, configuration.serverport, "/socket.io/?EIO=4");
@@ -77,7 +78,7 @@ void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payloa
 }
 
 void Websocket::handleEvent(uint8_t *payload, size_t length) {
-    StaticJsonDocument<192> doc;
+    StaticJsonDocument<768> doc;
 
     DeserializationError error = deserializeJson(doc, payload);
 
@@ -91,13 +92,17 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
     const JsonObject object = doc[1];
     // Handle the different events
     if (*event == '!') {
-        Serial.printf("[Websocket] get event: %s\n", payload);
+        Serial.printf("[Websocket] get state: %s\n", payload);
         State::setState(object);
+    } else if (*event == '/') {
+        Serial.printf("[Websocket] get state segments event: %s\n", payload);
+        State::setStateSegments(object);
     } else if (*event == '.') {
         handleDotEvent(payload, doc);
     } else {
         // Handle invalid or unknown event
-        handleUnknownEvent(payload, doc);
+        handleUnknownEvent(payload, doc
+        );
     }
 }
 
