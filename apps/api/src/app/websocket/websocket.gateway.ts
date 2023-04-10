@@ -9,7 +9,13 @@ import {Logger} from "@nestjs/common";
 import {Server, Socket} from "socket.io";
 import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
 import {ConfigurationService} from "../configuration/configuration.service";
-import {AddGradientResponse, GradientInformation, LedstripState, ModeInformation} from "@angulon/interfaces";
+import {
+  AddGradientResponse,
+  GradientInformation,
+  LedstripPreset,
+  LedstripState,
+  ModeInformation
+} from "@angulon/interfaces";
 import {GradientsService} from "../gradients/gradients.service";
 
 @WebSocketGateway(undefined, {cors: true})
@@ -120,6 +126,12 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   @SubscribeMessage("submitState")
   async onRegisterState(client: Socket, payload: LedstripState): Promise<void> {
     this.websocketClientsManagerService.syncState(client, payload);
+  }
+
+  @SubscribeMessage("setPreset")
+  async setPresetOnLedstrips(client: Socket, payload: LedstripPreset): Promise<"OK"> {
+    this.websocketClientsManagerService.setPreset(payload);
+    return "OK";
   }
 
   /**

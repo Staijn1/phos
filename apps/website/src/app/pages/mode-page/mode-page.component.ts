@@ -9,7 +9,7 @@ import {Fire2012State} from "../../services/chromaEffect/state/fire2012-state/fi
 import {WaterfallState} from "../../services/chromaEffect/state/waterfall-state/waterfall-state";
 import {RainbowCycleState} from "../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state";
 import {VisualizerState} from "../../services/chromaEffect/state/visualizer-state/visualizer-state";
-import {ModeInformation} from "@angulon/interfaces";
+import {LedstripPreset, ModeInformation, Segment} from "@angulon/interfaces";
 import {themes} from "../../shared/constants";
 import {ThemeService} from "../../services/theme/theme.service";
 import {WebsocketService} from "../../services/websocketconnection/websocket.service";
@@ -19,22 +19,8 @@ import {
 import {ChangeContext, Options} from "@angular-slider/ngx-slider";
 import {ColorpickerComponent, ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
 import {NgbAccordion, NgbPanelChangeEvent} from "@ng-bootstrap/ng-bootstrap";
-import {debounceTime, distinctUntilChanged, filter, map, Observable, OperatorFunction} from "rxjs";
+import {debounceTime, distinctUntilChanged, map, Observable} from "rxjs";
 
-interface LedstripPreset {
-  name: string;
-  brightness: number;
-  segments: Segment[];
-}
-
-interface Segment {
-  start: number;
-  stop: number;
-  mode: number;
-  speed: number;
-  options: number;
-  colors: string[];
-}
 
 @Component({
   selector: "app-mode",
@@ -130,6 +116,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
   onBrightnessChange(event: ChangeContext) {
     if (!this.selectedPreset) return;
     this.selectedPreset.brightness = event.value;
+    this.onPresetChange();
   }
 
   addPreset(): void {
@@ -232,6 +219,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
   }
 
   private onPresetChange() {
-
+    if (!this.selectedPreset) return;
+    this.connection.setPreset(this.selectedPreset);
   }
 }

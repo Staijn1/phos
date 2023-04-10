@@ -1,6 +1,6 @@
 import {Injectable, Logger} from "@nestjs/common";
 import {Server, Socket} from "socket.io";
-import {constrain, LedstripState} from "@angulon/interfaces";
+import {constrain, LedstripPreset, LedstripState} from "@angulon/interfaces";
 
 @Injectable()
 export class WebsocketClientsManagerService {
@@ -91,6 +91,16 @@ export class WebsocketClientsManagerService {
    */
   private setStateOnAllLedstrips(): void {
     this.sendEventToAllLedstrips("!", this.state);
+    /* this.sendEventToAllLedstrips('/', {
+       brightness: this.state.brightness,
+       segments: [{
+         start: 0,
+         stop: 60,
+         colors: this.state.colors,
+         mode: this.state.mode,
+         speed: this.state.speed
+       }]
+     } as any);*/
   }
 
   /**
@@ -151,10 +161,16 @@ export class WebsocketClientsManagerService {
    * @param payload
    * @private
    */
-  private sendEventToAllLedstrips(event: string, payload: string | LedstripState) {
+  private sendEventToAllLedstrips(event: string, payload: unknown) {
     const clients = this.getLedstripClients();
     for (const client of clients) {
       client.emit(event, payload);
     }
+  }
+
+  setPreset(payload: LedstripPreset) {
+    const brightness = payload.brightness;
+    console.log(brightness)
+    this.sendEventToAllLedstrips('/', payload);
   }
 }

@@ -4,7 +4,13 @@ import {environment} from '../../../environments/environment'
 import iro from '@jaames/iro'
 import {MessageService} from '../message-service/message.service'
 import {io, Socket} from 'socket.io-client'
-import {AddGradientResponse, GradientInformation, LedstripState, ModeInformation} from '@angulon/interfaces';
+import {
+  AddGradientResponse,
+  GradientInformation,
+  LedstripPreset,
+  LedstripState,
+  ModeInformation
+} from '@angulon/interfaces';
 import {Store} from '@ngrx/store';
 import {colorChange} from '../../../redux/color/color.action';
 
@@ -118,10 +124,17 @@ export class WebsocketService {
         reject(error)
       }, 3000)
 
+      if (args.length == 1 && !Array.isArray(args[0])){
+        args = args[0]
+      }
       this.socket.emit(eventName, args, (data: T) => {
         clearTimeout(timeout);
         resolve(data)
       })
     })
+  }
+
+  setPreset(preset: LedstripPreset) {
+    return this.promisifyEmit("setPreset", preset);
   }
 }

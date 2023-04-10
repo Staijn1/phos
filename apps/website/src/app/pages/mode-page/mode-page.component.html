@@ -335,7 +335,9 @@
               </ngb-accordion>
             </div>
             <div class="col-6">
+
               <div *ngIf="selectedPreset">
+                <pre>{{selectedPreset | json}}</pre>
                 <h4>Brightness</h4>
                 <ngx-slider [value]="selectedPreset.brightness" [options]="brightnessSliderOptions"
                             (userChange)="onBrightnessChange($event)"></ngx-slider>
