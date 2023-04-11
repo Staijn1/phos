@@ -55,7 +55,7 @@ uint8_t Ledstrip::getMode() {
 }
 
 void Ledstrip::setMode(int mode) {
-    if (mode == FX_MODE_CUSTOM || FX_MODE_CUSTOM_0 || FX_MODE_CUSTOM_1) {
+    if (mode == FX_MODE_CUSTOM   || mode == FX_MODE_CUSTOM_1) {
         Logger::log("Ledstrip", "Received a custom mode, setting segment");
         Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
     } else {
@@ -139,6 +139,15 @@ uint8_t Ledstrip::getModeCount() {
     return Ledstrip::strip->getModeCount();
 }
 
-void Ledstrip::setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mode, const uint32_t colors[], uint16_t speed) {
-    Ledstrip::strip->setSegment(segment, start, stop, mode, colors, speed);
+void
+Ledstrip::setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mode, uint16_t speed, const char *color_0,
+                     const char *color_1, const char *color_2) {
+    this->colorsHexString[0] = color_0;
+    this->colorsHexString[1] = color_1;
+    this->colorsHexString[2] = color_2;
+    uint32_t convertedColors[MAX_NUM_COLORS] = {
+            this->hexStringToInt(color_0),
+            this->hexStringToInt(color_1),
+            this->hexStringToInt(color_2)};
+    Ledstrip::strip->setSegment(segment, start, stop, mode, convertedColors, speed);
 }

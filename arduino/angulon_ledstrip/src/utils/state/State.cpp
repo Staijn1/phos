@@ -67,9 +67,10 @@ void State::setStateSegments(const JsonObject object) {
         int speed = segment["speed"];
 
         JsonArray colors = segment["colors"];
-        uint32_t colorArray[3] = {colors[0], colors[1], colors[2]};
-
-        Angulon::ledstrip->setSegment(segmentNumber, start, stop, mode, colorArray, speed);
+        const char *color_0 = colors[0]; // "#ff0000"
+        const char *color_1 = colors[1]; // "#00ff00"
+        const char *color_2 = colors[2]; // "#0000ff"
+        Angulon::ledstrip->setSegment(segmentNumber, start, stop, mode, speed, color_0, color_1, color_2);
     }
 }
 
