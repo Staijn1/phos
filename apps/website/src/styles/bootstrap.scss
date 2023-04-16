@@ -146,6 +146,10 @@
         }
       }
     }
+
+    .custom-accordion-button{
+      color: $color;
+    }
   }
 }
 
@@ -196,6 +200,10 @@ $text-bright: white;
         color: $text-bright !important;
       }
     }
+  }
+
+  .accordion-collapse, .custom-accordion-header{
+    background: $dark-background !important;
   }
 }
 

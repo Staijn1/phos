@@ -296,48 +296,55 @@
                 <h4>Presets</h4>
                 <button class="btn btn-primary btn-sm" (click)="addPreset()">Create Preset</button>
               </div>
-              <ngb-accordion #acc="ngbAccordion" [closeOthers]="true" (panelChange)="onPanelChange($event)">
-                <ngb-panel *ngFor="let preset of ledstripPresets; let presetIndex = index"
-                           [id]="'ngb-panel.' + presetIndex"
-                           [ngClass]="{'active': preset === selectedPreset}"
-                           (click)="selectPreset(preset)"
+              <div #accordion="ngbAccordion" ngbAccordion [closeOthers]="true" (shown)="onPanelShow($event)">
+                <div [ngbAccordionItem]="'ngb-panel.' + presetIndex"
+                     *ngFor="let preset of ledstripPresets; let presetIndex = index"
+                     [ngClass]="{'active': preset === selectedPreset}"
+                     (click)="selectPreset(preset)"
                 >
-                  <ng-template ngbPanelTitle>
-                    <div class="d-flex justify-content-between w-100">
-                      {{ preset.name }}
-                      <button class="btn btn-danger btn-sm float-end me-5" (click)="deletePreset(preset)">Delete
+                  <div ngbAccordionHeader
+                       class="accordion-button custom-accordion-header d-flex justify-content-between">
+                    <h2>{{preset.name}}</h2>
+                    <div>
+                      <button ngbAccordionToggle class="custom-accordion-button">
+                        <fa-icon
+                          [icon]="accordion.isExpanded('ngb-panel.' + presetIndex) ? accordionIconOpen : accordionIconClosed"></fa-icon>
                       </button>
                     </div>
-                  </ng-template>
-                  <ng-template ngbPanelContent>
-                    <div class="d-flex justify-content-end mb-3">
-                      <button type="button" class="btn btn-primary btn-sm" (click)="addSegment()">Add Segment</button>
-                    </div>
-                    <div *ngFor="let segment of preset.segments; let segmentIndex = index"
-                         [ngClass]="{'active': segment === selectedSegment}"
-                         (click)="selectSegment(segment)">
-                      <div class="card mb-3">
-                        <div class="card-body">
-                          <h5 class="card-title d-flex justify-content-between">
-                            <span>{{ segment.start }} - {{ segment.stop }}</span>
-                            <button type="button" class="btn btn-danger btn-sm" (click)="removeSegment(segmentIndex)">
-                              Remove Segment
-                            </button>
-                          </h5>
-                          <p class="card-text">Colors: {{ segment.colors }}</p>
-                          <p class="card-text">Speed: {{ segment.speed }}</p>
-                          <p class="card-text">Mode: {{ segment.mode }}</p>
+                  </div>
+                  <div ngbAccordionCollapse>
+                    <div ngbAccordionBody>
+                      <ng-template>
+                        <div class="d-flex justify-content-end mb-3">
+                          <button type="button" class="btn btn-primary btn-sm" (click)="addSegment()">Add Segment
+                          </button>
                         </div>
-                      </div>
+                        <div *ngFor="let segment of preset.segments; let segmentIndex = index"
+                             [ngClass]="{'active': segment === selectedSegment}"
+                             (click)="selectSegment(segment, $event)">
+                          <div class="card mb-3">
+                            <div class="card-body">
+                              <h5 class="card-title d-flex justify-content-between">
+                                <span>{{ segment.start }} - {{ segment.stop }}</span>
+                                <button type="button" class="btn btn-danger btn-sm"
+                                        (click)="removeSegment(segmentIndex)">
+                                  Remove Segment
+                                </button>
+                              </h5>
+                              <p class="card-text">Colors: {{ segment.colors }}</p>
+                              <p class="card-text">Speed: {{ segment.speed }}</p>
+                              <p class="card-text">Mode: {{ segment.mode }}</p>
+                            </div>
+                          </div>
+                        </div>
+                      </ng-template>
                     </div>
-                  </ng-template>
-                </ngb-panel>
-              </ngb-accordion>
+                  </div>
+                </div>
+              </div>
             </div>
             <div class="col-6">
-
               <div *ngIf="selectedPreset">
-                <pre>{{selectedPreset | json}}</pre>
                 <h4>Brightness</h4>
                 <ngx-slider [value]="selectedPreset.brightness" [options]="brightnessSliderOptions"
                             (userChange)="onBrightnessChange($event)"></ngx-slider>

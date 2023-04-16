@@ -20,6 +20,7 @@ import {ChangeContext, Options} from "@angular-slider/ngx-slider";
 import {ColorpickerComponent, ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
 import {NgbAccordion, NgbPanelChangeEvent} from "@ng-bootstrap/ng-bootstrap";
 import {debounceTime, distinctUntilChanged, map, Observable} from "rxjs";
+import {faChevronDown, faChevronLeft, faChevronUp} from "@fortawesome/free-solid-svg-icons";
 
 
 @Component({
@@ -64,6 +65,8 @@ export class ModePageComponent implements OnInit, OnDestroy {
     // todo the maximum should depend on the ledstrip
     ceil: 60
   };
+  readonly accordionIconClosed = faChevronLeft;
+  readonly accordionIconOpen = faChevronDown;
   /**
    * This variable holds the mode to display in the custom mode selector for a segment
    */
@@ -168,17 +171,12 @@ export class ModePageComponent implements OnInit, OnDestroy {
     this.onPresetChange()
   }
 
-  selectSegment(segment: Segment): void {
+  selectSegment(segment: Segment, event?: Event): void {
+    event?.stopPropagation();
     this.selectedSegment = segment;
     if (!this.colorpicker) return;
     this.colorpicker.updateColors(segment.colors);
     this.setSegmentModeModel(segment.mode)
-  }
-
-  onPanelChange(event: NgbPanelChangeEvent): void {
-    const panelId = event.panelId;
-    const selectedPresetIndex = Number(panelId.split(".")[1]);
-    this.selectPreset(this.ledstripPresets[selectedPresetIndex]);
   }
 
   removeSegment(index: number): void {
@@ -221,5 +219,10 @@ export class ModePageComponent implements OnInit, OnDestroy {
   private onPresetChange() {
     if (!this.selectedPreset) return;
     this.connection.setPreset(this.selectedPreset);
+  }
+
+  onPanelShow(panelId: string) {
+    const selectedPresetIndex = Number(panelId.split(".")[1]);
+    this.selectPreset(this.ledstripPresets[selectedPresetIndex]);
   }
 }

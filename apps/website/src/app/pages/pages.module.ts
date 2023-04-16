@@ -5,7 +5,7 @@ import {VisualizerPageComponent} from './visualizer-page/visualizer-page.compone
 import {ModePageComponent} from './mode-page/mode-page.component';
 import {FormsModule} from '@angular/forms';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import {NgbAccordionModule, NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SharedModule} from '../shared/shared.module';
 import {VisualizerPage3DComponent} from './visualizer-page3-d/visualizer-page3-d.component';
 import {NgxSliderModule} from '@angular-slider/ngx-slider';
