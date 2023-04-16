@@ -1,4 +1,4 @@
-import { constrain } from '@angulon/interfaces';
+import {constrain} from '@angulon/interfaces';
 import {GlobalVars} from './constants'
 import {RGBObject} from './types/types';
 

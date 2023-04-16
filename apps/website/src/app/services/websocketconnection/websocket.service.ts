@@ -124,7 +124,7 @@ export class WebsocketService {
         reject(error)
       }, 3000)
 
-      if (args.length == 1 && !Array.isArray(args[0])){
+      if (args.length == 1 && !Array.isArray(args[0])) {
         args = args[0]
       }
       this.socket.emit(eventName, args, (data: T) => {

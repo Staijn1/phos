@@ -23,7 +23,7 @@ services:
     networks:
       - corp
     restart: on-failure
-   
+
 
 
   angulon_website:

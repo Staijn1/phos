@@ -1,5 +1,6 @@
 /* You can add global styles to this file, and also import other style files */
 @import './styles/_variables.scss';
+
 /*--------------------------------------------------------------
 # General
 --------------------------------------------------------------*/
@@ -88,7 +89,7 @@ section {
 @import "./styles/bootstrap";
 @import "./styles/neon-text";
 
-@media screen and (max-width: map-get($grid-breakpoints, 'sm')){
+@media screen and (max-width: map-get($grid-breakpoints, 'sm')) {
   html {
     user-select: none;
   }

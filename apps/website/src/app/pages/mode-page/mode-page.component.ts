@@ -18,9 +18,9 @@ import {
 } from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
 import {ChangeContext, Options} from "@angular-slider/ngx-slider";
 import {ColorpickerComponent, ColorpickerEvent} from "../../shared/components/colorpicker/colorpicker.component";
-import {NgbAccordion, NgbPanelChangeEvent} from "@ng-bootstrap/ng-bootstrap";
+import {NgbAccordion} from "@ng-bootstrap/ng-bootstrap";
 import {debounceTime, distinctUntilChanged, map, Observable} from "rxjs";
-import {faChevronDown, faChevronLeft, faChevronUp} from "@fortawesome/free-solid-svg-icons";
+import {faChevronDown, faChevronLeft} from "@fortawesome/free-solid-svg-icons";
 
 
 @Component({

@@ -1,4 +1,4 @@
-import { GradientOptions } from 'audiomotion-analyzer'
+import {GradientOptions} from 'audiomotion-analyzer'
 import {ArrayTwoOrMore} from "./ArrayTwoOrMore";
 
 type ColorStop = {

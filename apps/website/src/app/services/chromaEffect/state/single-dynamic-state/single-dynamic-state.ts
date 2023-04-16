@@ -1,6 +1,7 @@
 import {State} from '../abstract/state'
 import {color_wheel, randomInteger} from '../../../../shared/functions'
 import {HeadsetEffect, KeyboardEffect, MouseEffect} from '../../../chromaSDK/chromaSDK.service';
+
 export class SingleDynamicState extends State {
   private interval: string | number | NodeJS.Timeout | undefined;
   private headsetColors = [0, 0, 0, 0, 0];
@@ -27,7 +28,7 @@ export class SingleDynamicState extends State {
 
         const randomIndex = randomInteger(0, this._context.headset.amount - 1)
         this.headsetColors[randomIndex] = color_wheel(randomInteger(0, 255))
-        this._context.createHeadsetEffect(HeadsetEffect.CHROMA_CUSTOM ,this.headsetColors).then()
+        this._context.createHeadsetEffect(HeadsetEffect.CHROMA_CUSTOM, this.headsetColors).then()
       }, this._context.speed)
     }
   }
