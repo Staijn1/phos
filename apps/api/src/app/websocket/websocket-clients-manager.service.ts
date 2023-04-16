@@ -7,7 +7,7 @@ export class WebsocketClientsManagerService {
   private server!: Server;
   private colorTimeout: NodeJS.Timeout;
   private state: LedstripState = {
-    brightness: 255, colors: ["#ff0000", "#00ff00", "#0000ff"], fftValue: 0, mode: 0, speed: 1000
+    brightness: 255, colors: ["#000000", "#000000", "#000000"], fftValue: 0, mode: 0, speed: 1000
   };
   private logger: Logger = new Logger("WebsocketClientsManagerService");
 
@@ -91,16 +91,6 @@ export class WebsocketClientsManagerService {
    */
   private setStateOnAllLedstrips(): void {
     this.sendEventToAllLedstrips("!", this.state);
-    /* this.sendEventToAllLedstrips('/', {
-       brightness: this.state.brightness,
-       segments: [{
-         start: 0,
-         stop: 60,
-         colors: this.state.colors,
-         mode: this.state.mode,
-         speed: this.state.speed
-       }]
-     } as any);*/
   }
 
   /**
@@ -170,7 +160,6 @@ export class WebsocketClientsManagerService {
 
   setPreset(payload: LedstripPreset) {
     const brightness = payload.brightness;
-    console.log(brightness)
     this.sendEventToAllLedstrips('/', payload);
   }
 }
