@@ -256,7 +256,7 @@
 </section>
 <section>
   <div class="container">
-    <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs">
+    <ul ngbNav #nav="ngbNav" [(activeId)]="activeTab" [destroyOnHide]="false" class="nav-tabs">
       <li [ngbNavItem]="0">
         <a ngbNavLink>Simple Modes</a>
         <ng-template ngbNavContent>
