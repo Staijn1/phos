@@ -55,10 +55,15 @@ uint8_t Ledstrip::getMode() {
 }
 
 void Ledstrip::setMode(int mode) {
+    // Do not set the mode if the new mode is the same as the current mode except if it is a custom mode
+    // By setting the same mode the animation restarts which looks strange when setting brightness/speed or color
+
     if (mode == FX_MODE_CUSTOM   || mode == FX_MODE_CUSTOM_1) {
         Logger::log("Ledstrip", "Received a custom mode, setting segment");
         Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
     } else {
+        const int currentMode = Ledstrip::strip->getMode();
+        if(currentMode == mode) return;
         Ledstrip::strip->setMode(mode);
     }
     Logger::log("Ledstrip", "Set mode to: " + String(mode));
