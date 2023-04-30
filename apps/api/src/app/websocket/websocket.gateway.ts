@@ -1,6 +1,7 @@
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer
@@ -19,10 +20,12 @@ import {
 import {GradientsService} from "../gradients/gradients.service";
 
 @WebSocketGateway(undefined, {cors: true})
-export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
   private logger: Logger = new Logger("WebsocketGateway");
+  // 5 minutes in milliseconds
+  private readonly stateIntervalTimeMS = 300000;
 
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
@@ -155,5 +158,15 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   handleDisconnect(client: Socket): any {
     this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
     this.websocketClientsManagerService.setServer(this.server);
+  }
+
+  /**
+   * Start a timer that will send the state of the server to all connected ledstrips every x time.
+   */
+  afterInit(): void {
+    setInterval(() => {
+      this.logger.log("Sending state to all ledstrips - forced")
+      this.websocketClientsManagerService.setStateOnAllLedstrips(true);
+    }, this.stateIntervalTimeMS);
   }
 }
