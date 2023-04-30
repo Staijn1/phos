@@ -40,7 +40,7 @@ public:
 
     int getSpeed();
 
-    void setMode(int mode);
+    void setMode(int mode, boolean force);
 
     void setSpeed(int speed);
 
@@ -57,6 +57,8 @@ public:
     static uint16_t vuMeter();
 
     static uint16_t vuMeterBrightness();
+
+    void setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mode, uint16_t speed, const char *color_0, const char *color_1, const char *color_2);
 };
 
 

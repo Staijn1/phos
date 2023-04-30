@@ -1,5 +1,3 @@
-import iro from "@jaames/iro";
-
 export interface ColorpickerState {
   colors: string[];
   updateLedstrips: boolean;

@@ -2,6 +2,7 @@ import {State} from '../abstract/state'
 import {calculateBGRInteger, color_wheel, convertRGBIntegerToArray} from '../../../../shared/functions'
 import iro from '@jaames/iro'
 import {HeadsetEffect, KeyboardEffect, MouseEffect} from '../../../chromaSDK/chromaSDK.service';
+
 export class RainbowState extends State {
   private counter = 0;
   private interval: string | number | NodeJS.Timer | undefined;

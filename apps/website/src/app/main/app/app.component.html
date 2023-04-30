@@ -1,7 +1,7 @@
 <app-navigationbar></app-navigationbar>
 <router-outlet></router-outlet>
 
-<div class="alert-container w-50-s">
+<div class="alert-container">
   <div (click)="onAlertClick(error)" *ngFor="let error of errorService.getMessages()" @swipeRight
        [class.alert-danger]="error.severity === 'error'"
        [class.alert-info]="error.severity === 'info'"

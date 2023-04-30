@@ -33,7 +33,7 @@
     "@nestjs/platform-express": "^9.0.0",
     "@nestjs/platform-socket.io": "^9.2.0",
     "@nestjs/websockets": "^9.2.0",
-    "@ng-bootstrap/ng-bootstrap": "^14.0.0",
+    "@ng-bootstrap/ng-bootstrap": "^14.1.0",
     "@ngrx/store": "^15.3.0",
     "@ngrx/store-devtools": "^15.3.0",
     "@popperjs/core": "^2.11.6",

@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, HostListener, OnInit, Renderer2, ViewChild} from '@angular/core';
+import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
 import {gsap} from 'gsap';
 import {NavigationEnd, NavigationStart, Router} from '@angular/router';
 
@@ -19,14 +19,11 @@ import {
   faTimes,
   faWalking
 } from '@fortawesome/free-solid-svg-icons';
-import {GeneralSettings} from '../../shared/types/types';
-import {SettingsService} from '../../services/settings/settings.service';
 import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 import {Store} from '@ngrx/store';
 import {ColorpickerState} from '../../../redux/color/color.reducer';
 import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
-import {colorChange} from "../../../redux/color/color.action";
 
 @Component({
   selector: 'app-navigationbar',

@@ -1,9 +1,9 @@
-import { Injectable } from "@angular/core";
-import { GeneralSettings } from "../../shared/types/types";
-import { Options } from "audiomotion-analyzer";
+import {Injectable} from "@angular/core";
+import {GeneralSettings} from "../../shared/types/types";
+import {Options} from "audiomotion-analyzer";
 import iro from "@jaames/iro";
-import { MessageService } from "../message-service/message.service";
-import { AngulonVisualizerOptions } from "@angulon/interfaces";
+import {MessageService} from "../message-service/message.service";
+import {AngulonVisualizerOptions} from "@angulon/interfaces";
 
 
 @Injectable({
@@ -97,7 +97,7 @@ export class SettingsService {
 
     try {
       const parsed = JSON.parse(savedItem as string);
-      return { ...defaultVal, ...parsed };
+      return {...defaultVal, ...parsed};
     } catch (e: any) {
       this.messageService.setMessage(e);
       return defaultVal;

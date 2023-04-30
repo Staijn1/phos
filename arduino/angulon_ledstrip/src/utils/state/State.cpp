@@ -6,7 +6,7 @@
 #include "ArduinoJson.h"
 #include "Angulon.h"
 
-/// Serialize an array
+/// Serialize the current state into an array to submit to the central server
 /// The first element represents the event that has to be fired on the server
 /// The second element contains the state object
 /// \return
@@ -36,6 +36,8 @@ String State::getStateJSON() {
 void State::setState(const JsonObject object) {
     Logger::log("State", "Updating state");
 
+    boolean forceState = object["force"];
+
     int mode = object["mode"]; // 0
     int speed = object["speed"]; // 1000
     int brightness = object["brightness"]; // 196
@@ -48,11 +50,35 @@ void State::setState(const JsonObject object) {
     Angulon::ledstrip->setBrightness(brightness);
     Angulon::ledstrip->setSpeed(speed);
     Angulon::ledstrip->setColors(0, color_0, color_1, color_2);
-    Angulon::ledstrip->setMode(mode);
+    Angulon::ledstrip->setMode(mode, forceState);
+}
+
+void State::setStateSegments(const JsonObject object) {
+    Logger::log("State", "Updating state with segments");
+
+    String brightness = object["brightness"]; // new brightness for the ledstrip
+    Serial.println(brightness);
+//    Angulon::ledstrip->setBrightness(brightness);
+
+    JsonArray segments = object["segments"];
+    for (JsonVariant segment: segments) {
+        int segmentNumber = segment["segment"];
+        int start = segment["start"];
+        int stop = segment["stop"];
+        int mode = segment["mode"];
+        int speed = segment["speed"];
+
+        JsonArray colors = segment["colors"];
+        const char *color_0 = colors[0]; // "#ff0000"
+        const char *color_1 = colors[1]; // "#00ff00"
+        const char *color_2 = colors[2]; // "#0000ff"
+        Angulon::ledstrip->setSegment(segmentNumber, start, stop, mode, speed, color_0, color_1, color_2);
+    }
 }
 
 String State::getModesJSON() {
-    const size_t bufferSize = JSON_ARRAY_SIZE(Angulon::ledstrip->getModeCount() + 1) + Angulon::ledstrip->getModeCount() * JSON_OBJECT_SIZE(2) + 1000;
+    const size_t bufferSize = JSON_ARRAY_SIZE(Angulon::ledstrip->getModeCount() + 1) +
+                              Angulon::ledstrip->getModeCount() * JSON_OBJECT_SIZE(2) + 1000;
     DynamicJsonDocument jsonBuffer(bufferSize);
     JsonArray json = jsonBuffer.to<JsonArray>();
     for (uint8_t i = 0; i < Angulon::ledstrip->getModeCount(); i++) {

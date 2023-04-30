@@ -23,8 +23,8 @@ services:
     networks:
       - corp
     restart: on-failure
-    depends_on:
-      - angulon_db
+
+
 
   angulon_website:
     container_name: angulon_website

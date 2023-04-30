@@ -1,18 +1,20 @@
 import {Injectable, Logger} from "@nestjs/common";
 import {Server, Socket} from "socket.io";
-import {constrain, LedstripState} from "@angulon/interfaces";
+import {constrain, LedstripPreset, LedstripState} from "@angulon/interfaces";
 
 @Injectable()
 export class WebsocketClientsManagerService {
-  private server!: Server;
+  private server: Server | undefined;
   private colorTimeout: NodeJS.Timeout;
-  private state: LedstripState | undefined;
+  private state: LedstripState = {
+    brightness: 255, colors: ["#000000", "#000000", "#000000"], fftValue: 0, mode: 0, speed: 1000
+  };
   private logger: Logger = new Logger("WebsocketClientsManagerService");
 
   /**
    * Get state of this server
    */
-  getState(): LedstripState | undefined {
+  getState(): LedstripState {
     return this.state;
   }
 
@@ -85,10 +87,10 @@ export class WebsocketClientsManagerService {
 
   /**
    * Send a command to all ledstrips. These are all clients that are not in the user room
-   * @private
+   * @param force If true the ledstrips will update their state even if it's the same as the current state. Default is false
    */
-  private setStateOnAllLedstrips(): void {
-    this.sendEventToAllLedstrips("!", this.state);
+  setStateOnAllLedstrips(force = false): void {
+    this.sendEventToAllLedstrips("!", {...this.state, force: force});
   }
 
   /**
@@ -108,7 +110,7 @@ export class WebsocketClientsManagerService {
    * @private
    */
   private sendAllUsers(event: string, payload: string[], originClient: Socket) {
-    const clients = this.server.sockets.sockets;
+    const clients = this.server ? this.server.sockets.sockets : new Map();
     for (const [, client] of clients) {
       if (client.id === originClient.id || !client.rooms.has("user")) continue;
       client.emit(event, payload);
@@ -139,7 +141,7 @@ export class WebsocketClientsManagerService {
    */
   private getLedstripClients(): Socket[] {
     // Convert the clients from a Map to an array
-    const clients = [...this.server.sockets.sockets.values()];
+    const clients = this.server ? [...this.server.sockets.sockets.values()] : [];
     return clients.filter(client => !client.rooms.has("user"));
   }
 
@@ -149,10 +151,14 @@ export class WebsocketClientsManagerService {
    * @param payload
    * @private
    */
-  private sendEventToAllLedstrips(event: string, payload: string | LedstripState) {
+  private sendEventToAllLedstrips(event: string, payload: unknown) {
     const clients = this.getLedstripClients();
     for (const client of clients) {
       client.emit(event, payload);
     }
+  }
+
+  setPreset(payload: LedstripPreset) {
+    this.sendEventToAllLedstrips('/', payload);
   }
 }

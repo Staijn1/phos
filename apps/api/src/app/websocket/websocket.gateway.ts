@@ -1,6 +1,7 @@
 import {
   OnGatewayConnection,
   OnGatewayDisconnect,
+  OnGatewayInit,
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer
@@ -9,14 +10,22 @@ import {Logger} from "@nestjs/common";
 import {Server, Socket} from "socket.io";
 import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
 import {ConfigurationService} from "../configuration/configuration.service";
-import {AddGradientResponse, GradientInformation, LedstripState, ModeInformation} from "@angulon/interfaces";
+import {
+  AddGradientResponse,
+  GradientInformation,
+  LedstripPreset,
+  LedstripState,
+  ModeInformation
+} from "@angulon/interfaces";
 import {GradientsService} from "../gradients/gradients.service";
 
 @WebSocketGateway(undefined, {cors: true})
-export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect {
+export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
   private logger: Logger = new Logger("WebsocketGateway");
+  // 5 minutes in milliseconds
+  private readonly stateIntervalTimeMS = 300000;
 
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
@@ -122,6 +131,12 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     this.websocketClientsManagerService.syncState(client, payload);
   }
 
+  @SubscribeMessage("setPreset")
+  async setPresetOnLedstrips(client: Socket, payload: LedstripPreset): Promise<"OK"> {
+    this.websocketClientsManagerService.setPreset(payload);
+    return "OK";
+  }
+
   /**
    * When a client connects, log its IP address.
    * Also set the server instance in the websocketClientsManagerService, so we make sure it is always up-to-date with the current server instance.
@@ -143,5 +158,15 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   handleDisconnect(client: Socket): any {
     this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
     this.websocketClientsManagerService.setServer(this.server);
+  }
+
+  /**
+   * Start a timer that will send the state of the server to all connected ledstrips every x time.
+   */
+  afterInit(): void {
+    setInterval(() => {
+      this.logger.log("Sending state to all ledstrips - forced")
+      this.websocketClientsManagerService.setStateOnAllLedstrips(true);
+    }, this.stateIntervalTimeMS);
   }
 }

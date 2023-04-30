@@ -1,4 +1,4 @@
-import {AfterViewInit, Component, ElementRef, OnInit, ViewChild} from '@angular/core'
+import {AfterViewInit, Component, ElementRef, ViewChild} from '@angular/core'
 
 @Component({
   selector: 'app-home',
@@ -12,7 +12,7 @@ export class HomePageComponent implements AfterViewInit {
     this.neonText(this.neonTextElement.nativeElement);
   }
 
-  neonText(target: HTMLElement){
+  neonText(target: HTMLElement) {
     const flickerLetter = (letter: any) => `<span style="animation: text-flicker-in-glow ${Math.random() * 4}s linear both ">${letter}</span>`
     const colorLetter = (letter: any) => `<span style="color: hsla(${Math.random() * 360}, 100%, 80%, 1);">${letter}</span>`;
 

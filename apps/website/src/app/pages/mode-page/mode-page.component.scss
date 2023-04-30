@@ -36,11 +36,15 @@
 
 }
 
-.active > div {
-  background-color: darken($secondary, 20%);
+.active > .icon-box, .active > .card {
+  background-color: darken($secondary, 20%) !important;
 
-  h4 {
+  h4, h5 {
     color: white;
+  }
+
+  p {
+    color: lightgray;
   }
 }
 
@@ -191,4 +195,24 @@
       line-height: 24px;
     }
   }
+}
+
+
+.card {
+  transition: all ease-in-out 0.3s;
+}
+
+.custom-accordion-header::after {
+  content: none;
+}
+
+.custom-accordion-button {
+  box-shadow: none;
+  background: none;
+  border: none;
+  //color: white;
+}
+
+.dark .custom-accordion-button {
+  //color: black;
 }

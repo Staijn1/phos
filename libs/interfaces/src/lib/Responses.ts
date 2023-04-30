@@ -1,4 +1,4 @@
-import { GradientInformation } from "..";
+import {GradientInformation} from "..";
 
 
 export type AddGradientResponse = {

@@ -1,5 +1,5 @@
 FROM staijn/angulon:nx-base AS builder
-
+ARG NX_DAEMON=false
 WORKDIR /app/builder
 COPY . .
 RUN npx nx build website

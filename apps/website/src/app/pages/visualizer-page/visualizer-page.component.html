@@ -42,7 +42,7 @@
                 <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
               </select>
             </div>
-<!--            Select box for the gradient right, only works when channelLayout != 'single'-->
+            <!--            Select box for the gradient right, only works when channelLayout != 'single'-->
             <div class="form-group">
               <label for="gradientRight">Gradient Right Channel</label>
               <select (change)="applySettings()" [(ngModel)]="visualizerOptions.gradientRight" class="form-control"
@@ -107,7 +107,7 @@
                 <option [ngValue]="'treble'">Treble</option>
               </select>
             </div>
-<!--            Selectbox for channalLayout-->
+            <!--            Selectbox for channalLayout-->
             <div class="form-group">
               <label for="channelLayout">Channel Layout</label>
               <select (change)="applySettings()" [(ngModel)]="visualizerOptions.channelLayout" class="form-control"
