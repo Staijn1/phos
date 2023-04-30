@@ -40,7 +40,7 @@ public:
 
     int getSpeed();
 
-    void setMode(int mode);
+    void setMode(int mode, boolean force);
 
     void setSpeed(int speed);
 

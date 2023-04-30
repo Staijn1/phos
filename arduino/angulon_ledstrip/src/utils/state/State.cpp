@@ -36,6 +36,8 @@ String State::getStateJSON() {
 void State::setState(const JsonObject object) {
     Logger::log("State", "Updating state");
 
+    boolean forceState = object["force"];
+
     int mode = object["mode"]; // 0
     int speed = object["speed"]; // 1000
     int brightness = object["brightness"]; // 196
@@ -48,7 +50,7 @@ void State::setState(const JsonObject object) {
     Angulon::ledstrip->setBrightness(brightness);
     Angulon::ledstrip->setSpeed(speed);
     Angulon::ledstrip->setColors(0, color_0, color_1, color_2);
-    Angulon::ledstrip->setMode(mode);
+    Angulon::ledstrip->setMode(mode, forceState);
 }
 
 void State::setStateSegments(const JsonObject object) {
