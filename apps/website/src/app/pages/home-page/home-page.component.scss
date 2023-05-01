@@ -1,0 +1,50 @@
+#introcover {
+  background: black;
+  opacity: 1;
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+
+#introtext {
+  stroke-dasharray: 100%;
+  stroke-dashoffset: 100%;
+  font-size: 7em;
+  font-family: RajdhaniMedium, sans-serif;
+  width: 100%;
+  height: 120px;
+  fill: none;
+  stroke: red; //getColor('primary');
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
+}
+
+#Light_Bulb {
+  stroke-width: 7px;
+  fill: none;
+
+  //@include media-breakpoint-up(xl) {
+  display: initial;
+  //}
+
+  .bulb {
+    stroke-dasharray: 100%;
+    stroke-dashoffset: 100%;
+  }
+
+  .reflection {
+    stroke-width: 0;
+    stroke: blue; //getColor('secondary');
+  }
+
+  .light {
+    stroke-opacity: 0;
+    stroke-width: 3px;
+    stroke: #F9CB40;
+    fill: #F9CB40;
+    fill-opacity: 0;
+  }
+}
