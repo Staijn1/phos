@@ -19,18 +19,4 @@ export class HomePageComponent implements AfterViewInit {
     this.timeline.to('#Light_Bulb', {duration: 0.7, y: -400, ease: 'power.out'}, '-=1.6');
     this.timeline.to('#introtext', {strokeDashoffset: 0, duration: 4}, '-=0.5');
   }
-
-  neonText(target: HTMLElement) {
-    const flickerLetter = (letter: any) => `<span style="animation: text-flicker-in-glow ${Math.random() * 4}s linear both ">${letter}</span>`
-    const colorLetter = (letter: any) => `<span style="color: hsla(${Math.random() * 360}, 100%, 80%, 1);">${letter}</span>`;
-
-    const flickerAndColorText = (text: string) =>
-      text
-        .split('')
-        .map(flickerLetter)
-        .map(colorLetter)
-        .join('');
-
-    target.innerHTML = flickerAndColorText(target.textContent as string);
-  }
 }
