@@ -18,6 +18,7 @@ import {
   ModeInformation
 } from "@angulon/interfaces";
 import {GradientsService} from "../gradients/gradients.service";
+import {PresetsService} from "../presets/presets.service";
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -30,7 +31,8 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
     private readonly configurationService: ConfigurationService,
-    private readonly gradientsService: GradientsService) {
+    private readonly gradientsService: GradientsService,
+    private readonly presetsService: PresetsService) {
   }
 
   @SubscribeMessage("getState")
@@ -111,6 +113,12 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   @SubscribeMessage("gradients/add")
   async onAddGradient(): Promise<AddGradientResponse> {
     return this.gradientsService.addGradient();
+  }
+
+  @SubscribeMessage("presets/add")
+  async onAddPreset(): Promise<LedstripPreset[]> {
+    await this.presetsService.addPreset();
+    return this.presetsService.getPresets();
   }
 
   @SubscribeMessage("joinUserRoom")
