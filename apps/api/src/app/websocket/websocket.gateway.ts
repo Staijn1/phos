@@ -24,8 +24,8 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   @WebSocketServer()
   private server: Server;
   private logger: Logger = new Logger("WebsocketGateway");
-  // 5 minutes in milliseconds
-  private readonly stateIntervalTimeMS = 300000;
+  // 15 minutes in milliseconds
+  private readonly stateIntervalTimeMS = 900000;
 
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
