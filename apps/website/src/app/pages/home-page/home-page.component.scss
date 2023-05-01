@@ -1,3 +1,7 @@
+@import "bootstrap/scss/mixins";
+@import "bootstrap/scss/functions";
+@import "bootstrap/scss/variables";
+
 #introcover {
   background: black;
   opacity: 1;
@@ -12,12 +16,11 @@
 #introtext {
   stroke-dasharray: 100%;
   stroke-dashoffset: 100%;
-  font-size: 7em;
+  font-size: 5em;
   font-family: RajdhaniMedium, sans-serif;
   width: 100%;
   height: 120px;
   fill: none;
-  stroke: red; //getColor('primary');
   stroke-width: 2.5px;
   stroke-linejoin: round;
 }
@@ -25,10 +28,11 @@
 #Light_Bulb {
   stroke-width: 7px;
   fill: none;
+  display: none;
 
-  //@include media-breakpoint-up(xl) {
-  display: initial;
-  //}
+  @include media-breakpoint-up(xl) {
+    display: initial;
+  }
 
   .bulb {
     stroke-dasharray: 100%;
@@ -37,7 +41,6 @@
 
   .reflection {
     stroke-width: 0;
-    stroke: blue; //getColor('secondary');
   }
 
   .light {
