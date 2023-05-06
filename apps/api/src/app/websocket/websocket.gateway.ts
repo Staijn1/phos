@@ -155,7 +155,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return this.presetsService.deletePreset(index)
   }
 
-  @SubscribeMessage("presets/edit")
+  @SubscribeMessage("presets/update")
   async onEditPreset(client: Socket, payload: { index: number, preset: LedstripPreset }): Promise<LedstripPreset[]> {
     return this.presetsService.updatePreset(payload.index, payload.preset);
   }
