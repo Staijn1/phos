@@ -24,6 +24,31 @@ export class PresetsService {
     return this.configurationService.getPresets();
   }
 
+  /**
+   * Delete a preset from the configuration file
+   */
+  async deletePreset(index: number): Promise<LedstripPreset[]> {
+    const gradients = await this.getPresets();
+    gradients.splice(index, 1);
+
+    await this.configurationService.writePresets(gradients);
+    return gradients;
+  }
+
+  /**
+   * Update an existing preset in the configuration file.
+   */
+  async updatePreset(index: number, newPresetInformation: LedstripPreset): Promise<LedstripPreset[]> {
+    const gradients = await this.getPresets();
+    gradients[index] = newPresetInformation;
+
+    await this.configurationService.writePresets(gradients);
+    return gradients;
+  }
+
+  /**
+   * Add a new preset to the configuration file.
+   */
   async addPreset(): Promise<LedstripPreset[]> {
     const loremIpsumName = new LoremIpsum().generateWords(1)
     const gradients = await this.getPresets();
