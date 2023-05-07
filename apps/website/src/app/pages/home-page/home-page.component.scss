@@ -2,12 +2,16 @@
 @import "bootstrap/scss/functions";
 @import "bootstrap/scss/variables";
 
-#introcover {
-  background: black;
-  opacity: 1;
+#introcontainer, svg {
   position: absolute;
   top: 0;
   left: 0;
+  width: 100%;
+  height: 100%;
+}
+
+#introcover {
+  background: black;
   width: 100%;
   height: 100%;
 }
@@ -26,6 +30,7 @@
 }
 
 #Light_Bulb {
+  z-index: 2;
   stroke-width: 7px;
   fill: none;
   display: none;
