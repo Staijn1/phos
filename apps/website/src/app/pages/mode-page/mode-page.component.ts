@@ -94,6 +94,9 @@ export class ModePageComponent implements OnInit, OnDestroy {
   ngOnInit(): void {
     this.connection.getModes().then(modes => {
       this.modes = modes;
+      return this.connection.getPresets();
+    }).then(presets => {
+      this.ledstripPresets = presets;
     });
   }
 
@@ -123,21 +126,20 @@ export class ModePageComponent implements OnInit, OnDestroy {
   }
 
   addPreset(): void {
-    const newPreset = {
-      name: "New Preset",
-      brightness: 64,
-      segments: [
-        {start: 0, stop: 9, mode: 0, speed: 1000, options: 0, colors: ["#ff0000", "#00ff00", "#0000ff"]}
-      ]
-    };
+    this.connection.addPreset().then(presets => {
+      this.ledstripPresets = presets;
+      const index = presets.length - 1;
+      // The new preset is the last one in the array
+      this.selectPreset(presets[index]);
 
-    // The index of the newly inserted preset is the new length of presets (returned by push) - 1
-    const index = this.ledstripPresets.push(newPreset) - 1;
-    this.selectPreset(newPreset);
-    // Expand the newly created preset
-    if (this.accordion) {
-      setTimeout(() => this.accordion?.expand(`ngb-panel.${index}`), 100);
-    }
+      // Expand the newly created preset
+      this.expandPresetAccordion(index);
+    });
+  }
+
+  private expandPresetAccordion(preset: number | LedstripPreset) {
+    const index = typeof preset === "number" ? preset : this.ledstripPresets.indexOf(preset);
+    setTimeout(() => this.accordion?.expand(`ngb-panel.${index}`), 100);
   }
 
   deletePreset(preset: LedstripPreset): void {
@@ -197,7 +199,12 @@ export class ModePageComponent implements OnInit, OnDestroy {
       start: newSegmentStart,
       stop: newSegmentStop
     });
-    this.selectSegment(this.selectedPreset.segments[this.selectedPreset.segments.length - 1])
+
+    const index = this.ledstripPresets.indexOf(this.selectedPreset)
+    this.connection.updatePreset(index, this.selectedPreset).then(presets => {
+      if (!this.selectedPreset) return;
+      this.selectSegment(this.selectedPreset.segments[this.selectedPreset.segments.length - 1])
+    });
   }
 
   /**

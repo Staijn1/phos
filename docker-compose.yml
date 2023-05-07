@@ -23,8 +23,8 @@ services:
     networks:
       - corp
     restart: on-failure
-
-
+    volumes:
+      - /data/angulon:/app/dist/apps/api/assets/config
 
   angulon_website:
     container_name: angulon_website

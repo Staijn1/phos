@@ -135,6 +135,18 @@ export class WebsocketService {
   }
 
   setPreset(preset: LedstripPreset) {
-    return this.promisifyEmit("setPreset", preset);
+    return this.promisifyEmit("presets/set", preset);
+  }
+
+  addPreset(): Promise<LedstripPreset[]> {
+    return this.promisifyEmit("presets/add")
+  }
+
+  getPresets() {
+    return this.promisifyEmit<LedstripPreset[]>("presets/get")
+  }
+
+  updatePreset(index: number, selectedPreset: LedstripPreset) {
+    return this.promisifyEmit<LedstripPreset[]>("presets/update", {index: index, preset: selectedPreset})
   }
 }

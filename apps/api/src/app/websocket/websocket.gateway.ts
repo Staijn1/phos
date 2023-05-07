@@ -18,19 +18,21 @@ import {
   ModeInformation
 } from "@angulon/interfaces";
 import {GradientsService} from "../gradients/gradients.service";
+import {PresetsService} from "../presets/presets.service";
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
   private logger: Logger = new Logger("WebsocketGateway");
-  // 5 minutes in milliseconds
-  private readonly stateIntervalTimeMS = 300000;
+  // 15 minutes in milliseconds
+  private readonly stateIntervalTimeMS = 900000;
 
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
     private readonly configurationService: ConfigurationService,
-    private readonly gradientsService: GradientsService) {
+    private readonly gradientsService: GradientsService,
+    private readonly presetsService: PresetsService) {
   }
 
   @SubscribeMessage("getState")
@@ -113,6 +115,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return this.gradientsService.addGradient();
   }
 
+
   @SubscribeMessage("joinUserRoom")
   async onJoinUserRoom(client: Socket): Promise<void> {
     this.websocketClientsManagerService.joinUserRoom(client);
@@ -131,10 +134,35 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     this.websocketClientsManagerService.syncState(client, payload);
   }
 
-  @SubscribeMessage("setPreset")
+  /**
+   * This event is emitted when selecting a preset, the handler will set the preset on the ledstrips.
+   * @param client
+   * @param payload
+   */
+  @SubscribeMessage("presets/set")
   async setPresetOnLedstrips(client: Socket, payload: LedstripPreset): Promise<"OK"> {
     this.websocketClientsManagerService.setPreset(payload);
     return "OK";
+  }
+
+  @SubscribeMessage("presets/add")
+  async onAddPreset(): Promise<LedstripPreset[]> {
+    return this.presetsService.addPreset();
+  }
+
+  @SubscribeMessage("presets/delete")
+  async onDeletePreset(client: Socket, index: number): Promise<LedstripPreset[]> {
+    return this.presetsService.deletePreset(index)
+  }
+
+  @SubscribeMessage("presets/update")
+  async onEditPreset(client: Socket, payload: { index: number, preset: LedstripPreset }): Promise<LedstripPreset[]> {
+    return this.presetsService.updatePreset(payload.index, payload.preset);
+  }
+
+  @SubscribeMessage("presets/get")
+  async onGetPresets(): Promise<LedstripPreset[]> {
+    return this.presetsService.getPresets();
   }
 
   /**
