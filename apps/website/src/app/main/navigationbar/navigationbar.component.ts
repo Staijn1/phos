@@ -100,8 +100,14 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
     this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
 
-    this.connection.setColor(['#000000', '#000000', '#000000']);
-    this.connection.setMode(0);
+    const colorsHex = this.colorpicker.getColors().map(color => color.hexString);
+    // Only set the first color to black, so we retain the other colors.
+    colorsHex[0] = '#000000';
+    // By setting the color picker colors the redux store will be updated and the ledstrips will be updated.
+    this.colorpicker.updateColors(colorsHex)
+    // 18 is Color Wipe, which will give a nice graceful animation when turning off the ledstrips, if the ledstips are on effects that do not use the colors (like rainbow)
+    // For effects that do use the colors, setting the mode to 18 will not have any effect because the colors are set to black before the mode is set.
+    this.connection.setMode(18);
   }
 
   private closeMobileMenu() {
