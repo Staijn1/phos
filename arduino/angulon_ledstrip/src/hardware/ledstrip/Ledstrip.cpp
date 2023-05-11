@@ -60,7 +60,7 @@ void Ledstrip::setMode(int mode, boolean force) {
 
     if (mode == FX_MODE_CUSTOM   || mode == FX_MODE_CUSTOM_1) {
         Logger::log("Ledstrip", "Received a custom mode, setting segment");
-        Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
+        Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getSegment()->colors, 0, NO_OPTIONS);
     } else {
         const int currentMode = Ledstrip::strip->getMode();
         if(currentMode == mode && force == false) return;
