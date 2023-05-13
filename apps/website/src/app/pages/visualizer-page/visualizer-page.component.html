@@ -294,6 +294,18 @@
           </div>
         </ng-template>
       </li>
+      <li [ngbNavItem]="3">
+        <a ngbNavLink>
+          <fa-icon [icon]="spotifyIcon"></fa-icon>
+        </a>
+        <ng-template ngbNavContent>
+          <div>
+            <div class="playback-controls">
+              <button (click)="toggleSpotifyPlayerPlay()">Play/pause</button>
+            </div>
+          </div>
+        </ng-template>
+      </li>
     </ul>
     <div [ngbNavOutlet]="nav" class="mt-2 h-100"></div>
   </div>
