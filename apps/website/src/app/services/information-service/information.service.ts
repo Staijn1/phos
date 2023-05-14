@@ -4,6 +4,7 @@ import { MessageService } from "../message-service/message.service";
 import { environment } from "../../../environments/environment";
 import { WebsocketService } from "../websocketconnection/websocket.service";
 import Vibrant from "node-vibrant";
+import { Palette } from "node-vibrant/lib/color";
 
 @Injectable({
   providedIn: "root"
@@ -45,7 +46,7 @@ export class InformationService {
    * From an image URL get the average colors of the image.
    * @param {string} url
    */
-  async getAverageColors(url: string) {
+  async getAverageColors(url: string):Promise<Palette> {
     // Create a Vibrant object with the image URL
     const vibrant = new Vibrant(url);
 
