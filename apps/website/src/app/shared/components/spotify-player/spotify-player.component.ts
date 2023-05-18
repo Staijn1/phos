@@ -2,6 +2,8 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {getDeviceType} from "../../functions";
 import {SpotifyAuthenticationService} from "../../../services/spotify-authentication/spotify-authentication.service";
 import {faSpotify} from "@fortawesome/free-brands-svg-icons";
+import {MessageService} from "../../../services/message-service/message.service";
+import {Message} from "../../types/Message";
 
 /// <reference types="@types/spotify-web-playback-sdk" />
 declare global {
@@ -22,7 +24,7 @@ export class SpotifyPlayerComponent implements OnInit {
   readonly spotifyIcon = faSpotify;
   spotifyAuthenticationURL!: string;
 
-  constructor(public readonly spotifyAuth: SpotifyAuthenticationService) {
+  constructor(public readonly spotifyAuth: SpotifyAuthenticationService, private readonly messageService: MessageService) {
     this.spotifyAuth.generateAuthorizeURL().then(url => this.spotifyAuthenticationURL = url)
   }
 
@@ -67,13 +69,9 @@ export class SpotifyPlayerComponent implements OnInit {
       console.error(message);
     });
 
-    this.player.addListener("authentication_error", ({message}) => {
-      console.error(message);
-    });
+    this.player.addListener("authentication_error", ({message}) => this.messageService.setMessage(new Message('error', message)));
 
-    this.player.addListener("account_error", ({message}) => {
-      console.error(message);
-    });
+    this.player.addListener("account_error", ({message}) => this.messageService.setMessage(new Message('error', message)));
     // Ready
     this.player.addListener("ready", ({device_id}) => {
       console.log("Ready with Device ID", device_id);
