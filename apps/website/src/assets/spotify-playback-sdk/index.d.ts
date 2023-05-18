@@ -154,6 +154,8 @@ declare namespace Spotify {
     & ((event: ErrorTypes, cb: ErrorListener) => void);
 
   class Player {
+    addListener: AddListenerFn;
+    on: AddListenerFn;
     readonly _options: PlayerInit & {id: string};
     constructor(options: PlayerInit);
 
@@ -162,9 +164,6 @@ declare namespace Spotify {
     getCurrentState(): Promise<PlaybackState | null>;
     getVolume(): Promise<number>;
     nextTrack(): Promise<void>;
-
-    addListener: AddListenerFn;
-    on: AddListenerFn;
 
     removeListener(
       event: 'ready' | 'not_ready' | 'player_state_changed' | ErrorTypes,
@@ -180,6 +179,7 @@ declare namespace Spotify {
     togglePlay(): Promise<void>;
 
     activateElement(): Promise<void>;
+
   }
 
   interface Track {
