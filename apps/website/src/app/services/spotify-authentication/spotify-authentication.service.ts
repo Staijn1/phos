@@ -53,7 +53,7 @@ export class SpotifyAuthenticationService {
     });
 
     sessionStorage.setItem('spotifyCodeVerifier', codeVerifier);
-    sessionStorage.setItem('state', generatedState);
+    sessionStorage.setItem('spotifyAuthenticationState', generatedState);
 
     return `https://accounts.spotify.com/authorize?${params}`;
   }
@@ -100,17 +100,26 @@ export class SpotifyAuthenticationService {
    * Last step of the authentication process., by requesting an access token.
    * @returns {Promise<void>}
    */
-  async completeLogin(): Promise<void> {
+  async completeLogin(): Promise<string | null> {
     const codeVerifier = sessionStorage.getItem('spotifyCodeVerifier') as string;
 
     const params = new URLSearchParams(location.search);
 
-    await this.createAccessToken({
+    const token = await this.createAccessToken({
       grant_type: 'authorization_code',
       code: params.get('code') as string,
       redirect_uri: this.REDIRECT_URI,
       code_verifier: codeVerifier,
     });
+
+    // If token is not null, then the authentication was successful. We then start the refresh token process to keep the user logged in.
+    if (token) {
+      setInterval(async () => {
+        await this.refreshAccessToken();
+      }, 1000 * 60 * 30); // Refresh token every 30 minutes
+    }
+
+    return token
   }
 
   /**
@@ -129,8 +138,7 @@ export class SpotifyAuthenticationService {
       const json = await response.json();
       const accessToken = json.access_token;
 
-      sessionStorage.setItem('spotifyToken', JSON.stringify(response));
-      console.log(response)
+      sessionStorage.setItem('spotifyToken', JSON.stringify(json));
       return accessToken;
     } catch (e) {
       if (e instanceof Error) this.messageService.setMessage(e)
@@ -140,7 +148,7 @@ export class SpotifyAuthenticationService {
 
 
   /**
-   * @returns ontains the current tokenset if still valid otherwise null
+   * @returns Contains the current tokenset if still valid otherwise null
    */
   async refreshAccessToken(): Promise<string | null> {
     let tokenSet = JSON.parse(sessionStorage.getItem('spotifyToken') as string);
