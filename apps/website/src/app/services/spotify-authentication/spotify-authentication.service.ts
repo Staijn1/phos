@@ -1,8 +1,5 @@
 import {EventEmitter, Injectable, Output} from '@angular/core';
-import {environment} from '../../../environments/environment';
-import {CustomError} from '../../types/CustomError';
-import {HTTPService} from '../http/http-service.service';
-
+import {MessageService} from "../message-service/message.service";
 
 /**
  * Handles the authentication process with Spotify, using the Spotify Web API.
@@ -12,15 +9,27 @@ import {HTTPService} from '../http/http-service.service';
 @Injectable({
   providedIn: 'root'
 })
-export class SpotifyAuthenticationService extends HTTPService {
-  // The ID of the spotify application registered in the Spotify developer portal.
-  private readonly CLIENT_ID = '0ad647aa391e490ba42610b5dde235b4';
-  // Scopes is a space-separated list of scopes, found in the spotify API documentation.
-  private readonly SCOPES = 'user-top-read playlist-modify-public playlist-modify-private playlist-read-private playlist-read-collaborative';
-  // The redirect URI is the URL where the user will be redirected after the authentication process.
-  // It must be registered in the Spotify developer portal.
-  private readonly REDIRECT_URI = environment.redirect_uri;
-  @Output() errorEvent = new EventEmitter<CustomError>();
+export class SpotifyAuthenticationService {
+  /**
+   * The ID of the spotify application registered in the Spotify developer portal.
+   */
+  private readonly CLIENT_ID = '8df4bf11f92b4d3286f0f26ea96d9241';
+  /**
+   *  Scopes are used to grant your app access to different parts of the Spotify API.
+   *  The scopes are separated by a space.
+   */
+  private readonly SCOPES = '';
+
+  /**
+   * The redirect URI is the URL where the user will be redirected after the authentication process.
+   * It must be registered in the Spotify developer portal.
+   * The redirect URI is the current URL, with the last part replaced by 'spotify-callback'.
+   * Example, current URL = 'https://some-subdomain.domain.nl/some-path/home' will become 'https://some-subdomain.domain.nl/some-path/spotify-callback'
+   */
+  private readonly REDIRECT_URI = window.location.href.replace(/\/[^/]*$/, "/spotify-callback");
+
+  constructor(private messageService: MessageService,) {
+  }
 
   /**
    * Returns the URL to start the authentication process.
@@ -43,7 +52,7 @@ export class SpotifyAuthenticationService extends HTTPService {
       scope: this.SCOPES
     });
 
-    sessionStorage.setItem('codeVerifier', codeVerifier);
+    sessionStorage.setItem('spotifyCodeVerifier', codeVerifier);
     sessionStorage.setItem('state', generatedState);
 
     return `https://accounts.spotify.com/authorize?${params}`;
@@ -84,7 +93,7 @@ export class SpotifyAuthenticationService extends HTTPService {
    * @returns {boolean}
    */
   isLoggedIn(): boolean {
-    return (!!sessionStorage.getItem('tokenSet'));
+    return (!!sessionStorage.getItem('spotifyToken'));
   }
 
   /**
@@ -92,7 +101,7 @@ export class SpotifyAuthenticationService extends HTTPService {
    * @returns {Promise<void>}
    */
   async completeLogin(): Promise<void> {
-    const codeVerifier = sessionStorage.getItem('codeVerifier') as string;
+    const codeVerifier = sessionStorage.getItem('spotifyCodeVerifier') as string;
 
     const params = new URLSearchParams(location.search);
 
@@ -106,38 +115,35 @@ export class SpotifyAuthenticationService extends HTTPService {
 
   /**
    * @param params - Params to send with request
-   * @returns - Promise with access token as string
+   * @returns Promise with access token as string, null if an error occurred
    */
-  async createAccessToken(params: Record<string, string>): Promise<string> {
+  async createAccessToken(params: Record<string, string>): Promise<string | null> {
     try {
-      const response = await this.request('https://accounts.spotify.com/api/token', {
+      const response = await fetch('https://accounts.spotify.com/api/token', {
         method: 'POST',
         body: new URLSearchParams({
           client_id: this.CLIENT_ID,
           ...params,
         }),
       });
+      const json = await response.json();
+      const accessToken = json.access_token;
 
-      const accessToken = response.access_token;
-
-      sessionStorage.setItem('tokenSet', JSON.stringify(response));
+      sessionStorage.setItem('spotifyToken', JSON.stringify(response));
       console.log(response)
-
-      this.errorEvent.emit(undefined);
       return accessToken;
     } catch (e) {
-      console.log('caught:', e);
-      this.errorEvent.emit(e as CustomError);
-      return '';
+      if (e instanceof Error) this.messageService.setMessage(e)
+      return null;
     }
   }
 
 
   /**
-   * @returns Promise<string> - Contains the current tokenset if still valid
+   * @returns ontains the current tokenset if still valid otherwise null
    */
   async refreshAccessToken(): Promise<string | null> {
-    let tokenSet = JSON.parse(sessionStorage.getItem('tokenSet') as string);
+    let tokenSet = JSON.parse(sessionStorage.getItem('spotifyToken') as string);
 
     if (!tokenSet) {
       return null;

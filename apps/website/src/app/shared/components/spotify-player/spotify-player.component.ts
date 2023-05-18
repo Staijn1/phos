@@ -2,6 +2,8 @@ import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {getDeviceType} from "../../functions";
 import {GradientColorStop, GradientOptions} from "audiomotion-analyzer";
 import {colorChange} from "../../../../redux/color/color.action";
+import {SpotifyAuthenticationService} from "../../../services/spotify-authentication/spotify-authentication.service";
+import {faSpotify} from "@fortawesome/free-brands-svg-icons";
 
 /// <reference types="@types/spotify-web-playback-sdk" />
 declare global {
@@ -19,7 +21,12 @@ declare global {
 export class SpotifyPlayerComponent implements OnInit {
   @Output() playbackChanged: EventEmitter<Spotify.PlaybackState> = new EventEmitter<Spotify.PlaybackState>();
   private player: Spotify.Player | undefined;
+  readonly spotifyIcon = faSpotify;
+  spotifyAuthenticationURL!: string;
 
+  constructor(public readonly spotifyAuth: SpotifyAuthenticationService) {
+    this.spotifyAuth.generateAuthorizeURL().then(url => this.spotifyAuthenticationURL = url)
+  }
 
   ngOnInit() {
     window.onSpotifyWebPlaybackSDKReady = () => {
