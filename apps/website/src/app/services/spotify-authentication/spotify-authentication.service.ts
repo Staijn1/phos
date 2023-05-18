@@ -17,8 +17,9 @@ export class SpotifyAuthenticationService {
   /**
    *  Scopes are used to grant your app access to different parts of the Spotify API.
    *  The scopes are separated by a space.
+   *  The scope 'streaming' is required to play music.
    */
-  private readonly SCOPES = '';
+  private readonly SCOPES = 'streaming';
 
   /**
    * The redirect URI is the URL where the user will be redirected after the authentication process.
