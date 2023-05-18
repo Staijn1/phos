@@ -1,7 +1,5 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {getDeviceType} from "../../functions";
-import {GradientColorStop, GradientOptions} from "audiomotion-analyzer";
-import {colorChange} from "../../../../redux/color/color.action";
 import {SpotifyAuthenticationService} from "../../../services/spotify-authentication/spotify-authentication.service";
 import {faSpotify} from "@fortawesome/free-brands-svg-icons";
 
@@ -29,40 +27,7 @@ export class SpotifyPlayerComponent implements OnInit {
   }
 
   ngOnInit() {
-    window.onSpotifyWebPlaybackSDKReady = () => {
-      const token = "BQClkBuVMzQZY5hkxPzO20fYWCxB38gtB7kehSDjRplXXGUI5q1bfYaqPhX9Z62wqc5XdGcM_WbJ1gAvASiXR444559_AIR0p5toDbCTN-Ld62FiI-4NKLz1tgR9JW9hmv94Ts04rBdKbhHmKefjpJDsVF2sKhShGuifzN_mlDA8syR8GweJUWHCID7tnKdh1W1x9eONSz4";
-      const device = getDeviceType();
-      this.player = new Spotify.Player({
-        name: `Angulon - ${device}`,
-        getOAuthToken: cb => {
-          cb(token);
-        },
-        volume: 1
-      });
-
-      this.player.addListener("initialization_error", ({message}) => {
-        console.error(message);
-      });
-
-      this.player.addListener("authentication_error", ({message}) => {
-        console.error(message);
-      });
-
-      this.player.addListener("account_error", ({message}) => {
-        console.error(message);
-      });
-      // Ready
-      this.player.addListener("ready", ({device_id}) => {
-        console.log("Ready with Device ID", device_id);
-      });
-
-      // Not Ready
-      this.player.addListener("not_ready", ({device_id}) => {
-        console.log("Device ID has gone offline", device_id);
-      });
-      this.player.addListener("player_state_changed", state => this.onSpotifyStateChanged(state));
-      this.player.connect();
-    };
+    this.loadSpotifyWebPlaybackSDK();
   }
 
   /**
@@ -74,5 +39,51 @@ export class SpotifyPlayerComponent implements OnInit {
 
   private onSpotifyStateChanged(state: Spotify.PlaybackState) {
     this.playbackChanged.emit(state);
+  }
+
+  private loadSpotifyWebPlaybackSDK() {
+    console.log("Loading Spotify Web Playback SDK")
+    window.onSpotifyWebPlaybackSDKReady = () => console.log("Spotify Web Playback SDK loaded");
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
+    script.async = true;
+    script.defer = true;
+    window.onSpotifyWebPlaybackSDKReady = () => this.onSpotifyWebPlaybackSDKReady();
+    document.body.appendChild(script);
+  }
+
+  private onSpotifyWebPlaybackSDKReady() {
+    const token = this.spotifyAuth.getToken()
+    const device = getDeviceType();
+    this.player = new Spotify.Player({
+      name: `Angulon - ${device}`,
+      getOAuthToken: cb => {
+        cb(token);
+      },
+      volume: 1
+    });
+
+    this.player.addListener("initialization_error", ({message}) => {
+      console.error(message);
+    });
+
+    this.player.addListener("authentication_error", ({message}) => {
+      console.error(message);
+    });
+
+    this.player.addListener("account_error", ({message}) => {
+      console.error(message);
+    });
+    // Ready
+    this.player.addListener("ready", ({device_id}) => {
+      console.log("Ready with Device ID", device_id);
+    });
+
+    // Not Ready
+    this.player.addListener("not_ready", ({device_id}) => {
+      console.log("Device ID has gone offline", device_id);
+    });
+    this.player.addListener("player_state_changed", state => this.onSpotifyStateChanged(state));
+    this.player.connect();
   }
 }

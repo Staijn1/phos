@@ -173,4 +173,8 @@ export class SpotifyAuthenticationService {
   logOut(): void {
     sessionStorage.clear();
   }
+
+  getToken() {
+    return JSON.parse(sessionStorage.getItem('spotifyToken') as string).access_token;
+  }
 }
