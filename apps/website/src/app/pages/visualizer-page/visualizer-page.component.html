@@ -300,9 +300,7 @@
         </a>
         <ng-template ngbNavContent>
           <div>
-            <div class="playback-controls">
-              <button (click)="toggleSpotifyPlayerPlay()">Play/pause</button>
-            </div>
+            <app-spotify-player (playbackChanged)="onSpotifyStateChanged($event)"></app-spotify-player>
           </div>
         </ng-template>
       </li>
