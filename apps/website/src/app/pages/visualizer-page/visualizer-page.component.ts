@@ -124,7 +124,6 @@ export class VisualizerPageComponent implements OnDestroy {
 
   drawCallback(instance: AudioMotionAnalyzer): void {
     const value = instance.getEnergy(this.visualizerOptions.energyPreset);
-    console.log(value);
     this.connection.setLeds(value);
     this.chromaEffect.intensity = value;
   }
