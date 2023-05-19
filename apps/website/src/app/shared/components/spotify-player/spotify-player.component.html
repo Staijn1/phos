@@ -1,9 +1,9 @@
-<p>spotify-player works!</p>
 <div *ngIf="spotifyAuth.isLoggedIn(); else notLoggedIn">
   Logged in
 </div>
 <ng-template #notLoggedIn>
-  <a class="btn btn-primary btn-spotify" [href]="spotifyAuthenticationURL">
+  <a class="btn btn-primary btn-spotify w-100 mt-3" [href]="spotifyAuthenticationURL">
     <fa-icon [icon]="spotifyIcon"></fa-icon>
+    Login with Spotify
   </a>
 </ng-template>

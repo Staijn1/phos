@@ -20,6 +20,11 @@ declare global {
 })
 export class SpotifyPlayerComponent implements OnInit {
   @Output() playbackChanged: EventEmitter<Spotify.PlaybackState> = new EventEmitter<Spotify.PlaybackState>();
+  /**
+   * Emits when the spotify player is ready
+   * Payload is this device id
+   */
+  @Output() ready: EventEmitter<string> = new EventEmitter<string>();
   private player: Spotify.Player | undefined;
   readonly spotifyIcon = faSpotify;
   spotifyAuthenticationURL!: string;
@@ -59,9 +64,7 @@ export class SpotifyPlayerComponent implements OnInit {
     const device = getDeviceType();
     this.player = new Spotify.Player({
       name: `Angulon - ${device}`,
-      getOAuthToken: cb => {
-        cb(token);
-      },
+      getOAuthToken: cb => cb(token),
       volume: 1
     });
 
@@ -73,9 +76,7 @@ export class SpotifyPlayerComponent implements OnInit {
 
     this.player.addListener("account_error", ({message}) => this.messageService.setMessage(new Message('error', message)));
     // Ready
-    this.player.addListener("ready", ({device_id}) => {
-      console.log("Ready with Device ID", device_id);
-    });
+    this.player.addListener("ready", ({device_id}) => this.ready.emit(device_id));
 
     // Not Ready
     this.player.addListener("not_ready", ({device_id}) => {
