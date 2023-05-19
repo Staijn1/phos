@@ -1,9 +1,10 @@
 import {Component, EventEmitter, OnInit, Output} from '@angular/core';
 import {getDeviceType} from "../../functions";
 import {SpotifyAuthenticationService} from "../../../services/spotify-authentication/spotify-authentication.service";
-import {faSpotify} from "@fortawesome/free-brands-svg-icons";
+import {faSpotify, IconDefinition} from "@fortawesome/free-brands-svg-icons";
 import {MessageService} from "../../../services/message-service/message.service";
 import {Message} from "../../types/Message";
+import {faBackward, faForward, faPause, faPlay, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
 
 /// <reference types="@types/spotify-web-playback-sdk" />
 declare global {
@@ -28,6 +29,44 @@ export class SpotifyPlayerComponent implements OnInit {
   private player: Spotify.Player | undefined;
   readonly spotifyIcon = faSpotify;
   spotifyAuthenticationURL!: string;
+  previousSongIcon = faBackward;
+  skipSongIcon = faForward;
+  readonly pauseIcon = faPause;
+  readonly playIcon = faPlay;
+  private state: Spotify.PlaybackState | undefined;
+  notActiveIcon = faTimesCircle;
+
+  /**
+   * Returns the url of the current track image.
+   * If it is undefined then we return a backup image - A random image from picsum
+   */
+  get albumImageSrc(): string {
+    return this.state?.track_window.current_track.album.images[2].url ?? "https://picsum.photos/200";
+  }
+
+  get trackName(): string {
+    return this.state?.track_window.current_track.name ?? "No Track Playing";
+  }
+
+  get artistName(): string {
+    return this.state?.track_window.current_track.artists[0].name ?? "No Artist Playing";
+  }
+
+  /**
+   * Helper function to check if the user has selected this device in the spotify app
+   * If the track window has a current track which is not null or undefined, then we are active
+   */
+  get isActive(): boolean {
+    return !!this.state?.track_window.current_track;
+  }
+
+  /**
+   * When the spotify player is paused then we show the > icon (play)
+   * Otherwise we show the || icon (pause)
+   */
+  public get playIconWhenPlaying(): IconDefinition {
+    return this.state?.paused ? this.playIcon : this.pauseIcon;
+  }
 
   constructor(public readonly spotifyAuth: SpotifyAuthenticationService, private readonly messageService: MessageService) {
     this.spotifyAuth.generateAuthorizeURL().then(url => this.spotifyAuthenticationURL = url)
@@ -49,7 +88,6 @@ export class SpotifyPlayerComponent implements OnInit {
   }
 
   private loadSpotifyWebPlaybackSDK() {
-    console.log("Loading Spotify Web Playback SDK")
     window.onSpotifyWebPlaybackSDKReady = () => console.log("Spotify Web Playback SDK loaded");
     const script = document.createElement("script");
     script.src = "https://sdk.scdn.co/spotify-player.js";
@@ -82,7 +120,23 @@ export class SpotifyPlayerComponent implements OnInit {
     this.player.addListener("not_ready", ({device_id}) => {
       console.log("Device ID has gone offline", device_id);
     });
-    this.player.addListener("player_state_changed", state => this.onSpotifyStateChanged(state));
+    this.player.addListener("player_state_changed", state => {
+      this.state = state;
+      console.log('state changed', state)
+      this.onSpotifyStateChanged(state)
+    });
     this.player.connect();
+  }
+
+  previousSong() {
+    this.player?.previousTrack();
+  }
+
+  skipSong() {
+    this.player?.nextTrack();
+  }
+
+  togglePlay() {
+    this.player?.togglePlay();
   }
 }

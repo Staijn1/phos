@@ -1,5 +1,5 @@
 import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import {CommonModule, NgOptimizedImage} from '@angular/common';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { RouterModule } from '@angular/router';
 import { VisualizerComponent } from './components/visualizer/visualizer.component';
@@ -18,7 +18,7 @@ import { SpotifyPlayerComponent } from './components/spotify-player/spotify-play
     OffCanvasComponent,
     SpotifyPlayerComponent,
   ],
-  imports: [RouterModule, CommonModule, FontAwesomeModule],
+    imports: [RouterModule, CommonModule, FontAwesomeModule, NgOptimizedImage],
     exports: [
         RouterModule,
         VisualizerComponent,
