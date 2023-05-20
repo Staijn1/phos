@@ -4,7 +4,15 @@ import {SpotifyAuthenticationService} from "../../../services/spotify-authentica
 import {faSpotify, IconDefinition} from "@fortawesome/free-brands-svg-icons";
 import {MessageService} from "../../../services/message-service/message.service";
 import {Message} from "../../types/Message";
-import {faBackward, faForward, faPause, faPlay, faTimesCircle} from "@fortawesome/free-solid-svg-icons";
+import {
+  faBackward,
+  faForward,
+  faPause,
+  faPlay,
+  faTimesCircle,
+  faVolumeHigh,
+  faVolumeLow
+} from "@fortawesome/free-solid-svg-icons";
 
 /// <reference types="@types/spotify-web-playback-sdk" />
 declare global {
@@ -20,21 +28,23 @@ declare global {
   styleUrls: ['./spotify-player.component.scss'],
 })
 export class SpotifyPlayerComponent implements OnInit {
-  @Output() playbackChanged: EventEmitter<Spotify.PlaybackState> = new EventEmitter<Spotify.PlaybackState>();
   /**
    * Emits when the spotify player is ready
    * Payload is this device id
    */
   @Output() ready: EventEmitter<string> = new EventEmitter<string>();
-  private player: Spotify.Player | undefined;
+  @Output() playbackChanged: EventEmitter<Spotify.PlaybackState> = new EventEmitter<Spotify.PlaybackState>();
   readonly spotifyIcon = faSpotify;
-  spotifyAuthenticationURL!: string;
-  previousSongIcon = faBackward;
-  skipSongIcon = faForward;
+  readonly previousSongIcon = faBackward;
+  readonly skipSongIcon = faForward;
   readonly pauseIcon = faPause;
   readonly playIcon = faPlay;
+  readonly volumeLowIcon = faVolumeLow;
+  readonly volumeHighIcon = faVolumeHigh;
   private state: Spotify.PlaybackState | undefined;
-  notActiveIcon = faTimesCircle;
+  private player: Spotify.Player | undefined;
+  spotifyAuthenticationURL!: string;
+  volume = 1;
 
   /**
    * Returns the url of the current track image.
@@ -76,13 +86,6 @@ export class SpotifyPlayerComponent implements OnInit {
     this.loadSpotifyWebPlaybackSDK();
   }
 
-  /**
-   * Pauses or unpause the spotify player
-   */
-  toggleSpotifyPlayerPlay() {
-    this.player?.togglePlay();
-  }
-
   private onSpotifyStateChanged(state: Spotify.PlaybackState) {
     this.playbackChanged.emit(state);
   }
@@ -103,7 +106,8 @@ export class SpotifyPlayerComponent implements OnInit {
     this.player = new Spotify.Player({
       name: `Angulon - ${device}`,
       getOAuthToken: cb => cb(token),
-      volume: 1
+      volume: 1,
+      enableMediaSession: true
     });
 
     this.player.addListener("initialization_error", ({message}) => {
@@ -138,5 +142,9 @@ export class SpotifyPlayerComponent implements OnInit {
 
   togglePlay() {
     this.player?.togglePlay();
+  }
+
+  changeVolume() {
+    this.player?.setVolume(this.volume);
   }
 }

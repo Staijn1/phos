@@ -8,6 +8,7 @@ import { ModalComponent } from './components/modal/modal.component';
 import { OffCanvasComponent } from './components/offcanvas/off-canvas.component';
 import { ColorpickerComponent } from './components/colorpicker/colorpicker.component';
 import { SpotifyPlayerComponent } from './components/spotify-player/spotify-player.component';
+import {FormsModule} from "@angular/forms";
 
 @NgModule({
   declarations: [
@@ -18,7 +19,7 @@ import { SpotifyPlayerComponent } from './components/spotify-player/spotify-play
     OffCanvasComponent,
     SpotifyPlayerComponent,
   ],
-    imports: [RouterModule, CommonModule, FontAwesomeModule, NgOptimizedImage],
+    imports: [RouterModule, CommonModule, FontAwesomeModule, NgOptimizedImage, FormsModule],
     exports: [
         RouterModule,
         VisualizerComponent,
