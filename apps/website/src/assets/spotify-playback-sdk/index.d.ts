@@ -69,6 +69,7 @@ declare namespace Spotify {
     next_items: PlaybackContextTrack[];
     previous_items: PlaybackContextTrack[];
     restrictions: PlaybackContextRestrictions;
+    context_description: string;
     options: {
       repeat_mode: string;
       shuffled: boolean;
@@ -128,6 +129,7 @@ declare namespace Spotify {
     playback_features: {
       hifi_status: string;
     };
+    playback_speed: number;
   }
 
   interface PlaybackTrackWindow {
