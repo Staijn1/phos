@@ -4,15 +4,8 @@ import {SpotifyAuthenticationService} from "../../../services/spotify-authentica
 import {faSpotify, IconDefinition} from "@fortawesome/free-brands-svg-icons";
 import {MessageService} from "../../../services/message-service/message.service";
 import {Message} from "../../types/Message";
-import {
-  faBackward,
-  faForward,
-  faPause,
-  faPlay,
-  faTimesCircle,
-  faVolumeHigh,
-  faVolumeLow
-} from "@fortawesome/free-solid-svg-icons";
+import {faBackward, faForward, faPause, faPlay, faVolumeHigh, faVolumeLow} from "@fortawesome/free-solid-svg-icons";
+import {Track} from "spotify-web-playback-sdk";
 
 /// <reference types="@types/spotify-web-playback-sdk" />
 declare global {
@@ -41,10 +34,10 @@ export class SpotifyPlayerComponent implements OnInit {
   readonly playIcon = faPlay;
   readonly volumeLowIcon = faVolumeLow;
   readonly volumeHighIcon = faVolumeHigh;
-  private state: Spotify.PlaybackState | undefined;
   private player: Spotify.Player | undefined;
   spotifyAuthenticationURL!: string;
   volume = 1;
+  state: Spotify.PlaybackState | undefined ;
 
   /**
    * Returns the url of the current track image.
@@ -58,9 +51,42 @@ export class SpotifyPlayerComponent implements OnInit {
     return this.state?.track_window.current_track.name ?? "No Track Playing";
   }
 
+  /**
+   * Get the name of the artist of the current track
+   */
   get artistName(): string {
-    return this.state?.track_window.current_track.artists[0].name ?? "No Artist Playing";
+    if (!this.state?.track_window.current_track) return "No Artist Playing";
+    return this.getArtistNames(this.state?.track_window.current_track)
   }
+
+  /**
+   * Get a list of all the tracks that are coming up next
+   */
+  get upcomingTracks(): Spotify.Track[] {
+    return this.state?.track_window.next_tracks ?? [];
+  }
+
+  /**
+   * Get a list of all previously played tracks
+   */
+  get previousTracks(): Spotify.Track[] {
+    return this.state?.track_window.previous_tracks ?? [];
+  }
+
+  /**
+   * Getter to get the current track
+   */
+  get currentTrack(): Spotify.Track {
+    return this.state?.track_window.current_track as Track;
+  }
+
+  /**
+   * Combine the previous, current and upcoming tracks into one array
+   */
+  get allTracks(): Spotify.Track[] {
+    return [...this.previousTracks, this.currentTrack, ...this.upcomingTracks];
+  }
+
 
   /**
    * Helper function to check if the user has selected this device in the spotify app
@@ -74,7 +100,7 @@ export class SpotifyPlayerComponent implements OnInit {
    * When the spotify player is paused then we show the > icon (play)
    * Otherwise we show the || icon (pause)
    */
-  public get playIconWhenPlaying(): IconDefinition {
+  public get getIconForPlayStatus(): IconDefinition {
     return this.state?.paused ? this.playIcon : this.pauseIcon;
   }
 
@@ -82,14 +108,26 @@ export class SpotifyPlayerComponent implements OnInit {
     this.spotifyAuth.generateAuthorizeURL().then(url => this.spotifyAuthenticationURL = url)
   }
 
+  /**
+   * On init we start to initialize the spotify player
+   */
   ngOnInit() {
     this.loadSpotifyWebPlaybackSDK();
   }
 
+  /**
+   * When the playback state changes, we emit the new state so other components can react to it
+   * @param state
+   * @private
+   */
   private onSpotifyStateChanged(state: Spotify.PlaybackState) {
     this.playbackChanged.emit(state);
   }
 
+  /**
+   * Loads the spotify web playback sdk from the spotify cdn
+   * @private
+   */
   private loadSpotifyWebPlaybackSDK() {
     window.onSpotifyWebPlaybackSDKReady = () => console.log("Spotify Web Playback SDK loaded");
     const script = document.createElement("script");
@@ -100,6 +138,13 @@ export class SpotifyPlayerComponent implements OnInit {
     document.body.appendChild(script);
   }
 
+  /**
+   * Called when the spotify web playback sdk is ready
+   * Gets the token from the spotify auth service and creates a new player
+   * The application is then available to cast to from the spotify app, as a device.
+   * The device has a name of Angulon - {deviceType}, for example Angulon - Windows
+   * @private
+   */
   private onSpotifyWebPlaybackSDKReady() {
     const token = this.spotifyAuth.getToken()
     const device = getDeviceType();
@@ -132,19 +177,53 @@ export class SpotifyPlayerComponent implements OnInit {
     this.player.connect();
   }
 
+  /**
+   * Skip to the previous song
+   */
   previousSong() {
     this.player?.previousTrack();
   }
 
+  /**
+   * Skip to the next song
+   */
   skipSong() {
     this.player?.nextTrack();
   }
 
+  /**
+   * Play or pause the current song
+   */
   togglePlay() {
     this.player?.togglePlay();
   }
 
+  /**
+   * Called when the user changes the volume on the volume slider
+   */
   changeVolume() {
     this.player?.setVolume(this.volume);
+  }
+
+  /**
+   * A song can have multiple artists, so we join them together with a comma
+   * @param song
+   */
+  getArtistNames(song: Track) {
+    return song.artists.map(artist => artist.name).join(", ");
+  }
+
+  /**
+   * Calculate the opacity of the track based on its index
+   * The current track is always 1. The previous tracks come before the current track and have an increasing opacity based on their index
+   * The upcoming tracks come after the current track and have a decreasing opacity based on their index
+   * @param song
+   * @param index
+   */
+  calculateOpacityForTrack(song: Track, index: number) {
+    if (song == this.currentTrack) return 1;
+    if (index < this.previousTracks.length) return 0.7 - (index * 0.2);
+
+    return 0.7 - ((index - this.upcomingTracks.length) * 0.2);
   }
 }

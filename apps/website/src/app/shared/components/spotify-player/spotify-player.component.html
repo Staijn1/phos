@@ -21,7 +21,7 @@
                     <fa-icon [icon]="previousSongIcon"></fa-icon>
                   </button>
                   <button type="button" class="btn btn-secondary" (click)="togglePlay()">
-                    <fa-icon [icon]="playIconWhenPlaying"></fa-icon>
+                    <fa-icon [icon]="getIconForPlayStatus"></fa-icon>
                   </button>
                   <button type="button" class="btn btn-secondary" (click)="skipSong()">
                     <fa-icon [icon]="skipSongIcon"></fa-icon>
@@ -29,13 +29,39 @@
                 </div>
                 <div class="mt-3 d-flex align-items-center">
                   <fa-icon [icon]="volumeLowIcon"></fa-icon>
-                  <input type="range" class="form-range flex-grow-1 mx-2" min="0" max="1" step="0.1" [(ngModel)]="volume" (input)="changeVolume()">
+                  <input type="range" class="form-range flex-grow-1 mx-2" min="0" max="1" step="0.1"
+                         [(ngModel)]="volume" (input)="changeVolume()">
                   <fa-icon [icon]="volumeHighIcon"></fa-icon>
                 </div>
               </div>
             </div>
           </div>
         </div>
+      </div>
+
+      <!-- Playlist Section -->
+      <div class="mt-5">
+        <h6>Upcoming Songs</h6>
+        <ul class="list-unstyled">
+          <li
+            *ngFor="let song of allTracks; let i = index"
+            [class.previousTrack]="previousTracks.includes(song)"
+            [class.currentTrack]="currentTrack === song"
+            [class.upcomingTrack]="upcomingTracks.includes(song)"
+            class="track"
+            [style.opacity]="calculateOpacityForTrack(song, i)"
+          >
+            <div class="row">
+              <div class="col-md-3">
+                <img class="img-fluid" [src]="song.album.images[0].url" alt="Album Image">
+              </div>
+              <div class="col-md-9 song-info">
+                <h6>{{song.name}}</h6>
+                <p>{{getArtistNames(song)}}</p>
+              </div>
+            </div>
+          </li>
+        </ul>
       </div>
     </div>
   </div>
