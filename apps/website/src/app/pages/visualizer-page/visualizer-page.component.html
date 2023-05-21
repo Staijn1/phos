@@ -301,6 +301,16 @@
         <ng-template ngbNavContent>
           <div>
             <app-spotify-player (playbackChanged)="onSpotifyStateChanged($event)"></app-spotify-player>
+            <div class="d-flex justify-content-between border-bottom">
+              <div style="width: 50px; height: 50px" id="vibrant">Vibrant</div>
+              <div style="width: 50px; height: 50px" id="darkVibrant"> Dark Vibrant</div>
+              <div style="width: 50px; height: 50px" id="lightVibrant">Light Vibrant</div>
+            </div>
+            <div class="d-flex justify-content-between">
+              <div style="width: 50px; height: 50px" id="muted">Muted</div>
+              <div style="width: 50px; height: 50px" id="darkMuted">Dark Muted</div>
+              <div style="width: 50px; height: 50px" id="lightMuted">Light Muted</div>
+            </div>
           </div>
         </ng-template>
       </li>

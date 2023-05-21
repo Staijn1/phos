@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit, ViewChild} from "@angular/core";
+import {Component, OnDestroy, ViewChild} from "@angular/core";
 import AudioMotionAnalyzer, {GradientColorStop, GradientOptions} from "audiomotion-analyzer";
 import {faExpand} from "@fortawesome/free-solid-svg-icons/faExpand";
 import {faCheck, faLightbulb, faList, faSliders, faWrench} from "@fortawesome/free-solid-svg-icons";
@@ -12,7 +12,6 @@ import {InformationService} from "../../services/information-service/information
 import {visualizerModeId} from "../../shared/constants";
 import {WebsocketService} from "../../services/websocketconnection/websocket.service";
 import {faSpotify} from "@fortawesome/free-brands-svg-icons";
-import {getDeviceType} from "../../shared/functions";
 import {Store} from "@ngrx/store";
 import {ColorpickerState} from "../../../redux/color/color.reducer";
 import {colorChange} from "../../../redux/color/color.action";
@@ -191,8 +190,6 @@ export class VisualizerPageComponent implements OnDestroy {
       const albumCover = state?.track_window?.current_track?.album?.images[0]?.url;
       if (albumCover) {
         this.information.getAverageColors(albumCover).then((colors) => {
-          console.log(colors);
-
           const colorsStops: GradientColorStop[] = [];
           const colorKeys = Object.keys(colors);
           for (const element of colorKeys) {
@@ -212,8 +209,15 @@ export class VisualizerPageComponent implements OnDestroy {
           this.visualizerOptions.gradientLeft = "Spotify";
           this.visualizerOptions.gradientRight = "Spotify";
           this.applySettings();
-          console.log(colorsStops.slice(0, 3));
           this.store.dispatch(colorChange(colorsStops.slice(0, 3) as string[], true));
+
+          (document.getElementById('vibrant') as HTMLElement).style.background = colors?.Vibrant?.hex ?? "#000";
+          (document.getElementById('darkVibrant') as HTMLElement).style.background = colors?.DarkVibrant?.hex ?? "#000";
+          (document.getElementById('lightVibrant') as HTMLElement).style.background = colors?.LightVibrant?.hex ?? "#000";
+          (document.getElementById('muted') as HTMLElement).style.background = colors?.Muted?.hex ?? "#000";
+          (document.getElementById('darkMuted') as HTMLElement).style.background = colors?.DarkMuted?.hex ?? "#000";
+          (document.getElementById('lightMuted') as HTMLElement).style.background = colors?.LightMuted?.hex ?? "#000";
+
         });
       }
     }
