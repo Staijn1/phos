@@ -174,35 +174,35 @@ export class SpotifyPlayerComponent implements OnInit {
       console.log('state changed', state)
       this.onSpotifyStateChanged(state)
     });
-    this.player.connect();
+    this.player.connect().catch(err => this.messageService.setMessage(err));
   }
 
   /**
    * Skip to the previous song
    */
   previousSong() {
-    this.player?.previousTrack();
+    this.player?.previousTrack().catch(err => this.messageService.setMessage(err));
   }
 
   /**
    * Skip to the next song
    */
   skipSong() {
-    this.player?.nextTrack();
+    this.player?.nextTrack().catch(err => this.messageService.setMessage(err));
   }
 
   /**
    * Play or pause the current song
    */
   togglePlay() {
-    this.player?.togglePlay();
+    this.player?.togglePlay().catch(err => this.messageService.setMessage(err));
   }
 
   /**
    * Called when the user changes the volume on the volume slider
    */
   changeVolume() {
-    this.player?.setVolume(this.volume);
+    this.player?.setVolume(this.volume).catch(err => this.messageService.setMessage(err));
   }
 
   /**
