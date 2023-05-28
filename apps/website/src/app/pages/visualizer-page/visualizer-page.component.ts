@@ -217,7 +217,7 @@ export class VisualizerPageComponent implements OnDestroy {
           (document.getElementById('muted') as HTMLElement).style.background = colors?.Muted?.hex ?? "#000";
           (document.getElementById('darkMuted') as HTMLElement).style.background = colors?.DarkMuted?.hex ?? "#000";
           (document.getElementById('lightMuted') as HTMLElement).style.background = colors?.LightMuted?.hex ?? "#000";
-
+          (document.getElementById('average') as HTMLElement).style.background = colors?.Average.hex ?? "#000";
         });
       }
     }
