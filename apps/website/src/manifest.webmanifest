@@ -763,5 +763,12 @@
       "type": "image/png",
       "purpose": "maskable any"
     }
+  ],
+  "shortcuts": [
+    {
+      "name": "Turn Off",
+      "description": "Turn off all LEDs",
+      "url": "/shortcut?action=turnOff"
+    }
   ]
 }
