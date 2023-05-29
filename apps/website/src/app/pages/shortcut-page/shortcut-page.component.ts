@@ -1,5 +1,5 @@
 import {Component} from '@angular/core';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute, Router} from "@angular/router";
 import {MessageService} from '../../services/message-service/message.service';
 import {WebsocketService} from "../../services/websocketconnection/websocket.service";
 
@@ -12,7 +12,7 @@ export class ShortcutPageComponent {
   /**
    * From the query parameters we will read the shortcut to execute
    */
-  constructor(private activatedRoute: ActivatedRoute, private messageService: MessageService, private connection: WebsocketService) {
+  constructor(private activatedRoute: ActivatedRoute, private messageService: MessageService, private connection: WebsocketService, private router: Router) {
     this.activatedRoute.queryParams.subscribe(params => {
       this.executeShortcut(params['shortcut']);
     });
@@ -41,5 +41,8 @@ export class ShortcutPageComponent {
       default:
         this.messageService.setMessage(new Error("Shortcut not found"))
     }
+
+    // After the action just redirect to the home page
+    this.router.navigateByUrl('/home').catch(reason => this.messageService.setMessage(reason));
   }
 }
