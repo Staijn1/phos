@@ -27,19 +27,15 @@ export class ShortcutPageComponent {
         this.connection.turnOff();
         break;
       case "increaseBrightness":
-        console.log("Increasing brightness");
         this.connection.increaseBrightness()
         break;
       case "decreaseBrightness":
-        console.log("Decreasing brightness");
         this.connection.decreaseBrightness()
         break;
       case "increaseSpeed":
-        console.log("Increasing speed");
         this.connection.increaseSpeed();
         break;
       case "decreaseSpeed":
-        console.log("Decreasing speed");
         this.connection.decreaseSpeed();
         break;
       default:
