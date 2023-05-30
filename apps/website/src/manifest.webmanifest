@@ -5,7 +5,7 @@
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
-  "start_url": "./",
+  "start_url": "/home",
   "icons": [
     {
       "src": "assets/icons/windows10/SmallTile.scale-100.png",
