@@ -14,7 +14,7 @@ export class ShortcutPageComponent {
    */
   constructor(private activatedRoute: ActivatedRoute, private messageService: MessageService, private connection: WebsocketService, private router: Router) {
     this.activatedRoute.queryParams.subscribe(params => {
-      this.executeShortcut(params['shortcut']);
+      this.executeShortcut(params['action']);
     });
   }
 
@@ -23,7 +23,6 @@ export class ShortcutPageComponent {
 
     switch (param) {
       case "turnOff":
-        console.log("Turning off");
         this.connection.turnOff();
         break;
       case "increaseBrightness":
