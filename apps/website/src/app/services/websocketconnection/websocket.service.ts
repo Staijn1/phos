@@ -20,6 +20,7 @@ import {take} from "rxjs";
   providedIn: 'root'
 })
 export class WebsocketService {
+  private messageQueue: string[] = [];
   private websocketUrl = environment.url
   private socket: Socket;
 
@@ -35,7 +36,11 @@ export class WebsocketService {
       console.log(`Opened websocket at`, this.websocketUrl)
       this.socket.emit('joinUserRoom')
       this.getState().then(data => {
-        this.store.dispatch(colorChange(data.colors, false))
+        this.store.dispatch(colorChange(data.colors, false));
+        this.messageQueue.forEach(message => {
+          this.send(message)
+        });
+        this.messageQueue = []
       })
     });
 
@@ -71,6 +76,8 @@ export class WebsocketService {
   send(event: string, payload?: string | string[]): void {
     if (this.isOpen()) {
       this.socket.emit(event, payload)
+    } else {
+      this.messageQueue.push(event)
     }
   }
 
