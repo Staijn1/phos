@@ -7,7 +7,6 @@ export const environment = {
   production: false,
   saveSettings: false,
   url: 'http://localhost:3333',
-  redirect_uri: 'http://localhost:4200/spotify-callback'
 }
 
 export const AppConfig = {
