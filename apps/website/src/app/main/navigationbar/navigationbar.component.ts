@@ -24,6 +24,7 @@ import {WebsocketService} from '../../services/websocketconnection/websocket.ser
 import {Store} from '@ngrx/store';
 import {ColorpickerState} from '../../../redux/color/color.reducer';
 import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
+import {colorChange} from "../../../redux/color/color.action";
 
 @Component({
   selector: 'app-navigationbar',
@@ -104,7 +105,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     // Only set the first color to black, so we retain the other colors.
     colorsHex[0] = '#000000';
     // By setting the color picker colors the redux store will be updated and the ledstrips will be updated.
-    this.colorpicker.updateColors(colorsHex)
+    this.store.dispatch(colorChange(colorsHex, true))
     this.connection.setMode(0);
   }
 
