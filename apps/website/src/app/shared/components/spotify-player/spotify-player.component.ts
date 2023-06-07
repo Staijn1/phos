@@ -152,7 +152,7 @@ export class SpotifyPlayerComponent implements OnInit {
       name: `Angulon - ${device}`,
       getOAuthToken: cb => cb(token),
       volume: 1,
-      enableMediaSession: true
+      // enableMediaSession: true
     });
 
     this.player.addListener("initialization_error", ({message}) => {
