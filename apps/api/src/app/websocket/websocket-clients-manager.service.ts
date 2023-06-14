@@ -90,6 +90,10 @@ export class WebsocketClientsManagerService {
    * @param force If true the ledstrips will update their state even if it's the same as the current state. Default is false
    */
   setStateOnAllLedstrips(force = false): void {
+    this.logger.log(
+      `Sending state to all ledstrips.
+      Force: ${force}
+      State: ${JSON.stringify(this.state, null, 2)}`);
     this.sendEventToAllLedstrips("!", {...this.state, force: force});
   }
 

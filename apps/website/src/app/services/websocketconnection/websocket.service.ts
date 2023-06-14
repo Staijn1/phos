@@ -17,7 +17,7 @@ import {ColorpickerState} from "../../../redux/color/color.reducer";
 import {take} from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class WebsocketService {
   private messageQueue: string[] = [];
@@ -77,7 +77,8 @@ export class WebsocketService {
     if (this.isOpen()) {
       this.socket.emit(event, payload)
     } else {
-      this.messageQueue.push(event)
+      console.log(`Websocket not open, adding ${event} to queue with payload ${payload}`);
+      this.messageQueue.push(event);
     }
   }
 
