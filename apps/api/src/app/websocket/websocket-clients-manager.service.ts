@@ -45,7 +45,7 @@ export class WebsocketClientsManagerService {
    * @param originClient
    */
   setColor(payload: string[], originClient: Socket) {
-    if (!this.state || !payload) return;
+    if (!this.state) return;
     this.state.colors = payload;
     clearTimeout(this.colorTimeout);
     // The server sends messages so quickly, the ledstrips can't keep up so we have to slow it down
