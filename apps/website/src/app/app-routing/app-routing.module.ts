@@ -15,6 +15,10 @@ const routes: Routes = [
     path: 'gradients-editor',
     loadChildren: () => import('../pages/gradient-editor-page/gradient-editor.module').then(m => m.GradientEditorModule)
   },
+  {
+    path: 'spotify-callback',
+    loadChildren: () => import('../pages/spotify-callback-page/spotify-callback-page.module').then(m => m.SpotifyCallbackPageModule)
+  },
   {path: 'settings', component: SettingsPageComponent},
   {path: 'visualizer3d', component: VisualizerPage3DComponent},
   {

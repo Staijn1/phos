@@ -1,49 +1,49 @@
-import {AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild} from '@angular/core'
-import AudioMotionAnalyzer, {Options} from 'audiomotion-analyzer'
-import {GradientInformation} from '@angulon/interfaces';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from "@angular/core";
+import AudioMotionAnalyzer, { GradientOptions, Options } from "audiomotion-analyzer";
+import { GradientInformation } from "@angulon/interfaces";
 
 
 @Component({
-  selector: 'app-shared-visualizer',
-  templateUrl: './visualizer.component.html',
-  styleUrls: ['./visualizer.component.scss'],
+  selector: "app-shared-visualizer",
+  templateUrl: "./visualizer.component.html",
+  styleUrls: ["./visualizer.component.scss"]
 })
 export class VisualizerComponent implements OnDestroy, AfterViewInit {
-  @ViewChild('container') container!: ElementRef<HTMLDivElement>
+  @ViewChild("container") container!: ElementRef<HTMLDivElement>;
   @Output() ready: EventEmitter<AudioMotionAnalyzer> = new EventEmitter<AudioMotionAnalyzer>();
   @Output() registeredGradients: EventEmitter<GradientInformation[]> = new EventEmitter<GradientInformation[]>();
-  private audioMotion: AudioMotionAnalyzer | undefined
-  private _options!: Options
+  private audioMotion: AudioMotionAnalyzer | undefined;
+  private _options!: Options;
 
   @Input() set options(options: Options) {
     this._options = {
       ...options,
-      ...{connectSpeakers: false},
-    }
-    this.updateOptions()
+      ...{ connectSpeakers: false }
+    };
+    this.updateOptions();
   }
 
-  private _gradients!: GradientInformation[]
+  private _gradients!: GradientInformation[];
 
   @Input() set gradients(gradients: GradientInformation[]) {
-    this._gradients = gradients
-    this.registerGradients()
+    this._gradients = gradients;
+    this.registerGradients();
   }
 
   ngOnDestroy(): void {
-    this.audioMotion?.toggleAnalyzer()
-    this._gradients = []
-    this.audioMotion = undefined
+    this.audioMotion?.toggleAnalyzer();
+    this._gradients = [];
+    this.audioMotion = undefined;
   }
 
   updateOptions(): void {
     if (this.audioMotion) {
-      this.audioMotion.setOptions(this._options)
+      this.audioMotion.setOptions(this._options);
     }
   }
 
   toggleFullscreen() {
-    this.audioMotion?.toggleFullscreen()
+    this.audioMotion?.toggleFullscreen();
   }
 
   ngAfterViewInit(): void {
@@ -51,32 +51,43 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
   }
 
   private init(): void {
-    this.audioMotion = new AudioMotionAnalyzer(this.container.nativeElement, this._options)
-    this.setSource()
-    this.ready.emit(this.audioMotion)
+    this.audioMotion = new AudioMotionAnalyzer(this.container.nativeElement, this._options);
+    this.setSource();
+    this.ready.emit(this.audioMotion);
   }
 
   private setSource(): void {
-    navigator.mediaDevices.getUserMedia({audio: true, video: false})
+    navigator.mediaDevices.getUserMedia({ audio: true, video: false })
       .then(stream => {
         if (!this.audioMotion) return;
-        const audioCtx = this.audioMotion.audioCtx
-        const micInput = audioCtx.createMediaStreamSource(stream)
-        this.audioMotion.disconnectInput()
-        this.audioMotion.connectInput(micInput)
+        const audioCtx = this.audioMotion.audioCtx;
+        const micInput = audioCtx.createMediaStreamSource(stream);
+        this.audioMotion.disconnectInput();
+        this.audioMotion.connectInput(micInput);
       })
       .catch(err => {
-        console.error(`Could not change audio source`, err)
-      })
+        console.error(`Could not change audio source`, err);
+      });
   }
 
   private registerGradients(): void {
     if (this._gradients.length === 0) return;
-    if (!this.audioMotion) throw Error('No visualizer!')
+    if (!this.audioMotion) throw Error("No visualizer!");
 
     for (const gradient of this._gradients) {
-      this.audioMotion.registerGradient(gradient.name, {...gradient})
+      this.audioMotion.registerGradient(gradient.name, { ...gradient });
     }
-    this.registeredGradients.emit(this._gradients)
+    this.registeredGradients.emit(this._gradients);
+  }
+
+  /**
+   * Register one single gradient.
+   * Does not emit the gradients because the gradient is only used internally for the visualizer.
+   * @param name
+   * @param gradient
+   */
+  registerGradient(name: string, gradient: GradientOptions) {
+    if (!this.audioMotion) throw Error("No visualizer!");
+    this.audioMotion.registerGradient(name, gradient);
   }
 }
