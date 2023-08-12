@@ -13,17 +13,20 @@ import {
 } from '@angulon/interfaces';
 import {Store} from '@ngrx/store';
 import {colorChange} from '../../../redux/color/color.action';
+import {ColorpickerState} from "../../../redux/color/color.reducer";
+import {take} from "rxjs";
 
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
 export class WebsocketService {
+  private messageQueue: { event: string, payload?: string | string[] }[] = [];
   private websocketUrl = environment.url
   private socket: Socket;
 
   constructor(
     private messageService: MessageService,
-    private readonly store: Store,
+    private readonly store: Store<{ colorpicker: ColorpickerState }>,
   ) {
     this.socket = io(this.websocketUrl, {
       transports: ['websocket'],
@@ -33,7 +36,11 @@ export class WebsocketService {
       console.log(`Opened websocket at`, this.websocketUrl)
       this.socket.emit('joinUserRoom')
       this.getState().then(data => {
-        this.store.dispatch(colorChange(data.colors, false))
+        this.store.dispatch(colorChange(data.colors, false));
+        this.messageQueue.forEach(message => {
+          this.send(message.event, message.payload)
+        });
+        this.messageQueue = []
       })
     });
 
@@ -69,6 +76,9 @@ export class WebsocketService {
   send(event: string, payload?: string | string[]): void {
     if (this.isOpen()) {
       this.socket.emit(event, payload)
+    } else {
+      console.log(`Websocket not open, adding ${event} to queue with payload ${payload}`);
+      this.messageQueue.push({event: event, payload: payload});
     }
   }
 
@@ -148,5 +158,23 @@ export class WebsocketService {
 
   updatePreset(index: number, selectedPreset: LedstripPreset) {
     return this.promisifyEmit<LedstripPreset[]>("presets/update", {index: index, preset: selectedPreset})
+  }
+
+  /**
+   * This function turns off the ledstrips.
+   * Sets the first color to black and the mode to 0 (Static).
+   * This way we retain the other colors, but because mode 0 is static the other colors are not used in the effect and thus the ledstrip looks turned off.
+   */
+  turnOff(): void {
+    this.setMode(0);
+    this.store.pipe(take(1)).subscribe(state => {
+      // The state array is readonly so we create a new array from the items in the state array, to prevent changing the original state directly
+      const currentColors = [...state.colorpicker.colors];
+      // Change the first color to black, retaining the other colors.
+      // This is only possible because we also set the mode to 0 which only uses the first color.
+      currentColors[0] = '#000000';
+      // Then set the new colors through the official way, through the store
+      this.store.dispatch(colorChange(currentColors, true))
+    });
   }
 }

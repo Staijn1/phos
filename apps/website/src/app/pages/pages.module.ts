@@ -9,6 +9,7 @@ import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import {SharedModule} from '../shared/shared.module';
 import {VisualizerPage3DComponent} from './visualizer-page3-d/visualizer-page3-d.component';
 import {NgxSliderModule} from '@angular-slider/ngx-slider';
+import {ShortcutPageComponent} from './shortcut-page/shortcut-page.component';
 
 @NgModule({
   declarations: [
@@ -16,6 +17,7 @@ import {NgxSliderModule} from '@angular-slider/ngx-slider';
     VisualizerPageComponent,
     ModePageComponent,
     VisualizerPage3DComponent,
+    ShortcutPageComponent
   ],
   imports: [
     FormsModule,
@@ -27,5 +29,4 @@ import {NgxSliderModule} from '@angular-slider/ngx-slider';
   ],
   exports: [],
 })
-export class PagesModule {
-}
+export class PagesModule {}

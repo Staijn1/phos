@@ -5,7 +5,7 @@
   "background_color": "#fafafa",
   "display": "standalone",
   "scope": "./",
-  "start_url": "./",
+  "start_url": "/home",
   "icons": [
     {
       "src": "assets/icons/windows10/SmallTile.scale-100.png",
@@ -762,6 +762,33 @@
       "sizes": "16x16",
       "type": "image/png",
       "purpose": "maskable any"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "Turn Off",
+      "description": "Turn off all LEDs",
+      "url": "/shortcut?action=turnOff"
+    },
+    {
+      "name": "Increase Brightness",
+      "description": "Increases brightness by 10%",
+      "url": "/shortcut?action=increaseBrightness"
+    },
+    {
+      "name": "Decrease Brightness",
+      "description": "Decreases brightness by 10%",
+      "url": "/shortcut?action=decreaseBrightness"
+    },
+    {
+      "name": "Increase Speed",
+      "description": "Increases speed of effects by 10%",
+      "url": "/shortcut?action=increaseSpeed"
+    },
+    {
+      "name": "Decrease Speed",
+      "description": "Decreases speed of effects by 10%",
+      "url": "/shortcut?action=decreaseSpeed"
     }
   ]
 }

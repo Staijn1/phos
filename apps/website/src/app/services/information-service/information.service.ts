@@ -1,14 +1,17 @@
-import {Injectable} from '@angular/core'
-import {AddGradientResponse, GradientInformation} from '@angulon/interfaces';
-import {MessageService} from '../message-service/message.service';
-import {environment} from '../../../environments/environment';
-import {WebsocketService} from '../websocketconnection/websocket.service';
+import {Injectable} from "@angular/core";
+import {AddGradientResponse, GradientInformation} from "@angulon/interfaces";
+import {MessageService} from "../message-service/message.service";
+import {environment} from "../../../environments/environment";
+import {WebsocketService} from "../websocketconnection/websocket.service";
+import Vibrant from "node-vibrant";
+import {Palette} from "node-vibrant/lib/color";
+import {FastAverageColor, FastAverageColorResult} from "fast-average-color";
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: "root"
 })
 export class InformationService {
-  url = environment.url
+  url = environment.url;
 
   constructor(private readonly messageService: MessageService, private readonly websocket: WebsocketService) {
   }
@@ -22,7 +25,7 @@ export class InformationService {
   }
 
   async deleteGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    return this.websocket.deleteGradient(gradient.id)
+    return this.websocket.deleteGradient(gradient.id);
   }
 
   /**
@@ -36,7 +39,25 @@ export class InformationService {
 
   private handleError(response: Response): void {
     if (!response.ok) {
-      this.messageService.setMessage(new Error(response.statusText))
+      this.messageService.setMessage(new Error(response.statusText));
     }
+  }
+
+  /**
+   * From an image URL get the average colors of the image.
+   * @param {string} url
+   */
+  async getAverageColors(url: string): Promise<Palette & { Average: FastAverageColorResult }> {
+    // Create a Vibrant object with the image URL
+    const vibrant = new Vibrant(url);
+    const fac = new FastAverageColor();
+
+    // Extract the color palette asynchronously
+    const palette = await vibrant.getPalette();
+    const average = await fac.getColorAsync(url, {algorithm: "dominant", ignoredColor: [0, 0, 0, 255, 50]});
+    console.log(palette);
+
+// Return the color palette with the result from fac
+    return {...palette, Average: average} as Palette & { Average: FastAverageColorResult };
   }
 }

@@ -1,5 +1,6 @@
 import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core'
 import iro from '@jaames/iro'
+import {IroColor} from '@irojs/iro-core';
 import {IroColorPicker} from '@jaames/iro/dist/ColorPicker'
 import {Store} from '@ngrx/store';
 import {ColorpickerState} from "../../../../redux/color/color.reducer";
@@ -121,5 +122,9 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
 
   updateColors(colors: string[]) {
     this.picker.setColors(colors);
+  }
+
+  getColors(): IroColor[] {
+    return this.picker.colors
   }
 }

@@ -24,6 +24,7 @@ import {WebsocketService} from '../../services/websocketconnection/websocket.ser
 import {Store} from '@ngrx/store';
 import {ColorpickerState} from '../../../redux/color/color.reducer';
 import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
+import {colorChange} from "../../../redux/color/color.action";
 
 @Component({
   selector: 'app-navigationbar',
@@ -100,8 +101,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
     this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
 
-    this.connection.setColor(['#000000', '#000000', '#000000']);
-    this.connection.setMode(0);
+    this.connection.turnOff();
   }
 
   private closeMobileMenu() {

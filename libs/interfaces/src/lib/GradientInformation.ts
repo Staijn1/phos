@@ -1,14 +1,9 @@
-import {GradientOptions} from 'audiomotion-analyzer'
-import {ArrayTwoOrMore} from "./ArrayTwoOrMore";
+import { GradientOptions } from "audiomotion-analyzer";
 
-type ColorStop = {
-  pos: number
-  color: string
-}
-
+export type ColorStop = { pos: number; color: string };
 export interface GradientInformation
   extends Omit<GradientOptions, 'colorStops'> {
-  colorStops: ArrayTwoOrMore<ColorStop>
+  colorStops: ColorStop[]
   name: string
   id: number
 }

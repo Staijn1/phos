@@ -1,0 +1,81 @@
+<div *ngIf="spotifyAuth.isLoggedIn(); else notLoggedIn">
+  <div *ngIf="isActive; else notActive">
+    <div class="mt-3">
+      <!-- Create a music player -->
+      <div class="row">
+        <div class="col-md-5">
+          <div class="d-flex align-items-center h-100">
+            <img [src]="albumImageSrc" class="img-fluid" alt="Album Image">
+          </div>
+        </div>
+        <div class="col-md-7">
+          <div class="d-flex flex-column h-100 justify-content-between">
+            <div>
+              <h5>{{trackName}}</h5>
+              <p>{{artistName}}</p>
+            </div>
+            <div class="w-100 d-flex justify-content-center">
+              <div>
+                <div class="btn-group btn-group-sm w-100" role="group">
+                  <button type="button" class="btn btn-secondary" (click)="previousSong()">
+                    <fa-icon [icon]="previousSongIcon"></fa-icon>
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="togglePlay()">
+                    <fa-icon [icon]="getIconForPlayStatus"></fa-icon>
+                  </button>
+                  <button type="button" class="btn btn-secondary" (click)="skipSong()">
+                    <fa-icon [icon]="skipSongIcon"></fa-icon>
+                  </button>
+                </div>
+                <div class="mt-3 d-flex align-items-center">
+                  <fa-icon [icon]="volumeLowIcon"></fa-icon>
+                  <input type="range" class="form-range flex-grow-1 mx-2" min="0" max="1" step="0.1"
+                         [(ngModel)]="volume" (input)="changeVolume()">
+                  <fa-icon [icon]="volumeHighIcon"></fa-icon>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Playlist Section -->
+      <div class="mt-5">
+        <h6>Upcoming Songs</h6>
+        <ul class="list-unstyled">
+          <li
+            *ngFor="let song of allTracks; let i = index"
+            [class.previousTrack]="previousTracks.includes(song)"
+            [class.currentTrack]="currentTrack === song"
+            [class.upcomingTrack]="upcomingTracks.includes(song)"
+            class="track"
+            [style.opacity]="calculateOpacityForTrack(song, i)"
+          >
+            <div class="row">
+              <div class="col-md-3">
+                <img class="img-fluid" [src]="song.album.images[0].url" alt="Album Image">
+              </div>
+              <div class="col-md-9 song-info">
+                <h6>{{song.name}}</h6>
+                <p>{{getArtistNames(song)}}</p>
+              </div>
+            </div>
+          </li>
+        </ul>
+      </div>
+    </div>
+  </div>
+</div>
+
+<ng-template #notLoggedIn>
+  <a class="btn btn-primary btn-spotify w-100 mt-3" [href]="spotifyAuthenticationURL">
+    <fa-icon [icon]="spotifyIcon"></fa-icon>
+    Login with Spotify
+  </a>
+</ng-template>
+
+<ng-template #notActive>
+  <h4> Spotify is not active!</h4>
+  <p>Please select Angulon in the list of devices in your Spotify app and start playing music.</p>
+</ng-template>
+
