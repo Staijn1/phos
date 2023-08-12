@@ -101,12 +101,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
     this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
 
-    const colorsHex = this.colorpicker.getColors().map(color => color.hexString);
-    // Only set the first color to black, so we retain the other colors.
-    colorsHex[0] = '#000000';
-    // By setting the color picker colors the redux store will be updated and the ledstrips will be updated.
-    this.store.dispatch(colorChange(colorsHex, true))
-    this.connection.setMode(0);
+    this.connection.turnOff();
   }
 
   private closeMobileMenu() {

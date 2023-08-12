@@ -4,6 +4,7 @@ import {SettingsPageComponent} from '../pages/settings-page/settings-page.compon
 import {ModePageComponent} from '../pages/mode-page/mode-page.component'
 import {VisualizerPageComponent} from '../pages/visualizer-page/visualizer-page.component'
 import {VisualizerPage3DComponent} from '../pages/visualizer-page3-d/visualizer-page3-d.component'
+import {ShortcutPageComponent} from "../pages/shortcut-page/shortcut-page.component";
 
 
 const routes: Routes = [
@@ -21,6 +22,10 @@ const routes: Routes = [
   },
   {path: 'settings', component: SettingsPageComponent},
   {path: 'visualizer3d', component: VisualizerPage3DComponent},
+  {
+    path: 'shortcut',
+    component: ShortcutPageComponent
+  },
   {
     path: '**',
     loadChildren: () => import('../pages/not-found-page/not-found-page.module').then(m => m.NotFoundPageModule)
