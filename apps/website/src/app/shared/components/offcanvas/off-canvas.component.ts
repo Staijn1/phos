@@ -8,20 +8,25 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular
 export class OffCanvasComponent implements AfterViewInit {
   @Input() width = "400px";
   @ViewChild("offCanvas") offcanvasElement!: ElementRef;
+  @ViewChild("offCanvasBackground") offcanvasBackgroundElement!: ElementRef;
 
   ngAfterViewInit(): void {
     this.offcanvasElement.nativeElement.style.visibility = "hidden";
     this.offcanvasElement.nativeElement.style.width = "0px";
+
+    this.offcanvasBackgroundElement.nativeElement.style.display = "none";
   }
 
   open(): void {
-    const elementStyle = this.offcanvasElement.nativeElement.style;
-    elementStyle.visibility = "visible";
-    elementStyle.width = this.width;
+    this.offcanvasElement.nativeElement.style.visibility = "visible";
+    this.offcanvasElement.nativeElement.style.width = this.width;
+
+    this.offcanvasBackgroundElement.nativeElement.style.display = "block";
   }
 
   close(): void {
     this.offcanvasElement.nativeElement.style.width = "0px";
+    this.offcanvasBackgroundElement.nativeElement.style.display = "none";
   }
 
   toggle(): void {
@@ -36,6 +41,4 @@ export class OffCanvasComponent implements AfterViewInit {
     const currentElementWidth = this.offcanvasElement.nativeElement.style.width;
     return currentElementWidth !== "0px" || currentElementWidth == "";
   }
-
-
 }
