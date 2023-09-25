@@ -166,7 +166,7 @@ $text-bright: white;
 .dark {
   background: $dark-background !important;
 
-  section, .form-control, #cover, .card, .offcanvas-body {
+  section, .form-control, #cover, .card, .offcanvas-container {
     background: $dark-background !important;
   }
 
