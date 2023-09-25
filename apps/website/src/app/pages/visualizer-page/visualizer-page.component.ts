@@ -160,11 +160,8 @@ export class VisualizerPageComponent implements OnDestroy {
     this.visualizerOptions = settings;
   }
 
-  openSettingsWindow() {
-    this.offcanvas.open({
-      position: "end",
-      backdropClass: "offcanvas-backdrop-custom"
-    });
+  toggleSettingsWindow() {
+    this.offcanvas.toggle();
   }
 
   applySettings() {
