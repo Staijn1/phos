@@ -27,7 +27,7 @@
   </div>
   <div body class="p-3 h-100">
     <!--    Create tabs-->
-    <ul #nav="ngbNav" [(activeId)]="activeTab" class="nav-tabs" ngbNav>
+    <ul #nav="ngbNav" [(activeId)]="activeTab" [destroyOnHide]="false" class="nav-tabs" ngbNav>
       <li [ngbNavItem]="0">
         <a ngbNavLink>
           <fa-icon [icon]="listIcon"></fa-icon>
