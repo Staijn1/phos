@@ -190,15 +190,24 @@ export class VisualizerPageComponent implements OnDestroy {
       const albumCover = state?.track_window?.current_track?.album?.images[0]?.url;
       if (albumCover) {
         this.information.getAverageColors(albumCover).then((colors) => {
-          const colorsStops: GradientColorStop[] = [];
-          const colorKeys = Object.keys(colors);
-          for (const element of colorKeys) {
-            // If the color key contains vibrant then we add it to the color stops
-            if (element.toLowerCase().includes("vibrant")) {
-              const color = colors[element] as any;
-              colorsStops.push(color.hex);
+          const colorsStops: GradientColorStop[] = [
+            {
+              color: colors.Average?.hex ?? "#000",
+              pos: 0.25
+            },
+            {
+              color: colors.LightVibrant?.hex ?? "#000",
+              pos: .50
+            },
+            {
+              color: colors.Vibrant?.hex ?? "#000",
+              pos: .75
+            },
+            {
+              color: colors.DarkVibrant?.hex ?? "#000",
+              pos: 1
             }
-          }
+          ];
 
           const gradient: GradientOptions = {
             bgColor: "#000",
@@ -210,14 +219,6 @@ export class VisualizerPageComponent implements OnDestroy {
           this.visualizerOptions.gradientRight = "Spotify";
           this.applySettings();
           this.store.dispatch(colorChange(colorsStops.slice(0, 3) as string[], true));
-
-          (document.getElementById('vibrant') as HTMLElement).style.background = colors?.Vibrant?.hex ?? "#000";
-          (document.getElementById('darkVibrant') as HTMLElement).style.background = colors?.DarkVibrant?.hex ?? "#000";
-          (document.getElementById('lightVibrant') as HTMLElement).style.background = colors?.LightVibrant?.hex ?? "#000";
-          (document.getElementById('muted') as HTMLElement).style.background = colors?.Muted?.hex ?? "#000";
-          (document.getElementById('darkMuted') as HTMLElement).style.background = colors?.DarkMuted?.hex ?? "#000";
-          (document.getElementById('lightMuted') as HTMLElement).style.background = colors?.LightMuted?.hex ?? "#000";
-          (document.getElementById('average') as HTMLElement).style.background = colors?.Average.hex ?? "#000";
         });
       }
     }
