@@ -1,38 +1,32 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {NgbOffcanvas, NgbOffcanvasOptions, NgbOffcanvasRef} from '@ng-bootstrap/ng-bootstrap';
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular/core";
 
 @Component({
-  selector: 'app-offcanvas',
-  templateUrl: './off-canvas.component.html',
-  styleUrls: ['./off-canvas.component.scss'],
+  selector: "app-offcanvas",
+  templateUrl: "./off-canvas.component.html",
+  styleUrls: ["./off-canvas.component.scss"]
 })
-export class OffCanvasComponent {
-  @ViewChild('content') content!: ElementRef;
-  private offcanvas: NgbOffcanvasRef | undefined;
+export class OffCanvasComponent implements AfterViewInit{
+  @Input() width = "400px";
+  @ViewChild("offCanvas") offcanvasElement!: ElementRef;
 
 
-  /**
-   * Inject the offcanvas service so we can open and close it using ng-bootstrap
-   * @param offcanvasService
-   */
-  constructor(private offcanvasService: NgbOffcanvas) {
+  open(): void {
+    const elementStyle = this.offcanvasElement.nativeElement.style;
+    elementStyle.visibility = "visible";
+    elementStyle.width = this.width;
   }
 
-  /**
-   * Open the offcanvas
-   * @param {NgbOffcanvasOptions} options
-   */
-  open(options?: NgbOffcanvasOptions): void {
-    this.offcanvas = this.offcanvasService.open(this.content, {ariaLabelledBy: 'offcanvas-basic-title', ...options});
-  }
-
-  /**
-   * Close the offcanvas
-   */
   close(): void {
-    if (this.offcanvas) {
-      this.offcanvas.close();
-      this.offcanvasService.dismiss();
-    }
+    this.offcanvasElement.nativeElement.style.width = "0px";
+  }
+
+  get isOpen(): boolean {
+    const currentElementWidth = this.offcanvasElement.nativeElement.style.width;
+    return currentElementWidth !== "0px" || currentElementWidth == "";
+  }
+
+  ngAfterViewInit(): void {
+    this.offcanvasElement.nativeElement.style.visibility = "hidden";
+    this.offcanvasElement.nativeElement.style.width = "0px";
   }
 }
