@@ -7,7 +7,6 @@ import {io, Socket} from 'socket.io-client'
 import {
   AddGradientResponse,
   GradientInformation,
-  LedstripPreset,
   LedstripState,
   ModeInformation
 } from '@angulon/interfaces';
@@ -142,22 +141,6 @@ export class WebsocketService {
         resolve(data)
       })
     })
-  }
-
-  setPreset(preset: LedstripPreset) {
-    return this.promisifyEmit("presets/set", preset);
-  }
-
-  addPreset(): Promise<LedstripPreset[]> {
-    return this.promisifyEmit("presets/add")
-  }
-
-  getPresets() {
-    return this.promisifyEmit<LedstripPreset[]>("presets/get")
-  }
-
-  updatePreset(index: number, selectedPreset: LedstripPreset) {
-    return this.promisifyEmit<LedstripPreset[]>("presets/update", {index: index, preset: selectedPreset})
   }
 
   /**

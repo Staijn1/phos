@@ -8,5 +8,4 @@ export * from './lib/Responses';
 export * from './lib/AngulonVisualizerOptions';
 export * from './lib/functions';
 export * from './lib/LedstripState';
-export * from './lib/LedstripPreset';
 
