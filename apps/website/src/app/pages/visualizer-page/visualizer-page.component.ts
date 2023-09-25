@@ -22,7 +22,6 @@ import {colorChange} from "../../../redux/color/color.action";
   styleUrls: ["./visualizer-page.component.scss"]
 })
 export class VisualizerPageComponent implements OnDestroy {
-  private spotifyPlayer!: Spotify.Player;
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent;
   @ViewChild(OffCanvasComponent) offcanvas!: OffCanvasComponent;
   visualizerOptions: AngulonVisualizerOptions = {};
