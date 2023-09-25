@@ -29,7 +29,7 @@ export class WebsocketService {
   ) {
     this.socket = io(this.websocketUrl, {
       transports: ['websocket'],
-      reconnectionAttempts: 10,
+      reconnectionAttempts: 5,
     });
 
     this.socket.on('connect', () => {
@@ -53,8 +53,7 @@ export class WebsocketService {
     });
 
     this.socket.on('connect_error', (error: Error) => {
-      console.log(`Failed to connect to websocket at ${this.websocketUrl}`)
-      console.error(error)
+      console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error)
       messageService.setMessage(error)
     });
   }
@@ -76,7 +75,7 @@ export class WebsocketService {
   send(event: string, payload?: string | string[]): void {
     if (this.isOpen()) {
       this.socket.emit(event, payload)
-    } else {
+    } else if(event !== 'FFT') {
       console.log(`Websocket not open, adding ${event} to queue with payload ${payload}`);
       this.messageQueue.push({event: event, payload: payload});
     }

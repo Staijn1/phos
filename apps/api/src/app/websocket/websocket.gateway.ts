@@ -6,21 +6,19 @@ import {
   WebSocketGateway,
   WebSocketServer
 } from "@nestjs/websockets";
-import {Logger} from "@nestjs/common";
-import {Server, Socket} from "socket.io";
-import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
-import {ConfigurationService} from "../configuration/configuration.service";
+import { Logger } from "@nestjs/common";
+import { Server, Socket } from "socket.io";
+import { WebsocketClientsManagerService } from "./websocket-clients-manager.service";
+import { ConfigurationService } from "../configuration/configuration.service";
 import {
   AddGradientResponse,
   GradientInformation,
-  LedstripPreset,
   LedstripState,
   ModeInformation
 } from "@angulon/interfaces";
-import {GradientsService} from "../gradients/gradients.service";
-import {PresetsService} from "../presets/presets.service";
+import { GradientsService } from "../gradients/gradients.service";
 
-@WebSocketGateway(undefined, {cors: true})
+@WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
@@ -31,8 +29,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
     private readonly configurationService: ConfigurationService,
-    private readonly gradientsService: GradientsService,
-    private readonly presetsService: PresetsService) {
+    private readonly gradientsService: GradientsService) {
   }
 
   @SubscribeMessage("getState")
@@ -135,37 +132,6 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   /**
-   * This event is emitted when selecting a preset, the handler will set the preset on the ledstrips.
-   * @param client
-   * @param payload
-   */
-  @SubscribeMessage("presets/set")
-  async setPresetOnLedstrips(client: Socket, payload: LedstripPreset): Promise<"OK"> {
-    this.websocketClientsManagerService.setPreset(payload);
-    return "OK";
-  }
-
-  @SubscribeMessage("presets/add")
-  async onAddPreset(): Promise<LedstripPreset[]> {
-    return this.presetsService.addPreset();
-  }
-
-  @SubscribeMessage("presets/delete")
-  async onDeletePreset(client: Socket, index: number): Promise<LedstripPreset[]> {
-    return this.presetsService.deletePreset(index)
-  }
-
-  @SubscribeMessage("presets/update")
-  async onEditPreset(client: Socket, payload: { index: number, preset: LedstripPreset }): Promise<LedstripPreset[]> {
-    return this.presetsService.updatePreset(payload.index, payload.preset);
-  }
-
-  @SubscribeMessage("presets/get")
-  async onGetPresets(): Promise<LedstripPreset[]> {
-    return this.presetsService.getPresets();
-  }
-
-  /**
    * When a client connects, log its IP address.
    * Also set the server instance in the websocketClientsManagerService, so we make sure it is always up-to-date with the current server instance.
    * @param {Socket} client
@@ -193,7 +159,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    */
   afterInit(): void {
     setInterval(() => {
-      this.logger.log("Sending state to all ledstrips - forced")
+      this.logger.log("Sending state to all ledstrips - forced");
       this.websocketClientsManagerService.setStateOnAllLedstrips(true);
     }, this.stateIntervalTimeMS);
   }
