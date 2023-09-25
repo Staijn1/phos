@@ -29,6 +29,7 @@ export class WebsocketService {
   ) {
     this.socket = io(this.websocketUrl, {
       transports: ['websocket'],
+      reconnectionAttempts: 10,
     });
 
     this.socket.on('connect', () => {
