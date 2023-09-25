@@ -1,7 +1,7 @@
-import {Injectable, Logger} from '@nestjs/common';
-import {GradientInformation, LedstripPreset, ModeInformation} from '@angulon/interfaces';
-import * as fs from 'fs';
-import path = require('path');
+import { Injectable, Logger } from "@nestjs/common";
+import { GradientInformation, ModeInformation } from "@angulon/interfaces";
+import * as fs from "fs";
+import path = require("path");
 
 @Injectable()
 export class ConfigurationService {
@@ -40,21 +40,6 @@ export class ConfigurationService {
    */
   async writeGradients(gradients: GradientInformation[]): Promise<void> {
     await fs.promises.writeFile(path.join(this.configPath, 'gradients.json'), JSON.stringify(gradients, null, 2));
-  }
-
-  /**
-   * Write a new array of presets to the presets.json file in the assets folder
-   */
-  async writePresets(presets: LedstripPreset[]): Promise<void> {
-    await fs.promises.writeFile(path.join(this.configPath, 'presets.json'), JSON.stringify(presets, null, 2));
-  }
-
-  /**
-   * Read the presets.json file in the assets folder
-   */
-  async getPresets(): Promise<LedstripPreset[]> {
-    const contents = await fs.promises.readFile(path.join(this.configPath, 'presets.json'));
-    return JSON.parse(contents.toString());
   }
 
   /**
