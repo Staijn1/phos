@@ -186,21 +186,15 @@ export class VisualizerPageComponent implements OnDestroy {
       const albumCover = state?.track_window?.current_track?.album?.images[0]?.url;
       if (albumCover) {
         this.information.getAverageColors(albumCover).then((colors) => {
+          const primaryColor = colors.Average.hex;
+          const secondaryColor = colors.Vibrant?.hex ?? "#000";
           const colorsStops: GradientColorStop[] = [
             {
-              color: colors.Average?.hex ?? "#000",
-              pos: 0.25
+              color: primaryColor,
+              pos: 0
             },
             {
-              color: colors.LightVibrant?.hex ?? "#000",
-              pos: .50
-            },
-            {
-              color: colors.Vibrant?.hex ?? "#000",
-              pos: .75
-            },
-            {
-              color: colors.DarkVibrant?.hex ?? "#000",
+              color: secondaryColor,
               pos: 1
             }
           ];
@@ -214,7 +208,7 @@ export class VisualizerPageComponent implements OnDestroy {
           this.visualizerOptions.gradientLeft = "Spotify";
           this.visualizerOptions.gradientRight = "Spotify";
           this.applySettings();
-          this.store.dispatch(colorChange(colorsStops.slice(0, 3) as string[], true));
+          this.store.dispatch(colorChange([primaryColor, secondaryColor], true));
         });
       }
     }
