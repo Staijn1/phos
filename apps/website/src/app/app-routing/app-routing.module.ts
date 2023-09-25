@@ -1,10 +1,9 @@
-import {NgModule} from '@angular/core'
-import {RouterModule, Routes} from '@angular/router'
-import {SettingsPageComponent} from '../pages/settings-page/settings-page.component'
-import {ModePageComponent} from '../pages/mode-page/mode-page.component'
-import {VisualizerPageComponent} from '../pages/visualizer-page/visualizer-page.component'
-import {VisualizerPage3DComponent} from '../pages/visualizer-page3-d/visualizer-page3-d.component'
-import {ShortcutPageComponent} from "../pages/shortcut-page/shortcut-page.component";
+import { NgModule } from "@angular/core";
+import { RouterModule, Routes } from "@angular/router";
+import { SettingsPageComponent } from "../pages/settings-page/settings-page.component";
+import { ModePageComponent } from "../pages/mode-page/mode-page.component";
+import { VisualizerPageComponent } from "../pages/visualizer-page/visualizer-page.component";
+import { ShortcutPageComponent } from "../pages/shortcut-page/shortcut-page.component";
 
 
 const routes: Routes = [
@@ -13,15 +12,10 @@ const routes: Routes = [
   {path: 'visualizer', component: VisualizerPageComponent},
   {path: 'mode', component: ModePageComponent},
   {
-    path: 'gradients-editor',
-    loadChildren: () => import('../pages/gradient-editor-page/gradient-editor.module').then(m => m.GradientEditorModule)
-  },
-  {
     path: 'spotify-callback',
     loadChildren: () => import('../pages/spotify-callback-page/spotify-callback-page.module').then(m => m.SpotifyCallbackPageModule)
   },
   {path: 'settings', component: SettingsPageComponent},
-  {path: 'visualizer3d', component: VisualizerPage3DComponent},
   {
     path: 'shortcut',
     component: ShortcutPageComponent
