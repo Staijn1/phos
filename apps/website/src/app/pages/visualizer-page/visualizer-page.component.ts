@@ -1,7 +1,6 @@
 import {Component, OnDestroy, ViewChild} from "@angular/core";
 import AudioMotionAnalyzer, {GradientColorStop, GradientOptions} from "audiomotion-analyzer";
-import {faExpand} from "@fortawesome/free-solid-svg-icons/faExpand";
-import {faCheck, faLightbulb, faList, faSliders, faWrench} from "@fortawesome/free-solid-svg-icons";
+import {faCheck, faLightbulb, faList, faSliders, faWrench, faExpand} from "@fortawesome/free-solid-svg-icons";
 import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.service";
 import {SettingsService} from "../../services/settings/settings.service";
 import {VisualizerComponent} from "../../shared/components/visualizer/visualizer.component";
@@ -131,9 +130,8 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   init(): void {
-    this.information.getGradients().then((gradients) => {
+    this.connection.getGradients().then((gradients) => {
       this.gradients = gradients;
-      // this.chromaEffect.state = new VisualizerBrightnessState()
     }).catch(e => {
       this.readSettings();
       this.applySettings();
@@ -185,7 +183,7 @@ export class VisualizerPageComponent implements OnDestroy {
       this.currentTrackId = state?.track_window?.current_track?.id;
       const albumCover = state?.track_window?.current_track?.album?.images[0]?.url;
       if (albumCover) {
-        this.information.getAverageColors(albumCover).then((colors) => {
+        this.information.getColorsFromImageUrl(albumCover).then((colors) => {
           const primaryColor = colors.Average.hex;
           const secondaryColor = colors.Vibrant?.hex ?? "#000";
           const colorsStops: GradientColorStop[] = [

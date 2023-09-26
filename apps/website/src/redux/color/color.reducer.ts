@@ -8,6 +8,7 @@ const initialState: ColorpickerState = {
   updateLedstrips: true
 };
 
+
 export function colorpickerReducer(state = initialState, action: any): ColorpickerState {
   switch (action.type) {
     case "COLOR_CHANGE": {

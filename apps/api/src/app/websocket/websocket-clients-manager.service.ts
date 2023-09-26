@@ -158,4 +158,8 @@ export class WebsocketClientsManagerService {
       client.emit(event, payload);
     }
   }
+
+  setState(payload: LedstripState, client: Socket) {
+
+  }
 }

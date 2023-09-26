@@ -33,56 +33,51 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage("getState")
-  async onGetState(): Promise<LedstripState | undefined> {
+  async onGetState(): Promise<LedstripState> {
     return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("mode")
-  async onModeCommand(client: Socket, payload: string): Promise<string> {
-    try {
-      const mode = parseInt(payload, 10);
-      this.websocketClientsManagerService.setMode(mode);
-      return "OK";
-    } catch (e) {
-      this.logger.error(e);
-      return "ERROR";
-    }
+  onModeCommand(client: Socket, payload: string): LedstripState {
+    const mode = parseInt(payload, 10);
+    this.websocketClientsManagerService.setMode(mode);
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("color")
-  onColorCommand(client: Socket, payload: string[]): string {
+  onColorCommand(client: Socket, payload: string[]): LedstripState {
     this.websocketClientsManagerService.setColor(payload, client);
-    return "OK";
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("FFT")
-  onFFTCommand(client: Socket, payload: number): string {
+  onFFTCommand(client: Socket, payload: number): LedstripState {
     this.websocketClientsManagerService.setFFTValue(payload);
-    return "OK";
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("increaseBrightness")
-  onIncreaseBrightnessCommand(): string {
+  onIncreaseBrightnessCommand(): LedstripState {
     this.websocketClientsManagerService.increaseBrightness();
-    return "OK";
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("increaseSpeed")
-  onIncreaseSpeedCommand(): string {
+  onIncreaseSpeedCommand(): LedstripState {
     this.websocketClientsManagerService.increaseSpeed();
-    return "OK";
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("decreaseBrightness")
-  onDecreaseBrightnessCommand(): string {
+  onDecreaseBrightnessCommand(): LedstripState {
     this.websocketClientsManagerService.decreaseBrightness();
-    return "OK";
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("decreaseSpeed")
-  onDecreaseSpeedCommand(): string {
+  onDecreaseSpeedCommand(): LedstripState {
     this.websocketClientsManagerService.decreaseSpeed();
-    return "OK";
+    return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage("getModes")
@@ -94,24 +89,6 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   async onGetGradients(): Promise<GradientInformation[]> {
     return this.gradientsService.getGradients();
   }
-
-  @SubscribeMessage("gradients/edit")
-  async onGradientsEdit(client: Socket, payload: GradientInformation): Promise<GradientInformation[]> {
-    await this.gradientsService.editGradient(payload);
-    return this.gradientsService.getGradients();
-  }
-
-  @SubscribeMessage("gradients/delete")
-  async onDeleteGradient(client: Socket, payload: { id: number }): Promise<GradientInformation[]> {
-    await this.gradientsService.deleteGradient(payload);
-    return this.gradientsService.getGradients();
-  }
-
-  @SubscribeMessage("gradients/add")
-  async onAddGradient(): Promise<AddGradientResponse> {
-    return this.gradientsService.addGradient();
-  }
-
 
   @SubscribeMessage("joinUserRoom")
   async onJoinUserRoom(client: Socket): Promise<void> {
