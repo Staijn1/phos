@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { MessageService } from "../message-service/message.service";
 import { io, Socket } from "socket.io-client";
-import { GradientInformationExtended, LedstripState, WebsocketMessage } from "@angulon/interfaces";
+import { GradientInformationExtended, LedstripState, ModeInformation, WebsocketMessage } from "@angulon/interfaces";
 import { Store } from "@ngrx/store";
 import { ReceiveLedstripState } from "../../../redux/ledstrip/ledstrip.action";
 
@@ -105,5 +105,12 @@ export class WebsocketServiceNextGen {
    */
   getGradients(): Promise<GradientInformationExtended[]> {
     return this.promisifyEmit<GradientInformationExtended[]>(WebsocketMessage.GetGradients);
+  }
+
+  /**
+   * TODO: Reduxify this
+   */
+  getModes() {
+    return this.promisifyEmit<ModeInformation[]>(WebsocketMessage.GetModes);
   }
 }

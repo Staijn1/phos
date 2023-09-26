@@ -9,14 +9,16 @@ import { Fire2012State } from "../../services/chromaEffect/state/fire2012-state/
 import { WaterfallState } from "../../services/chromaEffect/state/waterfall-state/waterfall-state";
 import { RainbowCycleState } from "../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state";
 import { VisualizerState } from "../../services/chromaEffect/state/visualizer-state/visualizer-state";
-import { ModeInformation } from "@angulon/interfaces";
+import { LedstripState, ModeInformation } from "@angulon/interfaces";
 import { themes } from "../../shared/constants";
 import { ThemeService } from "../../services/theme/theme.service";
-import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import {
   VisualizerBrightnessState
 } from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
 import { ColorpickerComponent } from "../../shared/components/colorpicker/colorpicker.component";
+import { WebsocketServiceNextGen } from "../../services/websocketconnection/websocket-nextgen.service";
+import { ChangeLedstripMode } from "../../../redux/ledstrip/ledstrip.action";
+import { Store } from "@ngrx/store";
 
 
 @Component({
@@ -44,8 +46,9 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private readonly connection: WebsocketService,
+    private readonly connection: WebsocketServiceNextGen,
     private readonly chromaService: ChromaEffectService,
+    private readonly store: Store<{ledstripState: LedstripState | undefined}>,
     public readonly themeService: ThemeService) {
   }
 
@@ -67,7 +70,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
     const id = parseInt(($event.currentTarget as HTMLElement).id, 10);
     this.selectedMode = id;
 
-    this.connection.setMode(id);
+    this.store.dispatch(new ChangeLedstripMode(id));
 
     const state = this.chromaEffects.find(stateToCompare => {
       const mode = this.modes[id];
