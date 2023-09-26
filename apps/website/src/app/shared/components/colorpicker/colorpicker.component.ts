@@ -1,10 +1,12 @@
-import {AfterViewInit, Component, EventEmitter, Input, OnInit, Output} from '@angular/core'
-import iro from '@jaames/iro'
-import {IroColor} from '@irojs/iro-core';
-import {IroColorPicker} from '@jaames/iro/dist/ColorPicker'
-import {Store} from '@ngrx/store';
-import {ColorpickerState} from "../../../../redux/color/color.reducer";
-import {colorChange} from "../../../../redux/color/color.action";
+import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import iro from "@jaames/iro";
+import { IroColor } from "@irojs/iro-core";
+import { IroColorPicker } from "@jaames/iro/dist/ColorPicker";
+import { Store } from "@ngrx/store";
+import { ColorpickerState } from "../../../../redux/color/color.reducer";
+import { colorChange } from "../../../../redux/color/color.action";
+import { ChangeLedstripColors } from "../../../../redux/ledstrip/ledstrip.action";
+import { LedstripState } from "@angulon/interfaces";
 
 export type ColorpickerEvent = {
   color: iro.Color
@@ -12,17 +14,14 @@ export type ColorpickerEvent = {
 }
 
 @Component({
-  selector: 'app-colorpicker',
-  templateUrl: './colorpicker.component.html',
-  styleUrls: ['./colorpicker.component.scss'],
+  selector: "app-colorpicker",
+  templateUrl: "./colorpicker.component.html",
+  styleUrls: ["./colorpicker.component.scss"]
 })
 export class ColorpickerComponent implements OnInit, AfterViewInit {
-  @Input() initialColor!: string[]
-  @Output() colorChange = new EventEmitter<ColorpickerEvent>()
-  id!: string;
-  private picker!: IroColorPicker
-  private skipColorChangeEmit = false;
-  private activeColorIndex = 0;
+  protected id = this.generateElementId();
+  private picker!: IroColorPicker;
+  private indexOfCurrentActiveColor = 0;
 
   /**
    * Options to configure the colorpicker, there is no type for it available..
@@ -30,75 +29,65 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
    * @see https://iro.js.org/colorPicker_api.html#options
    * @private
    */
-  private colorpickerOptions: any = {
+  private colorpickerOptions: Parameters<typeof iro.ColorPicker>[1] = {
     width: 150,
-    layoutDirection: 'horizontal',
+    layoutDirection: "horizontal",
     handleRadius: 8,
     borderWidth: 2,
-    borderColor: '#fff',
-    wheelAngle: 90
-  }
+    borderColor: "#fff",
+    wheelAngle: 90,
+    layout: [
+      {
+        component: iro.ui.Wheel
+      },
+      {
+        component: iro.ui.Slider,
+        options: {
+          sliderType: "value",
+          activeIndex: 0
+        }
+      },
+      {
+        component: iro.ui.Slider,
+        options: {
+          sliderType: "value",
+          activeIndex: 1
+        }
+      },
+      {
+        component: iro.ui.Slider,
+        options: {
+          sliderType: "value",
+          activeIndex: 2
+        }
+      }
+    ]
+  };
 
-  constructor(private store: Store<{ colorpicker: ColorpickerState }>) {
+  constructor(private store: Store<{ ledstripState: LedstripState | undefined }>) {
   }
 
   ngOnInit(): void {
     this.generateElementId();
-    if (this.controlsLedstripColor) {
-      this.colorpickerOptions.layout = [
-        {
-          component: iro.ui.Wheel,
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'value',
-            activeIndex: 0,
-          }
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'value',
-            activeIndex: 1,
-          }
-        },
-        {
-          component: iro.ui.Slider,
-          options: {
-            sliderType: 'value',
-            activeIndex: 2,
-          }
-        },
-      ]
-    }
   }
 
   ngAfterViewInit(): void {
     this.picker = iro.ColorPicker(`#${this.id}`, this.colorpickerOptions);
-    if (this.controlsLedstripColor) {
-      this.store.select('colorpicker').subscribe((state) => {
-        this.skipColorChangeEmit = true;
-        this.picker.setColors(state.colors);
 
-        // When setting the colors, the active color is reset to the first color.
-        // We need to set it back to the index of the color that was active before, otherwise it jumps to the first color and drags that instead
-        this.picker.setActiveColor(this.activeColorIndex)
-        this.skipColorChangeEmit = false;
-      });
-    } else {
-      this.picker.setColors(this.initialColor)
-    }
+    this.store.select("ledstripState").subscribe((state) => {
+      if(!state) return;
+      this.picker.setColors(state.colors);
 
+      // When setting the colors, the active color is reset to the first color.
+      // We need to set it back to the index of the color that was active before, otherwise it jumps to the first color and drags that instead
+      this.picker.setActiveColor(this.indexOfCurrentActiveColor);
+    });
 
-    this.picker.on('color:change', (color: iro.Color) => {
-      if (!this.skipColorChangeEmit && this.controlsLedstripColor) {
-        this.activeColorIndex = color.index
-        const colors = this.picker.colors.map(c => c.hexString);
-        this.store.dispatch(colorChange(colors, true));
-      }
-      this.colorChange.emit({color, colorpicker: this.picker})
-    })
+    this.picker.on("color:change", (color: iro.Color) => {
+      this.indexOfCurrentActiveColor = color.index;
+      const colors = this.picker.colors.map(c => c.hexString);
+      this.store.dispatch(new ChangeLedstripColors(colors));
+    });
   }
 
   /**
@@ -106,25 +95,13 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
    * It therefore should be a valid html ID
    * @private
    */
-  private generateElementId() {
+  private generateElementId(): string {
     const array = new Uint32Array(5);
     self.crypto.getRandomValues(array);
-    this.id = 'colorpicker-' + array.join('-');
+    return "colorpicker-" + array.join("-");
   }
 
-  private get controlsLedstripColor(): boolean {
-    return this.initialColor == undefined;
-  }
-
-  changeOrientation(direction: 'horizontal' | 'vertical') {
-    this.picker.setOptions({layoutDirection: direction})
-  }
-
-  updateColors(colors: string[]) {
-    this.picker.setColors(colors);
-  }
-
-  getColors(): IroColor[] {
-    return this.picker.colors
+  changeOrientation(direction: "horizontal" | "vertical") {
+    this.picker.setOptions({ layoutDirection: direction });
   }
 }
