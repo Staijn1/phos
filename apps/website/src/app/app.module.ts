@@ -11,7 +11,6 @@ import { ServiceWorkerModule } from "@angular/service-worker";
 import { environment } from "../environments/environment";
 import { BrowserAnimationsModule } from "@angular/platform-browser/animations";
 import { StoreModule } from "@ngrx/store";
-import { colorpickerReducer } from "../redux/color/color.reducer";
 import { StoreDevtoolsModule } from "@ngrx/store-devtools";
 import { ledstripStateReducer } from "../redux/ledstrip/ledstrip.reducer";
 
@@ -26,8 +25,7 @@ const StoreDevtools = !environment.production ? StoreDevtoolsModule.instrument()
     SharedModule,
     PagesModule,
     StoreModule.forRoot({
-      colorpicker: colorpickerReducer,
-      ledstrip: ledstripStateReducer
+      ledstripState: ledstripStateReducer
     }),
     StoreDevtools,
     FontAwesomeModule,

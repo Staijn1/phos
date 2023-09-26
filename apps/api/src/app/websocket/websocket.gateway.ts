@@ -10,12 +10,7 @@ import { Logger } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { WebsocketClientsManagerService } from "./websocket-clients-manager.service";
 import { ConfigurationService } from "../configuration/configuration.service";
-import {
-  AddGradientResponse,
-  GradientInformation,
-  LedstripState,
-  ModeInformation
-} from "@angulon/interfaces";
+import { GradientInformation, LedstripState, ModeInformation } from "@angulon/interfaces";
 import { GradientsService } from "../gradients/gradients.service";
 
 @WebSocketGateway(undefined, { cors: true })
@@ -33,9 +28,16 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage("getState")
-  async onGetState(): Promise<LedstripState> {
+  onGetState(): LedstripState {
     return this.websocketClientsManagerService.getState();
   }
+
+  @SubscribeMessage("setState")
+  onSetState(client: Socket, payload: LedstripState): LedstripState {
+    this.websocketClientsManagerService.setState(payload);
+    return this.websocketClientsManagerService.getState();
+  }
+
 
   @SubscribeMessage("mode")
   onModeCommand(client: Socket, payload: string): LedstripState {
@@ -91,8 +93,9 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage("joinUserRoom")
-  async onJoinUserRoom(client: Socket): Promise<void> {
+  async onJoinUserRoom(client: Socket): Promise<LedstripState> {
     this.websocketClientsManagerService.joinUserRoom(client);
+    return this.websocketClientsManagerService.getState();
   }
 
   /**

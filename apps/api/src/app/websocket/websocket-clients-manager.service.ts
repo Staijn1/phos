@@ -6,16 +6,32 @@ import {constrain, LedstripState} from "@angulon/interfaces";
 export class WebsocketClientsManagerService {
   private server: Server | undefined;
   private colorTimeout: NodeJS.Timeout;
+  /**
+   * This variable is the primary state, which will be sent to all ledstrips and users
+   */
   private state: LedstripState = {
-    brightness: 255, colors: ["#000000", "#000000", "#000000"], fftValue: 0, mode: 0, speed: 1000
+    brightness: 255,
+    colors: ["#000000", "#000000", "#000000"],
+    fftValue: 0,
+    mode: 0,
+    speed: 1000
   };
   private logger: Logger = new Logger("WebsocketClientsManagerService");
 
   /**
-   * Get state of this server
+   * Get the state of this server
    */
   getState(): LedstripState {
     return this.state;
+  }
+
+  /**
+   * Set the received state on the server and send it to all ledstrips
+   * @param newState
+   */
+  setState(newState: LedstripState) {
+    this.state = newState;
+    this.setStateOnAllLedstrips();
   }
 
   /**
@@ -157,9 +173,5 @@ export class WebsocketClientsManagerService {
     for (const client of clients) {
       client.emit(event, payload);
     }
-  }
-
-  setState(payload: LedstripState, client: Socket) {
-
   }
 }

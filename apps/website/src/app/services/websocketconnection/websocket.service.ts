@@ -10,6 +10,9 @@ import { colorChange } from "../../../redux/color/color.action";
 import { ColorpickerState } from "../../../redux/color/color.reducer";
 import { take } from "rxjs";
 
+/**
+ * @deprecated Use {@link WebsocketServiceNextGen} instead
+ */
 @Injectable({
   providedIn: "root"
 })
@@ -52,11 +55,6 @@ export class WebsocketService {
       messageService.setMessage(error);
     });
   }
-
-  private updateLedstripState(state: LedstripState): void {
-
-  }
-
   setColor(colors: iro.Color[] | string[]): void {
     const colorStrings = colors.map(color => typeof color === "string" ? color : color.hexString);
     this.send("color", colorStrings);

@@ -18,10 +18,17 @@ import {
   faWalking
 } from "@fortawesome/free-solid-svg-icons";
 import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
-import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import { Store } from "@ngrx/store";
 import { ColorpickerState } from "../../../redux/color/color.reducer";
 import { ColorpickerComponent } from "../../shared/components/colorpicker/colorpicker.component";
+import { LedstripState } from "@angulon/interfaces";
+import { WebsocketServiceNextGen } from "../../services/websocketconnection/websocket-nextgen.service";
+import {
+  ChangeLedstripColors,
+  DecreaseLedstripBrightness, DecreaseLedstripSpeed,
+  IncreaseLedstripBrightness,
+  IncreaseLedstripSpeed
+} from "../../../redux/ledstrip/ledstrip.action";
 
 @Component({
   selector: 'app-navigationbar',
@@ -48,24 +55,15 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   private animationMode = 0;
 
   constructor(
-    public connection: WebsocketService,
+    public connection: WebsocketServiceNextGen,
     private router: Router,
     private renderer: Renderer2,
     private chromaEffect: ChromaEffectService,
-    private store: Store<{ colorpicker: ColorpickerState }>
+    private store: Store<{ colorpicker: ColorpickerState, ledstripState: LedstripState}>
   ) {
   }
 
   ngOnInit(): void {
-    // When the colorpicker is updated, update the ledstrip colors if the updateLedstrips flag is set to true.
-    // Always update the chroma effect colors.
-    this.store.select('colorpicker').subscribe((state) => {
-      if (state.updateLedstrips) {
-        this.connection.setColor(state.colors);
-      }
-      this.chromaEffect.setColors = state.colors;
-    })
-
     // Subscribe to router events so we can display a page transition animation each time the user navigates to a new page.
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
@@ -83,20 +81,19 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.determineColorPickerOrientation()
   }
 
+  turnOff(): void {
+    this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
+    this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
 
-  mobileNav(): void {
+   this.store.dispatch(new ChangeLedstripColors(['#000000', '#000000']));
+  }
+
+  toggleNav(): void {
     if (!this.isOpen) {
       this.openMobileMenu();
     } else {
       this.closeMobileMenu();
     }
-  }
-
-  turnOff(): void {
-    this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
-    this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
-
-    this.connection.turnOff();
   }
 
   private closeMobileMenu() {
@@ -177,5 +174,21 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     } else {
       this.colorpicker.changeOrientation('horizontal')
     }
+  }
+
+  decreaseBrightness() {
+    this.store.dispatch(new DecreaseLedstripBrightness());
+  }
+
+  increaseBrightness() {
+    this.store.dispatch(new IncreaseLedstripBrightness());
+  }
+
+  increaseSpeed() {
+    this.store.dispatch(new IncreaseLedstripSpeed())
+  }
+
+  decreaseSpeed() {
+    this.store.dispatch(new DecreaseLedstripSpeed())
   }
 }

@@ -3,10 +3,12 @@ import { Action } from "@ngrx/store";
 
 export enum LedstripAction {
   RECEIVE_STATE = "RECEIVE_STATE",
-  CHANGE_BRIGHTNESS = "CHANGE_BRIGHTNESS",
   CHANGE_COLORS = "CHANGE_COLORS",
   CHANGE_MODE = "CHANGE_MODE",
-  CHANGE_SPEED = "CHANGE_SPEED"
+  INCREASE_BRIGHTNESS = "INCREASE_BRIGHTNESS",
+  DECREASE_BRIGHTNESS = "DECREASE_BRIGHTNESS",
+  INCREASE_SPEED = "INCREASE_SPEED",
+  DECREASE_SPEED = "DECREASE_SPEED"
 }
 
 export class ReceiveLedstripState implements Action {
@@ -16,11 +18,12 @@ export class ReceiveLedstripState implements Action {
   }
 }
 
-export class ChangeLedstripBrightness implements Action {
-  readonly type = LedstripAction.CHANGE_BRIGHTNESS;
+export class IncreaseLedstripBrightness implements Action {
+  readonly type = LedstripAction.INCREASE_BRIGHTNESS;
+}
 
-  constructor(public payload: number) {
-  }
+export class DecreaseLedstripBrightness implements Action {
+  readonly type = LedstripAction.DECREASE_BRIGHTNESS;
 }
 
 export class ChangeLedstripColors implements Action {
@@ -37,11 +40,12 @@ export class ChangeLedstripMode implements Action {
   }
 }
 
-export class ChangeLedstripSpeed implements Action {
-  readonly type = LedstripAction.CHANGE_SPEED;
+export class IncreaseLedstripSpeed implements Action {
+  readonly type = LedstripAction.INCREASE_SPEED;
+}
 
-  constructor(public payload: number) {
-  }
+export class DecreaseLedstripSpeed implements Action {
+  readonly type = LedstripAction.DECREASE_SPEED;
 }
 
 

@@ -1,6 +1,6 @@
 <div #container (window:resize)="determineColorPickerOrientation()">
   <!-- ======= Mobile nav toggle button ======= -->
-  <button (click)="mobileNav()" class="mobile-nav-toggle d-lg-none" type="button">
+  <button (click)="toggleNav()" class="mobile-nav-toggle d-lg-none" type="button">
     <fa-icon [icon]="mobileMenuIcon"></fa-icon>
   </button>
 
@@ -36,13 +36,13 @@
           <a (click)="$event.preventDefault()" href="">
             <fa-icon [icon]="controlsIcon"></fa-icon>
             <span>
-                        <fa-icon (click)="this.connection.decreaseBrightness()" [icon]="decreaseBrightnessIcon"
+                        <fa-icon (click)="this.decreaseBrightness()" [icon]="decreaseBrightnessIcon"
                                  class="ms-2 ms-lg-4"></fa-icon>
-                        <fa-icon (click)="this.connection.increaseBrightness()" [icon]="increaseBrightnessIcon"
+                        <fa-icon (click)="this.increaseBrightness()" [icon]="increaseBrightnessIcon"
                                  class="ms-2 ms-lg-4"></fa-icon>
-                        <fa-icon (click)="this.connection.decreaseSpeed()" [icon]="speedDecreaseIcon"
+                        <fa-icon (click)="this.decreaseSpeed()" [icon]="speedDecreaseIcon"
                                  class="ms-2 ms-lg-4"></fa-icon>
-                        <fa-icon (click)="this.connection.increaseSpeed()" [icon]="speedIncreaseIcon"
+                        <fa-icon (click)="this.increaseSpeed()" [icon]="speedIncreaseIcon"
                                  class="ms-2 ms-lg-4"></fa-icon>
                     </span>
           </a>
