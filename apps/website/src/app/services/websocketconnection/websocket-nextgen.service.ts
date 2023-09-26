@@ -5,6 +5,7 @@ import { io, Socket } from "socket.io-client";
 import { LedstripState } from "@angulon/interfaces";
 import { Store } from "@ngrx/store";
 import { ReceiveLedstripState } from "../../../redux/ledstrip/ledstrip.action";
+import { debounceTime } from "rxjs";
 
 @Injectable({
   providedIn: "root"
@@ -21,6 +22,7 @@ export class WebsocketServiceNextGen {
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
     this.store
       .select("ledstripState")
+      .pipe(debounceTime(200))
       .subscribe((state) => {
         if (!this.updateLedstripState) {
           this.updateLedstripState = true;
