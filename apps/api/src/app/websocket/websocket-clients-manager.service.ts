@@ -1,17 +1,16 @@
-import {Injectable, Logger} from "@nestjs/common";
-import {Server, Socket} from "socket.io";
-import {constrain, LedstripState} from "@angulon/interfaces";
+import { Injectable, Logger } from "@nestjs/common";
+import { Server, Socket } from "socket.io";
+import { LedstripState } from "@angulon/interfaces";
 
 @Injectable()
 export class WebsocketClientsManagerService {
   private server: Server | undefined;
-  private colorTimeout: NodeJS.Timeout;
   /**
    * This variable is the primary state, which will be sent to all ledstrips and users
    */
   private state: LedstripState = {
     brightness: 255,
-    colors: ["#000000", "#000000", "#000000"],
+    colors: ["#ff0000", "#000000", "#000000"],
     fftValue: 0,
     mode: 0,
     speed: 1000
@@ -28,20 +27,12 @@ export class WebsocketClientsManagerService {
   /**
    * Set the received state on the server and send it to all ledstrips
    * @param newState
+   * @param originClient
    */
-  setState(newState: LedstripState) {
+  setState(newState: LedstripState, originClient: Socket) {
     this.state = newState;
     this.setStateOnAllLedstrips();
-  }
-
-  /**
-   * Set the mode of all clients
-   * @param mode
-   */
-  setMode(mode: number) {
-    if (!this.state) return;
-    this.state.mode = mode;
-    this.setStateOnAllLedstrips();
+    this.setStateOnAllUsers("state-change", newState, originClient);
   }
 
   /**
@@ -55,47 +46,8 @@ export class WebsocketClientsManagerService {
   }
 
   /**
-   * Receive a hex color to set on all ledstrips
-   * Also broadcast the color to all users except the one that sent the message so their state can be updated
-   * @param payload
-   * @param originClient
-   */
-  setColor(payload: string[], originClient: Socket) {
-    if (!this.state) return;
-    this.state.colors = payload;
-    clearTimeout(this.colorTimeout);
-    // The server sends messages so quickly, the ledstrips can't keep up so we have to slow it down
-    this.colorTimeout = setTimeout(() => this.setStateOnAllLedstrips(), 10);
-    this.sendAllUsers("color-change", payload, originClient);
-  }
-
-  decreaseSpeed() {
-    if (!this.state) return;
-    this.state.speed = constrain(this.state.speed * 1.1, 200, 10000);
-    this.setStateOnAllLedstrips();
-  }
-
-  increaseSpeed() {
-    if (!this.state) return;
-    this.state.speed = constrain(this.state.speed * 0.9, 200, 10000);
-    this.setStateOnAllLedstrips();
-  }
-
-  increaseBrightness() {
-    if (!this.state) return;
-    this.state.brightness = constrain(this.state.brightness * 1.1, 10, 255);
-    this.setStateOnAllLedstrips();
-  }
-
-  decreaseBrightness() {
-    if (!this.state) return;
-    this.state.brightness = constrain(this.state.brightness * 0.9, 10, 255);
-    this.setStateOnAllLedstrips();
-  }
-
-  /**
    * Update the server variable so we have access to all the connected clients
-   * @param {Server} server
+   * @param server
    */
   setServer(server: Server) {
     this.server = server;
@@ -107,16 +59,7 @@ export class WebsocketClientsManagerService {
    */
   setStateOnAllLedstrips(force = false): void {
     this.logger.log(`Sending state to all ledstrips. Force: ${force}. State: ${JSON.stringify(this.state)}`);
-    this.sendEventToAllLedstrips("!", {...this.state, force: force});
-  }
-
-  /**
-   * Make the client join a room that is only for users - not ledstrips
-   * @param {Socket} client
-   */
-  joinUserRoom(client: Socket) {
-    client.join("user");
-    this.logger.log(`Client ${client.conn.remoteAddress} joined the user room`);
+    this.sendEventToAllLedstrips("!", { ...this.state, force: force });
   }
 
   /**
@@ -126,12 +69,21 @@ export class WebsocketClientsManagerService {
    * @param {Socket} originClient
    * @private
    */
-  private sendAllUsers(event: string, payload: string[], originClient: Socket) {
+  private setStateOnAllUsers(event: string, payload: LedstripState, originClient: Socket) {
     const clients = this.server ? this.server.sockets.sockets : new Map();
     for (const [, client] of clients) {
       if (client.id === originClient.id || !client.rooms.has("user")) continue;
       client.emit(event, payload);
     }
+  }
+
+  /**
+   * Make the client join a room that is only for users - not ledstrips
+   * @param client
+   */
+  joinUserRoom(client: Socket) {
+    client.join("user");
+    this.logger.log(`Client ${client.conn.remoteAddress} joined the user room`);
   }
 
   /**

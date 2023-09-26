@@ -34,51 +34,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   @SubscribeMessage("setState")
   onSetState(client: Socket, payload: LedstripState): LedstripState {
-    this.websocketClientsManagerService.setState(payload);
-    return this.websocketClientsManagerService.getState();
-  }
-
-
-  @SubscribeMessage("mode")
-  onModeCommand(client: Socket, payload: string): LedstripState {
-    const mode = parseInt(payload, 10);
-    this.websocketClientsManagerService.setMode(mode);
-    return this.websocketClientsManagerService.getState();
-  }
-
-  @SubscribeMessage("color")
-  onColorCommand(client: Socket, payload: string[]): LedstripState {
-    this.websocketClientsManagerService.setColor(payload, client);
-    return this.websocketClientsManagerService.getState();
-  }
-
-  @SubscribeMessage("FFT")
-  onFFTCommand(client: Socket, payload: number): LedstripState {
-    this.websocketClientsManagerService.setFFTValue(payload);
-    return this.websocketClientsManagerService.getState();
-  }
-
-  @SubscribeMessage("increaseBrightness")
-  onIncreaseBrightnessCommand(): LedstripState {
-    this.websocketClientsManagerService.increaseBrightness();
-    return this.websocketClientsManagerService.getState();
-  }
-
-  @SubscribeMessage("increaseSpeed")
-  onIncreaseSpeedCommand(): LedstripState {
-    this.websocketClientsManagerService.increaseSpeed();
-    return this.websocketClientsManagerService.getState();
-  }
-
-  @SubscribeMessage("decreaseBrightness")
-  onDecreaseBrightnessCommand(): LedstripState {
-    this.websocketClientsManagerService.decreaseBrightness();
-    return this.websocketClientsManagerService.getState();
-  }
-
-  @SubscribeMessage("decreaseSpeed")
-  onDecreaseSpeedCommand(): LedstripState {
-    this.websocketClientsManagerService.decreaseSpeed();
+    this.websocketClientsManagerService.setState(payload, client);
     return this.websocketClientsManagerService.getState();
   }
 
