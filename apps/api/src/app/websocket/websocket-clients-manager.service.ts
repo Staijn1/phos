@@ -1,6 +1,6 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
-import { LedstripState } from "@angulon/interfaces";
+import { LedstripState, WebsocketMessage } from "@angulon/interfaces";
 
 @Injectable()
 export class WebsocketClientsManagerService {
@@ -32,7 +32,7 @@ export class WebsocketClientsManagerService {
   setState(newState: LedstripState, originClient: Socket) {
     this.state = newState;
     this.setStateOnAllLedstrips();
-    this.setStateOnAllUsers("state-change", newState, originClient);
+    this.setStateOnAllUsers(WebsocketMessage.StateChange, newState, originClient);
   }
 
   /**
@@ -42,7 +42,7 @@ export class WebsocketClientsManagerService {
   setFFTValue(payload: number): void {
     if (!this.state) return;
     this.state.fftValue = payload;
-    this.sendEventToAllLedstrips(".", payload.toString());
+    this.sendEventToAllLedstrips(WebsocketMessage.LedstripFFT, payload.toString());
   }
 
   /**
@@ -59,7 +59,7 @@ export class WebsocketClientsManagerService {
    */
   setStateOnAllLedstrips(force = false): void {
     this.logger.log(`Sending state to all ledstrips. Force: ${force}. State: ${JSON.stringify(this.state)}`);
-    this.sendEventToAllLedstrips("!", { ...this.state, force: force });
+    this.sendEventToAllLedstrips(WebsocketMessage.LedstripSetState, { ...this.state, force: force });
   }
 
   /**
@@ -69,7 +69,7 @@ export class WebsocketClientsManagerService {
    * @param {Socket} originClient
    * @private
    */
-  private setStateOnAllUsers(event: string, payload: LedstripState, originClient: Socket) {
+  private setStateOnAllUsers(event: WebsocketMessage, payload: LedstripState, originClient: Socket) {
     const clients = this.server ? this.server.sockets.sockets : new Map();
     for (const [, client] of clients) {
       if (client.id === originClient.id || !client.rooms.has("user")) continue;
@@ -120,7 +120,7 @@ export class WebsocketClientsManagerService {
    * @param payload
    * @private
    */
-  private sendEventToAllLedstrips(event: string, payload: unknown) {
+  private sendEventToAllLedstrips(event: WebsocketMessage, payload: unknown) {
     const clients = this.getLedstripClients();
     for (const client of clients) {
       client.emit(event, payload);

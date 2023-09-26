@@ -2,40 +2,22 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { MessageService } from "../message-service/message.service";
 import { io, Socket } from "socket.io-client";
-import { LedstripState } from "@angulon/interfaces";
+import { LedstripState, WebsocketMessage } from "@angulon/interfaces";
 import { Store } from "@ngrx/store";
 import { ReceiveLedstripState } from "../../../redux/ledstrip/ledstrip.action";
-import { debounceTime } from "rxjs";
 
 @Injectable({
   providedIn: "root"
 })
 export class WebsocketServiceNextGen {
   private websocketUrl = environment.url;
-  private socket: Socket;
+  private readonly socket: Socket;
   private updateLedstripState = true;
 
   constructor(
     private messageService: MessageService,
     private readonly store: Store<{ ledstripState: LedstripState }>
   ) {
-    // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
-    this.store
-      .select("ledstripState")
-      .pipe(debounceTime(200))
-      .subscribe((state) => {
-        if (!this.updateLedstripState) {
-          this.updateLedstripState = true;
-          return;
-        }
-
-        if (!this.socket || this.socket.disconnected) {
-          return;
-        }
-
-        this.promisifyEmit<LedstripState>("setState", state).then();
-      });
-
     this.socket = io(this.websocketUrl, {
       transports: ["websocket"],
       reconnectionAttempts: 5
@@ -44,10 +26,7 @@ export class WebsocketServiceNextGen {
     this.socket.on("connect", () => {
       console.log(`Opened websocket at`, this.websocketUrl);
 
-      this.promisifyEmit<LedstripState>("joinUserRoom").then((state) => {
-        this.updateLedstripState = false;
-        this.store.dispatch(new ReceiveLedstripState(state));
-      });
+      this.promisifyEmit<LedstripState>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
     });
 
     this.socket.on("disconnect", () => {
@@ -58,8 +37,38 @@ export class WebsocketServiceNextGen {
       console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
       messageService.setMessage(error);
     });
+
+    this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
+
+    // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
+    this.store
+      .select("ledstripState")
+      .subscribe((state) => {
+        if (!this.updateLedstripState) {
+          this.updateLedstripState = true;
+          return;
+        }
+
+        if (!this.socket || this.socket.disconnected) {
+          return;
+        }
+
+        this.promisifyEmit<LedstripState>(WebsocketMessage.SetState, state).then();
+      });
   }
 
+
+  /**
+   * Store the received state in the redux store, whilst setting the updateLedstripState flag.
+   * This is required because otherwise this state change would trigger a new request to get the state from the server.
+   * And this in turn, would trigger a new state change, and so on, infinitely.
+   * @param state
+   * @private
+   */
+  private updateAppState(state: LedstripState) {
+    this.updateLedstripState = false;
+    this.store.dispatch(new ReceiveLedstripState(state));
+  }
 
   /**
    * Changes the .emit API of the websocket to a Promise-based API, so we can await the response
@@ -68,10 +77,11 @@ export class WebsocketServiceNextGen {
    * @returns A promise that resolves when the server responds
    * @private
    */
-  private promisifyEmit<T>(eventName: string, ...args: any[]): Promise<T> {
+  private promisifyEmit<T>(eventName: WebsocketMessage, ...args: any[]): Promise<T> {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         const error = new Error("Websocket response timeout exceeded");
+        console.warn(`Timeout exceeded for event: ${eventName} with args: ${args.toString()}`, error);
         this.messageService.setMessage(error);
         reject(error);
       }, 3000);

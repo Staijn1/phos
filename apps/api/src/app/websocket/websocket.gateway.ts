@@ -10,7 +10,7 @@ import { Logger } from "@nestjs/common";
 import { Server, Socket } from "socket.io";
 import { WebsocketClientsManagerService } from "./websocket-clients-manager.service";
 import { ConfigurationService } from "../configuration/configuration.service";
-import { GradientInformation, LedstripState, ModeInformation } from "@angulon/interfaces";
+import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from "@angulon/interfaces";
 import { GradientsService } from "../gradients/gradients.service";
 
 @WebSocketGateway(undefined, { cors: true })
@@ -27,28 +27,34 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     private readonly gradientsService: GradientsService) {
   }
 
-  @SubscribeMessage("getState")
+  @SubscribeMessage(WebsocketMessage.GetState)
   onGetState(): LedstripState {
     return this.websocketClientsManagerService.getState();
   }
 
-  @SubscribeMessage("setState")
+  @SubscribeMessage(WebsocketMessage.SetFFTValue)
+  onFFTCommand(client: Socket, payload: number): LedstripState {
+    this.websocketClientsManagerService.setFFTValue(payload);
+    return this.websocketClientsManagerService.getState();
+  }
+
+  @SubscribeMessage(WebsocketMessage.SetState)
   onSetState(client: Socket, payload: LedstripState): LedstripState {
     this.websocketClientsManagerService.setState(payload, client);
     return this.websocketClientsManagerService.getState();
   }
 
-  @SubscribeMessage("getModes")
+  @SubscribeMessage(WebsocketMessage.GetModes)
   async onGetModes(): Promise<ModeInformation[]> {
     return this.configurationService.getModes();
   }
 
-  @SubscribeMessage("gradients/get")
+  @SubscribeMessage(WebsocketMessage.GetGradients)
   async onGetGradients(): Promise<GradientInformation[]> {
     return this.gradientsService.getGradients();
   }
 
-  @SubscribeMessage("joinUserRoom")
+  @SubscribeMessage(WebsocketMessage.RegisterAsUser)
   async onJoinUserRoom(client: Socket): Promise<LedstripState> {
     this.websocketClientsManagerService.joinUserRoom(client);
     return this.websocketClientsManagerService.getState();
@@ -62,7 +68,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    * @param client
    * @param payload
    */
-  @SubscribeMessage("submitState")
+  @SubscribeMessage(WebsocketMessage.SubmitState)
   async onRegisterState(client: Socket, payload: LedstripState): Promise<void> {
     this.websocketClientsManagerService.syncState(client, payload);
   }
