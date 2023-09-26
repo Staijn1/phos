@@ -2,7 +2,7 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { MessageService } from "../message-service/message.service";
 import { io, Socket } from "socket.io-client";
-import { LedstripState, WebsocketMessage } from "@angulon/interfaces";
+import { GradientInformationExtended, LedstripState, WebsocketMessage } from "@angulon/interfaces";
 import { Store } from "@ngrx/store";
 import { ReceiveLedstripState } from "../../../redux/ledstrip/ledstrip.action";
 
@@ -94,5 +94,16 @@ export class WebsocketServiceNextGen {
         resolve(data);
       });
     });
+  }
+
+  sendFFTValue(value: number) {
+    this.socket.emit(WebsocketMessage.SetFFTValue, value);
+  }
+
+  /**
+   * TODO: Reduxify this
+   */
+  getGradients(): Promise<GradientInformationExtended[]> {
+    return this.promisifyEmit<GradientInformationExtended[]>(WebsocketMessage.GetGradients);
   }
 }

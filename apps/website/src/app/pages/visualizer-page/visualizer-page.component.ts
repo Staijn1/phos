@@ -4,7 +4,12 @@ import {faCheck, faLightbulb, faList, faSliders, faWrench, faExpand} from "@fort
 import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.service";
 import {SettingsService} from "../../services/settings/settings.service";
 import {VisualizerComponent} from "../../shared/components/visualizer/visualizer.component";
-import {AngulonVisualizerOptions, GradientInformation} from "@angulon/interfaces";
+import {
+  AngulonVisualizerOptions,
+  GradientInformation,
+  GradientInformationExtended,
+  LedstripState
+} from "@angulon/interfaces";
 import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
 import * as slider from "@angular-slider/ngx-slider";
 import {InformationService} from "../../services/information-service/information.service";
@@ -13,7 +18,8 @@ import {WebsocketService} from "../../services/websocketconnection/websocket.ser
 import {faSpotify} from "@fortawesome/free-brands-svg-icons";
 import {Store} from "@ngrx/store";
 import {ColorpickerState} from "../../../redux/color/color.reducer";
-import {colorChange} from "../../../redux/color/color.action";
+import { ChangeLedstripColors, ChangeLedstripMode } from "../../../redux/ledstrip/ledstrip.action";
+import { WebsocketServiceNextGen } from "../../services/websocketconnection/websocket-nextgen.service";
 
 @Component({
   selector: "app-visualizer",
@@ -26,7 +32,7 @@ export class VisualizerPageComponent implements OnDestroy {
   visualizerOptions: AngulonVisualizerOptions = {};
 
   // Gradient definitions
-  gradients: GradientInformation[] = [];
+  gradients: GradientInformationExtended[] = [];
   // Visualization modes
   modes = [
     {value: 0, text: "Discrete frequencies", disabled: false},
@@ -90,11 +96,11 @@ export class VisualizerPageComponent implements OnDestroy {
   private currentTrackId: string | null | undefined;
 
   constructor(
-    private connection: WebsocketService,
+    private connection: WebsocketServiceNextGen,
     private information: InformationService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService,
-    private store: Store<{ colorpicker: ColorpickerState }>
+    private store: Store<{ ledstripState: LedstripState | undefined }>
   ) {
   }
 
@@ -116,12 +122,12 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   updateLedstrip(): void {
-    this.connection.setMode(visualizerModeId);
+    this.store.dispatch(new ChangeLedstripMode(visualizerModeId));
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
     const value = instance.getEnergy(this.visualizerOptions.energyPreset);
-    this.connection.setLeds(value);
+    this.connection.sendFFTValue(value);
     this.chromaEffect.intensity = value;
   }
 
@@ -206,7 +212,7 @@ export class VisualizerPageComponent implements OnDestroy {
           this.visualizerOptions.gradientLeft = "Spotify";
           this.visualizerOptions.gradientRight = "Spotify";
           this.applySettings();
-          this.store.dispatch(colorChange([primaryColor, secondaryColor], true));
+          this.store.dispatch(new ChangeLedstripColors([primaryColor, secondaryColor]));
         });
       }
     }
