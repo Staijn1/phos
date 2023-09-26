@@ -1,17 +1,9 @@
-import { AfterViewInit, Component, EventEmitter, Input, OnInit, Output } from "@angular/core";
+import { AfterViewInit, Component, OnInit } from "@angular/core";
 import iro from "@jaames/iro";
-import { IroColor } from "@irojs/iro-core";
 import { IroColorPicker } from "@jaames/iro/dist/ColorPicker";
 import { Store } from "@ngrx/store";
-import { ColorpickerState } from "../../../../redux/color/color.reducer";
-import { colorChange } from "../../../../redux/color/color.action";
 import { ChangeLedstripColors } from "../../../../redux/ledstrip/ledstrip.action";
 import { LedstripState } from "@angulon/interfaces";
-
-export type ColorpickerEvent = {
-  color: iro.Color
-  colorpicker: iro.ColorPicker
-}
 
 @Component({
   selector: "app-colorpicker",
