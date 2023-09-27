@@ -38,7 +38,7 @@
     "@ngrx/store-devtools": "15.3.0",
     "@popperjs/core": "^2.11.6",
     "aos": "^2.3.4",
-    "audiomotion-analyzer": "^4.0.0-beta.5",
+    "audiomotion-analyzer": "^4.2.0",
     "bootstrap": "^5.2.3",
     "fast-average-color": "^9.3.0",
     "gsap": "^3.7.1",
