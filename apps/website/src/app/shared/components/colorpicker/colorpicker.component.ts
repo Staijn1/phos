@@ -14,7 +14,7 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   protected id = this.generateElementId();
   private picker!: IroColorPicker;
   private indexOfCurrentActiveColor = 0;
-
+  private skipSettingColors = false;
   /**
    * Options to configure the colorpicker, there is no type for it available..
    * See the docs for available options
@@ -67,7 +67,13 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
     this.picker = iro.ColorPicker(`#${this.id}`, this.colorpickerOptions);
 
     this.store.select("ledstripState").subscribe((state) => {
-      if(!state) return;
+      if (!state) return;
+
+      if (this.skipSettingColors) {
+        this.skipSettingColors = false;
+        return;
+      }
+
       this.picker.setColors(state.colors);
 
       // When setting the colors, the active color is reset to the first color.
@@ -78,6 +84,7 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
     this.picker.on("color:change", (color: iro.Color) => {
       this.indexOfCurrentActiveColor = color.index;
       const colors = this.picker.colors.map(c => c.hexString);
+      this.skipSettingColors = true;
       this.store.dispatch(new ChangeLedstripColors(colors));
     });
   }
