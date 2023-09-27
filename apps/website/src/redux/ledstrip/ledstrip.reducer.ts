@@ -24,6 +24,7 @@ export const ledstripStateReducer = (state: LedstripState | undefined, action: a
       };
     }
     case LedstripAction.CHANGE_COLORS: {
+      console.log("Changing colors", state.colors, action.payload);
       return {
         ...state,
         colors: mergeArrays(state.colors, action.payload)
@@ -50,7 +51,8 @@ export const ledstripStateReducer = (state: LedstripState | undefined, action: a
     case LedstripAction.MULTIPLE_PROPERTIES: {
       return {
         ...state,
-        ...action.payload
+        ...action.payload,
+        colors: mergeArrays(state.colors, action.payload.colors)
       };
     }
     // Don't include fftValue in the state because:
