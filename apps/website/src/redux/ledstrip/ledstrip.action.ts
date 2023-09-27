@@ -8,7 +8,8 @@ export enum LedstripAction {
   INCREASE_BRIGHTNESS = "INCREASE_BRIGHTNESS",
   DECREASE_BRIGHTNESS = "DECREASE_BRIGHTNESS",
   INCREASE_SPEED = "INCREASE_SPEED",
-  DECREASE_SPEED = "DECREASE_SPEED"
+  DECREASE_SPEED = "DECREASE_SPEED",
+  MULTIPLE_PROPERTIES = "MULTIPLE_PROPERTIES",
 }
 
 export class ReceiveLedstripState implements Action {
@@ -48,4 +49,9 @@ export class DecreaseLedstripSpeed implements Action {
   readonly type = LedstripAction.DECREASE_SPEED;
 }
 
+export class ChangeMultipleLedstripProperties implements Action {
+  readonly type = LedstripAction.MULTIPLE_PROPERTIES;
 
+  constructor(public payload: Partial<LedstripState>) {
+  }
+}

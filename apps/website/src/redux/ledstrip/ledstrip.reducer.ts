@@ -44,7 +44,13 @@ export const ledstripStateReducer = (state: LedstripState | undefined, action: a
     case LedstripAction.DECREASE_SPEED: {
       return {
         ...state,
-        speed:constrain(state.speed * 1.1, 200, 10000)
+        speed: constrain(state.speed * 1.1, 200, 10000)
+      };
+    }
+    case LedstripAction.MULTIPLE_PROPERTIES: {
+      return {
+        ...state,
+        ...action.payload
       };
     }
     // Don't include fftValue in the state because:
