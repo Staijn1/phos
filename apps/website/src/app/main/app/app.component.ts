@@ -1,16 +1,16 @@
-import { Component, OnInit } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
-import { MessageService } from '../../services/message-service/message.service';
-import { ThemeService } from '../../services/theme/theme.service';
-import { Message } from '../../shared/types/Message';
-import { swipeRight } from '@angulon/ui';
-import * as AOS from 'aos';
+import { Component, OnInit } from "@angular/core";
+import { SwUpdate } from "@angular/service-worker";
+import { MessageService } from "../../services/message-service/message.service";
+import { ThemeService } from "../../services/theme/theme.service";
+import { Message } from "../../shared/types/Message";
+import { swipeRight } from "@angulon/ui";
+import * as AOS from "aos";
 
 @Component({
-  selector: 'app-root',
+  selector: "app-root",
   animations: [swipeRight],
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.scss']
+  templateUrl: "./app.component.html",
+  styleUrls: ["./app.component.scss"]
 })
 export class AppComponent implements OnInit {
   constructor(readonly updates: SwUpdate, public errorService: MessageService, private theme: ThemeService) {
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     if (updates.isEnabled) {
       updates.checkForUpdate().then((hasUpdate) => {
         if (hasUpdate) {
-          this.errorService.setMessage(new Message('info', 'New update available! Click here to update.', () => this.update()));
+          this.errorService.setMessage(new Message("info", "New update available! Click here to update.", () => this.update()));
         }
       });
     }

@@ -1,11 +1,11 @@
-import { Component, EventEmitter, OnInit, Output } from '@angular/core';
-import { getDeviceType } from '../../functions';
-import { SpotifyAuthenticationService } from '../../../services/spotify-authentication/spotify-authentication.service';
-import { faSpotify, IconDefinition } from '@fortawesome/free-brands-svg-icons';
-import { MessageService } from '../../../services/message-service/message.service';
-import { Message } from '../../types/Message';
-import { faBackward, faForward, faPause, faPlay, faVolumeHigh, faVolumeLow } from '@fortawesome/free-solid-svg-icons';
-import { Track } from 'spotify-web-playback-sdk';
+import { Component, EventEmitter, OnInit, Output } from "@angular/core";
+import { getDeviceType } from "../../functions";
+import { SpotifyAuthenticationService } from "../../../services/spotify-authentication/spotify-authentication.service";
+import { faSpotify, IconDefinition } from "@fortawesome/free-brands-svg-icons";
+import { MessageService } from "../../../services/message-service/message.service";
+import { Message } from "../../types/Message";
+import { faBackward, faForward, faPause, faPlay, faVolumeHigh, faVolumeLow } from "@fortawesome/free-solid-svg-icons";
+import { Track } from "spotify-web-playback-sdk";
 
 /// <reference types="@types/spotify-web-playback-sdk" />
 declare global {
@@ -16,9 +16,9 @@ declare global {
 }
 
 @Component({
-  selector: 'app-spotify-player',
-  templateUrl: './spotify-player.component.html',
-  styleUrls: ['./spotify-player.component.scss']
+  selector: "app-spotify-player",
+  templateUrl: "./spotify-player.component.html",
+  styleUrls: ["./spotify-player.component.scss"]
 })
 export class SpotifyPlayerComponent implements OnInit {
   /**
@@ -48,18 +48,18 @@ export class SpotifyPlayerComponent implements OnInit {
    * If it is undefined then we return a backup image - A random image from picsum
    */
   get albumImageSrc(): string {
-    return this.state?.track_window.current_track.album.images[2].url ?? 'https://picsum.photos/200';
+    return this.state?.track_window.current_track.album.images[2].url ?? "https://picsum.photos/200";
   }
 
   get trackName(): string {
-    return this.state?.track_window.current_track.name ?? 'No Track Playing';
+    return this.state?.track_window.current_track.name ?? "No Track Playing";
   }
 
   /**
    * Get the name of the artist of the current track
    */
   get artistName(): string {
-    if (!this.state?.track_window.current_track) return 'No Artist Playing';
+    if (!this.state?.track_window.current_track) return "No Artist Playing";
     return this.getArtistNames(this.state?.track_window.current_track);
   }
 
@@ -147,7 +147,7 @@ export class SpotifyPlayerComponent implements OnInit {
    * @param song
    */
   getArtistNames(song: Track) {
-    return song.artists.map(artist => artist.name).join(', ');
+    return song.artists.map(artist => artist.name).join(", ");
   }
 
   /**
@@ -178,9 +178,9 @@ export class SpotifyPlayerComponent implements OnInit {
    * @private
    */
   private loadSpotifyWebPlaybackSDK() {
-    window.onSpotifyWebPlaybackSDKReady = () => console.log('Spotify Web Playback SDK loaded');
-    const script = document.createElement('script');
-    script.src = 'https://sdk.scdn.co/spotify-player.js';
+    window.onSpotifyWebPlaybackSDKReady = () => console.log("Spotify Web Playback SDK loaded");
+    const script = document.createElement("script");
+    script.src = "https://sdk.scdn.co/spotify-player.js";
     script.async = true;
     script.defer = true;
     window.onSpotifyWebPlaybackSDKReady = () => this.onSpotifyWebPlaybackSDKReady();
@@ -204,23 +204,23 @@ export class SpotifyPlayerComponent implements OnInit {
       // enableMediaSession: true
     });
 
-    this.player.addListener('initialization_error', ({ message }) => {
+    this.player.addListener("initialization_error", ({ message }) => {
       console.error(message);
     });
 
-    this.player.addListener('authentication_error', ({ message }) => this.messageService.setMessage(new Message('error', message)));
+    this.player.addListener("authentication_error", ({ message }) => this.messageService.setMessage(new Message("error", message)));
 
-    this.player.addListener('account_error', ({ message }) => this.messageService.setMessage(new Message('error', message)));
+    this.player.addListener("account_error", ({ message }) => this.messageService.setMessage(new Message("error", message)));
     // Ready
-    this.player.addListener('ready', ({ device_id }) => this.ready.emit(device_id));
+    this.player.addListener("ready", ({ device_id }) => this.ready.emit(device_id));
 
     // Not Ready
-    this.player.addListener('not_ready', ({ device_id }) => {
-      console.log('Device ID has gone offline', device_id);
+    this.player.addListener("not_ready", ({ device_id }) => {
+      console.log("Device ID has gone offline", device_id);
     });
-    this.player.addListener('player_state_changed', state => {
+    this.player.addListener("player_state_changed", state => {
       this.state = state;
-      console.log('state changed', state);
+      console.log("state changed", state);
       this.onSpotifyStateChanged(state);
     });
     this.player.connect().catch(err => this.messageService.setMessage(err));

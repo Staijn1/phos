@@ -63,21 +63,6 @@ export class WebsocketClientsManagerService {
   }
 
   /**
-   * Send a message to all users except the one that sent the message
-   * @param {string} event
-   * @param {string[]} payload
-   * @param {Socket} originClient
-   * @private
-   */
-  private setStateOnAllUsers(event: WebsocketMessage, payload: LedstripState, originClient: Socket) {
-    const clients = this.server ? this.server.sockets.sockets : new Map();
-    for (const [, client] of clients) {
-      if (client.id === originClient.id || !client.rooms.has("user")) continue;
-      client.emit(event, payload);
-    }
-  }
-
-  /**
    * Make the client join a room that is only for users - not ledstrips
    * @param client
    */
@@ -102,6 +87,21 @@ export class WebsocketClientsManagerService {
     }
     // To the ledstrip that just submitted it's state, send the state of the server because it's not the first ledstrip to connect
     client.emit("!", this.state);
+  }
+
+  /**
+   * Send a message to all users except the one that sent the message
+   * @param {string} event
+   * @param {string[]} payload
+   * @param {Socket} originClient
+   * @private
+   */
+  private setStateOnAllUsers(event: WebsocketMessage, payload: LedstripState, originClient: Socket) {
+    const clients = this.server ? this.server.sockets.sockets : new Map();
+    for (const [, client] of clients) {
+      if (client.id === originClient.id || !client.rooms.has("user")) continue;
+      client.emit(event, payload);
+    }
   }
 
   /**

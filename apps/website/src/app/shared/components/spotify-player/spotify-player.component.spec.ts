@@ -1,8 +1,8 @@
-import {ComponentFixture, TestBed} from '@angular/core/testing';
+import { ComponentFixture, TestBed } from "@angular/core/testing";
 
-import {SpotifyPlayerComponent} from './spotify-player.component';
+import { SpotifyPlayerComponent } from "./spotify-player.component";
 
-describe('SpotifyPlayerComponent', () => {
+describe("SpotifyPlayerComponent", () => {
   let component: SpotifyPlayerComponent;
   let fixture: ComponentFixture<SpotifyPlayerComponent>;
 
@@ -16,7 +16,7 @@ describe('SpotifyPlayerComponent', () => {
     fixture.detectChanges();
   });
 
-  it('should create', () => {
+  it("should create", () => {
     expect(component).toBeTruthy();
   });
 });

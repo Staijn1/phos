@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { RouterModule } from '@angular/router';
-import { NotFoundPageComponent } from './not-found-page.component';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { RouterModule } from "@angular/router";
+import { NotFoundPageComponent } from "./not-found-page.component";
 
 
 @NgModule({
@@ -9,7 +9,7 @@ import { NotFoundPageComponent } from './not-found-page.component';
   imports: [
     RouterModule.forChild([
       {
-        path: '',
+        path: "",
         component: NotFoundPageComponent
       }
     ]),

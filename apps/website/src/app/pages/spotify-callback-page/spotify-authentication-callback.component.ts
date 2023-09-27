@@ -1,11 +1,11 @@
-import { Component, OnInit } from '@angular/core';
-import { SpotifyAuthenticationService } from '../../services/spotify-authentication/spotify-authentication.service';
-import { Router } from '@angular/router';
+import { Component, OnInit } from "@angular/core";
+import { SpotifyAuthenticationService } from "../../services/spotify-authentication/spotify-authentication.service";
+import { Router } from "@angular/router";
 
 @Component({
-  selector: 'app-spotify-authentication-callback',
-  templateUrl: './spotify-authentication-callback.component.html',
-  styleUrls: ['./spotify-authentication-callback.component.scss']
+  selector: "app-spotify-authentication-callback",
+  templateUrl: "./spotify-authentication-callback.component.html",
+  styleUrls: ["./spotify-authentication-callback.component.scss"]
 })
 export class SpotifyAuthenticationCallbackComponent implements OnInit {
   authenticationSuccessfull = true;
@@ -14,6 +14,6 @@ export class SpotifyAuthenticationCallbackComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.spotifyAuth.completeLogin().then(r => this.router.navigate(['/'])).catch(e => this.authenticationSuccessfull = false);
+    this.spotifyAuth.completeLogin().then(r => this.router.navigate(["/"])).catch(e => this.authenticationSuccessfull = false);
   }
 }

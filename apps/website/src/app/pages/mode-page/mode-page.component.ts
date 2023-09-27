@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit, ViewChild } from "@angular/core";
+import { Component, OnDestroy, ViewChild } from "@angular/core";
 import { StaticState } from "../../services/chromaEffect/state/static-state/static-state";
 import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
 import { BlinkState } from "../../services/chromaEffect/state/blink-state/blink-state";

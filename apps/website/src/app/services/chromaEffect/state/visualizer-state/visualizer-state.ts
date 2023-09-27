@@ -1,7 +1,7 @@
-import { State } from '../abstract/state';
-import { calculateBGRInteger, map } from '../../../../shared/functions';
-import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
+import { State } from "../abstract/state";
+import { calculateBGRInteger, map } from "../../../../shared/functions";
+import iro from "@jaames/iro";
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from "../../../chromaSDK/chromaSDK.service";
 
 export class VisualizerState extends State {
   protected _BGRIntegerForeground = 0;

@@ -7,11 +7,11 @@ import path = require("path");
 export class ConfigurationService {
   private readonly rootAssetsPath: string;
   private readonly configPath: string;
-  private readonly logger: Logger = new Logger('ConfigurationService');
+  private readonly logger: Logger = new Logger("ConfigurationService");
 
   constructor() {
-    this.rootAssetsPath = path.join(__filename, '../assets');
-    this.configPath = path.join(this.rootAssetsPath, 'config');
+    this.rootAssetsPath = path.join(__filename, "../assets");
+    this.configPath = path.join(this.rootAssetsPath, "config");
     this.writeDefaults().then();
   }
 
@@ -20,7 +20,7 @@ export class ConfigurationService {
    * @returns {Promise<ModeInformation[]>}
    */
   async getModes(): Promise<ModeInformation[]> {
-    const contents = await fs.promises.readFile(path.join(this.configPath, 'modes.json'));
+    const contents = await fs.promises.readFile(path.join(this.configPath, "modes.json"));
     return JSON.parse(contents.toString());
   }
 
@@ -29,7 +29,7 @@ export class ConfigurationService {
    * @returns {Promise<GradientInformation[]>}
    */
   async getGradients(): Promise<GradientInformation[]> {
-    const contents = await fs.promises.readFile(path.join(this.configPath, 'gradients.json'));
+    const contents = await fs.promises.readFile(path.join(this.configPath, "gradients.json"));
     return JSON.parse(contents.toString());
   }
 
@@ -39,7 +39,7 @@ export class ConfigurationService {
    * @returns {Promise<void>}
    */
   async writeGradients(gradients: GradientInformation[]): Promise<void> {
-    await fs.promises.writeFile(path.join(this.configPath, 'gradients.json'), JSON.stringify(gradients, null, 2));
+    await fs.promises.writeFile(path.join(this.configPath, "gradients.json"), JSON.stringify(gradients, null, 2));
   }
 
   /**
@@ -49,7 +49,7 @@ export class ConfigurationService {
    * @private
    */
   private async writeDefaults(): Promise<void> {
-    const defaultsPath = path.join(this.rootAssetsPath, 'defaults');
+    const defaultsPath = path.join(this.rootAssetsPath, "defaults");
     const defaultFiles = await fs.promises.readdir(defaultsPath);
 
     // Check if config folder exists
@@ -69,7 +69,7 @@ export class ConfigurationService {
         await fs.promises.access(assetFilePath, fs.constants.F_OK);
       } catch (err) {
         // If the file does not exist, write it to the asset path
-        this.logger.log(`Writing defaults for file ${file}`)
+        this.logger.log(`Writing defaults for file ${file}`);
         const contents = await fs.promises.readFile(defaultFilePath);
         await fs.promises.writeFile(assetFilePath, contents);
       }

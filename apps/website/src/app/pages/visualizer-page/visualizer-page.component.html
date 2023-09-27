@@ -175,7 +175,8 @@
             </div>
             <!-- Checkbox for note labels on X axis -->
             <div class="form-check">
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.noteLabels" [disabled]="!visualizerOptions.showScaleX"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.noteLabels"
+                     [disabled]="!visualizerOptions.showScaleX"
                      class="form-check-input"
                      id="noteLabels"
                      type="checkbox">

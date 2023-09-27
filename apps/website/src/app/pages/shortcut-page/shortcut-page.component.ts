@@ -1,21 +1,21 @@
-import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
-import { MessageService } from '../../services/message-service/message.service';
-import { Store } from '@ngrx/store';
-import { LedstripState } from '@angulon/interfaces';
-import { combineLatest } from 'rxjs';
-import { WebsocketService } from '../../services/websocketconnection/websocket.service';
+import { Component } from "@angular/core";
+import { ActivatedRoute, Router } from "@angular/router";
+import { MessageService } from "../../services/message-service/message.service";
+import { Store } from "@ngrx/store";
+import { LedstripState } from "@angulon/interfaces";
+import { combineLatest } from "rxjs";
+import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import {
   DecreaseLedstripBrightness,
   DecreaseLedstripSpeed,
   IncreaseLedstripBrightness,
   IncreaseLedstripSpeed
-} from '../../../redux/ledstrip/ledstrip.action';
+} from "../../../redux/ledstrip/ledstrip.action";
 
 @Component({
-  selector: 'app-shortcut-page',
-  templateUrl: './shortcut-page.component.html',
-  styleUrls: ['./shortcut-page.component.scss']
+  selector: "app-shortcut-page",
+  templateUrl: "./shortcut-page.component.html",
+  styleUrls: ["./shortcut-page.component.scss"]
 })
 export class ShortcutPageComponent {
   private static wasShortcutActivated = false;
@@ -28,11 +28,11 @@ export class ShortcutPageComponent {
               private connection: WebsocketService,
               private router: Router,
               private store: Store<{ ledstripState: LedstripState | undefined }>) {
-    combineLatest([this.activatedRoute.queryParams, this.store.select('ledstripState')])
+    combineLatest([this.activatedRoute.queryParams, this.store.select("ledstripState")])
       .subscribe(([params, state]) => {
         if (!state) return;
 
-        this.executeShortcut(params['action']);
+        this.executeShortcut(params["action"]);
       });
   }
 
@@ -41,27 +41,27 @@ export class ShortcutPageComponent {
     if (!ShortcutPageComponent.wasShortcutActivated) {
       ShortcutPageComponent.wasShortcutActivated = true;
       switch (param) {
-        case 'turnOff':
+        case "turnOff":
           this.connection.turnOff();
           break;
-        case 'increaseBrightness':
+        case "increaseBrightness":
           this.store.dispatch(new IncreaseLedstripBrightness());
           break;
-        case 'decreaseBrightness':
+        case "decreaseBrightness":
           this.store.dispatch(new DecreaseLedstripBrightness());
           break;
-        case 'increaseSpeed':
+        case "increaseSpeed":
           this.store.dispatch(new IncreaseLedstripSpeed());
           break;
-        case 'decreaseSpeed':
+        case "decreaseSpeed":
           this.store.dispatch(new DecreaseLedstripSpeed());
           break;
         default:
-          this.messageService.setMessage(new Error('Shortcut not found'));
+          this.messageService.setMessage(new Error("Shortcut not found"));
       }
     }
     // After the action just redirect to the home page
-    this.router.navigateByUrl('/home')
+    this.router.navigateByUrl("/home")
       .catch(reason => this.messageService.setMessage(reason))
       .finally(() => ShortcutPageComponent.wasShortcutActivated = false);
   }

@@ -1,7 +1,7 @@
-import { NgModule } from '@angular/core';
-import { CommonModule } from '@angular/common';
-import { SpotifyAuthenticationCallbackComponent } from './spotify-authentication-callback.component';
-import { RouterModule } from '@angular/router';
+import { NgModule } from "@angular/core";
+import { CommonModule } from "@angular/common";
+import { SpotifyAuthenticationCallbackComponent } from "./spotify-authentication-callback.component";
+import { RouterModule } from "@angular/router";
 
 @NgModule({
   declarations: [SpotifyAuthenticationCallbackComponent],
@@ -9,7 +9,7 @@ import { RouterModule } from '@angular/router';
     CommonModule,
     RouterModule.forChild([
       {
-        path: '',
+        path: "",
         component: SpotifyAuthenticationCallbackComponent
       }
     ])

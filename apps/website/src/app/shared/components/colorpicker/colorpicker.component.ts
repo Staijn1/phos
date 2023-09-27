@@ -1,14 +1,14 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
-import iro from '@jaames/iro';
-import { IroColorPicker } from '@jaames/iro/dist/ColorPicker';
-import { Store } from '@ngrx/store';
-import { ChangeLedstripColors } from '../../../../redux/ledstrip/ledstrip.action';
-import { LedstripState } from '@angulon/interfaces';
+import { AfterViewInit, Component, OnInit } from "@angular/core";
+import iro from "@jaames/iro";
+import { IroColorPicker } from "@jaames/iro/dist/ColorPicker";
+import { Store } from "@ngrx/store";
+import { ChangeLedstripColors } from "../../../../redux/ledstrip/ledstrip.action";
+import { LedstripState } from "@angulon/interfaces";
 
 @Component({
-  selector: 'app-colorpicker',
-  templateUrl: './colorpicker.component.html',
-  styleUrls: ['./colorpicker.component.scss']
+  selector: "app-colorpicker",
+  templateUrl: "./colorpicker.component.html",
+  styleUrls: ["./colorpicker.component.scss"]
 })
 export class ColorpickerComponent implements OnInit, AfterViewInit {
   protected id = this.generateElementId();
@@ -17,10 +17,10 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   private skipSettingColors = false;
   private colorpickerOptions: Parameters<typeof iro.ColorPicker>[1] = {
     width: 150,
-    layoutDirection: 'horizontal',
+    layoutDirection: "horizontal",
     handleRadius: 8,
     borderWidth: 2,
-    borderColor: '#fff',
+    borderColor: "#fff",
     wheelAngle: 90,
     layout: [
       {
@@ -29,21 +29,21 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
       {
         component: iro.ui.Slider,
         options: {
-          sliderType: 'value',
+          sliderType: "value",
           activeIndex: 0
         }
       },
       {
         component: iro.ui.Slider,
         options: {
-          sliderType: 'value',
+          sliderType: "value",
           activeIndex: 1
         }
       },
       {
         component: iro.ui.Slider,
         options: {
-          sliderType: 'value',
+          sliderType: "value",
           activeIndex: 2
         }
       }
@@ -60,7 +60,7 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   ngAfterViewInit(): void {
     this.picker = iro.ColorPicker(`#${this.id}`, this.colorpickerOptions);
 
-    this.store.select('ledstripState').subscribe((state) => {
+    this.store.select("ledstripState").subscribe((state) => {
       if (!state) return;
 
       if (this.skipSettingColors) {
@@ -75,7 +75,7 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
       this.picker.setActiveColor(this.indexOfCurrentActiveColor);
     });
 
-    this.picker.on('color:change', (color: iro.Color) => {
+    this.picker.on("color:change", (color: iro.Color) => {
       this.indexOfCurrentActiveColor = color.index;
       const colors = this.picker.colors.map(c => c.hexString);
       this.skipSettingColors = true;
@@ -83,7 +83,7 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
     });
   }
 
-  changeOrientation(direction: 'horizontal' | 'vertical') {
+  changeOrientation(direction: "horizontal" | "vertical") {
     this.picker.setOptions({ layoutDirection: direction });
   }
 
@@ -95,6 +95,6 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   private generateElementId(): string {
     const array = new Uint32Array(5);
     self.crypto.getRandomValues(array);
-    return 'colorpicker-' + array.join('-');
+    return "colorpicker-" + array.join("-");
   }
 }

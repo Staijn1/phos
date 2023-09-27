@@ -1,7 +1,7 @@
-import { State } from '../abstract/state';
-import { calculateBGRInteger, ColdColor, map, qadd8, qsub8, randomInteger } from '../../../../shared/functions';
-import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
+import { State } from "../abstract/state";
+import { calculateBGRInteger, ColdColor, map, qadd8, qsub8, randomInteger } from "../../../../shared/functions";
+import iro from "@jaames/iro";
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from "../../../chromaSDK/chromaSDK.service";
 
 export class WaterfallState extends State {
   readonly COOLING = 55;

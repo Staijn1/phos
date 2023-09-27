@@ -70,13 +70,13 @@ export class WebsocketService {
     return this.promisifyEmit<GradientInformationExtended[]>(WebsocketMessage.GetGradients);
   }
 
+  turnOff() {
+    this.store.dispatch(new ChangeMultipleLedstripProperties({ colors: ["#000000", "#000000"], mode: 0 }));
+  }
+
   private loadModes() {
     this.promisifyEmit<ModeInformation[]>(WebsocketMessage.GetModes)
       .then((modes) => this.store.dispatch(new LoadModesAction(modes)));
-  }
-
-  turnOff() {
-    this.store.dispatch(new ChangeMultipleLedstripProperties({ colors: ["#000000", "#000000"], mode: 0 }));
   }
 
   /**

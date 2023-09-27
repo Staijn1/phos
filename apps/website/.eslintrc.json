@@ -15,7 +15,10 @@
         "plugin:@angular-eslint/template/process-inline-templates"
       ],
       "rules": {
-        "semi": ["error", "always"],
+        "semi": [
+          "error",
+          "always"
+        ],
         "@typescript-eslint/no-empty-function": "off",
         "@angular-eslint/directive-selector": [
           "error",
