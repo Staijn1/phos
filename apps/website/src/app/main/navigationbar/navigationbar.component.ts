@@ -1,7 +1,6 @@
 import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
 import { gsap } from 'gsap';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
-
 import {
   faBars,
   faChartBar,
@@ -19,7 +18,6 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.service';
 import { Store } from '@ngrx/store';
-import { ColorpickerState } from '../../../redux/color/color.reducer';
 import { ColorpickerComponent } from '../../shared/components/colorpicker/colorpicker.component';
 import { LedstripState } from '@angulon/interfaces';
 import { WebsocketServiceNextGen } from '../../services/websocketconnection/websocket-nextgen.service';
@@ -59,7 +57,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     private router: Router,
     private renderer: Renderer2,
     private chromaEffect: ChromaEffectService,
-    private store: Store<{ colorpicker: ColorpickerState, ledstripState: LedstripState }>
+    private store: Store<{ ledstripState: LedstripState }>
   ) {
   }
 
