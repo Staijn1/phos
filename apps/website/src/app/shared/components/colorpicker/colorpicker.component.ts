@@ -15,12 +15,6 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   private picker!: IroColorPicker;
   private indexOfCurrentActiveColor = 0;
   private skipSettingColors = false;
-  /**
-   * Options to configure the colorpicker, there is no type for it available..
-   * See the docs for available options
-   * @see https://iro.js.org/colorPicker_api.html#options
-   * @private
-   */
   private colorpickerOptions: Parameters<typeof iro.ColorPicker>[1] = {
     width: 150,
     layoutDirection: "horizontal",
