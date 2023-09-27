@@ -85,7 +85,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
     this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
 
-   this.store.dispatch(new ChangeLedstripColors(['#000000', '#000000']));
+    this.connection.turnOff();
   }
 
   toggleNav(): void {
