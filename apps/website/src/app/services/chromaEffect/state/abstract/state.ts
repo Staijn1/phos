@@ -1,16 +1,16 @@
-import {ChromaEffectService} from '../../chroma-effect.service'
-import iro from '@jaames/iro'
+import { ChromaEffectService } from '../../chroma-effect.service';
+import iro from '@jaames/iro';
 
 
 export abstract class State {
   protected _context!: ChromaEffectService;
 
   get context(): ChromaEffectService {
-    return this._context
+    return this._context;
   }
 
   set context(newContext: ChromaEffectService) {
-    this._context = newContext
+    this._context = newContext;
   }
 
   abstract handle(colors: iro.Color[]): void;
@@ -20,7 +20,7 @@ export abstract class State {
   abstract onEntry(): void;
 
   protected update(newState: State): void {
-    this._context.state = newState
+    this._context.state = newState;
   }
 
 }

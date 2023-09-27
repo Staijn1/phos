@@ -1,9 +1,9 @@
-import {Component, OnInit} from '@angular/core'
-import {SwUpdate} from '@angular/service-worker'
-import {MessageService} from '../../services/message-service/message.service'
-import {ThemeService} from '../../services/theme/theme.service';
-import {Message} from '../../shared/types/Message';
-import {swipeRight} from '@angulon/ui';
+import { Component, OnInit } from '@angular/core';
+import { SwUpdate } from '@angular/service-worker';
+import { MessageService } from '../../services/message-service/message.service';
+import { ThemeService } from '../../services/theme/theme.service';
+import { Message } from '../../shared/types/Message';
+import { swipeRight } from '@angulon/ui';
 import * as AOS from 'aos';
 
 @Component({
@@ -21,14 +21,14 @@ export class AppComponent implements OnInit {
     if (updates.isEnabled) {
       updates.checkForUpdate().then((hasUpdate) => {
         if (hasUpdate) {
-          this.errorService.setMessage(new Message('info', 'New update available! Click here to update.', () => this.update()))
+          this.errorService.setMessage(new Message('info', 'New update available! Click here to update.', () => this.update()));
         }
-      })
+      });
     }
   }
 
   update() {
-    this.updates.activateUpdate().then(() => document.location.reload())
+    this.updates.activateUpdate().then(() => document.location.reload());
   }
 
   onAlertClick(error: Message) {
@@ -37,6 +37,6 @@ export class AppComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    AOS.init()
+    AOS.init();
   }
 }

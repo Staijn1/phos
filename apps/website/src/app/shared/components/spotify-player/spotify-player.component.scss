@@ -9,9 +9,10 @@
   }
 }
 
-.track{
+.track {
   transition: opacity 0.3s ease-in-out;
   cursor: pointer;
+
   &:hover {
     // Use !important to override style of previous class
     opacity: 100% !important;

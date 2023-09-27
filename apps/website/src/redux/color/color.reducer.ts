@@ -4,14 +4,14 @@ export interface ColorpickerState {
 }
 
 const initialState: ColorpickerState = {
-  colors: ["#ff0000", "#00ff00", "#0000ff"],
+  colors: ['#ff0000', '#00ff00', '#0000ff'],
   updateLedstrips: true
 };
 
 
 export function colorpickerReducer(state = initialState, action: any): ColorpickerState {
   switch (action.type) {
-    case "COLOR_CHANGE": {
+    case 'COLOR_CHANGE': {
       // merge the state.colors with the action.payload
       const newColors = state.colors.map((color, index) => {
         if (action.payload[index]) {

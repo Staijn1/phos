@@ -1,6 +1,6 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from "@angular/core";
-import { gsap } from "gsap";
-import { NavigationEnd, NavigationStart, Router } from "@angular/router";
+import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { gsap } from 'gsap';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 
 import {
   faBars,
@@ -16,19 +16,19 @@ import {
   faSlidersH,
   faTimes,
   faWalking
-} from "@fortawesome/free-solid-svg-icons";
-import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
-import { Store } from "@ngrx/store";
-import { ColorpickerState } from "../../../redux/color/color.reducer";
-import { ColorpickerComponent } from "../../shared/components/colorpicker/colorpicker.component";
-import { LedstripState } from "@angulon/interfaces";
-import { WebsocketServiceNextGen } from "../../services/websocketconnection/websocket-nextgen.service";
+} from '@fortawesome/free-solid-svg-icons';
+import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.service';
+import { Store } from '@ngrx/store';
+import { ColorpickerState } from '../../../redux/color/color.reducer';
+import { ColorpickerComponent } from '../../shared/components/colorpicker/colorpicker.component';
+import { LedstripState } from '@angulon/interfaces';
+import { WebsocketServiceNextGen } from '../../services/websocketconnection/websocket-nextgen.service';
 import {
-  ChangeLedstripColors,
-  DecreaseLedstripBrightness, DecreaseLedstripSpeed,
+  DecreaseLedstripBrightness,
+  DecreaseLedstripSpeed,
   IncreaseLedstripBrightness,
   IncreaseLedstripSpeed
-} from "../../../redux/ledstrip/ledstrip.action";
+} from '../../../redux/ledstrip/ledstrip.action';
 
 @Component({
   selector: 'app-navigationbar',
@@ -59,7 +59,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     private router: Router,
     private renderer: Renderer2,
     private chromaEffect: ChromaEffectService,
-    private store: Store<{ colorpicker: ColorpickerState, ledstripState: LedstripState}>
+    private store: Store<{ colorpicker: ColorpickerState, ledstripState: LedstripState }>
   ) {
   }
 
@@ -68,7 +68,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if (val instanceof NavigationStart) {
-        gsap.set('#cover', {autoAlpha: 1, duration: 0.3});
+        gsap.set('#cover', { autoAlpha: 1, duration: 0.3 });
       }
       if (val instanceof NavigationEnd) {
         this.animate();
@@ -78,12 +78,12 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.determineColorPickerOrientation()
+    this.determineColorPickerOrientation();
   }
 
   turnOff(): void {
-    this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
-    this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
+    this.timeline.to('#powerOff', { duration: 0.6, color: 'white', background: 'var(--bs-danger)' });
+    this.timeline.to('#powerOff', { duration: 1.2, clearProps: 'background,color' });
 
     this.connection.turnOff();
   }
@@ -94,6 +94,34 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
     } else {
       this.closeMobileMenu();
     }
+  }
+
+  /**
+   * This function changes the orientation of the colorpicker depending on the screen size.
+   * If the screen is smaller than 992px (lg breakpoint in Bootstrap 5), the colorpicker will be vertical.
+   */
+  determineColorPickerOrientation() {
+    if (screen.width < 992) {
+      this.colorpicker.changeOrientation('vertical');
+    } else {
+      this.colorpicker.changeOrientation('horizontal');
+    }
+  }
+
+  decreaseBrightness() {
+    this.store.dispatch(new DecreaseLedstripBrightness());
+  }
+
+  increaseBrightness() {
+    this.store.dispatch(new IncreaseLedstripBrightness());
+  }
+
+  increaseSpeed() {
+    this.store.dispatch(new IncreaseLedstripSpeed());
+  }
+
+  decreaseSpeed() {
+    this.store.dispatch(new DecreaseLedstripSpeed());
   }
 
   private closeMobileMenu() {
@@ -125,7 +153,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
       delay: 0,
       stagger: -0.05
     });
-    gsap.set('.from-left .tile', {left: '0', width: '0'});
+    gsap.set('.from-left .tile', { left: '0', width: '0' });
   }
 
   private animate(): void {
@@ -140,7 +168,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
         break;
     }
 
-    this.timeline.to('#cover', {duration: 0.6, autoAlpha: 0, ease: 'power4.inOut'});
+    this.timeline.to('#cover', { duration: 0.6, autoAlpha: 0, ease: 'power4.inOut' });
     this.animationMode = ++this.animationMode % 2;
   }
 
@@ -161,34 +189,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
       delay: 0,
       stagger: -0.05
     });
-    gsap.set('.from-top .tile', {top: '0', height: '0'});
-  }
-
-  /**
-   * This function changes the orientation of the colorpicker depending on the screen size.
-   * If the screen is smaller than 992px (lg breakpoint in Bootstrap 5), the colorpicker will be vertical.
-   */
-  determineColorPickerOrientation() {
-    if (screen.width < 992) {
-      this.colorpicker.changeOrientation('vertical');
-    } else {
-      this.colorpicker.changeOrientation('horizontal')
-    }
-  }
-
-  decreaseBrightness() {
-    this.store.dispatch(new DecreaseLedstripBrightness());
-  }
-
-  increaseBrightness() {
-    this.store.dispatch(new IncreaseLedstripBrightness());
-  }
-
-  increaseSpeed() {
-    this.store.dispatch(new IncreaseLedstripSpeed())
-  }
-
-  decreaseSpeed() {
-    this.store.dispatch(new DecreaseLedstripSpeed())
+    gsap.set('.from-top .tile', { top: '0', height: '0' });
   }
 }

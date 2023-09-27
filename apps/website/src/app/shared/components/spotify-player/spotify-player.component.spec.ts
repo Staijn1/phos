@@ -1,6 +1,6 @@
-import { ComponentFixture, TestBed } from '@angular/core/testing';
+import {ComponentFixture, TestBed} from '@angular/core/testing';
 
-import { SpotifyPlayerComponent } from './spotify-player.component';
+import {SpotifyPlayerComponent} from './spotify-player.component';
 
 describe('SpotifyPlayerComponent', () => {
   let component: SpotifyPlayerComponent;
@@ -8,7 +8,7 @@ describe('SpotifyPlayerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SpotifyPlayerComponent],
+      declarations: [SpotifyPlayerComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SpotifyPlayerComponent);

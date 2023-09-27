@@ -1,15 +1,15 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from "@angular/core";
-import AudioMotionAnalyzer, { GradientOptions, Options } from "audiomotion-analyzer";
-import { GradientInformation } from "@angulon/interfaces";
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
+import AudioMotionAnalyzer, { GradientOptions, Options } from 'audiomotion-analyzer';
+import { GradientInformation } from '@angulon/interfaces';
 
 
 @Component({
-  selector: "app-shared-visualizer",
-  templateUrl: "./visualizer.component.html",
-  styleUrls: ["./visualizer.component.scss"]
+  selector: 'app-shared-visualizer',
+  templateUrl: './visualizer.component.html',
+  styleUrls: ['./visualizer.component.scss']
 })
 export class VisualizerComponent implements OnDestroy, AfterViewInit {
-  @ViewChild("container") container!: ElementRef<HTMLDivElement>;
+  @ViewChild('container') container!: ElementRef<HTMLDivElement>;
   @Output() ready: EventEmitter<AudioMotionAnalyzer> = new EventEmitter<AudioMotionAnalyzer>();
   @Output() registeredGradients: EventEmitter<GradientInformation[]> = new EventEmitter<GradientInformation[]>();
   private audioMotion: AudioMotionAnalyzer | undefined;
@@ -50,6 +50,17 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
     this.init();
   }
 
+  /**
+   * Register one single gradient.
+   * Does not emit the gradients because the gradient is only used internally for the visualizer.
+   * @param name
+   * @param gradient
+   */
+  registerGradient(name: string, gradient: GradientOptions) {
+    if (!this.audioMotion) throw Error('No visualizer!');
+    this.audioMotion.registerGradient(name, gradient);
+  }
+
   private init(): void {
     this.audioMotion = new AudioMotionAnalyzer(this.container.nativeElement, this._options);
     this.setSource();
@@ -66,28 +77,17 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
         this.audioMotion.connectInput(micInput);
       })
       .catch(err => {
-        console.error(`Could not change audio source`, err);
+        console.error('Could not change audio source', err);
       });
   }
 
   private registerGradients(): void {
     if (this._gradients.length === 0) return;
-    if (!this.audioMotion) throw Error("No visualizer!");
+    if (!this.audioMotion) throw Error('No visualizer!');
 
     for (const gradient of this._gradients) {
       this.audioMotion.registerGradient(gradient.name, { ...gradient });
     }
     this.registeredGradients.emit(this._gradients);
-  }
-
-  /**
-   * Register one single gradient.
-   * Does not emit the gradients because the gradient is only used internally for the visualizer.
-   * @param name
-   * @param gradient
-   */
-  registerGradient(name: string, gradient: GradientOptions) {
-    if (!this.audioMotion) throw Error("No visualizer!");
-    this.audioMotion.registerGradient(name, gradient);
   }
 }

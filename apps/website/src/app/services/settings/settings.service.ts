@@ -1,13 +1,13 @@
-import {Injectable} from "@angular/core";
-import {GeneralSettings} from "../../shared/types/types";
-import {Options} from "audiomotion-analyzer";
-import iro from "@jaames/iro";
-import {MessageService} from "../message-service/message.service";
-import {AngulonVisualizerOptions} from "@angulon/interfaces";
+import { Injectable } from '@angular/core';
+import { GeneralSettings } from '../../shared/types/types';
+import { Options } from 'audiomotion-analyzer';
+import iro from '@jaames/iro';
+import { MessageService } from '../message-service/message.service';
+import { AngulonVisualizerOptions } from '@angulon/interfaces';
 
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class SettingsService {
   readonly defaultVisualizerOptions: AngulonVisualizerOptions = {
@@ -15,7 +15,7 @@ export class SettingsService {
     bgAlpha: 0.7,
     fftSize: 8192,
     fillAlpha: 1,
-    gradientLeft: "classic",
+    gradientLeft: 'classic',
     lineWidth: 0,
     loRes: false,
     lumiBars: false,
@@ -40,12 +40,12 @@ export class SettingsService {
     showScaleY: false,
     smoothing: 0.7,
     spinSpeed: 0,
-    weightingFilter: "",
-    energyPreset: "bass"
+    weightingFilter: '',
+    energyPreset: 'bass'
   };
   private readonly defaultGeneralSettings: GeneralSettings = {
     chroma: false,
-    theme: "default",
+    theme: 'default',
     darkmodeEnabled: false
   };
 
@@ -55,19 +55,19 @@ export class SettingsService {
 
   saveVisualizerOptions(options: Options): void {
     delete options.onCanvasDraw;
-    this.saveSettings(options, "visualizerSettings");
+    this.saveSettings(options, 'visualizerSettings');
   }
 
   readVisualizerOptions(): AngulonVisualizerOptions {
-    return this.readSettings("visualizerSettings") as AngulonVisualizerOptions;
+    return this.readSettings('visualizerSettings') as AngulonVisualizerOptions;
   }
 
   saveGeneralSettings(settings: GeneralSettings): void {
-    this.saveSettings(settings, "generalSettings");
+    this.saveSettings(settings, 'generalSettings');
   }
 
   readGeneralSettings(): GeneralSettings {
-    return this.readSettings("generalSettings") as GeneralSettings;
+    return this.readSettings('generalSettings') as GeneralSettings;
   }
 
   convertColors(colors: iro.Color[]): string[] {
@@ -83,28 +83,28 @@ export class SettingsService {
     location.reload();
   }
 
-  private readSettings(name: "generalSettings" | "visualizerSettings"): GeneralSettings | Options {
+  private readSettings(name: 'generalSettings' | 'visualizerSettings'): GeneralSettings | Options {
     const savedItem = localStorage.getItem(name);
     let defaultVal;
     switch (name) {
-      case "generalSettings":
+      case 'generalSettings':
         defaultVal = this.defaultGeneralSettings;
         break;
-      case "visualizerSettings":
+      case 'visualizerSettings':
         defaultVal = this.defaultVisualizerOptions;
         break;
     }
 
     try {
       const parsed = JSON.parse(savedItem as string);
-      return {...defaultVal, ...parsed};
+      return { ...defaultVal, ...parsed };
     } catch (e: any) {
       this.messageService.setMessage(e);
       return defaultVal;
     }
   }
 
-  private saveSettings(settings: any, name: "generalSettings" | "visualizerSettings"): void {
+  private saveSettings(settings: any, name: 'generalSettings' | 'visualizerSettings'): void {
     localStorage.setItem(name, JSON.stringify(settings));
   }
 
@@ -113,10 +113,10 @@ export class SettingsService {
    * @private
    */
   private setDefaults(force?: boolean): void {
-    if (!this.readSettings("generalSettings") || force) {
+    if (!this.readSettings('generalSettings') || force) {
       this.saveGeneralSettings(this.defaultGeneralSettings);
     }
-    if (!this.readSettings("visualizerSettings") || force) {
+    if (!this.readSettings('visualizerSettings') || force) {
       this.saveVisualizerOptions(this.defaultVisualizerOptions);
     }
   }

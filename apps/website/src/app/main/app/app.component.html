@@ -5,8 +5,8 @@
   <div (click)="onAlertClick(error)" *ngFor="let error of errorService.getMessages()" @swipeRight
        [class.alert-danger]="error.severity === 'error'"
        [class.alert-info]="error.severity === 'info'"
-       [class.alert-warning]="error.severity === 'warning'"
        [class.alert-success]="error.severity === 'success'"
+       [class.alert-warning]="error.severity === 'warning'"
        class="alert">
     <p>{{error.message}}</p>
   </div>

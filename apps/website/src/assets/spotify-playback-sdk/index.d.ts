@@ -8,12 +8,14 @@
 // Definitions: https://github.com/DefinitelyTyped/DefinitelyTyped
 // TypeScript Version: 2.1
 
-declare module 'spotify-web-playback-sdk'{
+declare module 'spotify-web-playback-sdk' {
   export = Spotify;
 }
+
 interface Window {
-  onSpotifyWebPlaybackSDKReady(): void;
   Spotify: typeof Spotify;
+
+  onSpotifyWebPlaybackSDKReady(): void;
 }
 
 declare namespace Spotify {
@@ -140,9 +142,10 @@ declare namespace Spotify {
 
   interface PlayerInit {
     name: string;
-    getOAuthToken(cb: (token: string) => void): void;
     volume?: number | undefined;
     enableMediaSession?: boolean;
+
+    getOAuthToken(cb: (token: string) => void): void;
   }
 
   type ErrorListener = (err: Error) => void;
@@ -159,26 +162,37 @@ declare namespace Spotify {
   class Player {
     addListener: AddListenerFn;
     on: AddListenerFn;
-    readonly _options: PlayerInit & {id: string};
+    readonly _options: PlayerInit & { id: string };
+
     constructor(options: PlayerInit);
 
     connect(): Promise<boolean>;
+
     disconnect(): void;
+
     getCurrentState(): Promise<PlaybackState | null>;
+
     getVolume(): Promise<number>;
+
     nextTrack(): Promise<void>;
 
     removeListener(
       event: 'ready' | 'not_ready' | 'player_state_changed' | ErrorTypes,
-      cb?: ErrorListener | PlaybackInstanceListener | PlaybackStateListener,
+      cb?: ErrorListener | PlaybackInstanceListener | PlaybackStateListener
     ): void;
 
     pause(): Promise<void>;
+
     previousTrack(): Promise<void>;
+
     resume(): Promise<void>;
+
     seek(pos_ms: number): Promise<void>;
+
     setName(name: string): Promise<void>;
+
     setVolume(volume: number): Promise<void>;
+
     togglePlay(): Promise<void>;
 
     activateElement(): Promise<void>;

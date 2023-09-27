@@ -8,7 +8,7 @@ describe('SpotifyAuthenticationCallbackComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SpotifyAuthenticationCallbackComponent],
+      declarations: [SpotifyAuthenticationCallbackComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SpotifyAuthenticationCallbackComponent);
