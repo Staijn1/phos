@@ -1,23 +1,16 @@
-import {Component, OnDestroy, ViewChild} from "@angular/core";
-import AudioMotionAnalyzer, {GradientColorStop, GradientOptions} from "audiomotion-analyzer";
-import {faCheck, faLightbulb, faList, faSliders, faWrench, faExpand} from "@fortawesome/free-solid-svg-icons";
-import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.service";
-import {SettingsService} from "../../services/settings/settings.service";
-import {VisualizerComponent} from "../../shared/components/visualizer/visualizer.component";
-import {
-  AngulonVisualizerOptions,
-  GradientInformation,
-  GradientInformationExtended,
-  LedstripState
-} from "@angulon/interfaces";
-import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
+import { Component, OnDestroy, ViewChild } from "@angular/core";
+import AudioMotionAnalyzer, { GradientColorStop, GradientOptions } from "audiomotion-analyzer";
+import { faCheck, faExpand, faLightbulb, faList, faSliders, faWrench } from "@fortawesome/free-solid-svg-icons";
+import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
+import { SettingsService } from "../../services/settings/settings.service";
+import { VisualizerComponent } from "../../shared/components/visualizer/visualizer.component";
+import { AngulonVisualizerOptions, GradientInformationExtended, LedstripState } from "@angulon/interfaces";
+import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas.component";
 import * as slider from "@angular-slider/ngx-slider";
-import {InformationService} from "../../services/information-service/information.service";
-import {visualizerModeId} from "../../shared/constants";
-import {WebsocketService} from "../../services/websocketconnection/websocket.service";
-import {faSpotify} from "@fortawesome/free-brands-svg-icons";
-import {Store} from "@ngrx/store";
-import {ColorpickerState} from "../../../redux/color/color.reducer";
+import { InformationService } from "../../services/information-service/information.service";
+import { visualizerModeId } from "../../shared/constants";
+import { faSpotify } from "@fortawesome/free-brands-svg-icons";
+import { Store } from "@ngrx/store";
 import { ChangeLedstripColors, ChangeLedstripMode } from "../../../redux/ledstrip/ledstrip.action";
 import { WebsocketServiceNextGen } from "../../services/websocketconnection/websocket-nextgen.service";
 
