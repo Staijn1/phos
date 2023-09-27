@@ -13,6 +13,7 @@ import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import { Store } from '@ngrx/store';
 import { ChangeLedstripColors, ChangeLedstripMode } from '../../../redux/ledstrip/ledstrip.action';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
+import { map } from "../../shared/functions";
 
 @Component({
   selector: 'app-visualizer',
@@ -119,8 +120,8 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
-    const value = instance.getEnergy(this.visualizerOptions.energyPreset);
-    this.connection.sendFFTValue(value);
+    const value = instance.getEnergy("bass");
+    this.connection.sendFFTValue(map(value, 0, 1, 0, 255));
     this.chromaEffect.intensity = value;
   }
 
