@@ -70,14 +70,9 @@ export class WebsocketService {
     return this.promisifyEmit<GradientInformationExtended[]>(WebsocketMessage.GetGradients);
   }
 
-  /**
-   * TODO: Reduxify this
-   */
   private loadModes() {
-    this.promisifyEmit<ModeInformation[]>(WebsocketMessage.GetModes).then((modes) => {
-      console.log("Dispatching", modes)
-      this.store.dispatch(new LoadModesAction(modes));
-    });
+    this.promisifyEmit<ModeInformation[]>(WebsocketMessage.GetModes)
+      .then((modes) => this.store.dispatch(new LoadModesAction(modes)));
   }
 
   turnOff() {
