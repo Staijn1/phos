@@ -47,11 +47,6 @@ void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payloa
             socketIO.send(sIOtype_CONNECT, "/");
             Angulon::led->turnOn();
             Logger::log("Websocket", "Connected to server");
-
-            // Send event to update server of current ledstrip state.
-            String eventJson = State::getStateJSON();
-            socketIO.sendEVENT(eventJson);
-
             break;
         }
         case sIOtype_EVENT: {
@@ -102,8 +97,7 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
         handleDotEvent(payload, doc);
     } else {
         // Handle invalid or unknown event
-        handleUnknownEvent(payload, doc
-        );
+        handleUnknownEvent(payload, doc);
     }
 }
 
