@@ -1,16 +1,15 @@
 import { Component } from "@angular/core";
 import { ActivatedRoute, Router } from "@angular/router";
 import { MessageService } from "../../services/message-service/message.service";
-import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import { Store } from "@ngrx/store";
-import { ColorpickerState } from "../../../redux/color/color.reducer";
 import { LedstripState } from "@angulon/interfaces";
 import { combineLatest } from "rxjs";
 import { WebsocketServiceNextGen } from "../../services/websocketconnection/websocket-nextgen.service";
 import {
   DecreaseLedstripBrightness,
   DecreaseLedstripSpeed,
-  IncreaseLedstripBrightness, IncreaseLedstripSpeed
+  IncreaseLedstripBrightness,
+  IncreaseLedstripSpeed
 } from "../../../redux/ledstrip/ledstrip.action";
 
 @Component({

@@ -4,11 +4,7 @@ import { MessageService } from "../message-service/message.service";
 import { io, Socket } from "socket.io-client";
 import { GradientInformationExtended, LedstripState, ModeInformation, WebsocketMessage } from "@angulon/interfaces";
 import { Store } from "@ngrx/store";
-import {
-  ChangeLedstripColors,
-  ChangeLedstripMode, ChangeMultipleLedstripProperties,
-  ReceiveLedstripState
-} from "../../../redux/ledstrip/ledstrip.action";
+import { ChangeMultipleLedstripProperties, ReceiveLedstripState } from "../../../redux/ledstrip/ledstrip.action";
 
 @Injectable({
   providedIn: "root"
