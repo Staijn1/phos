@@ -16,7 +16,7 @@ import {
   VisualizerBrightnessState
 } from '../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
 import { ColorpickerComponent } from '../../shared/components/colorpicker/colorpicker.component';
-import { WebsocketServiceNextGen } from '../../services/websocketconnection/websocket-nextgen.service';
+import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 import { ChangeLedstripMode } from '../../../redux/ledstrip/ledstrip.action';
 import { Store } from '@ngrx/store';
 
@@ -46,7 +46,7 @@ export class ModePageComponent implements OnInit, OnDestroy {
 
 
   constructor(
-    private readonly connection: WebsocketServiceNextGen,
+    private readonly connection: WebsocketService,
     private readonly chromaService: ChromaEffectService,
     private readonly store: Store<{ ledstripState: LedstripState | undefined }>,
     public readonly themeService: ThemeService) {

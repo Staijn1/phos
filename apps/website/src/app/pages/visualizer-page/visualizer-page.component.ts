@@ -12,7 +12,7 @@ import { visualizerModeId } from '../../shared/constants';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import { Store } from '@ngrx/store';
 import { ChangeLedstripColors, ChangeLedstripMode } from '../../../redux/ledstrip/ledstrip.action';
-import { WebsocketServiceNextGen } from '../../services/websocketconnection/websocket-nextgen.service';
+import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 
 @Component({
   selector: 'app-visualizer',
@@ -89,7 +89,7 @@ export class VisualizerPageComponent implements OnDestroy {
   private currentTrackId: string | null | undefined;
 
   constructor(
-    private connection: WebsocketServiceNextGen,
+    private connection: WebsocketService,
     private information: InformationService,
     private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService,

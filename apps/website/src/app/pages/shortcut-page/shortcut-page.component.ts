@@ -4,7 +4,7 @@ import { MessageService } from '../../services/message-service/message.service';
 import { Store } from '@ngrx/store';
 import { LedstripState } from '@angulon/interfaces';
 import { combineLatest } from 'rxjs';
-import { WebsocketServiceNextGen } from '../../services/websocketconnection/websocket-nextgen.service';
+import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 import {
   DecreaseLedstripBrightness,
   DecreaseLedstripSpeed,
@@ -25,7 +25,7 @@ export class ShortcutPageComponent {
    */
   constructor(private activatedRoute: ActivatedRoute,
               private messageService: MessageService,
-              private connection: WebsocketServiceNextGen,
+              private connection: WebsocketService,
               private router: Router,
               private store: Store<{ ledstripState: LedstripState | undefined }>) {
     combineLatest([this.activatedRoute.queryParams, this.store.select('ledstripState')])

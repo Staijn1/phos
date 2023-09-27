@@ -13,6 +13,7 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { ledstripStateReducer } from '../redux/ledstrip/ledstrip.reducer';
+import { modesReducer } from "../redux/modes/modes.reducer";
 
 const StoreDevtools = !environment.production ? StoreDevtoolsModule.instrument() : [];
 
@@ -25,7 +26,8 @@ const StoreDevtools = !environment.production ? StoreDevtoolsModule.instrument()
     SharedModule,
     PagesModule,
     StoreModule.forRoot({
-      ledstripState: ledstripStateReducer
+      ledstripState: ledstripStateReducer,
+      modes: modesReducer
     }),
     StoreDevtools,
     FontAwesomeModule,

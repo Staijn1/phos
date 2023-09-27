@@ -20,7 +20,7 @@ import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.s
 import { Store } from '@ngrx/store';
 import { ColorpickerComponent } from '../../shared/components/colorpicker/colorpicker.component';
 import { LedstripState } from '@angulon/interfaces';
-import { WebsocketServiceNextGen } from '../../services/websocketconnection/websocket-nextgen.service';
+import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 import {
   DecreaseLedstripBrightness,
   DecreaseLedstripSpeed,
@@ -53,7 +53,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   private animationMode = 0;
 
   constructor(
-    public connection: WebsocketServiceNextGen,
+    public connection: WebsocketService,
     private router: Router,
     private renderer: Renderer2,
     private chromaEffect: ChromaEffectService,

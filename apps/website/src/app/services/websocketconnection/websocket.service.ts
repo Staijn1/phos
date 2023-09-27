@@ -9,7 +9,7 @@ import { ChangeMultipleLedstripProperties, ReceiveLedstripState } from '../../..
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketServiceNextGen {
+export class WebsocketService {
   private websocketUrl = environment.url;
   private readonly socket: Socket;
   private updateLedstripState = true;
