@@ -4,7 +4,11 @@ import { MessageService } from "../message-service/message.service";
 import { io, Socket } from "socket.io-client";
 import { GradientInformationExtended, LedstripState, ModeInformation, WebsocketMessage } from "@angulon/interfaces";
 import { Store } from "@ngrx/store";
-import { ReceiveLedstripState } from "../../../redux/ledstrip/ledstrip.action";
+import {
+  ChangeLedstripColors,
+  ChangeLedstripMode, ChangeMultipleLedstripProperties,
+  ReceiveLedstripState
+} from "../../../redux/ledstrip/ledstrip.action";
 
 @Injectable({
   providedIn: "root"
@@ -112,5 +116,9 @@ export class WebsocketServiceNextGen {
    */
   getModes() {
     return this.promisifyEmit<ModeInformation[]>(WebsocketMessage.GetModes);
+  }
+
+  turnOff() {
+    this.store.dispatch(new ChangeMultipleLedstripProperties({ colors: ["#000000", "#000000"], mode: 0 }));
   }
 }
