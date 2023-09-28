@@ -44,9 +44,9 @@ export class SettingsService {
     energyPreset: 'bass'
   };
   private readonly defaultGeneralSettings: GeneralSettings = {
-    chroma: false,
+    chromaSupportEnabled: false,
     theme: 'default',
-    darkmodeEnabled: false
+    darkModeEnabled: false
   };
 
   constructor(private readonly messageService: MessageService) {
@@ -67,11 +67,6 @@ export class SettingsService {
 
   readGeneralSettings(): GeneralSettings {
     return this.readSettings('generalSettings') as GeneralSettings;
-  }
-
-  clearSettings() {
-    this.setDefaults(true);
-    location.reload();
   }
 
   private readSettings(name: 'generalSettings' | 'visualizerSettings'): GeneralSettings | Options {
@@ -97,18 +92,5 @@ export class SettingsService {
 
   private saveSettings(settings: any, name: 'generalSettings' | 'visualizerSettings'): void {
     localStorage.setItem(name, JSON.stringify(settings));
-  }
-
-  /**
-   * Sets the default settings if no settings are saved
-   * @private
-   */
-  private setDefaults(force?: boolean): void {
-    if (!this.readSettings('generalSettings') || force) {
-      this.saveGeneralSettings(this.defaultGeneralSettings);
-    }
-    if (!this.readSettings('visualizerSettings') || force) {
-      this.saveVisualizerOptions(this.defaultVisualizerOptions);
-    }
   }
 }

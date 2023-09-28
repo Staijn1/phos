@@ -1,28 +1,26 @@
-import { Injectable } from "@angular/core";
-import { SettingsService } from "../settings/settings.service";
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { UserPreferences } from '../../shared/types/types';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class ThemeService {
   theme!: string;
 
-  constructor(private settingsService: SettingsService) {
+  constructor(private readonly store: Store<{
+    userPreferences: UserPreferences
+  }>) {
   }
 
-  loadTheme(theme?: string) {
-    const currentSettings = this.settingsService.readGeneralSettings();
-    if (!theme) {
-      theme = currentSettings.theme;
-    }
-    document.body.className = [theme, currentSettings.darkmodeEnabled ? "dark" : undefined].join(" ");
+  initialize(): void {
+    this.store.select('userPreferences').subscribe(userPreferences => {
+      this.applyTheme(userPreferences.settings.theme, userPreferences.settings.darkModeEnabled);
+    });
+  }
+
+  applyTheme(theme: string, darkModeEnabled: boolean) {
+    document.body.className = [theme, darkModeEnabled ? 'dark' : undefined].join(' ');
     this.theme = theme;
-  }
-
-  setTheme(theme: string) {
-    const currentSettings = this.settingsService.readGeneralSettings();
-    currentSettings.theme = theme;
-    this.settingsService.saveGeneralSettings(currentSettings);
-    this.loadTheme();
   }
 }

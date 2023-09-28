@@ -59,6 +59,10 @@
 // Helpers
 @import "bootstrap/scss/helpers";
 
+body * {
+    transition: background-color 250ms ease-in-out, color 250ms ease-in-out !important;
+}
+
 // Helper theme mixin
 // @param $name: name of the theme (HTML class)
 // @param $color: color of the theme

@@ -27,7 +27,7 @@ export class AppComponent implements OnInit {
         localStorage.setItem('userPreferences', JSON.stringify(preferences));
       });
 
-    this.theme.loadTheme();
+    this.theme.initialize();
 
     // Service worker update, but only in production. During development, the service worker is disabled which results in an error.
     // Enabling the service worker would result in a lot of caching, which is not desired during development because it would be hard to test changes.

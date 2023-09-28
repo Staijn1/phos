@@ -2,11 +2,11 @@ import { UserPreferences } from '../../app/shared/types/types';
 import { UserPreferencesAction } from './user-preferences.action';
 import { loadObjectFromLocalStorage } from '../../app/shared/functions';
 
-const initialState: UserPreferences = loadObjectFromLocalStorage('userPreferences', {
+const defaultUserPreferences: UserPreferences = {
   settings: {
-    chroma: false,
+    chromaSupportEnabled: false,
     theme: 'default',
-    darkmodeEnabled: false
+    darkModeEnabled: false
   },
   visualizerOptions: {
     barSpace: 0.1,
@@ -41,7 +41,9 @@ const initialState: UserPreferences = loadObjectFromLocalStorage('userPreference
     weightingFilter: '',
     energyPreset: 'bass'
   }
-});
+};
+
+const initialState: UserPreferences = loadObjectFromLocalStorage('userPreferences', defaultUserPreferences);
 
 export const userPreferencesReducer = (state: UserPreferences = initialState, action: any): UserPreferences => {
   switch (action.type) {
@@ -62,6 +64,9 @@ export const userPreferencesReducer = (state: UserPreferences = initialState, ac
           ...action.payload
         }
       };
+    }
+    case UserPreferencesAction.SET_DEFAULT_USER_PREFERENCES: {
+      return defaultUserPreferences;
     }
     default:
       return state;

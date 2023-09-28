@@ -224,6 +224,6 @@ export class ChromaSDKService {
   }
 
   private isChromaSupport(): boolean {
-    return this.settingsService.readGeneralSettings().chroma || false;
+    return this.settingsService.readGeneralSettings().chromaSupportEnabled || false;
   }
 }

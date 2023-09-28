@@ -1,39 +1,57 @@
-import { Component } from "@angular/core";
-import { faBroom, faSave } from "@fortawesome/free-solid-svg-icons";
-import { SettingsService } from "../../services/settings/settings.service";
-import { GeneralSettings } from "../../shared/types/types";
-import { ThemeService } from "../../services/theme/theme.service";
-import { themes } from "../../shared/constants";
+import { Component, OnInit, ViewChild } from '@angular/core';
+import { faBroom, faSave } from '@fortawesome/free-solid-svg-icons';
+import { GeneralSettings, UserPreferences } from '../../shared/types/types';
+import { ThemeService } from '../../services/theme/theme.service';
+import { themes } from '../../shared/constants';
+import { Store } from '@ngrx/store';
+import {
+  ChangeGeneralSettings,
+  SetDefaultUserPreferences
+} from '../../../redux/user-preferences/user-preferences.action';
+import { NgForm } from '@angular/forms';
+import { debounceTime } from 'rxjs';
 
 @Component({
-  selector: "app-settings",
-  templateUrl: "./settings-page.component.html",
-  styleUrls: ["./settings-page.component.scss"]
+  selector: 'app-settings',
+  templateUrl: './settings-page.component.html',
+  styleUrls: ['./settings-page.component.scss']
 })
-export class SettingsPageComponent {
-  settings: GeneralSettings;
+export class SettingsPageComponent implements OnInit {
+  @ViewChild('form', { static: true }) form!: NgForm;
+  settings: GeneralSettings | undefined;
   saveIcon = faSave;
   themes = themes;
   selectedTheme = 0;
   clearSettingsIcon = faBroom;
+  private skipUpdate = false;
 
-  constructor(private settingsService: SettingsService, private readonly theme: ThemeService) {
-    this.settings = this.settingsService.readGeneralSettings();
-    this.selectedTheme = this.themes.findIndex(theme => theme === this.settings.theme);
+  constructor(private readonly theme: ThemeService, private readonly store: Store<{
+    userPreferences: UserPreferences
+  }>) {
+    this.store.select('userPreferences').subscribe(preferences => {
+      if (this.skipUpdate) {
+        this.skipUpdate = false;
+        return;
+      }
+      this.settings = structuredClone(preferences.settings);
+      this.selectedTheme = this.themes.findIndex(theme => theme === preferences.settings.theme);
+    });
   }
 
-  saveSettings(): void {
-    this.settingsService.saveGeneralSettings(this.settings);
-    location.reload();
+  ngOnInit(): void {
+    this.form.form.valueChanges
+      .pipe(debounceTime(50))
+      .subscribe(newValues => {
+        this.skipUpdate = true;
+        this.store.dispatch(new ChangeGeneralSettings(newValues));
+      });
   }
 
-  setTheme(theme: string, index: number): void {
-    this.selectedTheme = index;
-    this.settings.theme = this.themes[this.selectedTheme];
-    this.theme.setTheme(this.settings.theme);
+  setTheme(theme: string): void {
+    this.store.dispatch(new ChangeGeneralSettings({ theme: theme }));
   }
 
   clearSettings(): void {
-    this.settingsService.clearSettings();
+    this.store.dispatch(new SetDefaultUserPreferences());
   }
 }
