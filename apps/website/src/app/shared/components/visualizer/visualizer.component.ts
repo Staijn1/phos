@@ -82,7 +82,7 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
       })
       .catch(err => {
         console.error("Could not change audio source", err);
-        this.messageService.setMessage({name: "SET_SOURCE_FAILED", message: "Could not set audio source for the audio-visualizer. Was microphone access granted?"})
+        this.messageService.setMessage({name: "SET_SOURCE_FAILED", message: "Could not set audio source for the audio-visualizer. Was microphone access granted?"});
       });
   }
 

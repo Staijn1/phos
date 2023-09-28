@@ -1,25 +1,24 @@
-import {Component, OnDestroy, ViewChild} from "@angular/core";
-import AudioMotionAnalyzer, {GradientColorStop, GradientOptions} from "audiomotion-analyzer";
-import {faCheck, faExpand, faLightbulb, faList, faSliders, faWrench} from "@fortawesome/free-solid-svg-icons";
-import {ChromaEffectService} from "../../services/chromaEffect/chroma-effect.service";
-import {SettingsService} from "../../services/settings/settings.service";
-import {VisualizerComponent} from "../../shared/components/visualizer/visualizer.component";
-import {AngulonVisualizerOptions, GradientInformation, LedstripState} from "@angulon/interfaces";
-import {OffCanvasComponent} from "../../shared/components/offcanvas/off-canvas.component";
-import * as slider from "@angular-slider/ngx-slider";
-import {InformationService} from "../../services/information-service/information.service";
-import {visualizerModeId} from "../../shared/constants";
-import {faSpotify} from "@fortawesome/free-brands-svg-icons";
-import {Store} from "@ngrx/store";
-import {ChangeLedstripColors, ChangeLedstripMode} from "../../../redux/ledstrip/ledstrip.action";
-import {WebsocketService} from "../../services/websocketconnection/websocket.service";
-import {map} from "../../shared/functions";
-import {MessageService} from "../../services/message-service/message.service";
+import { Component, OnDestroy, ViewChild } from '@angular/core';
+import AudioMotionAnalyzer, { GradientColorStop, GradientOptions } from 'audiomotion-analyzer';
+import { faCheck, faExpand, faLightbulb, faList, faSliders, faWrench } from '@fortawesome/free-solid-svg-icons';
+import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.service';
+import { SettingsService } from '../../services/settings/settings.service';
+import { VisualizerComponent } from '../../shared/components/visualizer/visualizer.component';
+import { AngulonVisualizerOptions, GradientInformation, LedstripState } from '@angulon/interfaces';
+import { OffCanvasComponent } from '../../shared/components/offcanvas/off-canvas.component';
+import * as slider from '@angular-slider/ngx-slider';
+import { InformationService } from '../../services/information-service/information.service';
+import { visualizerModeId } from '../../shared/constants';
+import { faSpotify } from '@fortawesome/free-brands-svg-icons';
+import { Store } from '@ngrx/store';
+import { ChangeLedstripColors, ChangeLedstripMode } from '../../../redux/ledstrip/ledstrip.action';
+import { WebsocketService } from '../../services/websocketconnection/websocket.service';
+import { map } from '../../shared/functions';
 
 @Component({
-  selector: "app-visualizer",
-  templateUrl: "./visualizer-page.component.html",
-  styleUrls: ["./visualizer-page.component.scss"]
+  selector: 'app-visualizer',
+  templateUrl: './visualizer-page.component.html',
+  styleUrls: ['./visualizer-page.component.scss']
 })
 export class VisualizerPageComponent implements OnDestroy {
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent;
@@ -30,16 +29,16 @@ export class VisualizerPageComponent implements OnDestroy {
   gradients: GradientInformation[] = [];
   // Visualization modes
   modes = [
-    {value: 0, text: "Discrete frequencies", disabled: false},
-    {value: 1, text: "1/24th octave bands", disabled: false},
-    {value: 2, text: "1/12th octave bands", disabled: false},
-    {value: 3, text: "1/8th octave bands", disabled: false},
-    {value: 4, text: "1/6th octave bands", disabled: false},
-    {value: 5, text: "1/4th octave bands", disabled: false},
-    {value: 6, text: "1/3rd octave bands", disabled: false},
-    {value: 7, text: "Half octave bands", disabled: false},
-    {value: 8, text: "Full octave bands", disabled: false},
-    {value: 10, text: "Area graph", disabled: false}
+    { value: 0, text: 'Discrete frequencies', disabled: false },
+    { value: 1, text: '1/24th octave bands', disabled: false },
+    { value: 2, text: '1/12th octave bands', disabled: false },
+    { value: 3, text: '1/8th octave bands', disabled: false },
+    { value: 4, text: '1/6th octave bands', disabled: false },
+    { value: 5, text: '1/4th octave bands', disabled: false },
+    { value: 6, text: '1/3rd octave bands', disabled: false },
+    { value: 7, text: 'Half octave bands', disabled: false },
+    { value: 8, text: 'Full octave bands', disabled: false },
+    { value: 10, text: 'Area graph', disabled: false }
   ];
 
   settingsIcon = faWrench;
@@ -106,21 +105,21 @@ export class VisualizerPageComponent implements OnDestroy {
   get isOctaveBandMode() {
     const currentMode = this.visualizerOptions.mode;
     const mode = this.modes.find((mode) => mode.value === currentMode);
-    return mode?.text.includes("octave");
+    return mode?.text.includes('octave');
   }
 
   init(): void {
-    this.store.select("gradients").subscribe((gradients) => {
+    this.store.select('gradients').subscribe((gradients) => {
       // Create a clone otherwise you will receive "Object is not extensible" error if Audiomotion decides to update the gradient when registering it
-      this.gradients = structuredClone(gradients)
-    })
+      this.gradients = structuredClone(gradients);
+    });
 
-    if ("wakeLock" in navigator) {
+    if ('wakeLock' in navigator) {
       const anyNavigator = navigator as any;
-      anyNavigator.wakeLock.request("screen").then((lock: any) => {
+      anyNavigator.wakeLock.request('screen').then((lock: any) => {
         this.wakeLock = lock;
       }).catch((error: any) => {
-        console.error("Failed to request wake lock", error);
+        console.error('Failed to request wake lock', error);
       });
     }
   }
@@ -129,7 +128,7 @@ export class VisualizerPageComponent implements OnDestroy {
     this.gradients = [];
     this.wakeLock?.release()
       .then()
-      .catch((error: any) => console.error("Failed to release wake lock", error));
+      .catch((error: any) => console.error('Failed to release wake lock', error));
   }
 
   updateLedstrip(): void {
@@ -137,7 +136,7 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
-    const value = instance.getEnergy("bass");
+    const value = instance.getEnergy('bass');
     this.connection.sendFFTValue(Math.floor(map(value, 0, 1, 0, 255)));
     this.chromaEffect.intensity = value;
   }
@@ -149,10 +148,10 @@ export class VisualizerPageComponent implements OnDestroy {
   readSettings() {
     const settings = this.settingsService.readVisualizerOptions();
     settings.onCanvasDraw = this.drawCallback.bind(this);
-    if (settings.gradientRight === "Spotify" || settings.gradientLeft === "Spotify" || settings.gradient === "Spotify") {
-      settings.gradient = "prism";
-      settings.gradientLeft = "prism";
-      settings.gradientRight = "prism";
+    if (settings.gradientRight === 'Spotify' || settings.gradientLeft === 'Spotify' || settings.gradient === 'Spotify') {
+      settings.gradient = 'prism';
+      settings.gradientLeft = 'prism';
+      settings.gradientRight = 'prism';
     }
     this.visualizerOptions = settings;
   }
@@ -184,7 +183,7 @@ export class VisualizerPageComponent implements OnDestroy {
       if (albumCover) {
         this.information.getColorsFromImageUrl(albumCover).then((colors) => {
           const primaryColor = colors.Average.hex;
-          const secondaryColor = colors.Vibrant?.hex ?? "#000";
+          const secondaryColor = colors.Vibrant?.hex ?? '#000';
           const colorsStops: GradientColorStop[] = [
             {
               color: primaryColor,
@@ -197,13 +196,13 @@ export class VisualizerPageComponent implements OnDestroy {
           ];
 
           const gradient: GradientOptions = {
-            bgColor: "#000",
+            bgColor: '#000',
             colorStops: colorsStops
           };
-          this.visualizerComponent.registerGradient("Spotify", gradient);
-          this.visualizerOptions.gradient = "Spotify";
-          this.visualizerOptions.gradientLeft = "Spotify";
-          this.visualizerOptions.gradientRight = "Spotify";
+          this.visualizerComponent.registerGradient('Spotify', gradient);
+          this.visualizerOptions.gradient = 'Spotify';
+          this.visualizerOptions.gradientLeft = 'Spotify';
+          this.visualizerOptions.gradientRight = 'Spotify';
           this.applySettings();
           this.store.dispatch(new ChangeLedstripColors([primaryColor, secondaryColor]));
         });
