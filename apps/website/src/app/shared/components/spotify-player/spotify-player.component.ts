@@ -195,6 +195,8 @@ export class SpotifyPlayerComponent implements OnInit {
    * @private
    */
   private onSpotifyWebPlaybackSDKReady() {
+    if(!this.spotifyAuth.isLoggedIn()) return;
+
     const token = this.spotifyAuth.getToken();
     const device = getDeviceType();
     this.player = new Spotify.Player({
