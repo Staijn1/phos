@@ -2,10 +2,11 @@ import { Injectable } from "@angular/core";
 import { environment } from "../../../environments/environment";
 import { MessageService } from "../message-service/message.service";
 import { io, Socket } from "socket.io-client";
-import { GradientInformationExtended, LedstripState, ModeInformation, WebsocketMessage } from "@angulon/interfaces";
+import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from "@angulon/interfaces";
 import { Store } from "@ngrx/store";
 import { ChangeMultipleLedstripProperties, ReceiveLedstripState } from "../../../redux/ledstrip/ledstrip.action";
 import { LoadModesAction } from "../../../redux/modes/modes.action";
+import {LoadGradientsAction} from "../../../redux/gradients/gradients.action";
 
 @Injectable({
   providedIn: "root"
@@ -29,6 +30,7 @@ export class WebsocketService {
 
       this.promisifyEmit<LedstripState>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
       this.loadModes();
+      this.loadGradients();
     });
 
     this.socket.on("disconnect", () => {
@@ -63,11 +65,9 @@ export class WebsocketService {
     this.socket.emit(WebsocketMessage.SetFFTValue, value);
   }
 
-  /**
-   * TODO: Reduxify this
-   */
-  getGradients(): Promise<GradientInformationExtended[]> {
-    return this.promisifyEmit<GradientInformationExtended[]>(WebsocketMessage.GetGradients);
+  private loadGradients(): void {
+    this.promisifyEmit<GradientInformation[]>(WebsocketMessage.GetGradients)
+      .then(gradients => this.store.dispatch(new LoadGradientsAction(gradients)));
   }
 
   turnOff() {
