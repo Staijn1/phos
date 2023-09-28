@@ -14,6 +14,7 @@ import {Store} from "@ngrx/store";
 import {ChangeLedstripColors, ChangeLedstripMode} from "../../../redux/ledstrip/ledstrip.action";
 import {WebsocketService} from "../../services/websocketconnection/websocket.service";
 import {map} from "../../shared/functions";
+import {MessageService} from "../../services/message-service/message.service";
 
 @Component({
   selector: "app-visualizer",
