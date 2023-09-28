@@ -4,7 +4,7 @@ import { faCheck, faExpand, faLightbulb, faList, faSliders, faWrench } from '@fo
 import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.service';
 import { SettingsService } from '../../services/settings/settings.service';
 import { VisualizerComponent } from '../../shared/components/visualizer/visualizer.component';
-import { AngulonVisualizerOptions, GradientInformation, LedstripState } from '@angulon/interfaces';
+import {  GradientInformation, LedstripState } from '@angulon/interfaces';
 import { OffCanvasComponent } from '../../shared/components/offcanvas/off-canvas.component';
 import * as slider from '@angular-slider/ngx-slider';
 import { InformationService } from '../../services/information-service/information.service';
@@ -14,6 +14,7 @@ import { Store } from '@ngrx/store';
 import { ChangeLedstripColors, ChangeLedstripMode } from '../../../redux/ledstrip/ledstrip.action';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 import { map } from '../../shared/functions';
+import { AngulonVisualizerOptions } from '../../shared/types/types';
 
 @Component({
   selector: 'app-visualizer',
