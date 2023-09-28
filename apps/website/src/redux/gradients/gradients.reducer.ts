@@ -1,11 +1,11 @@
-import {GradientInformationExtended} from "@angulon/interfaces";
-import {ModesAction} from "../modes/modes.action";
+import {GradientInformation} from "@angulon/interfaces";
+import {GradientAction} from "./gradients.action";
 
-const initialState: GradientInformationExtended[] = [];
+const initialState: GradientInformation[] = [];
 
-export const gradientsReducer = (state: GradientInformationExtended[] = initialState, action: any): GradientInformationExtended[] => {
+export const gradientsReducer = (state: GradientInformation[] = initialState, action: any): GradientInformation[] => {
   switch (action.type) {
-    case ModesAction.LOAD:
+    case GradientAction.LOAD_GRADIENTS:
       return action.payload;
     default:
       return state;
