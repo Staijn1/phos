@@ -1,7 +1,8 @@
 import { UserPreferences } from '../../app/shared/types/types';
 import { UserPreferencesAction } from './user-preferences.action';
+import { loadObjectFromLocalStorage } from '../../app/shared/functions';
 
-const initialState: UserPreferences = {
+const initialState: UserPreferences = loadObjectFromLocalStorage('userPreferences', {
   settings: {
     chroma: false,
     theme: 'default',
@@ -40,7 +41,7 @@ const initialState: UserPreferences = {
     weightingFilter: '',
     energyPreset: 'bass'
   }
-};
+});
 
 export const userPreferencesReducer = (state: UserPreferences = initialState, action: any): UserPreferences => {
   switch (action.type) {

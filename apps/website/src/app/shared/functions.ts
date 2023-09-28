@@ -1,6 +1,6 @@
-import { constrain } from "@angulon/interfaces";
-import { GlobalVars } from "./constants";
-import { RGBObject } from "./types/types";
+import { constrain } from '@angulon/interfaces';
+import { GlobalVars } from './constants';
+import { RGBObject } from './types/types';
 
 /**
  * Map a value from one scale to another. This function is the same as the map() function from arduino.
@@ -34,7 +34,7 @@ export function map(value: number, start1: number, stop1: number, start2: number
  */
 export function calculateBGRInteger(red: number, green: number, blue: number): number {
   if (red === undefined || red === null || green === undefined || green === null || blue === undefined || blue === null) {
-    throw new Error("Invalid parameters!");
+    throw new Error('Invalid parameters!');
   }
   return 65536 * blue + 256 * green + red;
 }
@@ -228,13 +228,24 @@ export function random8(): number {
 export const getDeviceType = (): string | void => {
   const userAgent = navigator.userAgent;
   const devices: Map<string, boolean> = new Map([
-    ["iPad", /iPad/.test(userAgent)],
-    ["iPhone", /iPhone/.test(userAgent)],
-    ["Android", /Android/.test(userAgent)],
-    ["Windows", /Windows/.test(userAgent)]
+    ['iPad', /iPad/.test(userAgent)],
+    ['iPhone', /iPhone/.test(userAgent)],
+    ['Android', /Android/.test(userAgent)],
+    ['Windows', /Windows/.test(userAgent)]
   ]);
 
   for (const [key, value] of devices) {
     if (value) return key;
   }
+};
+
+/**
+ * Loads and parses an object from the localstorage, if it exists. If it does not it returns the supplied default value;
+ * @param key
+ * @param defaultValue
+ */
+export const loadObjectFromLocalStorage = (key: string, defaultValue: unknown) => {
+  const localstorageItem = localStorage.getItem(key);
+  if (localstorageItem) return JSON.parse(localstorageItem);
+  return defaultValue;
 };
