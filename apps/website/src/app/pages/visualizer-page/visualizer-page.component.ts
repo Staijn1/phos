@@ -4,7 +4,7 @@ import { faCheck, faExpand, faLightbulb, faList, faSliders, faWrench } from '@fo
 import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.service';
 import { SettingsService } from '../../services/settings/settings.service';
 import { VisualizerComponent } from '../../shared/components/visualizer/visualizer.component';
-import {  GradientInformation, LedstripState } from '@angulon/interfaces';
+import { GradientInformation, LedstripState } from '@angulon/interfaces';
 import { OffCanvasComponent } from '../../shared/components/offcanvas/off-canvas.component';
 import * as slider from '@angular-slider/ngx-slider';
 import { InformationService } from '../../services/information-service/information.service';

@@ -1,8 +1,8 @@
-import { ComponentFixture, TestBed } from "@angular/core/testing";
+import { ComponentFixture, TestBed } from '@angular/core/testing';
 
-import { SpotifyAuthenticationCallbackComponent } from "./spotify-authentication-callback.component";
+import { SpotifyAuthenticationCallbackComponent } from './spotify-authentication-callback.component';
 
-describe("SpotifyAuthenticationCallbackComponent", () => {
+describe('SpotifyAuthenticationCallbackComponent', () => {
   let component: SpotifyAuthenticationCallbackComponent;
   let fixture: ComponentFixture<SpotifyAuthenticationCallbackComponent>;
 
@@ -16,7 +16,7 @@ describe("SpotifyAuthenticationCallbackComponent", () => {
     fixture.detectChanges();
   });
 
-  it("should create", () => {
+  it('should create', () => {
     expect(component).toBeTruthy();
   });
 });

@@ -1,15 +1,15 @@
-import { Injectable } from "@angular/core";
-import { environment } from "../../../environments/environment";
-import { MessageService } from "../message-service/message.service";
-import { io, Socket } from "socket.io-client";
-import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from "@angulon/interfaces";
-import { Store } from "@ngrx/store";
-import { ChangeMultipleLedstripProperties, ReceiveLedstripState } from "../../../redux/ledstrip/ledstrip.action";
-import { LoadModesAction } from "../../../redux/modes/modes.action";
-import {LoadGradientsAction} from "../../../redux/gradients/gradients.action";
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { MessageService } from '../message-service/message.service';
+import { io, Socket } from 'socket.io-client';
+import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from '@angulon/interfaces';
+import { Store } from '@ngrx/store';
+import { ChangeMultipleLedstripProperties, ReceiveLedstripState } from '../../../redux/ledstrip/ledstrip.action';
+import { LoadModesAction } from '../../../redux/modes/modes.action';
+import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class WebsocketService {
   private websocketUrl = environment.url;
@@ -21,23 +21,23 @@ export class WebsocketService {
     private readonly store: Store<{ modes: ModeInformation[], ledstripState: LedstripState }>
   ) {
     this.socket = io(this.websocketUrl, {
-      transports: ["websocket"],
+      transports: ['websocket'],
       reconnectionAttempts: 5
     });
 
-    this.socket.on("connect", () => {
-      console.log("Opened websocket at", this.websocketUrl);
+    this.socket.on('connect', () => {
+      console.log('Opened websocket at', this.websocketUrl);
 
       this.promisifyEmit<LedstripState>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
       this.loadModes();
       this.loadGradients();
     });
 
-    this.socket.on("disconnect", () => {
+    this.socket.on('disconnect', () => {
       console.log(`Disconnected from websocket at ${this.websocketUrl}`);
     });
 
-    this.socket.on("connect_error", (error: Error) => {
+    this.socket.on('connect_error', (error: Error) => {
       console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
       messageService.setMessage(error);
     });
@@ -46,7 +46,7 @@ export class WebsocketService {
 
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
     this.store
-      .select("ledstripState")
+      .select('ledstripState')
       .subscribe((state) => {
         if (!this.updateLedstripState) {
           this.updateLedstripState = true;
@@ -65,13 +65,13 @@ export class WebsocketService {
     this.socket.emit(WebsocketMessage.SetFFTValue, value);
   }
 
+  turnOff() {
+    this.store.dispatch(new ChangeMultipleLedstripProperties({ colors: ['#000000', '#000000'], mode: 0 }));
+  }
+
   private loadGradients(): void {
     this.promisifyEmit<GradientInformation[]>(WebsocketMessage.GetGradients)
       .then(gradients => this.store.dispatch(new LoadGradientsAction(gradients)));
-  }
-
-  turnOff() {
-    this.store.dispatch(new ChangeMultipleLedstripProperties({ colors: ["#000000", "#000000"], mode: 0 }));
   }
 
   private loadModes() {
@@ -101,7 +101,7 @@ export class WebsocketService {
   private promisifyEmit<T>(eventName: WebsocketMessage, ...args: any[]): Promise<T> {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
-        const error = new Error("Websocket response timeout exceeded");
+        const error = new Error('Websocket response timeout exceeded');
         console.warn(`Timeout exceeded for event: ${eventName} with args: ${args.toString()}`, error);
         this.messageService.setMessage(error);
         reject(error);

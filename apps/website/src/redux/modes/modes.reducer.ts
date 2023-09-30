@@ -1,5 +1,5 @@
-import { ModeInformation } from "@angulon/interfaces";
-import { ModesAction } from "./modes.action";
+import { ModeInformation } from '@angulon/interfaces';
+import { ModesAction } from './modes.action';
 
 const initialState: ModeInformation[] = [];
 

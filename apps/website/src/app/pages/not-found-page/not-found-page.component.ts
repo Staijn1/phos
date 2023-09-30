@@ -1,10 +1,10 @@
-import { Component } from "@angular/core";
-import { ThemeService } from "../../services/theme/theme.service";
+import { Component } from '@angular/core';
+import { ThemeService } from '../../services/theme/theme.service';
 
 @Component({
-  selector: "app-not-found-page",
-  templateUrl: "./not-found-page.component.html",
-  styleUrls: ["./not-found-page.component.scss"]
+  selector: 'app-not-found-page',
+  templateUrl: './not-found-page.component.html',
+  styleUrls: ['./not-found-page.component.scss']
 })
 export class NotFoundPageComponent {
   theme!: string;

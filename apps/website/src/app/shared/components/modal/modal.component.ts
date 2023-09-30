@@ -1,14 +1,14 @@
-import { Component, ElementRef, ViewChild } from "@angular/core";
-import { NgbModal, NgbModalOptions, NgbModalRef } from "@ng-bootstrap/ng-bootstrap";
-import { faTimes } from "@fortawesome/free-solid-svg-icons";
+import { Component, ElementRef, ViewChild } from '@angular/core';
+import { NgbModal, NgbModalOptions, NgbModalRef } from '@ng-bootstrap/ng-bootstrap';
+import { faTimes } from '@fortawesome/free-solid-svg-icons';
 
 @Component({
-  selector: "app-modal",
-  templateUrl: "./modal.component.html",
-  styleUrls: ["./modal.component.scss"]
+  selector: 'app-modal',
+  templateUrl: './modal.component.html',
+  styleUrls: ['./modal.component.scss']
 })
 export class ModalComponent {
-  @ViewChild("content") content!: ElementRef;
+  @ViewChild('content') content!: ElementRef;
   closeModalIcon = faTimes;
   private modal: NgbModalRef | undefined;
 
@@ -25,7 +25,7 @@ export class ModalComponent {
    * @param {NgbModalOptions} options
    */
   open(options?: NgbModalOptions): void {
-    this.modal = this.modalService.open(this.content, { ariaLabelledBy: "modal-basic-title", ...options });
+    this.modal = this.modalService.open(this.content, { ariaLabelledBy: 'modal-basic-title', ...options });
   }
 
   /**

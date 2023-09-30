@@ -1,6 +1,6 @@
-import { State } from "../abstract/state";
-import { color_wheel, randomInteger } from "../../../../shared/functions";
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from "../../../chromaSDK/chromaSDK.service";
+import { State } from '../abstract/state';
+import { color_wheel, randomInteger } from '../../../../shared/functions';
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
 
 export class MultiDynamicState extends State {
   private headsetColors = [0, 0, 0, 0, 0];

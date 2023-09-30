@@ -4,18 +4,18 @@ export class GlobalVars {
 }
 
 export const themes = [
-  "default",
-  "carrot",
-  "banana",
-  "cherry",
-  "candy-cane",
-  "sunday",
-  "leaf",
-  "seaweed",
-  "sulfur",
-  "yucca",
-  "walnut",
-  "elderberry"
+  'default',
+  'carrot',
+  'banana',
+  'cherry',
+  'candy-cane',
+  'sunday',
+  'leaf',
+  'seaweed',
+  'sulfur',
+  'yucca',
+  'walnut',
+  'elderberry'
 ];
 
 export const visualizerModeId = 72;

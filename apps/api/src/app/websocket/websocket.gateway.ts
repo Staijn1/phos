@@ -5,19 +5,19 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer
-} from "@nestjs/websockets";
-import { Logger } from "@nestjs/common";
-import { Server, Socket } from "socket.io";
-import { WebsocketClientsManagerService } from "./websocket-clients-manager.service";
-import { ConfigurationService } from "../configuration/configuration.service";
-import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from "@angulon/interfaces";
-import { GradientsService } from "../gradients/gradients.service";
+} from '@nestjs/websockets';
+import { Logger } from '@nestjs/common';
+import { Server, Socket } from 'socket.io';
+import { WebsocketClientsManagerService } from './websocket-clients-manager.service';
+import { ConfigurationService } from '../configuration/configuration.service';
+import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from '@angulon/interfaces';
+import { GradientsService } from '../gradients/gradients.service';
 
 @WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
-  private logger: Logger = new Logger("WebsocketGateway");
+  private logger: Logger = new Logger('WebsocketGateway');
   // 15 minutes in milliseconds
   private readonly stateIntervalTimeMS = 900000;
 
@@ -101,7 +101,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    */
   afterInit(): void {
     setInterval(() => {
-      this.logger.log("Sending state to all ledstrips - forced");
+      this.logger.log('Sending state to all ledstrips - forced');
       this.websocketClientsManagerService.setStateOnAllLedstrips(true);
     }, this.stateIntervalTimeMS);
   }

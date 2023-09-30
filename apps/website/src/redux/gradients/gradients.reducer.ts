@@ -1,5 +1,5 @@
-import {GradientInformation} from "@angulon/interfaces";
-import {GradientAction} from "./gradients.action";
+import { GradientInformation } from '@angulon/interfaces';
+import { GradientAction } from './gradients.action';
 
 const initialState: GradientInformation[] = [];
 

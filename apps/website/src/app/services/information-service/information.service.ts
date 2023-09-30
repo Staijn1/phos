@@ -1,10 +1,10 @@
-import { Injectable } from "@angular/core";
-import Vibrant from "node-vibrant";
-import { Palette } from "node-vibrant/lib/color";
-import { FastAverageColor, FastAverageColorResult } from "fast-average-color";
+import { Injectable } from '@angular/core';
+import Vibrant from 'node-vibrant';
+import { Palette } from 'node-vibrant/lib/color';
+import { FastAverageColor, FastAverageColorResult } from 'fast-average-color';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class InformationService {
   /**
@@ -18,7 +18,7 @@ export class InformationService {
 
     // Extract the color palette asynchronously
     const palette = await vibrant.getPalette();
-    const average = await fac.getColorAsync(url, { algorithm: "dominant", ignoredColor: [0, 0, 0, 255, 50] });
+    const average = await fac.getColorAsync(url, { algorithm: 'dominant', ignoredColor: [0, 0, 0, 255, 50] });
 
 // Return the color palette with the result from fac
     return { ...palette, Average: average } as Palette & { Average: FastAverageColorResult };

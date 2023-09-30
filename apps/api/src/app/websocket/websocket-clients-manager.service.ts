@@ -1,6 +1,6 @@
-import { Injectable, Logger } from "@nestjs/common";
-import { Server, Socket } from "socket.io";
-import { LedstripState, WebsocketMessage } from "@angulon/interfaces";
+import { Injectable, Logger } from '@nestjs/common';
+import { Server, Socket } from 'socket.io';
+import { LedstripState, WebsocketMessage } from '@angulon/interfaces';
 
 @Injectable()
 export class WebsocketClientsManagerService {
@@ -10,12 +10,12 @@ export class WebsocketClientsManagerService {
    */
   private state: LedstripState = {
     brightness: 255,
-    colors: ["#ff0000", "#000000", "#000000"],
+    colors: ['#ff0000', '#000000', '#000000'],
     fftValue: 0,
     mode: 0,
     speed: 1000
   };
-  private logger: Logger = new Logger("WebsocketClientsManagerService");
+  private logger: Logger = new Logger('WebsocketClientsManagerService');
 
   /**
    * Get the state of this server
@@ -67,7 +67,7 @@ export class WebsocketClientsManagerService {
    * @param client
    */
   joinUserRoom(client: Socket) {
-    client.join("user");
+    client.join('user');
     this.logger.log(`Client ${client.conn.remoteAddress} joined the user room`);
   }
 
@@ -86,7 +86,7 @@ export class WebsocketClientsManagerService {
       return;
     }
     // To the ledstrip that just submitted it's state, send the state of the server because it's not the first ledstrip to connect
-    client.emit("!", this.state);
+    client.emit('!', this.state);
   }
 
   /**
@@ -99,7 +99,7 @@ export class WebsocketClientsManagerService {
   private setStateOnAllUsers(event: WebsocketMessage, payload: LedstripState, originClient: Socket) {
     const clients = this.server ? this.server.sockets.sockets : new Map();
     for (const [, client] of clients) {
-      if (client.id === originClient.id || !client.rooms.has("user")) continue;
+      if (client.id === originClient.id || !client.rooms.has('user')) continue;
       client.emit(event, payload);
     }
   }
@@ -111,7 +111,7 @@ export class WebsocketClientsManagerService {
   private getLedstripClients(): Socket[] {
     // Convert the clients from a Map to an array
     const clients = this.server ? [...this.server.sockets.sockets.values()] : [];
-    return clients.filter(client => !client.rooms.has("user"));
+    return clients.filter(client => !client.rooms.has('user'));
   }
 
   /**

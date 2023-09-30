@@ -1,7 +1,7 @@
-import { State } from "../abstract/state";
-import { calculateBGRInteger, color_wheel, convertRGBIntegerToArray } from "../../../../shared/functions";
-import iro from "@jaames/iro";
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from "../../../chromaSDK/chromaSDK.service";
+import { State } from '../abstract/state';
+import { calculateBGRInteger, color_wheel, convertRGBIntegerToArray } from '../../../../shared/functions';
+import iro from '@jaames/iro';
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
 
 export class RainbowState extends State {
   private counter = 0;

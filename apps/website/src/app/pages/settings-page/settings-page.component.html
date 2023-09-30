@@ -1,59 +1,59 @@
-<div class="bg-warning" id="settingsWrapper"></div>
-<div class="row m-0 vh-100" id="settings">
-  <div class="col-6"></div>
-  <div class="col-sm-6 col-xl-4 m-0 d-flex flex-column justify-content-center">
-    <form #form="ngForm" class="card">
-      <div class="card-body" *ngIf='settings'>
-        <div class="card-title border-bottom">
-          <h1 class="text-center">Settings</h1>
+<div class='bg-warning' id='settingsWrapper'></div>
+<div class='row m-0 vh-100' id='settings'>
+  <div class='col-6'></div>
+  <div class='col-sm-6 col-xl-4 m-0 d-flex flex-column justify-content-center'>
+    <form #form='ngForm' class='card'>
+      <div *ngIf='settings' class='card-body'>
+        <div class='card-title border-bottom'>
+          <h1 class='text-center'>Settings</h1>
         </div>
-        <div class="row">
-          <div class="col">
-            <div class="input-group mb-3">
-              <div class="form-check">
-                <input [(ngModel)]="settings.chromaSupportEnabled" class="form-check-input" id="chromaSupportEnabled"
-                       name="chromaSupportEnabled"
-                       type="checkbox">
-                <label class="form-check-label" for="chromaSupportEnabled">
+        <div class='row'>
+          <div class='col'>
+            <div class='input-group mb-3'>
+              <div class='form-check'>
+                <input [(ngModel)]='settings.chromaSupportEnabled' class='form-check-input' id='chromaSupportEnabled'
+                       name='chromaSupportEnabled'
+                       type='checkbox'>
+                <label class='form-check-label' for='chromaSupportEnabled'>
                   Enable chroma support
                 </label>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col">
-            <div class="input-group mb-3">
-              <div class="form-check">
-                <input [(ngModel)]="settings.darkModeEnabled" class="form-check-input" id="darkModeEnabled"
-                       name="darkModeEnabled"
-                       type="checkbox">
-                <label class="form-check-label" for="darkModeEnabled">
+        <div class='row'>
+          <div class='col'>
+            <div class='input-group mb-3'>
+              <div class='form-check'>
+                <input [(ngModel)]='settings.darkModeEnabled' class='form-check-input' id='darkModeEnabled'
+                       name='darkModeEnabled'
+                       type='checkbox'>
+                <label class='form-check-label' for='darkModeEnabled'>
                   Enable dark mode
                 </label>
               </div>
             </div>
           </div>
         </div>
-        <div class="row">
-          <div class="col">
+        <div class='row'>
+          <div class='col'>
             Primary color:
-            <div class="row justify-content-center">
+            <div class='row justify-content-center'>
               <div
-                (click)="setTheme(theme)"
-                *ngFor="let theme of themes;let i = index"
-                [class.active]="i === selectedTheme"
-                [ngClass]="theme"
-                class="color-option col-4 col-sm-2 rounded d-flex justify-content-center align-items-center m-2 text-capitalize"
+                (click)='setTheme(theme)'
+                *ngFor='let theme of themes;let i = index'
+                [class.active]='i === selectedTheme'
+                [ngClass]='theme'
+                class='color-option col-4 col-sm-2 rounded d-flex justify-content-center align-items-center m-2 text-capitalize'
               >
                 {{theme}}
               </div>
             </div>
           </div>
         </div>
-        <div class="d-flex justify-content-between">
-          <button (click)="clearSettings()" class="btn btn-secondary" type="button">
-            <fa-icon [icon]="clearSettingsIcon"></fa-icon>
+        <div class='d-flex justify-content-between'>
+          <button (click)='clearSettings()' class='btn btn-secondary' type='button'>
+            <fa-icon [icon]='clearSettingsIcon'></fa-icon>
             Reset defaults
           </button>
         </div>

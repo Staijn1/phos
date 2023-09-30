@@ -1,8 +1,8 @@
-import { Injectable } from "@angular/core";
-import { Message } from "../../shared/types/Message";
+import { Injectable } from '@angular/core';
+import { Message } from '../../shared/types/Message';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class MessageService {
   private _messages: Message[] = [];
@@ -29,6 +29,6 @@ export class MessageService {
     if (message instanceof Message) {
       return message;
     }
-    return new Message("error", message.message);
+    return new Message('error', message.message);
   }
 }

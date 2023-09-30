@@ -1,5 +1,5 @@
-import { ChromaEffectService } from "../../chroma-effect.service";
-import iro from "@jaames/iro";
+import { ChromaEffectService } from '../../chroma-effect.service';
+import iro from '@jaames/iro';
 
 
 export abstract class State {
