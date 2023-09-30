@@ -1,19 +1,20 @@
-import { Injectable } from "@angular/core";
-import { ChromaSDKService } from "../chromaSDK/chromaSDK.service";
-import { State } from "./state/abstract/state";
-import { StaticState } from "./state/static-state/static-state";
-import { SettingsService } from "../settings/settings.service";
-import iro from "@jaames/iro";
-import { VisualizerState } from "./state/visualizer-state/visualizer-state";
-import { MessageService } from "../message-service/message.service";
-import { VisualizerBrightnessState } from "./state/visualizer-brightness-state/visualizer-brightness-state";
+import { Injectable } from '@angular/core';
+import { ChromaSDKService } from '../chromaSDK/chromaSDK.service';
+import { State } from './state/abstract/state';
+import { StaticState } from './state/static-state/static-state';
+import iro from '@jaames/iro';
+import { VisualizerState } from './state/visualizer-state/visualizer-state';
+import { MessageService } from '../message-service/message.service';
+import { VisualizerBrightnessState } from './state/visualizer-brightness-state/visualizer-brightness-state';
+import { Store } from '@ngrx/store';
+import { UserPreferences } from '../../shared/types/types';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class ChromaEffectService extends ChromaSDKService {
-  constructor(settingsService: SettingsService, messageService: MessageService) {
-    super(settingsService, messageService);
+  constructor(messageService: MessageService, store: Store<{ userPreferences: UserPreferences }>) {
+    super(messageService, store);
     this._state = new StaticState();
     this._state.context = this;
   }
@@ -22,7 +23,7 @@ export class ChromaEffectService extends ChromaSDKService {
 
   set setColors(newColors: iro.Color[] | string[]) {
     newColors = newColors.map(c => {
-      if (typeof c === "string") {
+      if (typeof c === 'string') {
         return new iro.Color(c);
       }
       return c;
