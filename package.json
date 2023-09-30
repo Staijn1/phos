@@ -38,7 +38,7 @@
     "@ngrx/store-devtools": "15.3.0",
     "@popperjs/core": "^2.11.6",
     "aos": "^2.3.4",
-    "audiomotion-analyzer": "^4.2.0",
+    "audiomotion-analyzer": "^4.3.0",
     "bootstrap": "^5.2.3",
     "fast-average-color": "^9.3.0",
     "gsap": "^3.7.1",
@@ -47,7 +47,6 @@
     "rxjs": "7.8.1",
     "socket.io-client": "^4.5.3",
     "tslib": "^2.3.0",
-    "websocket": "^1.0.34",
     "zone.js": "0.12.0"
   },
   "devDependencies": {
