@@ -9,9 +9,8 @@ jobs:
     name: Build and lint
     runs-on: ubuntu-latest
     steps:
-      - name: Print GitHub event action
-        run: |
-          echo "${{ github.event.action }}"
+      - run: echo "event name is:" ${{ github.event_name }}
+      - run: echo "event type is:" ${{ github.event.action }}
       - uses: actions/checkout@v2
         with:
           fetch-depth: 0
