@@ -45,7 +45,7 @@ export class ModePageComponent implements OnDestroy {
     { name: 'VuMeter', state: new VisualizerState() },
     { name: 'VuMeter Brightness', state: new VisualizerBrightnessState() }
   ];
-  classes = themes;
+  classes = themes.map(theme => theme.name);
   selectedMode = 0;
 
 

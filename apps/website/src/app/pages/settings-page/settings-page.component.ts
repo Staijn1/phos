@@ -20,7 +20,7 @@ export class SettingsPageComponent implements OnInit {
   @ViewChild('form', { static: true }) form!: NgForm;
   settings: GeneralSettings | undefined;
   saveIcon = faSave;
-  themes = themes;
+  themes = themes.map(theme => theme.name);
   selectedTheme = 0;
   clearSettingsIcon = faBroom;
   private skipUpdate = false;
