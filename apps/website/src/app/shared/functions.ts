@@ -13,7 +13,7 @@ import { RGBObject } from './types/types';
  * @param withinBounds
  * @returns A number within the new range
  */
-export const mapNumber = (value: number, start1: number, stop1: number, start2: number, stop2: number, withinBounds: boolean = false): number => {
+export const mapNumber = (value: number, start1: number, stop1: number, start2: number, stop2: number, withinBounds = false): number => {
   const newval = (value - start1) / (stop1 - start1) * (stop2 - start2) + start2;
   if (!withinBounds) {
     return newval;
@@ -248,4 +248,33 @@ export const loadObjectFromLocalStorage = (key: string, defaultValue: unknown) =
   const localstorageItem = localStorage.getItem(key);
   if (localstorageItem) return JSON.parse(localstorageItem);
   return defaultValue;
+};
+
+/**
+ * Prefixes the current URL with "api.". Used to deploy to different environments, production and demo.
+ * @example "https://some.domain.com" becomes "https://api.some.domain.com"
+ */
+export const prefixURLWithApi = () => {
+  // Get the current URL
+  const currentUrl = window.location.href;
+
+  // Split the URL into its parts
+  const urlParts = currentUrl.split("//");
+
+  // Check if we have the protocol and hostname
+  if (urlParts.length === 2) {
+    const [protocol, rest] = urlParts;
+    const [hostname, ...pathParts] = rest.split("/");
+
+    // Add "api." to the hostname
+    const modifiedHostname = "api." + hostname;
+
+    // Reconstruct the modified URL
+    const modifiedUrl = `${protocol}//${modifiedHostname}/${pathParts.join("/")}`;
+
+    return modifiedUrl;
+  } else {
+    // Invalid URL format
+    return currentUrl;
+  }
 };
