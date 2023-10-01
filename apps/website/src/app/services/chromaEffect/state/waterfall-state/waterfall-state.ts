@@ -1,5 +1,5 @@
 import { State } from '../abstract/state';
-import { calculateBGRInteger, ColdColor, map, qadd8, qsub8, randomInteger } from '../../../../shared/functions';
+import { calculateBGRInteger, ColdColor, mapNumber, qadd8, qsub8, randomInteger } from '../../../../shared/functions';
 import iro from '@jaames/iro';
 import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
 
@@ -53,7 +53,7 @@ export class WaterfallState extends State {
     // Step 4.  Map from heatKeyboard cells to LED colors on keyboard
     for (let i = 0; i < this._context.keyboard.rows; i++) {
       for (let j = 0; j < this._context.keyboard.columns; j++) {
-        const color = ColdColor(map(this.heatKeyboard[j], 0, 255, 0, 240));
+        const color = ColdColor(mapNumber(this.heatKeyboard[j], 0, 255, 0, 240));
         let pixelnumber;
         if (this.G_REVERSE_DIRECTION) {
           pixelnumber = (this._context.keyboard.columns - 1) - j;
@@ -81,7 +81,7 @@ export class WaterfallState extends State {
     // Step 4.  Map from heatKeyboard cells to LED colors on keyboard
     for (let i = 0; i < this._context.mouse.rows; i++) {
       for (let j = 0; j < this._context.mouse.columns; j++) {
-        const color = ColdColor(map(this.heatMouse[i], 0, 255, 0, 240));
+        const color = ColdColor(mapNumber(this.heatMouse[i], 0, 255, 0, 240));
         let pixelnumber;
         if (this.G_REVERSE_DIRECTION) {
           pixelnumber = (this._context.mouse.rows - 1) - i;

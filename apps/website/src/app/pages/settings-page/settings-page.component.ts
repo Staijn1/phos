@@ -25,7 +25,7 @@ export class SettingsPageComponent implements OnInit {
   clearSettingsIcon = faBroom;
   private skipUpdate = false;
 
-  constructor(private readonly theme: ThemeService, private readonly store: Store<{
+  constructor(private readonly store: Store<{
     userPreferences: UserPreferences
   }>) {
     this.store.select('userPreferences').subscribe(preferences => {

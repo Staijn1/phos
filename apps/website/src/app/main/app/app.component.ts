@@ -22,10 +22,7 @@ export class AppComponent implements OnInit {
     // Subscribe to all changes in the user preferences so we can write the current state to local storage
     store.select('userPreferences')
       .pipe(debounceTime(500))
-      .subscribe(preferences => {
-        delete preferences.visualizerOptions.onCanvasDraw;
-        localStorage.setItem('userPreferences', JSON.stringify(preferences));
-      });
+      .subscribe(preferences => localStorage.setItem('userPreferences', JSON.stringify(preferences)));
 
     this.theme.initialize();
 

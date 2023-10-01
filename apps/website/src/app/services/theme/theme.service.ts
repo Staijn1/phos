@@ -6,7 +6,10 @@ import { UserPreferences } from '../../shared/types/types';
   providedIn: 'root'
 })
 export class ThemeService {
-  theme!: string;
+  private _theme = 'default';
+  get theme(): string {
+    return this._theme;
+  }
 
   constructor(private readonly store: Store<{
     userPreferences: UserPreferences
@@ -21,6 +24,6 @@ export class ThemeService {
 
   applyTheme(theme: string, darkModeEnabled: boolean) {
     document.body.className = [theme, darkModeEnabled ? 'dark' : undefined].join(' ');
-    this.theme = theme;
+    this._theme = theme;
   }
 }

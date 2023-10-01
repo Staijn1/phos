@@ -1,5 +1,5 @@
 import { State } from '../abstract/state';
-import { calculateBGRInteger, map } from '../../../../shared/functions';
+import { calculateBGRInteger, mapNumber } from '../../../../shared/functions';
 import iro from '@jaames/iro';
 import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
 
@@ -22,7 +22,7 @@ export class VisualizerBrightnessState extends State {
   }
 
   createVisualizer(foregroundColor: iro.Color): void {
-    foregroundColor.value = map(this._intensity, 0, 1, 0, 100, true);
+    foregroundColor.value = mapNumber(this._intensity, 0, 1, 0, 100, true);
     this._BGRIntegerForeground = calculateBGRInteger(foregroundColor.red, foregroundColor.green, foregroundColor.blue);
 
     // Nothing changed so let's not waste resources to set the same effect again.

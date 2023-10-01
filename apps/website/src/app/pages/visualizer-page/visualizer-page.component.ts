@@ -2,7 +2,6 @@ import { Component, OnDestroy, ViewChild } from '@angular/core';
 import AudioMotionAnalyzer, { GradientColorStop, GradientOptions } from 'audiomotion-analyzer';
 import { faCheck, faExpand, faLightbulb, faList, faSliders, faWrench } from '@fortawesome/free-solid-svg-icons';
 import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.service';
-import { SettingsService } from '../../services/settings/settings.service';
 import { VisualizerComponent } from '../../shared/components/visualizer/visualizer.component';
 import { GradientInformation, LedstripState } from '@angulon/interfaces';
 import { OffCanvasComponent } from '../../shared/components/offcanvas/off-canvas.component';
@@ -13,8 +12,10 @@ import { faSpotify } from '@fortawesome/free-brands-svg-icons';
 import { Store } from '@ngrx/store';
 import { ChangeLedstripColors, ChangeLedstripMode } from '../../../redux/ledstrip/ledstrip.action';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
-import { map } from '../../shared/functions';
-import { AngulonVisualizerOptions } from '../../shared/types/types';
+import { mapNumber } from '../../shared/functions';
+import { AngulonVisualizerOptions, UserPreferences } from '../../shared/types/types';
+import { distinctUntilChanged, map } from 'rxjs';
+import { ChangeVisualizerOptions } from '../../../redux/user-preferences/user-preferences.action';
 
 @Component({
   selector: 'app-visualizer',
@@ -93,9 +94,12 @@ export class VisualizerPageComponent implements OnDestroy {
   constructor(
     private connection: WebsocketService,
     private information: InformationService,
-    private settingsService: SettingsService,
     private chromaEffect: ChromaEffectService,
-    private store: Store<{ ledstripState: LedstripState | undefined, gradients: GradientInformation[] }>
+    private store: Store<{
+      ledstripState: LedstripState | undefined,
+      gradients: GradientInformation[],
+      userPreferences: UserPreferences
+    }>
   ) {
   }
 
@@ -138,7 +142,7 @@ export class VisualizerPageComponent implements OnDestroy {
 
   drawCallback(instance: AudioMotionAnalyzer): void {
     const value = instance.getEnergy('bass');
-    this.connection.sendFFTValue(Math.floor(map(value, 0, 1, 0, 255)));
+    this.connection.sendFFTValue(Math.floor(mapNumber(value, 0, 1, 0, 255)));
     this.chromaEffect.intensity = value;
   }
 
@@ -147,14 +151,20 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   readSettings() {
-    const settings = this.settingsService.readVisualizerOptions();
-    settings.onCanvasDraw = this.drawCallback.bind(this);
-    if (settings.gradientRight === 'Spotify' || settings.gradientLeft === 'Spotify' || settings.gradient === 'Spotify') {
-      settings.gradient = 'prism';
-      settings.gradientLeft = 'prism';
-      settings.gradientRight = 'prism';
-    }
-    this.visualizerOptions = settings;
+    this.store.select('userPreferences').pipe(
+      map(userPref => userPref.visualizerOptions)
+    ).subscribe(visualizerOptions => {
+      // Set some overrides on the settings before applying
+      const settingsToApply = {...visualizerOptions};
+
+      settingsToApply.onCanvasDraw = this.drawCallback.bind(this);
+      if (settingsToApply.gradientRight === 'Spotify' || settingsToApply.gradientLeft === 'Spotify' || settingsToApply.gradient === 'Spotify') {
+        settingsToApply.gradient = 'prism';
+        settingsToApply.gradientLeft = 'prism';
+        settingsToApply.gradientRight = 'prism';
+      }
+      this.visualizerOptions = settingsToApply;
+    });
   }
 
   toggleSettingsWindow() {
@@ -163,7 +173,7 @@ export class VisualizerPageComponent implements OnDestroy {
 
   applySettings() {
     this.visualizerOptions = Object.assign({}, this.visualizerOptions);
-    this.settingsService.saveVisualizerOptions(this.visualizerOptions);
+    this.store.dispatch(new ChangeVisualizerOptions(this.visualizerOptions));
   }
 
   closeOffcanvas() {
@@ -175,7 +185,7 @@ export class VisualizerPageComponent implements OnDestroy {
    * This handler checks if the song has changed and if so, it will extract the average colors from the album cover
    * Then it creates a gradient from the colors and sets it as the current gradient in the visualizer
    * Then it will send the average colors to the ledstrip
-   * @param {Spotify.PlaybackState} state
+   * @param state
    */
   onSpotifyStateChanged(state: Spotify.PlaybackState) {
     if (state?.track_window?.current_track?.id !== this.currentTrackId) {

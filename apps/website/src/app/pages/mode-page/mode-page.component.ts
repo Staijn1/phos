@@ -47,7 +47,6 @@ export class ModePageComponent implements OnDestroy {
 
 
   constructor(
-    private readonly connection: WebsocketService,
     private readonly chromaService: ChromaEffectService,
     private readonly store: Store<{ modes: ModeInformation[], ledstripState: LedstripState | undefined }>,
     public readonly themeService: ThemeService) {
