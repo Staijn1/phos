@@ -1,8 +1,8 @@
-import { AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
 import { gsap } from 'gsap';
 import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import {
-  faBars,
+  faBars as OpenMobileMenuIcon,
   faChartBar,
   faCog,
   faEyeDropper,
@@ -13,10 +13,9 @@ import {
   faPowerOff,
   faRunning,
   faSlidersH,
-  faTimes,
+  faTimes as CloseMobileMenuIcon,
   faWalking
 } from '@fortawesome/free-solid-svg-icons';
-import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.service';
 import { Store } from '@ngrx/store';
 import { ColorpickerComponent } from '../../shared/components/colorpicker/colorpicker.component';
 import { LedstripState } from '@angulon/interfaces';
@@ -27,20 +26,22 @@ import {
   IncreaseLedstripBrightness,
   IncreaseLedstripSpeed
 } from '../../../redux/ledstrip/ledstrip.action';
+import { OffCanvasComponent } from '../../shared/components/offcanvas/off-canvas.component';
 
 @Component({
   selector: 'app-navigationbar',
   templateUrl: './navigationbar.component.html',
   styleUrls: ['./navigationbar.component.scss']
 })
-export class NavigationbarComponent implements OnInit, AfterViewInit {
+export class NavigationbarComponent implements OnInit {
+  @ViewChild('mobileMenu') mobileMenu!: OffCanvasComponent;
   @ViewChild('container') navContainer!: ElementRef;
   @ViewChild(ColorpickerComponent) colorpicker!: ColorpickerComponent;
   homeIcon = faHome;
   modeIcon = faList;
   visualizerIcon = faChartBar;
   colorpickerIcon = faEyeDropper;
-  mobileMenuIcon = faBars;
+  mobileMenuIcon = OpenMobileMenuIcon;
   powerOffIcon = faPowerOff;
   controlsIcon = faSlidersH;
   settingsIcon = faCog;
@@ -55,8 +56,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   constructor(
     public connection: WebsocketService,
     private router: Router,
-    private renderer: Renderer2,
-    private chromaEffect: ChromaEffectService,
     private store: Store<{ ledstripState: LedstripState }>
   ) {
   }
@@ -70,40 +69,36 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
       }
       if (val instanceof NavigationEnd) {
         this.animate();
-        this.closeMobileMenu();
+        this.mobileMenu.close();
       }
     });
   }
 
-  ngAfterViewInit(): void {
-    this.determineColorPickerOrientation();
+  /**
+   * On resize, check if the screen is still small enough for a mobile menu.
+   * If the screen is big and the menu was open, we will close it
+   * If the screen turned small and the menu is open, we will open it up
+   * @private
+   */
+  @HostListener('window:resize')
+  private closeMobileMenuOnBigScreen(): void {
+    if (screen.width > 992 && this.mobileMenu.isOpen) this.mobileMenu.close();
+    if (screen.width <= 992 && this.mobileMenu.isOpen) this.mobileMenu.open();
+  }
+
+  onMobileMenuChange(isOpen: boolean) {
+    this.mobileMenuIcon = isOpen ? CloseMobileMenuIcon : OpenMobileMenuIcon;
   }
 
   turnOff(): void {
+    // Animate the off button to become red
     this.timeline.to('#powerOff', { duration: 0.6, color: 'white', background: 'var(--bs-danger)' });
     this.timeline.to('#powerOff', { duration: 1.2, clearProps: 'background,color' });
 
+    this.timeline.to('#powerOffMobile', { duration: 0.6, color: 'white', background: 'var(--bs-danger)' });
+    this.timeline.to('#powerOffMobile', { duration: 1.2, clearProps: 'background,color' });
+
     this.connection.turnOff();
-  }
-
-  toggleNav(): void {
-    if (!this.isOpen) {
-      this.openMobileMenu();
-    } else {
-      this.closeMobileMenu();
-    }
-  }
-
-  /**
-   * This function changes the orientation of the colorpicker depending on the screen size.
-   * If the screen is smaller than 992px (lg breakpoint in Bootstrap 5), the colorpicker will be vertical.
-   */
-  determineColorPickerOrientation() {
-    if (screen.width < 992) {
-      this.colorpicker.changeOrientation('vertical');
-    } else {
-      this.colorpicker.changeOrientation('horizontal');
-    }
   }
 
   decreaseBrightness() {
@@ -120,18 +115,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
 
   decreaseSpeed() {
     this.store.dispatch(new DecreaseLedstripSpeed());
-  }
-
-  private closeMobileMenu() {
-    this.mobileMenuIcon = faBars;
-    this.renderer.removeClass(this.navContainer.nativeElement, 'mobile-nav-active');
-    this.isOpen = false;
-  }
-
-  private openMobileMenu() {
-    this.mobileMenuIcon = faTimes;
-    this.renderer.addClass(this.navContainer.nativeElement, 'mobile-nav-active');
-    this.isOpen = true;
   }
 
   private animationFromLeft(): void {

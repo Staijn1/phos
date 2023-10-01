@@ -1,6 +1,6 @@
 <div #offCanvasBackground (click)='close()'
-     [style.left]='position === "left"   ? 0 : undefined'
-     [style.right]='position === "right" ? 0 : undefined'
+     [style.left]='position === "left"   ? "0px" : undefined'
+     [style.right]='position === "right" ? "0px": undefined'
      class='offcanvas-background'></div>
 <div #offCanvas class='offcanvas-container'>
   <div class='offcanvas-header bg-primary'>

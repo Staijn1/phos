@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
 import iro from '@jaames/iro';
 import { IroColorPicker } from '@jaames/iro/dist/ColorPicker';
 import { Store } from '@ngrx/store';
@@ -11,13 +11,13 @@ import { LedstripState } from '@angulon/interfaces';
   styleUrls: ['./colorpicker.component.scss']
 })
 export class ColorpickerComponent implements OnInit, AfterViewInit {
+  @Input() orientation: 'horizontal' | 'vertical' = 'horizontal';
   protected id = this.generateElementId();
   private picker!: IroColorPicker;
   private indexOfCurrentActiveColor = 0;
   private skipSettingColors = false;
   private colorpickerOptions: Parameters<typeof iro.ColorPicker>[1] = {
     width: 150,
-    layoutDirection: 'horizontal',
     handleRadius: 8,
     borderWidth: 2,
     borderColor: '#fff',
@@ -58,6 +58,7 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
+    this.colorpickerOptions.layoutDirection = this.orientation;
     this.picker = iro.ColorPicker(`#${this.id}`, this.colorpickerOptions);
 
     this.store.select('ledstripState').subscribe((state) => {
@@ -84,7 +85,9 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   }
 
   changeOrientation(direction: 'horizontal' | 'vertical') {
+    console.log(direction);
     this.picker.setOptions({ layoutDirection: direction });
+    console.log(this.picker.props.layoutDirection);
   }
 
   /**

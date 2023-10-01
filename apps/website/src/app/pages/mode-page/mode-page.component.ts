@@ -31,6 +31,9 @@ export class ModePageComponent implements OnDestroy {
   @ViewChild(ColorpickerComponent) colorpicker: ColorpickerComponent | undefined;
 
   modes: ModeInformation[] = [];
+  /**
+   * TODO: Re-implement using chroma-effects
+   */
   chromaEffects = [
     { name: 'Rainbow', state: new RainbowState() },
     { name: 'Rainbow Cycle', state: new RainbowCycleState() },
@@ -77,13 +80,5 @@ export class ModePageComponent implements OnDestroy {
     this.selectedMode = id;
 
     this.store.dispatch(new ChangeLedstripMode(id));
-
-    const state = this.chromaEffects.find(stateToCompare => {
-      const mode = this.modes[id];
-      if (!mode) return false;
-      return stateToCompare.name.toLowerCase() === mode.name?.toLowerCase();
-    });
-
-    this.chromaService.state = state === undefined ? new StaticState() : state.state;
   }
 }
