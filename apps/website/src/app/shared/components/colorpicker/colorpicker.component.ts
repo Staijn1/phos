@@ -84,12 +84,6 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
     });
   }
 
-  changeOrientation(direction: 'horizontal' | 'vertical') {
-    console.log(direction);
-    this.picker.setOptions({ layoutDirection: direction });
-    console.log(this.picker.props.layoutDirection);
-  }
-
   /**
    * To prevent multiple colorpickers on the same page ending up with the same id, we generate a random id.
    * It therefore should be a valid html ID

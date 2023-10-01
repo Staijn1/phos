@@ -24,7 +24,6 @@ export const ledstripStateReducer = (state: LedstripState | undefined, action: a
       };
     }
     case LedstripAction.CHANGE_COLORS: {
-      console.log('Changing colors', state.colors, action.payload);
       return {
         ...state,
         colors: mergeArrays(state.colors, action.payload)

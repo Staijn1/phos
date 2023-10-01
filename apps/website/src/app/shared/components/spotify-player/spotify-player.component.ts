@@ -222,7 +222,6 @@ export class SpotifyPlayerComponent implements OnInit {
     });
     this.player.addListener('player_state_changed', state => {
       this.state = state;
-      console.log('state changed', state);
       this.onSpotifyStateChanged(state);
     });
     this.player.connect().catch(err => this.messageService.setMessage(err));
