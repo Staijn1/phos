@@ -7,6 +7,7 @@ import { AfterViewInit, Component, ElementRef, Input, ViewChild } from '@angular
 })
 export class OffCanvasComponent implements AfterViewInit {
   @Input() width = '400px';
+  @Input() position: 'left' | 'right' = 'right';
   @ViewChild('offCanvas') offcanvasElement!: ElementRef;
   @ViewChild('offCanvasBackground') offcanvasBackgroundElement!: ElementRef;
 

@@ -1,4 +1,7 @@
-<div #offCanvasBackground (click)='close()' class='offcanvas-background'></div>
+<div #offCanvasBackground (click)='close()'
+     [style.left]='position === "left"   ? 0 : undefined'
+     [style.right]='position === "right" ? 0 : undefined'
+     class='offcanvas-background'></div>
 <div #offCanvas class='offcanvas-container'>
   <div class='offcanvas-header bg-primary'>
     <ng-content select='[header]'></ng-content>
