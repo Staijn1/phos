@@ -1,6 +1,6 @@
-import { constrain } from '@angulon/interfaces';
-import { GlobalVars } from './constants';
-import { RGBObject } from './types/types';
+import { constrain } from "@angulon/interfaces";
+import { GlobalVars } from "./constants";
+import { RGBObject } from "./types/types";
 
 /**
  * Map a number from one scale to another. This function is the same as the map() function from arduino.
@@ -34,7 +34,7 @@ export const mapNumber = (value: number, start1: number, stop1: number, start2: 
  */
 export function calculateBGRInteger(red: number, green: number, blue: number): number {
   if (red === undefined || red === null || green === undefined || green === null || blue === undefined || blue === null) {
-    throw new Error('Invalid parameters!');
+    throw new Error("Invalid parameters!");
   }
   return 65536 * blue + 256 * green + red;
 }
@@ -228,10 +228,10 @@ export function random8(): number {
 export const getDeviceType = (): string | void => {
   const userAgent = navigator.userAgent;
   const devices: Map<string, boolean> = new Map([
-    ['iPad', /iPad/.test(userAgent)],
-    ['iPhone', /iPhone/.test(userAgent)],
-    ['Android', /Android/.test(userAgent)],
-    ['Windows', /Windows/.test(userAgent)]
+    ["iPad", /iPad/.test(userAgent)],
+    ["iPhone", /iPhone/.test(userAgent)],
+    ["Android", /Android/.test(userAgent)],
+    ["Windows", /Windows/.test(userAgent)]
   ]);
 
   for (const [key, value] of devices) {
@@ -264,15 +264,13 @@ export const prefixURLWithApi = () => {
   // Check if we have the protocol and hostname
   if (urlParts.length === 2) {
     const [protocol, rest] = urlParts;
-    const [hostname, ...pathParts] = rest.split("/");
+    const [hostname] = rest.split("/");
 
     // Add "api." to the hostname
     const modifiedHostname = "api." + hostname;
 
     // Reconstruct the modified URL
-    const modifiedUrl = `${protocol}//${modifiedHostname}/${pathParts.join("/")}`;
-
-    return modifiedUrl;
+    return `${protocol}//${modifiedHostname}`;
   } else {
     // Invalid URL format
     return currentUrl;
