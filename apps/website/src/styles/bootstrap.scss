@@ -59,7 +59,7 @@
 // Helpers
 @import "bootstrap/scss/helpers";
 
-body * {
+body * :not(.offcanvas-container) {
   transition: background-color 250ms ease-in-out, color 250ms ease-in-out !important;
 }
 
