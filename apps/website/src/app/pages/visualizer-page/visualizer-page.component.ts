@@ -5,7 +5,7 @@ import { ChromaEffectService } from '../../services/chromaEffect/chroma-effect.s
 import { VisualizerComponent } from '../../shared/components/visualizer/visualizer.component';
 import { GradientInformation, LedstripState } from '@angulon/interfaces';
 import { OffCanvasComponent } from '../../shared/components/offcanvas/off-canvas.component';
-import * as slider from '@angular-slider/ngx-slider';
+import * as slider from 'ngx-slider-v2';
 import { InformationService } from '../../services/information-service/information.service';
 import { visualizerModeId } from '../../shared/constants';
 import { faSpotify } from '@fortawesome/free-brands-svg-icons';
