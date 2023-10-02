@@ -1,6 +1,5 @@
 <div #offCanvasBackground (click)='close()'
-     [style.left]='position === "left"   ? "0px" : undefined'
-     [style.right]='position === "right" ? "0px": undefined'
+     (transitionend)="onTransitionEnd($event)"
      class='offcanvas-background'></div>
 <div #offCanvas class='offcanvas-container'>
   <div class='offcanvas-header bg-primary'>
