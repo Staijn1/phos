@@ -1,19 +1,18 @@
-import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from '@angular/core';
-import AudioMotionAnalyzer, { GradientOptions, Options } from 'audiomotion-analyzer';
-import { GradientInformation } from '@angulon/interfaces';
-import { MessageService } from '../../../services/message-service/message.service';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, OnDestroy, Output, ViewChild } from "@angular/core";
+import AudioMotionAnalyzer, { GradientOptions, Options } from "audiomotion-analyzer";
+import { GradientInformation } from "@angulon/interfaces";
+import { MessageService } from "../../../services/message-service/message.service";
 
 
 @Component({
-  selector: 'app-shared-visualizer',
-  templateUrl: './visualizer.component.html',
-  styleUrls: ['./visualizer.component.scss']
+  selector: "app-shared-visualizer",
+  templateUrl: "./visualizer.component.html",
+  styleUrls: ["./visualizer.component.scss"]
 })
 export class VisualizerComponent implements OnDestroy, AfterViewInit {
-  @ViewChild('container') container!: ElementRef<HTMLDivElement>;
+  @ViewChild("container") container!: ElementRef<HTMLDivElement>;
   @Output() ready: EventEmitter<AudioMotionAnalyzer> = new EventEmitter<AudioMotionAnalyzer>();
-  @Output() registeredGradients: EventEmitter<GradientInformation[]> = new EventEmitter<GradientInformation[]>();
-  private audioMotion: AudioMotionAnalyzer | undefined;
+  audioMotion: AudioMotionAnalyzer | undefined;
 
   constructor(private readonly messageService: MessageService) {
   }
@@ -28,16 +27,8 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
     this.updateOptions();
   }
 
-  private _gradients!: GradientInformation[];
-
-  @Input() set gradients(gradients: GradientInformation[]) {
-    this._gradients = gradients;
-    this.registerGradients();
-  }
-
   ngOnDestroy(): void {
     this.audioMotion?.toggleAnalyzer();
-    this._gradients = [];
     this.audioMotion = undefined;
   }
 
@@ -52,7 +43,9 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
   }
 
   ngAfterViewInit(): void {
-    this.init();
+    this.audioMotion = new AudioMotionAnalyzer(this.container.nativeElement, this._options);
+    this.ready.emit(this.audioMotion);
+    this.setSource();
   }
 
   /**
@@ -62,14 +55,8 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
    * @param gradient
    */
   registerGradient(name: string, gradient: GradientOptions) {
-    if (!this.audioMotion) throw Error('No visualizer!');
+    if (!this.audioMotion) throw Error("No visualizer!");
     this.audioMotion.registerGradient(name, gradient);
-  }
-
-  private init(): void {
-    this.audioMotion = new AudioMotionAnalyzer(this.container.nativeElement, this._options);
-    this.setSource();
-    this.ready.emit(this.audioMotion);
   }
 
   private setSource(): void {
@@ -90,13 +77,11 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
       });
   }
 
-  private registerGradients(): void {
-    if (this._gradients.length === 0) return;
-    if (!this.audioMotion) throw Error('No visualizer!');
+  public registerGradients(gradients: GradientInformation[]): void {
+    if (!this.audioMotion) throw Error("No visualizer!");
 
-    for (const gradient of this._gradients) {
+    for (const gradient of gradients) {
       this.audioMotion.registerGradient(gradient.name, { ...gradient });
     }
-    this.registeredGradients.emit(this._gradients);
   }
 }
