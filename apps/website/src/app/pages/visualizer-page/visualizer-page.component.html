@@ -242,15 +242,6 @@
                         [(value)]='visualizerOptions.spinSpeed'
                         [options]='spinSpeedSliderOptions'></ngx-slider>
           </div>
-          <!--      Range slider for min and max frequency-->
-          <div>
-            Min Frequency
-            <ngx-slider (valueChange)='applySettings()'
-                        *ngIf='visualizerOptions.minFreq !== undefined && visualizerOptions.maxFreq !== undefined'
-                        [(highValue)]='visualizerOptions.maxFreq'
-                        [(value)]='visualizerOptions.minFreq'
-                        [options]='frequencySliderOptions'></ngx-slider>
-          </div>
           <!--      Simple slider for line width-->
           <div>
             Line Width
