@@ -85,13 +85,13 @@ export class VisualizerPageComponent implements OnDestroy {
     step: 0.1
   };
   activeTab = 0;
-  listIcon = faList;
-  checkboxIcon = faCheck;
-  sliderIcon = faSliders;
+  readonly listIcon = faList;
+  readonly checkboxIcon = faCheck;
+  readonly sliderIcon = faSliders;
+  readonly closeIcon = faTimes;
   readonly spotifyIcon = faSpotify;
   private wakeLock: WakeLockSentinel | undefined;
   private currentTrackId: string | null | undefined;
-  readonly closeIcon = faTimes;
 
   constructor(
     private cdr: ChangeDetectorRef,
