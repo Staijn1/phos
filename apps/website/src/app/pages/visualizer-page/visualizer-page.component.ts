@@ -1,6 +1,14 @@
 import { ChangeDetectorRef, Component, OnDestroy, ViewChild } from "@angular/core";
 import AudioMotionAnalyzer, { GradientColorStop, GradientOptions } from "audiomotion-analyzer";
-import { faCheck, faExpand, faLightbulb, faList, faSliders, faWrench } from "@fortawesome/free-solid-svg-icons";
+import {
+  faCheck,
+  faExpand,
+  faLightbulb,
+  faList,
+  faSliders,
+  faTimes,
+  faWrench
+} from "@fortawesome/free-solid-svg-icons";
 import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
 import { VisualizerComponent } from "../../shared/components/visualizer/visualizer.component";
 import { GradientInformation, LedstripState } from "@angulon/interfaces";
@@ -83,6 +91,7 @@ export class VisualizerPageComponent implements OnDestroy {
   readonly spotifyIcon = faSpotify;
   private wakeLock: WakeLockSentinel | undefined;
   private currentTrackId: string | null | undefined;
+  readonly closeIcon = faTimes;
 
   constructor(
     private cdr: ChangeDetectorRef,

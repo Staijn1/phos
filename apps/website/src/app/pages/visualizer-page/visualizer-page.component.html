@@ -22,7 +22,7 @@
 <app-offcanvas position='right' width='250px'>
   <div class='p-1 d-flex justify-content-between w-100' header>
     <h3>Settings</h3>
-    <button (click)='closeOffcanvas()' aria-label='Close' class='btn-close' type='button'></button>
+    <button (click)='closeOffcanvas()' class='btn' type='button'><fa-icon [icon]="closeIcon"></fa-icon></button>
   </div>
   <div body class='p-3 h-100'>
     <!--    Create tabs-->
