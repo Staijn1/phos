@@ -1,4 +1,4 @@
-name: Build & Lint affected
+name: Build and Deploy
 
 on:
   push:
