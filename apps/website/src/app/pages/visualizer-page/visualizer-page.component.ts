@@ -56,13 +56,6 @@ export class VisualizerPageComponent implements OnDestroy {
     ceil: 20,
     step: 1
   };
-  frequencySliderOptions: slider.Options = {
-    floor: 20,
-    ceil: 22000,
-    minRange: 10,
-    pushRange: true,
-    noSwitching: true
-  };
   lineWidthSliderOptions: slider.Options = {
     floor: 0,
     ceil: 10
@@ -88,7 +81,7 @@ export class VisualizerPageComponent implements OnDestroy {
   checkboxIcon = faCheck;
   sliderIcon = faSliders;
   readonly spotifyIcon = faSpotify;
-  private wakeLock: any;
+  private wakeLock: WakeLockSentinel | undefined;
   private currentTrackId: string | null | undefined;
 
   constructor(
@@ -142,10 +135,9 @@ export class VisualizerPageComponent implements OnDestroy {
       });
 
     if ("wakeLock" in navigator) {
-      const anyNavigator = navigator as any;
-      anyNavigator.wakeLock.request("screen").then((lock: any) => {
+      navigator.wakeLock.request("screen").then((lock: WakeLockSentinel) => {
         this.wakeLock = lock;
-      }).catch((error: any) => {
+      }).catch((error) => {
         console.error("Failed to request wake lock", error);
       });
     }
@@ -155,7 +147,7 @@ export class VisualizerPageComponent implements OnDestroy {
     this.gradients = [];
     this.wakeLock?.release()
       .then()
-      .catch((error: any) => console.error("Failed to release wake lock", error));
+      .catch((error: Error) => console.error("Failed to release wake lock", error));
   }
 
   updateLedstrip(): void {
