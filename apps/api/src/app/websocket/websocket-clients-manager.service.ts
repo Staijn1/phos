@@ -10,7 +10,7 @@ export class WebsocketClientsManagerService {
    */
   private state: LedstripState = {
     brightness: 255,
-    colors: ['#ff0000', '#000000', '#000000'],
+    colors: ['#000000', '#000000', '#000000'],
     fftValue: 0,
     mode: 0,
     speed: 1000
