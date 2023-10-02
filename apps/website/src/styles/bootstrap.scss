@@ -59,8 +59,10 @@
 // Helpers
 @import "bootstrap/scss/helpers";
 
-body * :not(.offcanvas-container) :not(.nav-menu) {
-  transition: background-color 250ms ease-in-out, color 250ms ease-in-out !important;
+body * {
+  &:not(.offcanvas-container), &:not(.nav-menu) {
+    transition: background-color 250ms ease-in-out, color 250ms ease-in-out !important;
+  }
 }
 
 // Helper theme mixin
