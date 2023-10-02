@@ -17,8 +17,7 @@ import { modesReducer } from '../redux/modes/modes.reducer';
 import { gradientsReducer } from '../redux/gradients/gradients.reducer';
 import { userPreferencesReducer } from '../redux/user-preferences/user-preferences.reducer';
 
-const StoreDevtools = !environment.production ? StoreDevtoolsModule.instrument() : [];
-
+const StoreDevtools = StoreDevtoolsModule.instrument();
 @NgModule({
   imports: [
     CommonModule,
