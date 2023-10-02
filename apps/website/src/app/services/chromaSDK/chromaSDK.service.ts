@@ -1,6 +1,8 @@
-import {Injectable} from '@angular/core'
-import {SettingsService} from '../settings/settings.service'
-import {MessageService} from '../message-service/message.service';
+import { Injectable } from '@angular/core';
+import { MessageService } from '../message-service/message.service';
+import { Store } from '@ngrx/store';
+import { UserPreferences } from '../../shared/types/types';
+import { distinctUntilChanged, map } from 'rxjs';
 
 export enum KeyboardEffect {
   CHROMA_CUSTOM_KEY = 'CHROMA_CUSTOM_KEY',
@@ -30,9 +32,6 @@ export enum MouseEffect {
   providedIn: 'root'
 })
 export class ChromaSDKService {
-  private readonly RAZER_API_PORT = 54235;
-  private readonly API_URL = `http://localhost:${this.RAZER_API_PORT}/razer/chromasdk/`;
-
   mouseColors = [
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
@@ -42,33 +41,29 @@ export class ChromaSDKService {
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0]
   ];
-
   keyboardColors = [
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+    [0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0]
   ];
-
   readonly mouse = {
     rows: this.mouseColors.length,
-    columns: this.mouseColors[0].length,
+    columns: this.mouseColors[0].length
   };
-
   readonly keyboard = {
     rows: this.keyboardColors.length,
     columns: this.keyboardColors[0].length
   };
-
   readonly headset = {
-    amount: 5,
+    amount: 5
   };
-
-
+  private readonly RAZER_API_PORT = 54235;
+  private readonly API_URL = `http://localhost:${this.RAZER_API_PORT}/razer/chromasdk/`;
   private readonly options = {
     title: 'Angulon',
     description: 'The ledstrip and Razer peripherals will share some effects, controlled through a nice UI.',
@@ -86,15 +81,24 @@ export class ChromaSDKService {
     ],
     category: 'application'
   };
-  private timerId!: NodeJS.Timeout;
+  private heartbeatTimerId!: NodeJS.Timeout;
   private initializedApiURL: string | undefined;
 
-  constructor(private settingsService: SettingsService, private messageService: MessageService) {
-    if (this.isChromaSupport()) {
-      this.init()
-        .then((init) => this.initializedApiURL = init.uri)
-        .catch((err) => this.messageService.setMessage(err))
-    }
+  constructor(private messageService: MessageService, private readonly store: Store<{
+    userPreferences: UserPreferences
+  }>) {
+    this.store.select('userPreferences').pipe(
+      map(({ settings }) => settings.chromaSupportEnabled),
+      distinctUntilChanged()
+    ).subscribe((isChromaSupportEnabled) => {
+      if (isChromaSupportEnabled) {
+        this.init()
+          .then((init) => this.initializedApiURL = init.uri)
+          .catch((err) => this.messageService.setMessage(err));
+      } else {
+        this.uninit();
+      }
+    });
   }
 
   /**
@@ -105,18 +109,18 @@ export class ChromaSDKService {
       const response = await fetch(`${this.API_URL}/`, {
         method: 'POST',
         body: JSON.stringify(this.options),
-        headers: {'Content-type': 'application/json; charset=UTF-8'}
-      })
+        headers: { 'Content-type': 'application/json; charset=UTF-8' }
+      });
 
-      const data = response.json()
+      const data = response.json();
       if (response.ok) {
-        this.timerId = setInterval(() => {
-          this.onTimer()
-        }, 5000)
+        this.heartbeatTimerId = setInterval(() => {
+          this.onTimer();
+        }, 5000);
       }
-      return data
+      return data;
     } catch (e) {
-      throw new Error('Failed to setup the connection with the Razer SDK. Is Razer Synapse installed & running?')
+      throw new Error('Failed to setup the connection with the Razer SDK. Is Razer Synapse installed & running?');
     }
   }
 
@@ -125,112 +129,109 @@ export class ChromaSDKService {
    */
   onTimer(): void {
     this.heartbeat().catch(err => {
-      this.messageService.setMessage(err)
-      this.uninit()
-    })
+      this.messageService.setMessage(err);
+      this.uninit();
+    });
   }
 
   heartbeat(): Promise<any> {
-    if (this.initializedApiURL === undefined || this.initializedApiURL === null || !this.isChromaSupport()) {
-      return Promise.resolve(undefined)
+    if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
+      return Promise.resolve(undefined);
     }
     return fetch(`${this.initializedApiURL}/heartbeat`, {
       method: 'OPTIONS',
       body: null,
-      headers: {'Content-type': 'application/json; charset=UTF-8'}
-    })
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    });
   }
 
   async createKeyboardEffect(effect: KeyboardEffect, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
-      return
+      return;
     }
-    let jsonObj
+    let jsonObj;
 
     if (effect === 'CHROMA_NONE') {
-      jsonObj = JSON.stringify({effect})
+      jsonObj = JSON.stringify({ effect });
     } else if (effect === 'CHROMA_CUSTOM') {
-      jsonObj = JSON.stringify({effect, param: data})
+      jsonObj = JSON.stringify({ effect, param: data });
     } else if (effect === 'CHROMA_STATIC') {
-      const color = {color: data}
-      jsonObj = JSON.stringify({effect, param: color})
+      const color = { color: data };
+      jsonObj = JSON.stringify({ effect, param: color });
     } else if (effect === 'CHROMA_CUSTOM_KEY') {
-      jsonObj = JSON.stringify({effect, param: data})
+      jsonObj = JSON.stringify({ effect, param: data });
     }
 
     const response = await fetch(`${this.initializedApiURL}/keyboard`, {
       method: 'PUT',
       body: jsonObj,
-      headers: {'Content-type': 'application/json; charset=UTF-8'}
-    })
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    });
 
     if (!response.ok) {
-      throw new Error('error! ' + response.status)
+      throw new Error('error! ' + response.status);
     }
-    return response.json()
+    return response.json();
   }
 
   async createMouseEffect(effect: MouseEffect, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
-      return
+      return;
     }
-    let jsonObj
+    let jsonObj;
 
     if (effect === 'CHROMA_NONE') {
-      jsonObj = JSON.stringify({effect})
+      jsonObj = JSON.stringify({ effect });
     } else if (effect === 'CHROMA_CUSTOM2') {
-      jsonObj = JSON.stringify({effect, param: data})
+      jsonObj = JSON.stringify({ effect, param: data });
     } else if (effect === 'CHROMA_STATIC') {
-      const color = {color: data}
-      jsonObj = JSON.stringify({effect, param: color})
+      const color = { color: data };
+      jsonObj = JSON.stringify({ effect, param: color });
     }
 
     const response = await fetch(`${this.initializedApiURL}/mouse`, {
       method: 'PUT',
       body: jsonObj,
-      headers: {'Content-type': 'application/json; charset=UTF-8'}
-    })
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    });
 
     if (!response.ok) {
-      throw new Error('error! ' + response.status)
+      throw new Error('error! ' + response.status);
     }
-    return response.json()
+    return response.json();
   }
 
   async createHeadsetEffect(effect: HeadsetEffect, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
-      return
+      return;
     }
-    let jsonObj
+    let jsonObj;
 
     if (effect === 'CHROMA_NONE') {
-      jsonObj = JSON.stringify({effect})
+      jsonObj = JSON.stringify({ effect });
     } else if (effect === 'CHROMA_CUSTOM') {
-      jsonObj = JSON.stringify({effect, param: data})
+      jsonObj = JSON.stringify({ effect, param: data });
     } else if (effect === 'CHROMA_STATIC') {
-      const color = {color: data}
-      jsonObj = JSON.stringify({effect, param: color})
+      const color = { color: data };
+      jsonObj = JSON.stringify({ effect, param: color });
     } else if (effect === 'CHROMA_CUSTOM_KEY') {
-      jsonObj = JSON.stringify({effect, param: data})
+      jsonObj = JSON.stringify({ effect, param: data });
     }
 
     const response = await fetch(`${this.initializedApiURL}/headset`, {
       method: 'PUT',
       body: jsonObj,
-      headers: {'Content-type': 'application/json; charset=UTF-8'}
-    })
+      headers: { 'Content-type': 'application/json; charset=UTF-8' }
+    });
 
     if (!response.ok) {
-      throw new Error('error! ' + response.status)
+      throw new Error('error! ' + response.status);
     }
-    return response.json()
+    return response.json();
   }
 
   uninit(): void {
-    this.initializedApiURL = undefined
-  }
-
-  private isChromaSupport(): boolean {
-    return this.settingsService.readGeneralSettings().chroma || false
+    this.initializedApiURL = undefined;
+    clearInterval(this.heartbeatTimerId);
   }
 }

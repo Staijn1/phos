@@ -1,11 +1,11 @@
-import {Component, EventEmitter, OnInit, Output} from '@angular/core';
-import {getDeviceType} from "../../functions";
-import {SpotifyAuthenticationService} from "../../../services/spotify-authentication/spotify-authentication.service";
-import {faSpotify, IconDefinition} from "@fortawesome/free-brands-svg-icons";
-import {MessageService} from "../../../services/message-service/message.service";
-import {Message} from "../../types/Message";
-import {faBackward, faForward, faPause, faPlay, faVolumeHigh, faVolumeLow} from "@fortawesome/free-solid-svg-icons";
-import {Track} from "spotify-web-playback-sdk";
+import { Component, EventEmitter, OnInit, Output } from '@angular/core';
+import { getDeviceType } from '../../functions';
+import { SpotifyAuthenticationService } from '../../../services/spotify-authentication/spotify-authentication.service';
+import { faSpotify, IconDefinition } from '@fortawesome/free-brands-svg-icons';
+import { MessageService } from '../../../services/message-service/message.service';
+import { Message } from '../../types/Message';
+import { faBackward, faForward, faPause, faPlay, faVolumeHigh, faVolumeLow } from '@fortawesome/free-solid-svg-icons';
+import { Track } from 'spotify-web-playback-sdk';
 
 /// <reference types="@types/spotify-web-playback-sdk" />
 declare global {
@@ -18,7 +18,7 @@ declare global {
 @Component({
   selector: 'app-spotify-player',
   templateUrl: './spotify-player.component.html',
-  styleUrls: ['./spotify-player.component.scss'],
+  styleUrls: ['./spotify-player.component.scss']
 })
 export class SpotifyPlayerComponent implements OnInit {
   /**
@@ -34,29 +34,33 @@ export class SpotifyPlayerComponent implements OnInit {
   readonly playIcon = faPlay;
   readonly volumeLowIcon = faVolumeLow;
   readonly volumeHighIcon = faVolumeHigh;
-  private player: Spotify.Player | undefined;
   spotifyAuthenticationURL!: string;
   volume = 1;
-  state: Spotify.PlaybackState | undefined ;
+  state: Spotify.PlaybackState | undefined;
+  private player: Spotify.Player | undefined;
+
+  constructor(public readonly spotifyAuth: SpotifyAuthenticationService, private readonly messageService: MessageService) {
+    this.spotifyAuth.generateAuthorizeURL().then(url => this.spotifyAuthenticationURL = url);
+  }
 
   /**
    * Returns the url of the current track image.
    * If it is undefined then we return a backup image - A random image from picsum
    */
   get albumImageSrc(): string {
-    return this.state?.track_window.current_track.album.images[2].url ?? "https://picsum.photos/200";
+    return this.state?.track_window.current_track.album.images[2].url ?? 'https://picsum.photos/200';
   }
 
   get trackName(): string {
-    return this.state?.track_window.current_track.name ?? "No Track Playing";
+    return this.state?.track_window.current_track.name ?? 'No Track Playing';
   }
 
   /**
    * Get the name of the artist of the current track
    */
   get artistName(): string {
-    if (!this.state?.track_window.current_track) return "No Artist Playing";
-    return this.getArtistNames(this.state?.track_window.current_track)
+    if (!this.state?.track_window.current_track) return 'No Artist Playing';
+    return this.getArtistNames(this.state?.track_window.current_track);
   }
 
   /**
@@ -87,7 +91,6 @@ export class SpotifyPlayerComponent implements OnInit {
     return [...this.previousTracks, this.currentTrack, ...this.upcomingTracks];
   }
 
-
   /**
    * Helper function to check if the user has selected this device in the spotify app
    * If the track window has a current track which is not null or undefined, then we are active
@@ -104,77 +107,11 @@ export class SpotifyPlayerComponent implements OnInit {
     return this.state?.paused ? this.playIcon : this.pauseIcon;
   }
 
-  constructor(public readonly spotifyAuth: SpotifyAuthenticationService, private readonly messageService: MessageService) {
-    this.spotifyAuth.generateAuthorizeURL().then(url => this.spotifyAuthenticationURL = url)
-  }
-
   /**
    * On init we start to initialize the spotify player
    */
   ngOnInit() {
     this.loadSpotifyWebPlaybackSDK();
-  }
-
-  /**
-   * When the playback state changes, we emit the new state so other components can react to it
-   * @param state
-   * @private
-   */
-  private onSpotifyStateChanged(state: Spotify.PlaybackState) {
-    this.playbackChanged.emit(state);
-  }
-
-  /**
-   * Loads the spotify web playback sdk from the spotify cdn
-   * @private
-   */
-  private loadSpotifyWebPlaybackSDK() {
-    window.onSpotifyWebPlaybackSDKReady = () => console.log("Spotify Web Playback SDK loaded");
-    const script = document.createElement("script");
-    script.src = "https://sdk.scdn.co/spotify-player.js";
-    script.async = true;
-    script.defer = true;
-    window.onSpotifyWebPlaybackSDKReady = () => this.onSpotifyWebPlaybackSDKReady();
-    document.body.appendChild(script);
-  }
-
-  /**
-   * Called when the spotify web playback sdk is ready
-   * Gets the token from the spotify auth service and creates a new player
-   * The application is then available to cast to from the spotify app, as a device.
-   * The device has a name of Angulon - {deviceType}, for example Angulon - Windows
-   * @private
-   */
-  private onSpotifyWebPlaybackSDKReady() {
-    const token = this.spotifyAuth.getToken()
-    const device = getDeviceType();
-    this.player = new Spotify.Player({
-      name: `Angulon - ${device}`,
-      getOAuthToken: cb => cb(token),
-      volume: 1,
-      // enableMediaSession: true
-    });
-
-    this.player.addListener("initialization_error", ({message}) => {
-      console.error(message);
-    });
-
-    this.player.addListener("authentication_error", ({message}) => this.messageService.setMessage(new Message('error', message)));
-
-    this.player.addListener("account_error", ({message}) => this.messageService.setMessage(new Message('error', message)));
-    // Ready
-    this.player.addListener("ready", ({device_id}) => this.ready.emit(device_id));
-
-    // Not Ready
-    this.player.addListener("not_ready", ({device_id}) => {
-      console.log("Device ID has gone offline", device_id);
-    });
-    this.player.addListener("player_state_changed", state => {
-      this.state = state;
-      console.log('state changed', state)
-      this.onSpotifyStateChanged(state)
-    });
-    this.player.connect().catch(err => this.messageService.setMessage(err));
   }
 
   /**
@@ -210,7 +147,7 @@ export class SpotifyPlayerComponent implements OnInit {
    * @param song
    */
   getArtistNames(song: Track) {
-    return song.artists.map(artist => artist.name).join(", ");
+    return song.artists.map(artist => artist.name).join(', ');
   }
 
   /**
@@ -225,5 +162,68 @@ export class SpotifyPlayerComponent implements OnInit {
     if (index < this.previousTracks.length) return 0.7 - (index * 0.2);
 
     return 0.7 - ((index - this.upcomingTracks.length) * 0.2);
+  }
+
+  /**
+   * When the playback state changes, we emit the new state so other components can react to it
+   * @param state
+   * @private
+   */
+  private onSpotifyStateChanged(state: Spotify.PlaybackState) {
+    this.playbackChanged.emit(state);
+  }
+
+  /**
+   * Loads the spotify web playback sdk from the spotify cdn
+   * @private
+   */
+  private loadSpotifyWebPlaybackSDK() {
+    window.onSpotifyWebPlaybackSDKReady = () => console.log('Spotify Web Playback SDK loaded');
+    const script = document.createElement('script');
+    script.src = 'https://sdk.scdn.co/spotify-player.js';
+    script.async = true;
+    script.defer = true;
+    window.onSpotifyWebPlaybackSDKReady = () => this.onSpotifyWebPlaybackSDKReady();
+    document.body.appendChild(script);
+  }
+
+  /**
+   * Called when the spotify web playback sdk is ready
+   * Gets the token from the spotify auth service and creates a new player
+   * The application is then available to cast to from the spotify app, as a device.
+   * The device has a name of Angulon - {deviceType}, for example Angulon - Windows
+   * @private
+   */
+  private onSpotifyWebPlaybackSDKReady() {
+    if (!this.spotifyAuth.isLoggedIn()) return;
+
+    const token = this.spotifyAuth.getToken();
+    const device = getDeviceType();
+    this.player = new Spotify.Player({
+      name: `Angulon - ${device}`,
+      getOAuthToken: cb => cb(token),
+      volume: 1
+      // enableMediaSession: true
+    });
+
+    this.player.addListener('initialization_error', ({ message }) => {
+      console.error(message);
+    });
+
+    this.player.addListener('authentication_error', ({ message }) => this.messageService.setMessage(new Message('error', message)));
+
+    this.player.addListener('account_error', ({ message }) => this.messageService.setMessage(new Message('error', message)));
+    // Ready
+    this.player.addListener('ready', ({ device_id }) => this.ready.emit(device_id));
+
+    // Not Ready
+    this.player.addListener('not_ready', ({ device_id }) => {
+      console.log('Device ID has gone offline', device_id);
+    });
+    this.player.addListener('player_state_changed', state => {
+      this.state = state;
+      this.onSpotifyStateChanged(state);
+    });
+    this.player.connect().catch(err => this.messageService.setMessage(err));
   }
 }

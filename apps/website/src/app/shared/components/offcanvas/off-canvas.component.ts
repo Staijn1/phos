@@ -1,38 +1,60 @@
-import {Component, ElementRef, ViewChild} from '@angular/core';
-import {NgbOffcanvas, NgbOffcanvasOptions, NgbOffcanvasRef} from '@ng-bootstrap/ng-bootstrap';
+import { AfterViewInit, Component, ElementRef, EventEmitter, Input, Output, ViewChild } from "@angular/core";
 
 @Component({
-  selector: 'app-offcanvas',
-  templateUrl: './off-canvas.component.html',
-  styleUrls: ['./off-canvas.component.scss'],
+  selector: "app-offcanvas",
+  templateUrl: "./off-canvas.component.html",
+  styleUrls: ["./off-canvas.component.scss"]
 })
-export class OffCanvasComponent {
-  @ViewChild('content') content!: ElementRef;
-  private offcanvas: NgbOffcanvasRef | undefined;
+export class OffCanvasComponent implements AfterViewInit {
+  @Input() width = "400px";
+  @Input() position: "left" | "right" = "right";
+  @Output() stateCanged = new EventEmitter<boolean>();
+  @ViewChild("offCanvas", { static: false }) offcanvasElement!: ElementRef;
+  @ViewChild("offCanvasBackground", { static: false }) offcanvasBackgroundElement!: ElementRef;
 
+  isOpen = false;
 
-  /**
-   * Inject the offcanvas service so we can open and close it using ng-bootstrap
-   * @param offcanvasService
-   */
-  constructor(private offcanvasService: NgbOffcanvas) {
-  }
+  ngAfterViewInit(): void {
+    this.offcanvasElement.nativeElement.style.visibility = "hidden";
+    this.offcanvasElement.nativeElement.style.width = "0px";
 
-  /**
-   * Open the offcanvas
-   * @param {NgbOffcanvasOptions} options
-   */
-  open(options?: NgbOffcanvasOptions): void {
-    this.offcanvas = this.offcanvasService.open(this.content, {ariaLabelledBy: 'offcanvas-basic-title', ...options});
-  }
-
-  /**
-   * Close the offcanvas
-   */
-  close(): void {
-    if (this.offcanvas) {
-      this.offcanvas.close();
-      this.offcanvasService.dismiss();
+    switch (this.position) {
+      case "left":
+        this.offcanvasElement.nativeElement.style.left = "0px";
+        break;
+      case "right":
+        this.offcanvasElement.nativeElement.style.right = "0px";
+        break;
     }
+    this.offcanvasBackgroundElement.nativeElement.style.display = "none";
+  }
+
+  open(): void {
+    this.offcanvasElement.nativeElement.style.visibility = "visible";
+    this.offcanvasElement.nativeElement.style.width = this.width;
+
+    this.offcanvasBackgroundElement.nativeElement.style.display = "block";
+
+    this.isOpen = true;
+    this.stateCanged.emit(this.isOpen);
+  }
+
+  close(): void {
+    this.offcanvasElement.nativeElement.style.width = "0px";
+    this.offcanvasBackgroundElement.nativeElement.style.display = "none";
+    this.isOpen = false;
+    this.stateCanged.emit(this.isOpen);
+  }
+
+  toggle(): void {
+    if (this.isOpen) {
+      this.close();
+    } else {
+      this.open();
+    }
+  }
+
+  onTransitionEnd(event: TransitionEvent) {
+    if (!this.isOpen) this.offcanvasElement.nativeElement.style.visibility = "hidden";
   }
 }

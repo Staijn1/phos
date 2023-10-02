@@ -87,7 +87,6 @@ section {
 }
 
 @import "./styles/bootstrap";
-@import "./styles/neon-text";
 
 @media screen and (max-width: map-get($grid-breakpoints, 'sm')) {
   html {

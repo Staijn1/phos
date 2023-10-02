@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {MessageService} from "../message-service/message.service";
+import { Injectable } from '@angular/core';
+import { MessageService } from '../message-service/message.service';
 
 /**
  * Handles the authentication process with Spotify, using the Spotify Web API.
@@ -27,9 +27,9 @@ export class SpotifyAuthenticationService {
    * The redirect URI is the current URL, with the last part replaced by 'spotify-callback'.
    * Example, current URL = 'https://some-subdomain.domain.nl/some-path/home' will become 'https://some-subdomain.domain.nl/some-path/spotify-callback'
    */
-  private readonly REDIRECT_URI = window.location.href.replace(/\/[^/]*$/, "/spotify-callback");
+  private readonly REDIRECT_URI = window.location.href.replace(/\/[^/]*$/, '/spotify-callback');
 
-  constructor(private messageService: MessageService,) {
+  constructor(private messageService: MessageService) {
   }
 
   /**
@@ -110,7 +110,7 @@ export class SpotifyAuthenticationService {
       grant_type: 'authorization_code',
       code: params.get('code') as string,
       redirect_uri: this.REDIRECT_URI,
-      code_verifier: codeVerifier,
+      code_verifier: codeVerifier
     });
 
     // If token is not null, then the authentication was successful. We then start the refresh token process to keep the user logged in.
@@ -120,7 +120,7 @@ export class SpotifyAuthenticationService {
       }, 1000 * 60 * 30); // Refresh token every 30 minutes
     }
 
-    return token
+    return token;
   }
 
   /**
@@ -133,8 +133,8 @@ export class SpotifyAuthenticationService {
         method: 'POST',
         body: new URLSearchParams({
           client_id: this.CLIENT_ID,
-          ...params,
-        }),
+          ...params
+        })
       });
       const json = await response.json();
       const accessToken = json.access_token;
@@ -142,7 +142,7 @@ export class SpotifyAuthenticationService {
       sessionStorage.setItem('spotifyToken', JSON.stringify(json));
       return accessToken;
     } catch (e) {
-      if (e instanceof Error) this.messageService.setMessage(e)
+      if (e instanceof Error) this.messageService.setMessage(e);
       return null;
     }
   }
@@ -161,7 +161,7 @@ export class SpotifyAuthenticationService {
     if (tokenSet.expires_at < Date.now()) {
       tokenSet = await this.createAccessToken({
         grant_type: 'refresh_token',
-        refresh_token: tokenSet.refresh_token,
+        refresh_token: tokenSet.refresh_token
       });
     }
 

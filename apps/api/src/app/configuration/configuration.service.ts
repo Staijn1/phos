@@ -1,5 +1,5 @@
-import {Injectable, Logger} from '@nestjs/common';
-import {GradientInformation, LedstripPreset, ModeInformation} from '@angulon/interfaces';
+import { Injectable, Logger } from '@nestjs/common';
+import { GradientInformation, ModeInformation } from '@angulon/interfaces';
 import * as fs from 'fs';
 import path = require('path');
 
@@ -43,21 +43,6 @@ export class ConfigurationService {
   }
 
   /**
-   * Write a new array of presets to the presets.json file in the assets folder
-   */
-  async writePresets(presets: LedstripPreset[]): Promise<void> {
-    await fs.promises.writeFile(path.join(this.configPath, 'presets.json'), JSON.stringify(presets, null, 2));
-  }
-
-  /**
-   * Read the presets.json file in the assets folder
-   */
-  async getPresets(): Promise<LedstripPreset[]> {
-    const contents = await fs.promises.readFile(path.join(this.configPath, 'presets.json'));
-    return JSON.parse(contents.toString());
-  }
-
-  /**
    * For each file in assetpath/defaults, check if the file exists in assetpath
    * If not, write that file to the assetpath
    * Also check if the config folder exists, if not, create it
@@ -84,7 +69,7 @@ export class ConfigurationService {
         await fs.promises.access(assetFilePath, fs.constants.F_OK);
       } catch (err) {
         // If the file does not exist, write it to the asset path
-        this.logger.log(`Writing defaults for file ${file}`)
+        this.logger.log(`Writing defaults for file ${file}`);
         const contents = await fs.promises.readFile(defaultFilePath);
         await fs.promises.writeFile(assetFilePath, contents);
       }

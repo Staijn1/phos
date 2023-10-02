@@ -1,14 +1,21 @@
-import {Component} from "@angular/core";
-import {ActivatedRoute, Router} from "@angular/router";
-import {MessageService} from "../../services/message-service/message.service";
-import {WebsocketService} from "../../services/websocketconnection/websocket.service";
-import {Store} from "@ngrx/store";
-import {ColorpickerState} from "../../../redux/color/color.reducer";
+import { Component } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
+import { MessageService } from '../../services/message-service/message.service';
+import { Store } from '@ngrx/store';
+import { LedstripState } from '@angulon/interfaces';
+import { combineLatest } from 'rxjs';
+import { WebsocketService } from '../../services/websocketconnection/websocket.service';
+import {
+  DecreaseLedstripBrightness,
+  DecreaseLedstripSpeed,
+  IncreaseLedstripBrightness,
+  IncreaseLedstripSpeed
+} from '../../../redux/ledstrip/ledstrip.action';
 
 @Component({
-  selector: "app-shortcut-page",
-  templateUrl: "./shortcut-page.component.html",
-  styleUrls: ["./shortcut-page.component.scss"]
+  selector: 'app-shortcut-page',
+  templateUrl: './shortcut-page.component.html',
+  styleUrls: ['./shortcut-page.component.scss']
 })
 export class ShortcutPageComponent {
   private static wasShortcutActivated = false;
@@ -20,42 +27,42 @@ export class ShortcutPageComponent {
               private messageService: MessageService,
               private connection: WebsocketService,
               private router: Router,
-              private store: Store<{ colorpicker: ColorpickerState }>) {
-    this.activatedRoute.queryParams.subscribe(params => {
-      this.executeShortcut(params["action"]);
-    });
+              private store: Store<{ ledstripState: LedstripState | undefined }>) {
+    combineLatest([this.activatedRoute.queryParams, this.store.select('ledstripState')])
+      .subscribe(([params, state]) => {
+        if (!state) return;
+
+        this.executeShortcut(params['action']);
+      });
   }
 
   private executeShortcut(param: string | undefined) {
     if (!param) return;
-    // We need to subscribe to the state of the color picker because the colors get set after the connection is established
-    this.store.select("colorpicker").subscribe((state) => {
-      if (!ShortcutPageComponent.wasShortcutActivated) {
-        ShortcutPageComponent.wasShortcutActivated = true;
-        switch (param) {
-          case "turnOff":
-            this.connection.turnOff();
-            break;
-          case "increaseBrightness":
-            this.connection.increaseBrightness();
-            break;
-          case "decreaseBrightness":
-            this.connection.decreaseBrightness();
-            break;
-          case "increaseSpeed":
-            this.connection.increaseSpeed();
-            break;
-          case "decreaseSpeed":
-            this.connection.decreaseSpeed();
-            break;
-          default:
-            this.messageService.setMessage(new Error("Shortcut not found"));
-        }
+    if (!ShortcutPageComponent.wasShortcutActivated) {
+      ShortcutPageComponent.wasShortcutActivated = true;
+      switch (param) {
+        case 'turnOff':
+          this.connection.turnOff();
+          break;
+        case 'increaseBrightness':
+          this.store.dispatch(new IncreaseLedstripBrightness());
+          break;
+        case 'decreaseBrightness':
+          this.store.dispatch(new DecreaseLedstripBrightness());
+          break;
+        case 'increaseSpeed':
+          this.store.dispatch(new IncreaseLedstripSpeed());
+          break;
+        case 'decreaseSpeed':
+          this.store.dispatch(new DecreaseLedstripSpeed());
+          break;
+        default:
+          this.messageService.setMessage(new Error('Shortcut not found'));
       }
-      // After the action just redirect to the home page
-      this.router.navigateByUrl("/home")
-        .catch(reason => this.messageService.setMessage(reason))
-        .finally(() => ShortcutPageComponent.wasShortcutActivated = false);
-    });
+    }
+    // After the action just redirect to the home page
+    this.router.navigateByUrl('/home')
+      .catch(reason => this.messageService.setMessage(reason))
+      .finally(() => ShortcutPageComponent.wasShortcutActivated = false);
   }
 }

@@ -1,8 +1,11 @@
-<ng-template #content>
-  <div class="offcanvas-header bg-primary">
-    <ng-content select="[header]"></ng-content>
+<div #offCanvasBackground (click)='close()'
+     (transitionend)="onTransitionEnd($event)"
+     class='offcanvas-background'></div>
+<div #offCanvas class='offcanvas-container'>
+  <div class='offcanvas-header bg-primary'>
+    <ng-content select='[header]'></ng-content>
   </div>
-  <div class="offcanvas-body">
-    <ng-content select="[body]"></ng-content>
+  <div class='offcanvas-body h-100'>
+    <ng-content select='[body]'></ng-content>
   </div>
-</ng-template>
+</div>

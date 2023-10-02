@@ -1,14 +1,6 @@
-import { GradientOptions } from "audiomotion-analyzer";
+import {GradientOptions} from "audiomotion-analyzer";
 
-export type ColorStop = { pos: number; color: string };
-export interface GradientInformation
-  extends Omit<GradientOptions, 'colorStops'> {
-  colorStops: ColorStop[]
+export interface GradientInformation extends GradientOptions {
   name: string
   id: number
-}
-
-export interface GradientInformationExtended extends GradientInformation {
-  collapsed?: boolean;
-  sliderOptions: any;
 }

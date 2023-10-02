@@ -59,6 +59,12 @@
 // Helpers
 @import "bootstrap/scss/helpers";
 
+body * {
+  &:not(.offcanvas-container) &:not(.nav-menu) {
+    transition: background-color 250ms ease-in-out, color 250ms ease-in-out !important;
+  }
+}
+
 // Helper theme mixin
 // @param $name: name of the theme (HTML class)
 // @param $color: color of the theme
@@ -166,7 +172,7 @@ $text-bright: white;
 .dark {
   background: $dark-background !important;
 
-  section, .form-control, #cover, .card, .offcanvas-body {
+  section, .form-control, #cover, .card, .offcanvas-container {
     background: $dark-background !important;
   }
 

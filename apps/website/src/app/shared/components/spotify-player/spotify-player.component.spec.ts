@@ -8,7 +8,7 @@ describe('SpotifyPlayerComponent', () => {
 
   beforeEach(async () => {
     await TestBed.configureTestingModule({
-      declarations: [SpotifyPlayerComponent],
+      declarations: [SpotifyPlayerComponent]
     }).compileComponents();
 
     fixture = TestBed.createComponent(SpotifyPlayerComponent);

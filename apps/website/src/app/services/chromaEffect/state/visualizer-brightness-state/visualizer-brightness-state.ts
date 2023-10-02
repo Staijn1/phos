@@ -1,36 +1,37 @@
-import {State} from '../abstract/state'
-import {calculateBGRInteger, map} from '../../../../shared/functions'
-import iro from '@jaames/iro'
-import {HeadsetEffect, KeyboardEffect, MouseEffect} from '../../../chromaSDK/chromaSDK.service';
+import { State } from '../abstract/state';
+import { calculateBGRInteger, mapNumber } from '../../../../shared/functions';
+import iro from '@jaames/iro';
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
 
 export class VisualizerBrightnessState extends State {
   protected _BGRIntegerForeground = 0;
   protected _previousBGRIntegerForeground!: number;
-  protected _intensity = 0;
   private counter = 0;
 
+  protected _intensity = 0;
+
   set intensity(value: number) {
-    this._intensity = value
+    this._intensity = value;
   }
 
   handle(colors: iro.Color[]): void {
-    if (!colors) return
-    this.createVisualizer(new iro.Color(colors[0]))
+    if (!colors) return;
+    this.createVisualizer(new iro.Color(colors[0]));
     this.counter++;
     this.counter = this.counter % 100;
   }
 
   createVisualizer(foregroundColor: iro.Color): void {
-    foregroundColor.value = map(this._intensity, 0, 1, 0, 100, true)
-    this._BGRIntegerForeground = calculateBGRInteger(foregroundColor.red, foregroundColor.green, foregroundColor.blue)
+    foregroundColor.value = mapNumber(this._intensity, 0, 1, 0, 100, true);
+    this._BGRIntegerForeground = calculateBGRInteger(foregroundColor.red, foregroundColor.green, foregroundColor.blue);
 
     // Nothing changed so let's not waste resources to set the same effect again.
-    if (this._BGRIntegerForeground == this._previousBGRIntegerForeground) return
-    if (this.counter % 5 != 0) return
-    this._previousBGRIntegerForeground = this._BGRIntegerForeground
-    this.createHeadsetVisualizer()
-    this.createKeyBoardVisualizer()
-    this.createMouseVisualizer()
+    if (this._BGRIntegerForeground == this._previousBGRIntegerForeground) return;
+    if (this.counter % 5 != 0) return;
+    this._previousBGRIntegerForeground = this._BGRIntegerForeground;
+    this.createHeadsetVisualizer();
+    this.createKeyBoardVisualizer();
+    this.createMouseVisualizer();
   }
 
   onEntry(): void {
@@ -40,14 +41,14 @@ export class VisualizerBrightnessState extends State {
   }
 
   protected createMouseVisualizer() {
-    this._context.createMouseEffect(MouseEffect.CHROMA_STATIC, this._BGRIntegerForeground).then()
+    this._context.createMouseEffect(MouseEffect.CHROMA_STATIC, this._BGRIntegerForeground).then();
   }
 
   protected createKeyBoardVisualizer() {
-    this._context.createKeyboardEffect(KeyboardEffect.CHROMA_STATIC, this._BGRIntegerForeground).then()
+    this._context.createKeyboardEffect(KeyboardEffect.CHROMA_STATIC, this._BGRIntegerForeground).then();
   }
 
   protected createHeadsetVisualizer() {
-    this._context.createHeadsetEffect(HeadsetEffect.CHROMA_STATIC, this._BGRIntegerForeground).then()
+    this._context.createHeadsetEffect(HeadsetEffect.CHROMA_STATIC, this._BGRIntegerForeground).then();
   }
 }

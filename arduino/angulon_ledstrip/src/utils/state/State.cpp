@@ -6,33 +6,6 @@
 #include "ArduinoJson.h"
 #include "Angulon.h"
 
-/// Serialize the current state into an array to submit to the central server
-/// The first element represents the event that has to be fired on the server
-/// The second element contains the state object
-/// \return
-String State::getStateJSON() {
-    uint8_t currentMode = Angulon::ledstrip->getMode();
-    const auto &colors = Angulon::ledstrip->getColorsHexString();
-
-    StaticJsonDocument<192> doc;
-
-    doc.add("submitState");
-
-    JsonObject doc_1 = doc.createNestedObject();
-    doc_1["mode"] = 0;
-    doc_1["speed"] = 1000;
-    doc_1["brightness"] = 196;
-
-    JsonArray doc_1_color = doc_1.createNestedArray("colors");
-    doc_1_color.add(colors[0]);
-    doc_1_color.add(colors[1]);
-    doc_1_color.add(colors[2]);
-
-    String json;
-    serializeJson(doc, json);
-    return json;
-}
-
 void State::setState(const JsonObject object) {
     Logger::log("State", "Updating state");
 

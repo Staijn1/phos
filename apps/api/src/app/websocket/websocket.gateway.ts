@@ -5,120 +5,59 @@ import {
   SubscribeMessage,
   WebSocketGateway,
   WebSocketServer
-} from "@nestjs/websockets";
-import {Logger} from "@nestjs/common";
-import {Server, Socket} from "socket.io";
-import {WebsocketClientsManagerService} from "./websocket-clients-manager.service";
-import {ConfigurationService} from "../configuration/configuration.service";
-import {
-  AddGradientResponse,
-  GradientInformation,
-  LedstripPreset,
-  LedstripState,
-  ModeInformation
-} from "@angulon/interfaces";
-import {GradientsService} from "../gradients/gradients.service";
-import {PresetsService} from "../presets/presets.service";
+} from '@nestjs/websockets';
+import { Logger } from '@nestjs/common';
+import { Server, Socket } from 'socket.io';
+import { WebsocketClientsManagerService } from './websocket-clients-manager.service';
+import { ConfigurationService } from '../configuration/configuration.service';
+import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from '@angulon/interfaces';
+import { GradientsService } from '../gradients/gradients.service';
 
-@WebSocketGateway(undefined, {cors: true})
+@WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
-  private logger: Logger = new Logger("WebsocketGateway");
+  private logger: Logger = new Logger('WebsocketGateway');
   // 15 minutes in milliseconds
   private readonly stateIntervalTimeMS = 900000;
 
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
     private readonly configurationService: ConfigurationService,
-    private readonly gradientsService: GradientsService,
-    private readonly presetsService: PresetsService) {
+    private readonly gradientsService: GradientsService) {
   }
 
-  @SubscribeMessage("getState")
-  async onGetState(): Promise<LedstripState | undefined> {
+  @SubscribeMessage(WebsocketMessage.GetState)
+  onGetState(): LedstripState {
     return this.websocketClientsManagerService.getState();
   }
 
-  @SubscribeMessage("mode")
-  async onModeCommand(client: Socket, payload: string): Promise<string> {
-    try {
-      const mode = parseInt(payload, 10);
-      this.websocketClientsManagerService.setMode(mode);
-      return "OK";
-    } catch (e) {
-      this.logger.error(e);
-      return "ERROR";
-    }
-  }
-
-  @SubscribeMessage("color")
-  onColorCommand(client: Socket, payload: string[]): string {
-    this.websocketClientsManagerService.setColor(payload, client);
-    return "OK";
-  }
-
-  @SubscribeMessage("FFT")
-  onFFTCommand(client: Socket, payload: number): string {
+  @SubscribeMessage(WebsocketMessage.SetFFTValue)
+  onFFTCommand(client: Socket, payload: number): LedstripState {
     this.websocketClientsManagerService.setFFTValue(payload);
-    return "OK";
+    return this.websocketClientsManagerService.getState();
   }
 
-  @SubscribeMessage("increaseBrightness")
-  onIncreaseBrightnessCommand(): string {
-    this.websocketClientsManagerService.increaseBrightness();
-    return "OK";
+  @SubscribeMessage(WebsocketMessage.SetState)
+  onSetState(client: Socket, payload: LedstripState): LedstripState {
+    this.websocketClientsManagerService.setState(payload, client);
+    return this.websocketClientsManagerService.getState();
   }
 
-  @SubscribeMessage("increaseSpeed")
-  onIncreaseSpeedCommand(): string {
-    this.websocketClientsManagerService.increaseSpeed();
-    return "OK";
-  }
-
-  @SubscribeMessage("decreaseBrightness")
-  onDecreaseBrightnessCommand(): string {
-    this.websocketClientsManagerService.decreaseBrightness();
-    return "OK";
-  }
-
-  @SubscribeMessage("decreaseSpeed")
-  onDecreaseSpeedCommand(): string {
-    this.websocketClientsManagerService.decreaseSpeed();
-    return "OK";
-  }
-
-  @SubscribeMessage("getModes")
+  @SubscribeMessage(WebsocketMessage.GetModes)
   async onGetModes(): Promise<ModeInformation[]> {
     return this.configurationService.getModes();
   }
 
-  @SubscribeMessage("gradients/get")
+  @SubscribeMessage(WebsocketMessage.GetGradients)
   async onGetGradients(): Promise<GradientInformation[]> {
     return this.gradientsService.getGradients();
   }
 
-  @SubscribeMessage("gradients/edit")
-  async onGradientsEdit(client: Socket, payload: GradientInformation): Promise<GradientInformation[]> {
-    await this.gradientsService.editGradient(payload);
-    return this.gradientsService.getGradients();
-  }
-
-  @SubscribeMessage("gradients/delete")
-  async onDeleteGradient(client: Socket, payload: { id: number }): Promise<GradientInformation[]> {
-    await this.gradientsService.deleteGradient(payload);
-    return this.gradientsService.getGradients();
-  }
-
-  @SubscribeMessage("gradients/add")
-  async onAddGradient(): Promise<AddGradientResponse> {
-    return this.gradientsService.addGradient();
-  }
-
-
-  @SubscribeMessage("joinUserRoom")
-  async onJoinUserRoom(client: Socket): Promise<void> {
+  @SubscribeMessage(WebsocketMessage.RegisterAsUser)
+  async onJoinUserRoom(client: Socket): Promise<LedstripState> {
     this.websocketClientsManagerService.joinUserRoom(client);
+    return this.websocketClientsManagerService.getState();
   }
 
   /**
@@ -129,40 +68,9 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    * @param client
    * @param payload
    */
-  @SubscribeMessage("submitState")
+  @SubscribeMessage(WebsocketMessage.SubmitState)
   async onRegisterState(client: Socket, payload: LedstripState): Promise<void> {
     this.websocketClientsManagerService.syncState(client, payload);
-  }
-
-  /**
-   * This event is emitted when selecting a preset, the handler will set the preset on the ledstrips.
-   * @param client
-   * @param payload
-   */
-  @SubscribeMessage("presets/set")
-  async setPresetOnLedstrips(client: Socket, payload: LedstripPreset): Promise<"OK"> {
-    this.websocketClientsManagerService.setPreset(payload);
-    return "OK";
-  }
-
-  @SubscribeMessage("presets/add")
-  async onAddPreset(): Promise<LedstripPreset[]> {
-    return this.presetsService.addPreset();
-  }
-
-  @SubscribeMessage("presets/delete")
-  async onDeletePreset(client: Socket, index: number): Promise<LedstripPreset[]> {
-    return this.presetsService.deletePreset(index)
-  }
-
-  @SubscribeMessage("presets/update")
-  async onEditPreset(client: Socket, payload: { index: number, preset: LedstripPreset }): Promise<LedstripPreset[]> {
-    return this.presetsService.updatePreset(payload.index, payload.preset);
-  }
-
-  @SubscribeMessage("presets/get")
-  async onGetPresets(): Promise<LedstripPreset[]> {
-    return this.presetsService.getPresets();
   }
 
   /**
@@ -193,7 +101,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    */
   afterInit(): void {
     setInterval(() => {
-      this.logger.log("Sending state to all ledstrips - forced")
+      this.logger.log('Sending state to all ledstrips - forced');
       this.websocketClientsManagerService.setStateOnAllLedstrips(true);
     }, this.stateIntervalTimeMS);
   }

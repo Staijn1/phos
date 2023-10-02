@@ -1,180 +1,119 @@
-import {Injectable} from '@angular/core'
-import {map} from '../../shared/functions'
-import {environment} from '../../../environments/environment'
-import iro from '@jaames/iro'
-import {MessageService} from '../message-service/message.service'
-import {io, Socket} from 'socket.io-client'
-import {
-  AddGradientResponse,
-  GradientInformation,
-  LedstripPreset,
-  LedstripState,
-  ModeInformation
-} from '@angulon/interfaces';
-import {Store} from '@ngrx/store';
-import {colorChange} from '../../../redux/color/color.action';
-import {ColorpickerState} from "../../../redux/color/color.reducer";
-import {take} from "rxjs";
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { MessageService } from '../message-service/message.service';
+import { io, Socket } from 'socket.io-client';
+import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from '@angulon/interfaces';
+import { Store } from '@ngrx/store';
+import { ChangeMultipleLedstripProperties, ReceiveLedstripState } from '../../../redux/ledstrip/ledstrip.action';
+import { LoadModesAction } from '../../../redux/modes/modes.action';
+import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 
 @Injectable({
-  providedIn: "root"
+  providedIn: 'root'
 })
 export class WebsocketService {
-  private messageQueue: { event: string, payload?: string | string[] }[] = [];
-  private websocketUrl = environment.url
-  private socket: Socket;
+  private websocketUrl = environment.url;
+  private readonly socket: Socket;
+  private updateLedstripState = true;
 
   constructor(
     private messageService: MessageService,
-    private readonly store: Store<{ colorpicker: ColorpickerState }>,
+    private readonly store: Store<{ modes: ModeInformation[], ledstripState: LedstripState }>
   ) {
     this.socket = io(this.websocketUrl, {
       transports: ['websocket'],
+      reconnectionAttempts: 5
     });
 
     this.socket.on('connect', () => {
-      console.log(`Opened websocket at`, this.websocketUrl)
-      this.socket.emit('joinUserRoom')
-      this.getState().then(data => {
-        this.store.dispatch(colorChange(data.colors, false));
-        this.messageQueue.forEach(message => {
-          this.send(message.event, message.payload)
-        });
-        this.messageQueue = []
-      })
+      console.log('Opened websocket at', this.websocketUrl);
+
+      this.promisifyEmit<LedstripState>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
+      this.loadModes();
+      this.loadGradients();
     });
 
-    this.socket.on('color-change', (colors: string[]) => {
-      this.store.dispatch(colorChange(colors, false))
-    })
-
     this.socket.on('disconnect', () => {
-      console.log(`Disconnected from websocket at ${this.websocketUrl}`)
+      console.log(`Disconnected from websocket at ${this.websocketUrl}`);
     });
 
     this.socket.on('connect_error', (error: Error) => {
-      console.log(`Failed to connect to websocket at ${this.websocketUrl}`)
-      console.error(error)
-      messageService.setMessage(error)
+      console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
+      messageService.setMessage(error);
     });
+
+    this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
+
+    // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
+    this.store
+      .select('ledstripState')
+      .subscribe((state) => {
+        if (!this.updateLedstripState) {
+          this.updateLedstripState = true;
+          return;
+        }
+
+        if (!this.socket || this.socket.disconnected) {
+          return;
+        }
+
+        this.promisifyEmit<LedstripState>(WebsocketMessage.SetState, state).then();
+      });
   }
 
-  setColor(colors: iro.Color[] | string[]): void {
-    const colorStrings = colors.map(color => typeof color === 'string' ? color : color.hexString)
-    this.send('color', colorStrings)
+  sendFFTValue(value: number) {
+    this.socket.emit(WebsocketMessage.SetFFTValue, value);
   }
 
-  setMode(modeNumber: number): void {
-    this.send('mode', modeNumber.toString())
+  turnOff() {
+    this.store.dispatch(new ChangeMultipleLedstripProperties({ colors: ['#000000', '#000000'], mode: 0 }));
   }
 
-  setLeds(value: number): void {
-    const mappedValue = map(value, 0, 1, 0, 255)
-    this.send('FFT', mappedValue.toString())
+  private loadGradients(): void {
+    this.promisifyEmit<GradientInformation[]>(WebsocketMessage.GetGradients)
+      .then(gradients => this.store.dispatch(new LoadGradientsAction(gradients)));
   }
 
-  send(event: string, payload?: string | string[]): void {
-    if (this.isOpen()) {
-      this.socket.emit(event, payload)
-    } else {
-      console.log(`Websocket not open, adding ${event} to queue with payload ${payload}`);
-      this.messageQueue.push({event: event, payload: payload});
-    }
-  }
-
-  isOpen(): boolean {
-    return this.socket.connected
-  }
-
-  decreaseBrightness(): void {
-    this.send('decreaseBrightness')
-  }
-
-  increaseBrightness(): void {
-    this.send('increaseBrightness')
-  }
-
-  decreaseSpeed(): void {
-    this.send('decreaseSpeed')
-  }
-
-  increaseSpeed(): void {
-    this.send('increaseSpeed')
-  }
-
-  getModes(): Promise<ModeInformation[]> {
-    return this.promisifyEmit('getModes')
-  }
-
-  getGradients(): Promise<GradientInformation[]> {
-    return this.promisifyEmit('gradients/get')
-  }
-
-  deleteGradient(id: number): Promise<GradientInformation[]> {
-    return this.promisifyEmit("gradients/delete", {id})
-  }
-
-  addGradient(): Promise<AddGradientResponse> {
-    return this.promisifyEmit("gradients/add")
-  }
-
-  editGradient(gradient: GradientInformation): Promise<GradientInformation[]> {
-    return this.promisifyEmit("gradients/emit", gradient)
-  }
-
-  getState(): Promise<LedstripState> {
-    return this.promisifyEmit<LedstripState>('getState')
-  }
-
-  private promisifyEmit<T>(eventName: string, ...args: any[]): Promise<T> {
-    return new Promise((resolve, reject) => {
-      const timeout = setTimeout(() => {
-        const error = new Error("Websocket response timeout exceeded")
-        this.messageService.setMessage(error)
-        reject(error)
-      }, 3000)
-
-      if (args.length == 1 && !Array.isArray(args[0])) {
-        args = args[0]
-      }
-      this.socket.emit(eventName, args, (data: T) => {
-        clearTimeout(timeout);
-        resolve(data)
-      })
-    })
-  }
-
-  setPreset(preset: LedstripPreset) {
-    return this.promisifyEmit("presets/set", preset);
-  }
-
-  addPreset(): Promise<LedstripPreset[]> {
-    return this.promisifyEmit("presets/add")
-  }
-
-  getPresets() {
-    return this.promisifyEmit<LedstripPreset[]>("presets/get")
-  }
-
-  updatePreset(index: number, selectedPreset: LedstripPreset) {
-    return this.promisifyEmit<LedstripPreset[]>("presets/update", {index: index, preset: selectedPreset})
+  private loadModes() {
+    this.promisifyEmit<ModeInformation[]>(WebsocketMessage.GetModes)
+      .then((modes) => this.store.dispatch(new LoadModesAction(modes)));
   }
 
   /**
-   * This function turns off the ledstrips.
-   * Sets the first color to black and the mode to 0 (Static).
-   * This way we retain the other colors, but because mode 0 is static the other colors are not used in the effect and thus the ledstrip looks turned off.
+   * Store the received state in the redux store, whilst setting the updateLedstripState flag.
+   * This is required because otherwise this state change would trigger a new request to get the state from the server.
+   * And this in turn, would trigger a new state change, and so on, infinitely.
+   * @param state
+   * @private
    */
-  turnOff(): void {
-    this.setMode(0);
-    this.store.pipe(take(1)).subscribe(state => {
-      // The state array is readonly so we create a new array from the items in the state array, to prevent changing the original state directly
-      const currentColors = [...state.colorpicker.colors];
-      // Change the first color to black, retaining the other colors.
-      // This is only possible because we also set the mode to 0 which only uses the first color.
-      currentColors[0] = '#000000';
-      // Then set the new colors through the official way, through the store
-      this.store.dispatch(colorChange(currentColors, true))
+  private updateAppState(state: LedstripState) {
+    this.updateLedstripState = false;
+    this.store.dispatch(new ReceiveLedstripState(state));
+  }
+
+  /**
+   * Changes the .emit API of the websocket to a Promise-based API, so we can await the response
+   * @param eventName - The name of the event to emit
+   * @param args The arguments to pass to the event
+   * @returns A promise that resolves when the server responds
+   * @private
+   */
+  private promisifyEmit<T>(eventName: WebsocketMessage, ...args: any[]): Promise<T> {
+    return new Promise((resolve, reject) => {
+      const timeout = setTimeout(() => {
+        const error = new Error('Websocket response timeout exceeded');
+        console.warn(`Timeout exceeded for event: ${eventName} with args: ${args.toString()}`, error);
+        this.messageService.setMessage(error);
+        reject(error);
+      }, 3000);
+
+      if (args.length == 1 && !Array.isArray(args[0])) {
+        args = args[0];
+      }
+      this.socket.emit(eventName, args, (data: T) => {
+        clearTimeout(timeout);
+        resolve(data);
+      });
     });
   }
 }

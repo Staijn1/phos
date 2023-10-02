@@ -1,13 +1,10 @@
-import {AfterViewInit, Component, ElementRef, OnInit, Renderer2, ViewChild} from '@angular/core';
-import {gsap} from 'gsap';
-import {NavigationEnd, NavigationStart, Router} from '@angular/router';
-
+import { Component, ElementRef, HostListener, OnInit, ViewChild } from '@angular/core';
+import { gsap } from 'gsap';
+import { NavigationEnd, NavigationStart, Router } from '@angular/router';
 import {
-  faBars,
+  faBars as OpenMobileMenuIcon,
   faChartBar,
   faCog,
-  faCubes,
-  faEdit,
   faEyeDropper,
   faHome,
   faList,
@@ -16,29 +13,35 @@ import {
   faPowerOff,
   faRunning,
   faSlidersH,
-  faTimes,
+  faTimes as CloseMobileMenuIcon,
   faWalking
 } from '@fortawesome/free-solid-svg-icons';
-import {ChromaEffectService} from '../../services/chromaEffect/chroma-effect.service';
-import {WebsocketService} from '../../services/websocketconnection/websocket.service';
-import {Store} from '@ngrx/store';
-import {ColorpickerState} from '../../../redux/color/color.reducer';
-import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
-import {colorChange} from "../../../redux/color/color.action";
+import { Store } from '@ngrx/store';
+import { ColorpickerComponent } from '../../shared/components/colorpicker/colorpicker.component';
+import { LedstripState } from '@angulon/interfaces';
+import { WebsocketService } from '../../services/websocketconnection/websocket.service';
+import {
+  DecreaseLedstripBrightness,
+  DecreaseLedstripSpeed,
+  IncreaseLedstripBrightness,
+  IncreaseLedstripSpeed
+} from '../../../redux/ledstrip/ledstrip.action';
+import { OffCanvasComponent } from '../../shared/components/offcanvas/off-canvas.component';
 
 @Component({
   selector: 'app-navigationbar',
   templateUrl: './navigationbar.component.html',
   styleUrls: ['./navigationbar.component.scss']
 })
-export class NavigationbarComponent implements OnInit, AfterViewInit {
+export class NavigationbarComponent implements OnInit {
+  @ViewChild('mobileMenu') mobileMenu!: OffCanvasComponent;
   @ViewChild('container') navContainer!: ElementRef;
   @ViewChild(ColorpickerComponent) colorpicker!: ColorpickerComponent;
   homeIcon = faHome;
   modeIcon = faList;
   visualizerIcon = faChartBar;
   colorpickerIcon = faEyeDropper;
-  mobileMenuIcon = faBars;
+  mobileMenuIcon = OpenMobileMenuIcon;
   powerOffIcon = faPowerOff;
   controlsIcon = faSlidersH;
   settingsIcon = faCog;
@@ -46,8 +49,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   increaseBrightnessIcon = faPlus;
   speedIncreaseIcon = faRunning;
   speedDecreaseIcon = faWalking;
-  editorIcon = faEdit;
-  visualizer3DIcon = faCubes;
   timeline = gsap.timeline();
   isOpen = false;
   private animationMode = 0;
@@ -55,65 +56,65 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
   constructor(
     public connection: WebsocketService,
     private router: Router,
-    private renderer: Renderer2,
-    private chromaEffect: ChromaEffectService,
-    private store: Store<{ colorpicker: ColorpickerState }>
+    private store: Store<{ ledstripState: LedstripState }>
   ) {
   }
 
   ngOnInit(): void {
-    // When the colorpicker is updated, update the ledstrip colors if the updateLedstrips flag is set to true.
-    // Always update the chroma effect colors.
-    this.store.select('colorpicker').subscribe((state) => {
-      if (state.updateLedstrips) {
-        this.connection.setColor(state.colors);
-      }
-      this.chromaEffect.setColors = state.colors;
-    })
-
     // Subscribe to router events so we can display a page transition animation each time the user navigates to a new page.
     this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if (val instanceof NavigationStart) {
-        gsap.set('#cover', {autoAlpha: 1, duration: 0.3});
+        gsap.set('#cover', { autoAlpha: 1, duration: 0.3 });
       }
       if (val instanceof NavigationEnd) {
         this.animate();
-        this.closeMobileMenu();
+        this.mobileMenu.close();
       }
     });
   }
 
-  ngAfterViewInit(): void {
-    this.determineColorPickerOrientation()
+  /**
+   * On resize, check if the screen is still small enough for a mobile menu.
+   * If the screen is big and the menu was open, we will close it
+   * If the screen turned small and the menu is open, we will open it up
+   * @private
+   */
+  @HostListener('window:resize')
+  private closeMobileMenuOnBigScreen(): void {
+    if (screen.width > 992 && this.mobileMenu.isOpen) this.mobileMenu.close();
+    if (screen.width <= 992 && this.mobileMenu.isOpen) this.mobileMenu.open();
   }
 
-
-  mobileNav(): void {
-    if (!this.isOpen) {
-      this.openMobileMenu();
-    } else {
-      this.closeMobileMenu();
-    }
+  onMobileMenuChange(isOpen: boolean) {
+    this.mobileMenuIcon = isOpen ? CloseMobileMenuIcon : OpenMobileMenuIcon;
   }
 
   turnOff(): void {
-    this.timeline.to('#powerOff', {duration: 0.6, color: 'white', background: 'var(--bs-danger)'});
-    this.timeline.to('#powerOff', {duration: 1.2, clearProps: 'background,color'});
+    // Animate the off button to become red
+    this.timeline.to('#powerOff', { duration: 0.6, color: 'white', background: 'var(--bs-danger)' });
+    this.timeline.to('#powerOff', { duration: 1.2, clearProps: 'background,color' });
+
+    this.timeline.to('#powerOffMobile', { duration: 0.6, color: 'white', background: 'var(--bs-danger)' });
+    this.timeline.to('#powerOffMobile', { duration: 1.2, clearProps: 'background,color' });
 
     this.connection.turnOff();
   }
 
-  private closeMobileMenu() {
-    this.mobileMenuIcon = faBars;
-    this.renderer.removeClass(this.navContainer.nativeElement, 'mobile-nav-active');
-    this.isOpen = false;
+  decreaseBrightness() {
+    this.store.dispatch(new DecreaseLedstripBrightness());
   }
 
-  private openMobileMenu() {
-    this.mobileMenuIcon = faTimes;
-    this.renderer.addClass(this.navContainer.nativeElement, 'mobile-nav-active');
-    this.isOpen = true;
+  increaseBrightness() {
+    this.store.dispatch(new IncreaseLedstripBrightness());
+  }
+
+  increaseSpeed() {
+    this.store.dispatch(new IncreaseLedstripSpeed());
+  }
+
+  decreaseSpeed() {
+    this.store.dispatch(new DecreaseLedstripSpeed());
   }
 
   private animationFromLeft(): void {
@@ -133,7 +134,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
       delay: 0,
       stagger: -0.05
     });
-    gsap.set('.from-left .tile', {left: '0', width: '0'});
+    gsap.set('.from-left .tile', { left: '0', width: '0' });
   }
 
   private animate(): void {
@@ -148,7 +149,7 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
         break;
     }
 
-    this.timeline.to('#cover', {duration: 0.6, autoAlpha: 0, ease: 'power4.inOut'});
+    this.timeline.to('#cover', { duration: 0.6, autoAlpha: 0, ease: 'power4.inOut' });
     this.animationMode = ++this.animationMode % 2;
   }
 
@@ -169,18 +170,6 @@ export class NavigationbarComponent implements OnInit, AfterViewInit {
       delay: 0,
       stagger: -0.05
     });
-    gsap.set('.from-top .tile', {top: '0', height: '0'});
-  }
-
-  /**
-   * This function changes the orientation of the colorpicker depending on the screen size.
-   * If the screen is smaller than 992px (lg breakpoint in Bootstrap 5), the colorpicker will be vertical.
-   */
-  determineColorPickerOrientation() {
-    if (screen.width < 992) {
-      this.colorpicker.changeOrientation('vertical');
-    } else {
-      this.colorpicker.changeOrientation('horizontal')
-    }
+    gsap.set('.from-top .tile', { top: '0', height: '0' });
   }
 }

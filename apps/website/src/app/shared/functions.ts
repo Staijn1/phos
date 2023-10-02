@@ -3,17 +3,17 @@ import { GlobalVars } from "./constants";
 import { RGBObject } from "./types/types";
 
 /**
- * Map a value from one scale to another. This function is the same as the map() function from arduino.
+ * Map a number from one scale to another. This function is the same as the map() function from arduino.
  * For example, input 2 from a scale 1 to 4 becomes: 5 from scale 1 to 10
  * @param value
  * @param start1
  * @param stop1
  * @param start2
  * @param stop2
- * @param {boolean} withinBounds
- * @returns {number}
+ * @param withinBounds
+ * @returns A number within the new range
  */
-export function map(value: number, start1: number, stop1: number, start2: number, stop2: number, withinBounds = false): number {
+export const mapNumber = (value: number, start1: number, stop1: number, start2: number, stop2: number, withinBounds = false): number => {
   const newval = (value - start1) / (stop1 - start1) * (stop2 - start2) + start2;
   if (!withinBounds) {
     return newval;
@@ -23,7 +23,7 @@ export function map(value: number, start1: number, stop1: number, start2: number
   } else {
     return constrain(newval, stop2, start2);
   }
-}
+};
 
 /**
  * Get red, green and blue input and calcule the BGR integer. This is needed for razer chroma
@@ -124,7 +124,7 @@ export function WarmColor(temperature: number): any {
   // Scale 'heat' down from 0-255 to 0-191,
   // which can then be easily divided into three
   // equal 'thirds' of 64 units each.
-  const t192 = map(temperature, 0, 255, 0, 191);
+  const t192 = mapNumber(temperature, 0, 255, 0, 191);
 
   // calculate a value that ramps up from
   // zero to 255 in each 'third' of the scale.
@@ -168,7 +168,7 @@ export function ColdColor(temperature: number): any {
   // Scale 'heat' down from 0-255 to 0-191,
   // which can then be easily divided into three
   // equal 'thirds' of 64 units each.
-  const t192 = map(temperature, 0, 255, 0, 191);
+  const t192 = mapNumber(temperature, 0, 255, 0, 191);
 
   // calculate a value that ramps up from
   // zero to 255 in each 'third' of the scale.
@@ -236,5 +236,43 @@ export const getDeviceType = (): string | void => {
 
   for (const [key, value] of devices) {
     if (value) return key;
+  }
+};
+
+/**
+ * Loads and parses an object from the localstorage, if it exists. If it does not it returns the supplied default value;
+ * @param key
+ * @param defaultValue
+ */
+export const loadObjectFromLocalStorage = (key: string, defaultValue: unknown) => {
+  const localstorageItem = localStorage.getItem(key);
+  if (localstorageItem) return JSON.parse(localstorageItem);
+  return defaultValue;
+};
+
+/**
+ * Prefixes the current URL with "api.". Used to deploy to different environments, production and demo.
+ * @example "https://some.domain.com" becomes "https://api.some.domain.com"
+ */
+export const prefixURLWithApi = () => {
+  // Get the current URL
+  const currentUrl = window.location.href;
+
+  // Split the URL into its parts
+  const urlParts = currentUrl.split("//");
+
+  // Check if we have the protocol and hostname
+  if (urlParts.length === 2) {
+    const [protocol, rest] = urlParts;
+    const [hostname] = rest.split("/");
+
+    // Add "api." to the hostname
+    const modifiedHostname = "api." + hostname;
+
+    // Reconstruct the modified URL
+    return `${protocol}//${modifiedHostname}`;
+  } else {
+    // Invalid URL format
+    return currentUrl;
   }
 };

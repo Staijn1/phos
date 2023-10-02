@@ -1,37 +1,38 @@
-<div *ngIf="spotifyAuth.isLoggedIn(); else notLoggedIn">
-  <div *ngIf="isActive; else notActive">
-    <div class="mt-3">
+<div *ngIf='spotifyAuth.isLoggedIn(); else notLoggedIn'>
+  <div *ngIf='isActive; else notActive'>
+    <div class='mt-3'>
       <!-- Create a music player -->
-      <div class="row">
-        <div class="col-md-5">
-          <div class="d-flex align-items-center h-100">
-            <img [src]="albumImageSrc" class="img-fluid" alt="Album Image">
+      <div class='row'>
+        <div class='col-md-5'>
+          <div class='d-flex align-items-center h-100'>
+            <img [src]='albumImageSrc' alt='Album Image' class='img-fluid'>
           </div>
         </div>
-        <div class="col-md-7">
-          <div class="d-flex flex-column h-100 justify-content-between">
+        <div class='col-md-7'>
+          <div class='d-flex flex-column h-100 justify-content-between'>
             <div>
               <h5>{{trackName}}</h5>
               <p>{{artistName}}</p>
             </div>
-            <div class="w-100 d-flex justify-content-center">
+            <div class='w-100 d-flex justify-content-center'>
               <div>
-                <div class="btn-group btn-group-sm w-100" role="group">
-                  <button type="button" class="btn btn-secondary" (click)="previousSong()">
-                    <fa-icon [icon]="previousSongIcon"></fa-icon>
+                <div class='btn-group btn-group-sm w-100' role='group'>
+                  <button (click)='previousSong()' class='btn btn-secondary' type='button'>
+                    <fa-icon [icon]='previousSongIcon'></fa-icon>
                   </button>
-                  <button type="button" class="btn btn-secondary" (click)="togglePlay()">
-                    <fa-icon [icon]="getIconForPlayStatus"></fa-icon>
+                  <button (click)='togglePlay()' class='btn btn-secondary' type='button'>
+                    <fa-icon [icon]='getIconForPlayStatus'></fa-icon>
                   </button>
-                  <button type="button" class="btn btn-secondary" (click)="skipSong()">
-                    <fa-icon [icon]="skipSongIcon"></fa-icon>
+                  <button (click)='skipSong()' class='btn btn-secondary' type='button'>
+                    <fa-icon [icon]='skipSongIcon'></fa-icon>
                   </button>
                 </div>
-                <div class="mt-3 d-flex align-items-center">
-                  <fa-icon [icon]="volumeLowIcon"></fa-icon>
-                  <input type="range" class="form-range flex-grow-1 mx-2" min="0" max="1" step="0.1"
-                         [(ngModel)]="volume" (input)="changeVolume()">
-                  <fa-icon [icon]="volumeHighIcon"></fa-icon>
+                <div class='mt-3 d-flex align-items-center'>
+                  <fa-icon [icon]='volumeLowIcon'></fa-icon>
+                  <input (input)='changeVolume()' [(ngModel)]='volume' class='form-range flex-grow-1 mx-2' max='1'
+                         min='0'
+                         step='0.1' type='range'>
+                  <fa-icon [icon]='volumeHighIcon'></fa-icon>
                 </div>
               </div>
             </div>
@@ -40,22 +41,22 @@
       </div>
 
       <!-- Playlist Section -->
-      <div class="mt-5">
+      <div class='mt-5'>
         <h6>Upcoming Songs</h6>
-        <ul class="list-unstyled">
+        <ul class='list-unstyled'>
           <li
-            *ngFor="let song of allTracks; let i = index"
-            [class.previousTrack]="previousTracks.includes(song)"
-            [class.currentTrack]="currentTrack === song"
-            [class.upcomingTrack]="upcomingTracks.includes(song)"
-            class="track"
-            [style.opacity]="calculateOpacityForTrack(song, i)"
+            *ngFor='let song of allTracks; let i = index'
+            [class.currentTrack]='currentTrack === song'
+            [class.previousTrack]='previousTracks.includes(song)'
+            [class.upcomingTrack]='upcomingTracks.includes(song)'
+            [style.opacity]='calculateOpacityForTrack(song, i)'
+            class='track'
           >
-            <div class="row">
-              <div class="col-md-3">
-                <img class="img-fluid" [src]="song.album.images[0].url" alt="Album Image">
+            <div class='row'>
+              <div class='col-md-3'>
+                <img [src]='song.album.images[0].url' alt='Album Image' class='img-fluid'>
               </div>
-              <div class="col-md-9 song-info">
+              <div class='col-md-9 song-info'>
                 <h6>{{song.name}}</h6>
                 <p>{{getArtistNames(song)}}</p>
               </div>
@@ -68,8 +69,8 @@
 </div>
 
 <ng-template #notLoggedIn>
-  <a class="btn btn-primary btn-spotify w-100 mt-3" [href]="spotifyAuthenticationURL">
-    <fa-icon [icon]="spotifyIcon"></fa-icon>
+  <a [href]='spotifyAuthenticationURL' class='btn btn-primary btn-spotify w-100 mt-3'>
+    <fa-icon [icon]='spotifyIcon'></fa-icon>
     Login with Spotify
   </a>
 </ng-template>

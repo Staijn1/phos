@@ -1,22 +1,20 @@
-import {NgModule} from '@angular/core';
-import {CommonModule} from '@angular/common';
-import {SettingsPageComponent} from './settings-page/settings-page.component';
-import {VisualizerPageComponent} from './visualizer-page/visualizer-page.component';
-import {ModePageComponent} from './mode-page/mode-page.component';
-import {FormsModule} from '@angular/forms';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
-import {SharedModule} from '../shared/shared.module';
-import {VisualizerPage3DComponent} from './visualizer-page3-d/visualizer-page3-d.component';
-import {NgxSliderModule} from '@angular-slider/ngx-slider';
-import {ShortcutPageComponent} from './shortcut-page/shortcut-page.component';
+import { NgModule } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { SettingsPageComponent } from './settings-page/settings-page.component';
+import { VisualizerPageComponent } from './visualizer-page/visualizer-page.component';
+import { ModePageComponent } from './mode-page/mode-page.component';
+import { FormsModule } from '@angular/forms';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { SharedModule } from '../shared/shared.module';
+import { NgxSliderModule } from 'ngx-slider-v2';
+import { ShortcutPageComponent } from './shortcut-page/shortcut-page.component';
 
 @NgModule({
   declarations: [
     SettingsPageComponent,
     VisualizerPageComponent,
     ModePageComponent,
-    VisualizerPage3DComponent,
     ShortcutPageComponent
   ],
   imports: [
@@ -25,8 +23,9 @@ import {ShortcutPageComponent} from './shortcut-page/shortcut-page.component';
     NgbModule,
     CommonModule,
     SharedModule,
-    NgxSliderModule,
+    NgxSliderModule
   ],
-  exports: [],
+  exports: []
 })
-export class PagesModule {}
+export class PagesModule {
+}
