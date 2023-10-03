@@ -1,3 +1,7 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* You can add global styles to this file, and also import other style files */
 @import './styles/_variables.scss';
 
@@ -5,7 +9,7 @@
 # General
 --------------------------------------------------------------*/
 body {
-  font-family: "Open Sans", sans-serif;
+  font-family: 'Open Sans', sans-serif;
   color: #272829;
   overflow-x: hidden;
 }
@@ -19,12 +23,16 @@ a {
   }
 }
 
-h1, h3, h4, h5, h6 {
-  font-family: "Comfortaa", sans-serif !important;
+h1,
+h3,
+h4,
+h5,
+h6 {
+  font-family: 'Comfortaa', sans-serif !important;
 }
 
 h2 {
-  font-family: "Raleway", sans-serif !important;
+  font-family: 'Raleway', sans-serif !important;
 }
 
 /*--------------------------------------------------------------
@@ -86,7 +94,7 @@ section {
   }
 }
 
-@import "./styles/bootstrap";
+@import './styles/bootstrap';
 
 @media screen and (max-width: map-get($grid-breakpoints, 'sm')) {
   html {
@@ -94,4 +102,4 @@ section {
   }
 }
 
-@import "aos/dist/aos.css";
+@import 'aos/dist/aos.css';
