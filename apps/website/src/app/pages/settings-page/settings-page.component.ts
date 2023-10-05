@@ -34,6 +34,7 @@ export class SettingsPageComponent implements OnInit{
   }
 
   ngOnInit(): void {
+    // Skip the first value change because it's the initial value of the form
     this.form.form.valueChanges
       .pipe(debounceTime(50), skip(1))
       .subscribe(newValues => {
