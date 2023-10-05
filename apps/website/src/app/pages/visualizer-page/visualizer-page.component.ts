@@ -24,13 +24,11 @@ import { mapNumber } from "../../shared/functions";
 import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
 import { combineLatest, distinctUntilChanged, map, skipWhile } from "rxjs";
 import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
-import { fade } from "@angulon/ui";
 
 @Component({
   selector: "app-visualizer",
   templateUrl: "./visualizer-page.component.html",
   styleUrls: ["./visualizer-page.component.scss"],
-  animations: [fade]
 })
 export class VisualizerPageComponent implements OnDestroy {
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent;
