@@ -24,11 +24,13 @@ import { mapNumber } from "../../shared/functions";
 import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
 import { combineLatest, distinctUntilChanged, map, skipWhile } from "rxjs";
 import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
+import { fade } from "@angulon/ui";
 
 @Component({
   selector: "app-visualizer",
   templateUrl: "./visualizer-page.component.html",
-  styleUrls: ["./visualizer-page.component.scss"]
+  styleUrls: ["./visualizer-page.component.scss"],
+  animations: [fade]
 })
 export class VisualizerPageComponent implements OnDestroy {
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent;
@@ -225,5 +227,22 @@ export class VisualizerPageComponent implements OnDestroy {
         });
       }
     }
+  }
+
+  /**
+   * Select a new tab with the given index
+   * @param index
+   */
+  selectTab(index: number) {
+    this.activeTab = index;
+  }
+
+  /**
+   * We must finalize the tab selection after the animation has finished to set the `display` property correctly
+   * @param event
+   */
+  finalizeTabSelection(event: TransitionEvent) {
+    // If the transition finished and opacity is 0, set the display to none
+    console.log(event);
   }
 }
