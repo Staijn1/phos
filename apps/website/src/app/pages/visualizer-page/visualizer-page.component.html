@@ -1,4 +1,4 @@
-<div class="vh-100 d-flex flex-column bg-black" id="wrapper">
+<div class="tw-h-screen tw-flex tw-flex-col bg-black" id="wrapper">
   <div class="toolbar-container">
     <div class="toolbar">
       <!--      Button group-->
@@ -15,18 +15,18 @@
       </div>
     </div>
   </div>
-  <div class="h-100">
+  <div class="tw-h-full">
     <app-shared-visualizer (ready)="init()" [options]="visualizerOptions"></app-shared-visualizer>
   </div>
 </div>
 <app-offcanvas position="right" width="300px">
-  <div class="p-1 d-flex justify-content-between w-100" header>
+  <div class="p-1 tw-flex tw-content-between tw-w-full" header>
     <h3>Settings</h3>
     <button (click)="closeOffcanvas()" class="btn" type="button">
       <fa-icon [icon]="closeIcon"></fa-icon>
     </button>
   </div>
-  <div body class="p-3 h-100">
+  <div body class="p-3 tw-h-full">
     <!--    Create the tabs-->
     <div class="tw-tabs tw-w-full">
       <div (click)="selectTab(0)" class="tw-tab tw-tab-bordered" [class.tw-tab-active]="activeTab === 0">
