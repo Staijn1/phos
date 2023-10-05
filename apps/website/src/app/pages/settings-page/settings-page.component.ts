@@ -1,5 +1,5 @@
-import { AfterViewInit, Component, OnInit, ViewChild } from "@angular/core";
-import { faBroom, faSave } from "@fortawesome/free-solid-svg-icons";
+import { Component, OnInit, ViewChild } from "@angular/core";
+import { faBroom } from "@fortawesome/free-solid-svg-icons";
 import { GeneralSettings, UserPreferences } from "../../shared/types/types";
 import { themes } from "../../shared/constants";
 import { Store } from "@ngrx/store";
@@ -18,7 +18,6 @@ import { debounceTime, skip } from "rxjs";
 export class SettingsPageComponent implements OnInit{
   @ViewChild("form", { static: true }) form!: NgForm;
   settings: GeneralSettings | undefined;
-  saveIcon = faSave;
   themes = themes.map(theme => theme.name);
   selectedTheme = 0;
   clearSettingsIcon = faBroom;
