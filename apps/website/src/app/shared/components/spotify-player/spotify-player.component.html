@@ -16,14 +16,14 @@
             </div>
             <div class='tw-w-full tw-flex tw-justify-center'>
               <div>
-                <div class='btn-group btn-group-sm tw-w-full' role='group'>
-                  <button (click)='previousSong()' class='btn btn-secondary' type='button'>
+                <div class='tw-btn-group tw-btn-group-sm tw-w-full' role='group'>
+                  <button (click)='previousSong()' class='tw-btn tw-btn-secondary' type='button'>
                     <fa-icon [icon]='previousSongIcon'></fa-icon>
                   </button>
-                  <button (click)='togglePlay()' class='btn btn-secondary' type='button'>
+                  <button (click)='togglePlay()' class='tw-btn tw-btn-secondary' type='button'>
                     <fa-icon [icon]='getIconForPlayStatus'></fa-icon>
                   </button>
-                  <button (click)='skipSong()' class='btn btn-secondary' type='button'>
+                  <button (click)='skipSong()' class='tw-btn tw-btn-secondary' type='button'>
                     <fa-icon [icon]='skipSongIcon'></fa-icon>
                   </button>
                 </div>
@@ -69,7 +69,7 @@
 </div>
 
 <ng-template #notLoggedIn>
-  <a [href]='spotifyAuthenticationURL' class='btn btn-primary btn-spotify tw-w-full mt-3'>
+  <a [href]='spotifyAuthenticationURL' class='tw-btn tw-btn-primary btn-spotify tw-w-full mt-3'>
     <fa-icon [icon]='spotifyIcon'></fa-icon>
     Login with Spotify
   </a>
