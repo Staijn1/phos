@@ -32,7 +32,7 @@
     "@nestjs/platform-express": "10.0.2",
     "@nestjs/platform-socket.io": "^10.0.2",
     "@nestjs/websockets": "^10.0.2",
-    "@ngrx/store": "16.",
+    "@ngrx/store": "16.0.1",
     "@ngrx/store-devtools": "16.0.1",
     "aos": "^2.3.4",
     "audiomotion-analyzer": "^4.3.0",
