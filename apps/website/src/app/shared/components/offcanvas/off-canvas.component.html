@@ -1,11 +1,12 @@
-<div #offCanvasBackground (click)='close()'
-     (transitionend)="onTransitionEnd($event)"
-     class='offcanvas-background'></div>
-<div #offCanvas class='offcanvas-container'>
-  <div class='offcanvas-header bg-primary'>
-    <ng-content select='[header]'></ng-content>
-  </div>
-  <div class='offcanvas-body tw-h-full'>
-    <ng-content select='[body]'></ng-content>
+<div
+  class='tw-drawer'
+  [class.tw-drawer-end]='position === "right"'
+>
+  <input [(ngModel)]='isOpen'  [id]='id' type='checkbox' class='tw-drawer-toggle' />
+  <div class='tw-drawer-side'>
+    <label [for]='id' aria-label='close sidebar' class='tw-drawer-overlay'></label>
+    <div class='tw-p-4 tw-w-80 tw-min-h-full tw-bg-base-200 tw-text-base-content'>
+      <ng-content select='[body]'></ng-content>
+    </div>
   </div>
 </div>

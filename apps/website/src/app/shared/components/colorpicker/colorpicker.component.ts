@@ -1,4 +1,4 @@
-import { AfterViewInit, Component, Input, OnInit } from '@angular/core';
+import { AfterViewInit, Component, Input } from '@angular/core';
 import iro from '@jaames/iro';
 import { IroColorPicker } from '@jaames/iro/dist/ColorPicker';
 import { Store } from '@ngrx/store';
@@ -10,7 +10,7 @@ import { LedstripState } from '@angulon/interfaces';
   templateUrl: './colorpicker.component.html',
   styleUrls: ['./colorpicker.component.scss']
 })
-export class ColorpickerComponent implements OnInit, AfterViewInit {
+export class ColorpickerComponent implements AfterViewInit {
   @Input() orientation: 'horizontal' | 'vertical' = 'horizontal';
   protected id = this.generateElementId();
   private picker!: IroColorPicker;
@@ -51,10 +51,6 @@ export class ColorpickerComponent implements OnInit, AfterViewInit {
   };
 
   constructor(private store: Store<{ ledstripState: LedstripState | undefined }>) {
-  }
-
-  ngOnInit(): void {
-    this.generateElementId();
   }
 
   ngAfterViewInit(): void {
