@@ -47,58 +47,70 @@
     <div class='tab-contents-container'>
       <div class='tab-content' [class.active-tab]='activeTab === 0'>
         <div>
-          <!--    Select box for the gradient, use gradientLeft because this is used when channelLayout = 'single'-->
-          <div class='form-group'>
-            <label for='gradientLeft'>Gradient Left Channel</label>
-            <select (change)='applySettings()' [(ngModel)]='visualizerOptions.gradientLeft' class='form-control'
-                    id='gradientLeft'>
-              <option *ngFor='let gradient of gradients' [ngValue]='gradient.name'>{{gradient.name}}</option>
+          <!-- Select box for the gradient, use gradientLeft because this is used when channelLayout = 'single' -->
+          <div class="tw-form-control tw-w-full tw-max-w-xs">
+            <label class="tw-label">
+              <span class="tw-label-text">Gradient Left Channel</span>
+            </label>
+            <select (change)="applySettings()" [(ngModel)]="visualizerOptions.gradientLeft" class="tw-select focus:tw-select-primary tw-select-bordered">
+              <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
             </select>
           </div>
-          <!--            Select box for the gradient right, only works when channelLayout != 'single'-->
-          <div class='form-group'>
-            <label for='gradientRight'>Gradient Right Channel</label>
-            <select (change)='applySettings()' [(ngModel)]='visualizerOptions.gradientRight' class='form-control'
-                    id='gradientRight'>
-              <option *ngFor='let gradient of gradients' [ngValue]='gradient.name'>{{gradient.name}}</option>
+
+          <!-- Select box for the gradient right, only works when channelLayout != 'single' -->
+          <div class="tw-form-control tw-w-full tw-max-w-xs">
+            <label class="tw-label">
+              <span class="tw-label-text">Gradient Right Channel</span>
+            </label>
+            <select (change)="applySettings()" [(ngModel)]="visualizerOptions.gradientRight" class="tw-select focus:tw-select-primary tw-select-bordered">
+              <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
             </select>
           </div>
-          <!--    Select box for the display modes-->
-          <div class='form-group'>
-            <label for='modes'>Display Mode</label>
-            <select (change)='applySettings()' [(ngModel)]='visualizerOptions.mode' class='form-control' id='modes'>
-              <option *ngFor='let mode of modes' [ngValue]='mode.value'>{{mode.text}}</option>
+
+          <!-- Select box for the display modes -->
+          <div class="tw-form-control tw-w-full tw-max-w-xs">
+            <label class="tw-label">
+              <span class="tw-label-text">Display Mode</span>
+            </label>
+            <select (change)="applySettings()" [(ngModel)]="visualizerOptions.mode" class="tw-select focus:tw-select-primary tw-select-bordered">
+              <option *ngFor="let mode of modes" [ngValue]="mode.value">{{mode.text}}</option>
             </select>
           </div>
-          <!--    Selectbox for mirror. Accepted values are -1 for mirror left, 0 for no mirror and 1 for mirror right-->
-          <div class='form-group'>
-            <label for='mirror'>Mirror</label>
-            <select (change)='applySettings()' [(ngModel)]='visualizerOptions.mirror' class='form-control'
-                    id='mirror'>
-              <option [ngValue]='-1'>Left</option>
-              <option [ngValue]='0'>None</option>
-              <option [ngValue]='1'>Right</option>
+
+          <!-- Select box for Mirror. Accepted values are -1 for mirror left, 0 for no mirror and 1 for mirror right -->
+          <div class="tw-form-control tw-w-full tw-max-w-xs">
+            <label class="tw-label">
+              <span class="tw-label-text">Mirror</span>
+            </label>
+            <select (change)="applySettings()" [(ngModel)]="visualizerOptions.mirror" class="tw-select focus:tw-select-primary tw-select-bordered">
+              <option [ngValue]="-1">Left</option>
+              <option [ngValue]="0">None</option>
+              <option [ngValue]="1">Right</option>
             </select>
           </div>
-          <!--    Selectbox for FFT bin size-->
-          <div class='form-group'>
-            <label for='fftBinSize'>FFT Bin Size</label>
-            <select (change)='applySettings()' [(ngModel)]='visualizerOptions.fftSize' class='form-control'
-                    id='fftBinSize'>
-              <option [ngValue]='512'>512</option>
-              <option [ngValue]='1024'>1024</option>
-              <option [ngValue]='2048'>2048</option>
-              <option [ngValue]='4096'>4096</option>
-              <option [ngValue]='8192'>8192</option>
-              <option [ngValue]='16384'>16384</option>
-              <option [ngValue]='32768'>32768</option>
+
+          <!-- Select box for FFT bin size -->
+          <div class="tw-form-control tw-w-full tw-max-w-xs">
+            <label class="tw-label">
+              <span class="tw-label-text">FFT Bin Size</span>
+            </label>
+            <select (change)="applySettings()" [(ngModel)]="visualizerOptions.fftSize" class="tw-select focus:tw-select-primary tw-select-bordered">
+              <option [ngValue]="512">512</option>
+              <option [ngValue]="1024">1024</option>
+              <option [ngValue]="2048">2048</option>
+              <option [ngValue]="4096">4096</option>
+              <option [ngValue]="8192">8192</option>
+              <option [ngValue]="16384">16384</option>
+              <option [ngValue]="32768">32768</option>
             </select>
           </div>
-          <!--    Selectbox for FFT bin size-->
-          <div class='form-group'>
-            <label for='weightingFilter'>Weighting Filter</label>
-            <select (change)='applySettings()' [(ngModel)]='visualizerOptions.weightingFilter' class='form-control'
-                    id='weightingFilter'>
+
+          <!-- Select box for Weighting Filter -->
+          <div class="tw-form-control tw-w-full tw-max-w-xs">
+            <label class="tw-label">
+              <span class="tw-label-text">Weighting Filter</span>
+            </label>
+            <select (change)="applySettings()" [(ngModel)]="visualizerOptions.weightingFilter" class="tw-select focus:tw-select-primary tw-select-bordered">
               <option [ngValue]="''">None</option>
               <option [ngValue]="'A'">A-weighting</option>
               <option [ngValue]="'B'">B-weighting</option>
@@ -107,11 +119,13 @@
               <option [ngValue]="'468'">ITU-R 468 weighting</option>
             </select>
           </div>
-          <!--    Selectbox energy preset, determining which values to send over the wire-->
-          <div class='form-group'>
-            <label for='energyPreset'>Energy Preset</label>
-            <select (change)='applySettings()' [(ngModel)]='visualizerOptions.energyPreset' class='form-control'
-                    id='energyPreset'>
+
+          <!-- Select box for Energy Preset, determining which values to send over the wire -->
+          <div class="tw-form-control tw-w-full tw-max-w-xs">
+            <label class="tw-label">
+              <span class="tw-label-text">Energy Preset</span>
+            </label>
+            <select (change)="applySettings()" [(ngModel)]="visualizerOptions.energyPreset" class="tw-select focus:tw-select-primary tw-select-bordered">
               <option [ngValue]="'peak'">Peaks</option>
               <option [ngValue]="'bass'">Bass</option>
               <option [ngValue]="'lowMid'">Low Mid</option>
@@ -120,11 +134,13 @@
               <option [ngValue]="'treble'">Treble</option>
             </select>
           </div>
-          <!--            Selectbox for channalLayout-->
-          <div class='form-group'>
-            <label for='channelLayout'>Channel Layout</label>
-            <select (change)='applySettings()' [(ngModel)]='visualizerOptions.channelLayout' class='form-control'
-                    id='channelLayout'>
+
+          <!-- Select box for Channel Layout -->
+          <div class="tw-form-control tw-w-full tw-max-w-xs">
+            <label class="tw-label">
+              <span class="tw-label-text">Channel Layout</span>
+            </label>
+            <select (change)="applySettings()" [(ngModel)]="visualizerOptions.channelLayout" class="tw-select focus:tw-select-primary tw-select-bordered">
               <option [ngValue]="'single'">Single</option>
               <option [ngValue]="'dual-vertical'">Dual Vertical</option>
               <option [ngValue]="'dual-horizontal'">Dual Horizontal</option>
