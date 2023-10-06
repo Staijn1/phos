@@ -255,62 +255,70 @@
         </div>
       </div>
       <div class='tab-content' [class.active-tab]='activeTab === 2'>
+        <div class='tw-flex tw-flex-col tw-items-stretch'>
+          <div>
+Top
+          </div>
+          <div>
+Down
+          </div>
+        </div>
         <!--      Simple slider for smoothing-->
-        <div>
+      <!--  <div>
           Smoothing
           <ngx-slider (valueChange)='applySettings()' *ngIf='visualizerOptions.smoothing'
                       [(value)]='visualizerOptions.smoothing'
                       [options]='smoothingSliderOptions'></ngx-slider>
         </div>
-        <!--Simple slider for rotation speed, only visible when radial is true-->
+        &lt;!&ndash;Simple slider for rotation speed, only visible when radial is true&ndash;&gt;
         <div>
           Rotation Speed
           <ngx-slider (valueChange)='applySettings()' *ngIf='visualizerOptions.spinSpeed !== undefined'
                       [(value)]='visualizerOptions.spinSpeed'
                       [options]='spinSpeedSliderOptions'></ngx-slider>
         </div>
-        <!--      Simple slider for line width-->
+        &lt;!&ndash;      Simple slider for line width&ndash;&gt;
         <div>
           Line Width
           <ngx-slider (valueChange)='applySettings()' *ngIf='visualizerOptions.lineWidth !== undefined'
                       [(value)]='visualizerOptions.lineWidth'
                       [options]='lineWidthSliderOptions'></ngx-slider>
         </div>
-        <!--      Simple slider for fill alpha-->
+        &lt;!&ndash;      Simple slider for fill alpha&ndash;&gt;
         <div>
           Fill Alpha
           <ngx-slider (valueChange)='applySettings()' *ngIf='visualizerOptions.fillAlpha !== undefined'
                       [(value)]='visualizerOptions.fillAlpha'
                       [options]='fillAlphaSliderOptions'></ngx-slider>
         </div>
-        <!--      Simple slider for linearBoost -->
+        &lt;!&ndash;      Simple slider for linearBoost &ndash;&gt;
         <div *ngIf='visualizerOptions.linearAmplitude && visualizerOptions.linearBoost'>
           Linear Boost
           <ngx-slider (valueChange)='applySettings()'
                       [(value)]='visualizerOptions.linearBoost'
                       [options]='linearBoostSliderOptions'></ngx-slider>
         </div>
-        <!--            Create three vertical sliders next to each other for all reflex controls: reflexRatio, reflexAlpha and reflexBright-->
-        <div class='row h-50'>
-          <div class='col-4'>
+        &lt;!&ndash;            Create three vertical sliders next to each other for all reflex controls: reflexRatio, reflexAlpha and reflexBright&ndash;&gt;
+        <div class='tw-grid tw-grid-cols-3'>
+          <div>
             Reflex Ratio
             <ngx-slider (valueChange)='applySettings()' *ngIf='visualizerOptions.reflexRatio !== undefined'
                         [(value)]='visualizerOptions.reflexRatio'
                         [options]='reflexSliderOptions'></ngx-slider>
           </div>
-          <div class='col-4'>
+          <div>
             Reflex Alpha
             <ngx-slider (valueChange)='applySettings()' *ngIf='visualizerOptions.reflexAlpha !== undefined'
                         [(value)]='visualizerOptions.reflexAlpha'
                         [options]='reflexSliderOptions'></ngx-slider>
           </div>
-          <div class='col-4'>
+          <div>
             Reflex Bright
             <ngx-slider (valueChange)='applySettings()' *ngIf='visualizerOptions.reflexBright !== undefined'
                         [(value)]='visualizerOptions.reflexBright'
                         [options]='reflexSliderOptions'></ngx-slider>
           </div>
-        </div>
+        </div>-->
       </div>
       <div class='tab-content' [class.active-tab]='activeTab === 3'>
         <div>

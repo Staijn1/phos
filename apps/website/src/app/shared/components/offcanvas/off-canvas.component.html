@@ -5,7 +5,7 @@
   <input [(ngModel)]='isOpen'  [id]='id' type='checkbox' class='tw-drawer-toggle' />
   <div class='tw-drawer-side'>
     <div (click)='close()' class='tw-drawer-overlay'></div>
-    <div class='tw-p-4 tw-w-80 tw-min-h-full tw-bg-base-200 tw-text-base-content'>
+    <div class='tw-p-4 tw-w-80 tw-h-full tw-bg-base-200 tw-text-base-content'>
       <ng-content select='[header]'></ng-content>
       <ng-content select='[body]'></ng-content>
     </div>

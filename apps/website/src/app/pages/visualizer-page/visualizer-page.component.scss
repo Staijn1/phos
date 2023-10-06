@@ -24,11 +24,12 @@
 }
 
 .tab-contents-container {
-  @apply tw-mt-2;
+  @apply tw-mt-2 tw-h-full;
 
   .tab-content {
     display: none;
     opacity: 0;
+    @apply tw-h-full;
 
     &.active-tab {
       @apply
