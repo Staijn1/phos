@@ -1,10 +1,10 @@
 <section class='tw-flex tw-flex-col tw-justify-center' id='hero'>
   <div class='tw-grid tw-grid-cols-2 tw-container'>
     <div class='tw-flex tw-flex-col tw-justify-center'>
-      <h1 class='display-1'>Modes</h1>
-      <h3 class='text-dark mt-4'>Preset modes</h3>
+      <h1>Modes</h1>
+      <h3 class='tw-mt-4'>Preset modes</h3>
     </div>
-    <div class='tw-flex justify-content-end'>
+    <div class='tw-flex tw-justify-end'>
       <svg data-aos='fade-left' fill='none' height='559' viewBox='0 0 752 559' width='752'
            xmlns='http://www.w3.org/2000/svg'>
         <g [id]="'mode-page-illustration-' + themeService.theme" clip-path='url(#clip0_3_2)'>
@@ -264,17 +264,17 @@
           [ngClass]="{'active': selectedMode === mode.mode}"
           class='tw-flex tw-items-stretch'
           data-aos='fade-up'>
-          <!--        Assign one of the classes in the classes array to generate different colors-->
-          <!--        The modulo operator makes sure the index does not go out of bounds, because there are more modes than colors-->
+          <!-- Assign one of the classes in the classes array to generate different colors-->
+          <!-- The modulo operator makes sure the index does not go out of bounds, because there are more modes than colors-->
           <div [ngClass]="'icon-box-' + classes[indexOfelement % classes.length]"
-               class='icon-box tw-w-full section-title'>
+               class='icon-box tw-w-full'>
             <h4 class='mt-3'>{{mode.name}}</h4>
           </div>
         </div>
       </ng-container>
       <ng-template #noModes>
         <div class='tw-col-span-4'>
-          <div class='icon-box iconbox-primary tw-w-full section-title'>
+          <div class='icon-box tw-w-full'>
             <h6 class='tw-mt-3'>No modes available</h6>
           </div>
         </div>
