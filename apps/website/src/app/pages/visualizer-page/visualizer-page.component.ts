@@ -28,7 +28,7 @@ import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-pr
 @Component({
   selector: "app-visualizer",
   templateUrl: "./visualizer-page.component.html",
-  styleUrls: ["./visualizer-page.component.scss"],
+  styleUrls: ["./visualizer-page.component.scss"]
 })
 export class VisualizerPageComponent implements OnDestroy {
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent;
