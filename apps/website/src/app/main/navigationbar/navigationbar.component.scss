@@ -1,5 +1,10 @@
 @import '../../../styles/variables';
 
+#powerOff, #powerOffMobile{
+  &:hover {
+    @apply tw-bg-error tw-text-error-content;
+  }
+}
 /* Desktop Navigation */
 .nav-menu {
   ul li {

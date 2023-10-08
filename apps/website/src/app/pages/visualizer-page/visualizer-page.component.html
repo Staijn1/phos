@@ -20,13 +20,13 @@
   </div>
 </div>
 <app-offcanvas position="right" width="300px">
-  <div class="p-1 tw-flex tw-content-between tw-w-full" header>
+  <div class="p-1 tw-flex tw-justify-between tw-w-full" header>
     <h3>Settings</h3>
-    <button (click)="closeOffcanvas()" class="tw-btn" type="button">
+    <button (click)="closeOffcanvas()" class="tw-btn tw-btn-outline tw-btn-primary" type="button">
       <fa-icon [icon]="closeIcon"></fa-icon>
     </button>
   </div>
-  <div body class="p-3 tw-h-full">
+  <div body class="tw-mt-5 tw-h-full">
     <!--    Create the tabs-->
     <div class="tw-tabs tw-w-full">
       <div (click)="selectTab(0)" class="tw-tab tw-tab-bordered" [class.tw-tab-active]="activeTab === 0">
