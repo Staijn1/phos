@@ -7,7 +7,9 @@
 }
 
 .tw-tab-active {
- @apply tw-border-primary;
+  transition: 300ms;
+  border-color: hsl(var(--p)) !important;
+  color: hsl(var(--p));
 }
 
 @import 'aos/dist/aos.css';
