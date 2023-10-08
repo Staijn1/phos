@@ -25,7 +25,9 @@
     }
 
     &:hover {
-      @apply tw-bg-primary;
+      @apply
+      tw-bg-primary
+      tw-text-primary-content;
     }
 
     span {
