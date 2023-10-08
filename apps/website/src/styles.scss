@@ -1,97 +1,13 @@
-/* You can add global styles to this file, and also import other style files */
-@import './styles/_variables.scss';
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
 
-/*--------------------------------------------------------------
-# General
---------------------------------------------------------------*/
-body {
-  font-family: "Open Sans", sans-serif;
-  color: #272829;
-  overflow-x: hidden;
+.tw-container {
+  @apply tw-mx-auto;
 }
 
-a {
-  color: $primary;
-
-  &:hover {
-    color: $primary;
-    text-decoration: none !important;
-  }
+.tw-tab-active {
+ @apply tw-border-primary;
 }
 
-h1, h3, h4, h5, h6 {
-  font-family: "Comfortaa", sans-serif !important;
-}
-
-h2 {
-  font-family: "Raleway", sans-serif !important;
-}
-
-/*--------------------------------------------------------------
-# Disable aos animation delay on mobile devices
---------------------------------------------------------------*/
-@media screen and (max-width: 768px) {
-  [data-aos-delay] {
-    transition-delay: 0s !important;
-  }
-}
-
-/*--------------------------------------------------------------
-# Sections General
---------------------------------------------------------------*/
-
-section {
-  padding: 60px 0;
-  overflow: hidden;
-}
-
-.section-title {
-  text-align: center;
-  padding-bottom: 30px;
-
-  h2 {
-    font-size: 32px;
-    font-weight: bold;
-    text-transform: uppercase;
-    margin-bottom: 20px;
-    padding-bottom: 20px;
-    position: relative;
-    color: #45505b;
-
-    &::before {
-      content: '';
-      position: absolute;
-      display: block;
-      width: 120px;
-      height: 1px;
-      background: #ddd;
-      bottom: 1px;
-      left: calc(50% - 60px);
-    }
-
-    &::after {
-      content: '';
-      position: absolute;
-      display: block;
-      width: 40px;
-      height: 3px;
-      background: $primary;
-      bottom: 0;
-      left: calc(50% - 20px);
-    }
-  }
-
-  p {
-    margin-bottom: 0;
-  }
-}
-
-@import "./styles/bootstrap";
-
-@media screen and (max-width: map-get($grid-breakpoints, 'sm')) {
-  html {
-    user-select: none;
-  }
-}
-
-@import "aos/dist/aos.css";
+@import 'aos/dist/aos.css';

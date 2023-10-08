@@ -1,15 +1,17 @@
 <app-navigationbar></app-navigationbar>
 <router-outlet></router-outlet>
 
-<div class='alert-container'>
-  <div (click)='onAlertClick(error)' *ngFor='let error of errorService.getMessages()' @swipeRight
-       [class.alert-danger]="error.severity === 'error'"
-       [class.alert-info]="error.severity === 'info'"
-       [class.alert-success]="error.severity === 'success'"
-       [class.alert-warning]="error.severity === 'warning'"
-       class='alert'>
-    <p>{{error.message}}</p>
+
+<div class="tw-toast tw-toast-top tw-toast-end">
+  <div (click)="onAlertClick(message)" *ngFor="let message of errorService.getMessages()" @swipeRight
+       [class.tw-alert-error]="message.severity === 'error'"
+       [class.tw-alert-info]="message.severity === 'info'"
+       [class.tw-alert-success]="message.severity === 'success'"
+       [class.tw-alert-warning]="message.severity === 'warning'"
+       class="tw-alert">
+    <span>{{message.message}}</span>
   </div>
 </div>
+
 
 

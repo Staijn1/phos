@@ -30,7 +30,7 @@ const StoreDevtools = StoreDevtoolsModule.instrument();
       ledstripState: ledstripStateReducer,
       modes: modesReducer,
       gradients: gradientsReducer,
-      'userPreferences': userPreferencesReducer
+      userPreferences: userPreferencesReducer
     }),
     StoreDevtools,
     FontAwesomeModule,

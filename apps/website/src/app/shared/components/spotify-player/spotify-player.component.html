@@ -1,33 +1,33 @@
 <div *ngIf='spotifyAuth.isLoggedIn(); else notLoggedIn'>
   <div *ngIf='isActive; else notActive'>
-    <div class='mt-3'>
+    <div class='tw-mt-3'>
       <!-- Create a music player -->
       <div class='row'>
         <div class='col-md-5'>
-          <div class='d-flex align-items-center h-100'>
+          <div class='tw-flex tw-items-center tw-h-full'>
             <img [src]='albumImageSrc' alt='Album Image' class='img-fluid'>
           </div>
         </div>
         <div class='col-md-7'>
-          <div class='d-flex flex-column h-100 justify-content-between'>
+          <div class='tw-flex tw-flex-col tw-h-full tw-justify-between'>
             <div>
               <h5>{{trackName}}</h5>
               <p>{{artistName}}</p>
             </div>
-            <div class='w-100 d-flex justify-content-center'>
+            <div class='tw-w-full tw-flex tw-justify-center'>
               <div>
-                <div class='btn-group btn-group-sm w-100' role='group'>
-                  <button (click)='previousSong()' class='btn btn-secondary' type='button'>
+                <div class='tw-btn-group tw-btn-group-sm tw-w-full' role='group'>
+                  <button (click)='previousSong()' class='tw-btn tw-btn-secondary' type='button'>
                     <fa-icon [icon]='previousSongIcon'></fa-icon>
                   </button>
-                  <button (click)='togglePlay()' class='btn btn-secondary' type='button'>
+                  <button (click)='togglePlay()' class='tw-btn tw-btn-secondary' type='button'>
                     <fa-icon [icon]='getIconForPlayStatus'></fa-icon>
                   </button>
-                  <button (click)='skipSong()' class='btn btn-secondary' type='button'>
+                  <button (click)='skipSong()' class='tw-btn tw-btn-secondary' type='button'>
                     <fa-icon [icon]='skipSongIcon'></fa-icon>
                   </button>
                 </div>
-                <div class='mt-3 d-flex align-items-center'>
+                <div class='tw-mt-3 tw-flex tw-items-center'>
                   <fa-icon [icon]='volumeLowIcon'></fa-icon>
                   <input (input)='changeVolume()' [(ngModel)]='volume' class='form-range flex-grow-1 mx-2' max='1'
                          min='0'
@@ -69,7 +69,7 @@
 </div>
 
 <ng-template #notLoggedIn>
-  <a [href]='spotifyAuthenticationURL' class='btn btn-primary btn-spotify w-100 mt-3'>
+  <a [href]='spotifyAuthenticationURL' class='tw-btn tw-btn-primary btn-spotify tw-w-full tw-mt-3'>
     <fa-icon [icon]='spotifyIcon'></fa-icon>
     Login with Spotify
   </a>

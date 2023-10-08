@@ -100,7 +100,7 @@ body * {
     }
   }
 
-  .#{$name}.color-option {
+  .#{$name}.theme-option {
     background: $color !important;
     color: color-contrast($color) !important;
   }
@@ -164,7 +164,7 @@ $text-dark: lightgray;
 $text-bright: white;
 
 @media (max-width: 992px) {
-  .dark #header {
+  .dark #desktopNavigationContainer {
     background: $dark-background !important;
   }
 }

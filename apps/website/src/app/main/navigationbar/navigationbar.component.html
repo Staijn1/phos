@@ -1,9 +1,9 @@
 <div #container>
-  <button (click)='this.mobileMenu.toggle()' class='mobile-nav-toggle d-lg-none' type='button'>
+  <button (click)='this.mobileMenu.toggle()' class='mobile-nav-toggle' type='button'>
     <fa-icon [icon]='mobileMenuIcon'></fa-icon>
   </button>
   <!--  Navigation for big screens-->
-  <header class='d-flex flex-column justify-content-center' id='header'>
+  <header class='tw-flex tw-flex-col tw-justify-center' id="desktopNavigationContainer">
     <nav class='nav-menu'>
       <ul>
         <li>
@@ -33,22 +33,18 @@
         <li>
           <a (click)='$event.preventDefault()' href=''>
             <fa-icon [icon]='controlsIcon'></fa-icon>
-            <span>
-              <fa-icon (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'
-                       class='ms-2 ms-lg-4'></fa-icon>
-              <fa-icon (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'
-                       class='ms-2 ms-lg-4'></fa-icon>
-              <fa-icon (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'
-                       class='ms-2 ms-lg-4'></fa-icon>
-              <fa-icon (click)='this.increaseSpeed()' [icon]='speedIncreaseIcon'
-                       class='ms-2 ms-lg-4'></fa-icon>
+            <span class='actions'>
+              <fa-icon (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'></fa-icon>
+              <fa-icon (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'></fa-icon>
+              <fa-icon (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'></fa-icon>
+              <fa-icon (click)='this.increaseSpeed()' [icon]='speedIncreaseIcon'></fa-icon>
             </span>
           </a>
         </li>
         <li>
-          <a class='colorpicker h-100'>
+          <a class='colorpicker'>
             <fa-icon [icon]='colorpickerIcon'></fa-icon>
-            <div class='ms-2 ms-lg-4'>
+            <div class='tw-ms-4 md:tw-ms-8'>
               <app-colorpicker orientation='horizontal'></app-colorpicker>
             </div>
           </a>
@@ -63,9 +59,9 @@
     </nav>
   </header>
   <!--  Menu for small, mobile devices-->
-  <app-offcanvas (stateCanged)='onMobileMenuChange($event)' #mobileMenu position="left" width='300px'>
-    <div body class='d-flex justify-content-center flex-column h-100'>
-      <nav class='nav-menu mx-3'>
+  <app-offcanvas (stateChanged)='onMobileMenuChange($event)' #mobileMenu position="left" width='300px'>
+    <div body class='tw-flex tw-justify-center tw-flex-col tw-h-full'>
+      <nav class='nav-menu tw-mx-3'>
         <ul>
           <li>
             <a routerLink='home' routerLinkActive='active'>
@@ -94,22 +90,18 @@
           <li>
             <a (click)='$event.preventDefault()' href=''>
               <fa-icon [icon]='controlsIcon'></fa-icon>
-              <span>
-                        <fa-icon (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'
-                                 class='ms-2 ms-lg-4'></fa-icon>
-                        <fa-icon (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'
-                                 class='ms-2 ms-lg-4'></fa-icon>
-                        <fa-icon (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'
-                                 class='ms-2 ms-lg-4'></fa-icon>
-                        <fa-icon (click)='this.increaseSpeed()' [icon]='speedIncreaseIcon'
-                                 class='ms-2 ms-lg-4'></fa-icon>
-                    </span>
+              <span class='actions'>
+                <fa-icon (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'></fa-icon>
+                <fa-icon (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'></fa-icon>
+                <fa-icon (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'></fa-icon>
+                <fa-icon (click)='this.increaseSpeed()' [icon]='speedIncreaseIcon'></fa-icon>
+              </span>
             </a>
           </li>
           <li>
-            <a class='colorpicker h-100'>
+            <a class='colorpicker tw-h-full'>
               <fa-icon [icon]='colorpickerIcon'></fa-icon>
-              <div class='ms-2 ms-lg-4'>
+              <div class='tw-ms-2 tw-lg:ms-4'>
                 <app-colorpicker orientation='vertical'></app-colorpicker>
               </div>
             </a>

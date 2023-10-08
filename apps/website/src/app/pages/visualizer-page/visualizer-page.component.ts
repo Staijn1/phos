@@ -122,7 +122,6 @@ export class VisualizerPageComponent implements OnDestroy {
       this.store.select("gradients").pipe(skipWhile(gradients => gradients.length === 0))])
       .pipe(distinctUntilChanged())
       .subscribe(([visualizerOptions, gradients]) => {
-        console.log(visualizerOptions, gradients);
         // Create a clone otherwise you will receive "Object is not extensible" error if Audiomotion decides to update the gradient when registering it
         // This method of assigning will also trigger change detection in the visualizer component, causing it to register the gradients
         this.gradients = structuredClone(gradients);
@@ -225,5 +224,13 @@ export class VisualizerPageComponent implements OnDestroy {
         });
       }
     }
+  }
+
+  /**
+   * Select a new tab with the given index
+   * @param index
+   */
+  selectTab(index: number) {
+    this.activeTab = index;
   }
 }
