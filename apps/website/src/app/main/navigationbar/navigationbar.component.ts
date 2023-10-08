@@ -37,20 +37,19 @@ export class NavigationbarComponent implements OnInit {
   @ViewChild('mobileMenu') mobileMenu!: OffCanvasComponent;
   @ViewChild('container') navContainer!: ElementRef;
   @ViewChild(ColorpickerComponent) colorpicker!: ColorpickerComponent;
-  homeIcon = faHome;
-  modeIcon = faList;
-  visualizerIcon = faChartBar;
-  colorpickerIcon = faEyeDropper;
+  readonly homeIcon = faHome;
+  readonly modeIcon = faList;
+  readonly visualizerIcon = faChartBar;
+  readonly colorpickerIcon = faEyeDropper;
+  readonly powerOffIcon = faPowerOff;
+  readonly controlsIcon = faSlidersH;
+  readonly settingsIcon = faCog;
+  readonly decreaseBrightnessIcon = faMinus;
+  readonly increaseBrightnessIcon = faPlus;
+  readonly speedIncreaseIcon = faRunning;
+  readonly speedDecreaseIcon = faWalking;
+  readonly timeline = gsap.timeline();
   mobileMenuIcon = OpenMobileMenuIcon;
-  powerOffIcon = faPowerOff;
-  controlsIcon = faSlidersH;
-  settingsIcon = faCog;
-  decreaseBrightnessIcon = faMinus;
-  increaseBrightnessIcon = faPlus;
-  speedIncreaseIcon = faRunning;
-  speedDecreaseIcon = faWalking;
-  timeline = gsap.timeline();
-  isOpen = false;
   private animationMode = 0;
 
   constructor(
@@ -91,13 +90,6 @@ export class NavigationbarComponent implements OnInit {
   }
 
   turnOff(): void {
-    // Animate the off button to become red
-    this.timeline.to('#powerOff', { duration: 0.6, color: 'white', background: 'var(--bs-danger)' });
-    this.timeline.to('#powerOff', { duration: 1.2, clearProps: 'background,color' });
-
-    this.timeline.to('#powerOffMobile', { duration: 0.6, color: 'white', background: 'var(--bs-danger)' });
-    this.timeline.to('#powerOffMobile', { duration: 1.2, clearProps: 'background,color' });
-
     this.connection.turnOff();
   }
 

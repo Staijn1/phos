@@ -6,4 +6,8 @@
   @apply tw-mx-auto;
 }
 
+.tw-tab-active {
+ @apply tw-border-primary;
+}
+
 @import 'aos/dist/aos.css';
