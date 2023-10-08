@@ -67,44 +67,50 @@
 
 // Mobile navigation
 .mobile-nav-toggle {
-  position: fixed;
-  right: 15px;
-  top: 15px;
-  z-index: 9999;
-  border: 0;
-  background: none;
-  font-size: 24px;
-  transition: all 0.4s;
-  outline: none !important;
+  @apply
+  tw-fixed
+  tw-right-[15px]
+  tw-top-[15px]
+  tw-z-[9999]
+  tw-border-0
+  tw-bg-none
+  tw-text-2xl
+  tw-transition-all
+  tw-outline-none
+  tw-cursor-pointer
+  tw-text-right
+  tw-block
+  md:tw-hidden;
   line-height: 1;
-  cursor: pointer;
-  text-align: right;
 
   fa-icon {
     color: $secondary;
   }
 }
 
-#header {
-  position: fixed;
-  top: 0;
-  left: 0;
-  bottom: 0;
-  z-index: 500;
-  transition: all 0.5s;
-  padding: 15px;
-  overflow-y: auto;
+#desktopNavigationContainer {
+  @apply
+  tw-fixed
+  tw-left-0
+  tw-top-0
+  tw-bottom-0
+  tw-z-50
+  tw-p-5
+  tw-hidden
+  md:tw-flex;
 }
 
-@media (max-width: 992px) {
-  #header {
-    width: 300px;
-    left: -300px;
-    background: white;
+.actions fa-icon {
+  transition: 300ms;
+  @apply
+  tw-ms-2
+  lg:tw-ms-4
+  tw-p-4;
+
+  &:hover {
+    @apply tw-bg-primary-focus tw-rounded-full;
   }
 }
-
-
 /**
 CSS Required for the page transitions
  */
@@ -126,7 +132,7 @@ CSS Required for the page transitions
     margin: -5px, -5px, -5px, -5px;
 
     span {
-      background: rgb(79, 91, 255);
+      @apply tw-bg-secondary;
       height: 100%;
       width: 0;
     }
@@ -134,7 +140,7 @@ CSS Required for the page transitions
 
   &.from-top {
     span {
-      background: rgb(170, 79, 255);
+      @apply tw-bg-accent;
       height: 0;
       width: 100%;
     }
@@ -142,11 +148,12 @@ CSS Required for the page transitions
 }
 
 #cover {
-  background: white;
-  position: fixed;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  z-index: 9;
+  @apply
+  tw-bg-base-100
+  tw-fixed
+  tw-h-full
+  tw-w-full
+  tw-left-0
+  tw-top-0
+  tw-z-[9];
 }

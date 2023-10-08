@@ -164,7 +164,7 @@ $text-dark: lightgray;
 $text-bright: white;
 
 @media (max-width: 992px) {
-  .dark #header {
+  .dark #desktopNavigationContainer {
     background: $dark-background !important;
   }
 }
