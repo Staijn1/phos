@@ -44,7 +44,7 @@
   }
 
   .colorpicker {
-    height: 175px;
+    @apply tw-h-[275px] md:tw-h-[175px];
   }
 
   .active {
