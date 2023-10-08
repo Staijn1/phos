@@ -1,84 +1,54 @@
 @import '../../../styles/variables';
 
-// Active navigation
-.active {
-  background: $primary !important;
-  color: white !important;
-}
-
 /* Desktop Navigation */
 .nav-menu {
-  > ul {
-    list-style: none;
-    padding: 0;
-
-    li {
-      position: relative;
-      white-space: nowrap;
-    }
+  ul li {
+    position: relative;
+    white-space: nowrap;
   }
 
   a {
-    display: flex;
-    align-items: center;
-
-    text-decoration: none;
-    color: $secondary;
-    padding: 10px 18px;
-    font-size: 15px;
-
-    // Create some space between each nav item
-    margin-top: 4px;
-    margin-bottom: 8px;
-
-    border-radius: 50px;
-    background: #f2f3f5;
-    height: 56px;
-    width: 100%;
-    overflow: hidden;
-    transition: 0.3s;
+    @apply
+    tw-bg-base-200
+    tw-flex
+    tw-items-center
+    tw-p-[1.1rem]
+    tw-mt-2
+    tw-rounded-lg
+    tw-h-14
+    tw-w-full
+    tw-overflow-hidden;
+    transition: 200ms;
 
     fa-icon {
-      font-size: 20px;
-    }
-
-    span {
-      padding: 0 5px 0 7px;
-
-      fa-icon {
-        transition: background-color 0.3s;
-        padding: 0.75em;
-        height: 56px;
-        border-radius: 50px;
-      }
+      @apply tw-text-lg;
     }
 
     &:hover {
-      color: #fff;
-      background: $primary;
+      @apply tw-bg-primary;
+    }
+
+    span {
+      @apply tw-ms-4;
     }
   }
 
-  .active > a, li:hover > a {
-    color: #fff;
-    background: $primary;
-  }
-
-  a:hover span, .active > a span, li:hover > a span {
-    color: #fff;
-  }
-
   a:hover, li:hover > a {
-    width: 100%;
-    color: #fff;
+    @apply tw-w-full;
   }
 
   a:hover span, li:hover > a span {
-    display: block;
+    @apply tw-block;
   }
 
-  .colorpicker:hover {
-    height: 250px;
+  .colorpicker {
+    height: 175px;
+  }
+
+  .active {
+    @apply
+    tw-bg-primary
+    tw-text-primary-content;
   }
 }
 
@@ -111,10 +81,6 @@
   fa-icon {
     color: $secondary;
   }
-}
-
-.mobile-nav-active #header {
-  left: 0;
 }
 
 #header {

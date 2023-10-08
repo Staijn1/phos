@@ -9,7 +9,11 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
-    extend: {},
+    extend: {
+      borderRadius: {
+        lg: '50px'
+      },
+    },
   },
   plugins: [
     require("daisyui")
