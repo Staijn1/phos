@@ -1,23 +1,15 @@
-//.active > .icon-box, .active > .card {
-//  background-color: darken($secondary, 20%) !important;
-//
-//  h4, h5 {
-//    color: white;
-//  }
-//
-//  p {
-//    color: lightgray;
-//  }
-//}
+.active > .icon-box {
+  @apply tw-bg-base-300;
+
+  h4 {
+    @apply tw-text-base-content;
+  }
+}
 
 .icon-box {
-  text-align: center;
-  padding: 20px;
-  margin-bottom: 1em;
+  @apply tw-bg-base-200 tw-p-10 tw-text-center tw-mb-3 tw-cursor-pointer tw-rounded-lg tw-border-2;
   transition: all ease-in-out 0.3s;
   box-shadow: 0 5px 90px 0 rgba(84, 95, 100, 0.05);
-  cursor: pointer;
-  border-radius: 10px;
 
   h4 {
     font-weight: 600;
@@ -26,6 +18,7 @@
     position: relative;
     margin: 10px 0 15px 0;
 
+    // Underline the heading with a pseudo element
     &:before {
       content: '';
       position: absolute;
@@ -36,14 +29,79 @@
       bottom: 1px;
       left: calc(50% - 60px);
     }
+
+    &:after {
+      content: '';
+      position: absolute;
+      display: block;
+      width: 40px;
+      height: 3px;
+      bottom: 0;
+      left: calc(50% - 20px);
+    }
   }
 
   &:hover {
-    box-shadow: 0 0 35px 0 rgba(0, 0, 0, 0.08);
-
+    @apply tw-shadow-xl tw-shadow-base-300;
     h4 {
       color: white;
     }
+  }
+}
+
+.icon-box-primary {
+  @apply tw-border-primary;
+
+  h4:after {
+    @apply tw-bg-primary;
+  }
+}
+
+.icon-box-secondary {
+  @apply tw-border-secondary;
+
+  h4:after {
+    @apply tw-bg-secondary;
+  }
+}
+
+.icon-box-success {
+  @apply tw-border-success;
+
+  h4:after {
+    @apply tw-bg-success;
+  }
+}
+
+.icon-box-info {
+  @apply tw-border-info;
+
+  h4:after {
+    @apply tw-bg-info;
+  }
+}
+
+.icon-box-warning {
+  @apply tw-border-warning;
+
+  h4:after {
+    @apply tw-bg-warning;
+  }
+}
+
+.icon-box-error {
+  @apply tw-border-error;
+
+  h4:after {
+    @apply tw-bg-error;
+  }
+}
+
+.icon-box-accent {
+  @apply tw-border-accent;
+
+  h4:after {
+    @apply tw-bg-accent;
   }
 }
 

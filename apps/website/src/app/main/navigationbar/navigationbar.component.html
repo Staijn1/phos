@@ -33,7 +33,7 @@
         <li>
           <a (click)='$event.preventDefault()' href=''>
             <fa-icon [icon]='controlsIcon'></fa-icon>
-            <span class="actions">
+            <span class='actions'>
               <fa-icon (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'></fa-icon>
               <fa-icon (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'></fa-icon>
               <fa-icon (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'></fa-icon>
@@ -90,15 +90,11 @@
           <li>
             <a (click)='$event.preventDefault()' href=''>
               <fa-icon [icon]='controlsIcon'></fa-icon>
-              <span>
-                <fa-icon (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'
-                         class='tw-ms-2 tw-lg:ms-4'></fa-icon>
-                <fa-icon (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'
-                         class='tw-ms-2 tw-lg:ms-4'></fa-icon>
-                <fa-icon (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'
-                         class='tw-ms-2 tw-lg:ms-4'></fa-icon>
-                <fa-icon (click)='this.increaseSpeed()' [icon]='speedIncreaseIcon'
-                         class='tw-ms-2 tw-lg:ms-4'></fa-icon>
+              <span class='actions'>
+                <fa-icon (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'></fa-icon>
+                <fa-icon (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'></fa-icon>
+                <fa-icon (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'></fa-icon>
+                <fa-icon (click)='this.increaseSpeed()' [icon]='speedIncreaseIcon'></fa-icon>
               </span>
             </a>
           </li>
