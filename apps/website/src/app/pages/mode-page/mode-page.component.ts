@@ -17,12 +17,18 @@ import { ColorpickerComponent } from "../../shared/components/colorpicker/colorp
 import { ChangeLedstripMode } from "../../../redux/ledstrip/ledstrip.action";
 import { Store } from "@ngrx/store";
 import { combineLatest } from "rxjs";
+import { NgClass, NgForOf } from "@angular/common";
 
 
 @Component({
-  selector: 'app-mode',
-  templateUrl: './mode-page.component.html',
-  styleUrls: ['./mode-page.component.scss']
+  selector: "app-mode",
+  templateUrl: "./mode-page.component.html",
+  styleUrls: ["./mode-page.component.scss"],
+  imports: [
+    NgClass,
+    NgForOf
+  ],
+  standalone: true
 })
 export class ModePageComponent implements OnDestroy {
   @ViewChild(ColorpickerComponent) colorpicker: ColorpickerComponent | undefined;
