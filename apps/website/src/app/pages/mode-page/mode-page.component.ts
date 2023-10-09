@@ -17,7 +17,7 @@ import { ColorpickerComponent } from "../../shared/components/colorpicker/colorp
 import { ChangeLedstripMode } from "../../../redux/ledstrip/ledstrip.action";
 import { Store } from "@ngrx/store";
 import { combineLatest } from "rxjs";
-import { NgClass, NgForOf } from "@angular/common";
+import { NgClass, NgForOf, NgIf } from "@angular/common";
 
 
 @Component({
@@ -26,7 +26,8 @@ import { NgClass, NgForOf } from "@angular/common";
   styleUrls: ["./mode-page.component.scss"],
   imports: [
     NgClass,
-    NgForOf
+    NgForOf,
+    NgIf
   ],
   standalone: true
 })

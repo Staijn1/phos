@@ -7,10 +7,17 @@
         <div>
           <p>Ledstrip 1</p>
           <div class='tw-flex'>
-            <div class='tw-text-center tw-radial-progress tw-text-primary' style='--value:70; --size:8em; --thickness:5px'>Speed<br />70%
+            <div
+              [style.--value]="speedPercentage"
+              class='tw-text-center tw-radial-progress tw-text-primary' style='--size:8em; --thickness:5px'>
+              Speed<br />
+              {{speedPercentage | number: "1.0-0"}}%
             </div>
-            <div class='tw-text-center tw-radial-progress' style='--value:50; --size:8em; --thickness:5px'>
-              Brightness<br />50%
+            <div
+              [style.--value]="brightnessPercentage"
+              class='tw-text-center tw-radial-progress' style='--size:8em; --thickness:5px'>
+              Brightness<br/>
+              {{brightnessPercentage | number: "1.0-0"}}%
             </div>
           </div>
         </div>

@@ -37,3 +37,8 @@ export const themes: Theme[] = [
 ];
 
 export const visualizerModeId = 72;
+
+export const SPEED_MAXIMUM_INTERVAL_MS = 10000;
+export const SPEED_MINIMUM_INTERVAL_MS = 200;
+export const MINIMUM_BRIGHTNESS = 10;
+export const MAXIMUM_BRIGHTNESS = 255;
