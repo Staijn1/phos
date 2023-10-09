@@ -1,10 +1,11 @@
 @import '../../../styles/variables';
 
-#powerOff, #powerOffMobile{
+#powerOff, #powerOffMobile {
   &:hover {
     @apply tw-bg-error tw-text-error-content;
   }
 }
+
 /* Desktop Navigation */
 .nav-menu {
   ul li {
@@ -22,7 +23,8 @@
     tw-rounded-2xl
     tw-h-14
     tw-w-full
-    tw-overflow-hidden;
+    tw-overflow-hidden
+    md:tw-w-[56px];
     transition: 200ms;
 
     fa-icon {
@@ -36,7 +38,7 @@
     }
 
     span {
-      @apply tw-ms-4;
+      @apply tw-ms-4 md:tw-hidden;
     }
   }
 
@@ -59,17 +61,6 @@
   }
 }
 
-@media (min-width: 992px) {
-  .nav-menu a {
-    width: 56px;
-
-    span {
-      display: none;
-      color: #fff;
-    }
-  }
-}
-
 // Mobile navigation
 .mobile-nav-toggle {
   @apply
@@ -85,12 +76,9 @@
   tw-cursor-pointer
   tw-text-right
   tw-block
-  md:tw-hidden;
+  md:tw-hidden
+  tw-text-primary;
   line-height: 1;
-
-  fa-icon {
-    color: $secondary;
-  }
 }
 
 #desktopNavigationContainer {
@@ -116,6 +104,7 @@
     @apply tw-bg-primary-focus tw-rounded-full;
   }
 }
+
 /**
 CSS Required for the page transitions
  */

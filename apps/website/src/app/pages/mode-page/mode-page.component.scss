@@ -134,6 +134,13 @@
   animation: moveArm 3s infinite alternate;
 }
 
+#BoardBackground {
+  @apply tw-fill-base-100;
+}
+
+.illustration-form-text, #BoardBorder, #Floor{
+  @apply tw-fill-base-300;
+}
 @keyframes heightAnimation {
   0% {
     transform: scaleY(0.5);

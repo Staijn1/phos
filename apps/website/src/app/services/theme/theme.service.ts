@@ -8,7 +8,7 @@ import { MessageService } from "../message-service/message.service";
   providedIn: "root"
 })
 export class ThemeService {
-  private _theme = "default";
+  private _theme = '';
   get theme(): string {
     return this._theme;
   }
@@ -20,22 +20,13 @@ export class ThemeService {
 
   initialize(): void {
     this.store.select("userPreferences").subscribe(userPreferences => {
-      this.applyTheme(userPreferences.settings.theme, userPreferences.settings.darkModeEnabled);
+      this.applyTheme(userPreferences.settings.theme);
     });
   }
 
-  applyTheme(theme: string, darkModeEnabled: boolean) {
-    // Find the theme color that matches the theme name
-    const metaColor = themes.find(t => t.name === theme)?.color;
-    if (!metaColor) {
-      this.messageService.setMessage(new Error(`Requested theme ${theme} does not exist`));
-      return;
-    }
-
-    const metaTag = document.querySelector("meta[name=\"theme-color\"]");
-    metaTag?.setAttribute("content", metaColor);
-
-    document.body.className = [theme, darkModeEnabled ? "dark" : undefined].join(" ");
+  applyTheme(theme: string) {
+    // Set the data-theme attribute on the html tag. This will apply one of the (custom or built-in) daisyui themes
+    document.documentElement.setAttribute("data-theme", theme);
     this._theme = theme;
   }
 }

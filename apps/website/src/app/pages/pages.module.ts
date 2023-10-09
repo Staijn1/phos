@@ -8,6 +8,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSliderModule } from 'ngx-slider-v2';
 import { ShortcutPageComponent } from './shortcut-page/shortcut-page.component';
+import { ThemeVisualizationComponent } from "../shared/components/theme-visualization/theme-visualization.component";
 
 @NgModule({
   declarations: [
@@ -21,7 +22,8 @@ import { ShortcutPageComponent } from './shortcut-page/shortcut-page.component';
     FontAwesomeModule,
     CommonModule,
     SharedModule,
-    NgxSliderModule
+    NgxSliderModule,
+    ThemeVisualizationComponent
   ],
   exports: []
 })

@@ -1,0 +1,35 @@
+.preview div {
+  @apply tw-text-sm tw-font-bold;
+}
+
+.preview-base-200 {
+  @apply tw-bg-base-200 tw-col-start-1 tw-row-span-2 tw-row-start-1;
+}
+
+.preview-base-300 {
+  @apply tw-bg-base-300 tw-col-start-1 tw-row-start-3;
+}
+
+.preview-base-100 {
+  @apply tw-bg-base-100 tw-col-span-4 tw-col-start-2 tw-row-span-3 tw-row-start-1 tw-flex tw-flex-col tw-gap-1 tw-p-2;
+
+  .theme-name {
+    @apply tw-font-bold;
+  }
+}
+
+.preview-primary {
+  @apply tw-bg-primary tw-flex tw-aspect-square tw-w-5 tw-items-center tw-justify-center tw-rounded lg:tw-w-6;
+}
+
+.preview-secondary {
+  @apply tw-bg-secondary tw-flex tw-aspect-square tw-w-5 tw-items-center tw-justify-center tw-rounded lg:tw-w-6;
+}
+
+.preview-accent {
+  @apply tw-bg-accent tw-flex tw-aspect-square tw-w-5 tw-items-center tw-justify-center tw-rounded lg:tw-w-6;
+}
+
+.preview-neutral {
+  @apply tw-bg-neutral tw-flex tw-aspect-square tw-w-5 tw-items-center tw-justify-center tw-rounded lg:tw-w-6;
+}

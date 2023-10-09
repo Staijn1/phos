@@ -1,0 +1,31 @@
+<div
+  (click)="selectTheme()"
+  [attr.data-theme]="themeName"
+  class="tw-rounded-lg tw-overflow-hidden tw-bg-base-100 tw-text-base-content tw-w-full tw-cursor-pointer">
+  <div class="tw-grid tw-grid-cols-5 tw-grid-rows-3">
+    <div class="preview-base-200"></div>
+    <div class="preview-base-300"></div>
+    <div
+      class="preview-base-100">
+      <div class="theme-name">{{themeName ?? "Please provide theme"}}</div>
+      <div class="tw-flex tw-flex-wrap tw-gap-1">
+        <div
+          class="preview preview-primary">
+          <div class="tw-text-primary-content">P</div>
+        </div>
+        <div
+          class="preview preview-secondary">
+          <div class="tw-text-secondary-content">S</div>
+        </div>
+        <div
+          class="preview preview-accent">
+          <div class="tw-text-accent-content">A</div>
+        </div>
+        <div
+          class="preview preview-neutral">
+          <div class="tw-text-neutral-content">N</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
