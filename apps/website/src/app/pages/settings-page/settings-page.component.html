@@ -32,17 +32,12 @@
         </div>
       </div>
       <div>
-        Primary color:
+        Theme:
         <div class="tw-grid tw-grid-cols-3 tw-sm:grid-cols-2 tw-justify-center">
-          <div
-            (click)="setTheme(theme)"
-            *ngFor="let theme of themes;let i = index"
-            [class.active]="i === selectedTheme"
-            [ngClass]="theme"
-            class="theme-option tw-rounded tw-flex tw-justify-center tw-items-center tw-m-2 tw-capitalize"
-          >
-            {{theme}}
-          </div>
+          <app-theme-visualization
+            *ngFor="let availableTheme of availableThemes"
+            [themeName]="availableTheme">
+          </app-theme-visualization>
         </div>
       </div>
       <div class="tw-flex tw-justify-between">

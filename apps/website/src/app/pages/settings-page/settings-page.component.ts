@@ -18,17 +18,17 @@ import { debounceTime, skip } from "rxjs";
 export class SettingsPageComponent implements OnInit{
   @ViewChild("form", { static: true }) form!: NgForm;
   settings: GeneralSettings | undefined;
-  themes = themes.map(theme => theme.name);
   selectedTheme = 0;
   clearSettingsIcon = faBroom;
   private skipFormUpdate = false;
+  availableThemes = themes;
 
   constructor(private readonly store: Store<{
     userPreferences: UserPreferences
   }>) {
     this.store.select("userPreferences").subscribe(preferences => {
       this.settings = structuredClone(preferences.settings);
-      this.selectedTheme = this.themes.findIndex(theme => theme === preferences.settings.theme);
+      this.selectedTheme = this.availableThemes.findIndex(theme => theme === preferences.settings.theme);
     });
   }
 
