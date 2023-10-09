@@ -5,13 +5,11 @@ import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from '../shared/shared.module';
 import { NgxSliderModule } from 'ngx-slider-v2';
-import { ShortcutPageComponent } from './shortcut-page/shortcut-page.component';
 import { ThemeVisualizationComponent } from "../shared/components/theme-visualization/theme-visualization.component";
 
 @NgModule({
   declarations: [
     VisualizerPageComponent,
-    ShortcutPageComponent
   ],
   imports: [
     FormsModule,

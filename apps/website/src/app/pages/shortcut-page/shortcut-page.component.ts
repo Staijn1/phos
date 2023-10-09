@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { MessageService } from '../../services/message-service/message.service';
 import { Store } from '@ngrx/store';
 import { LedstripState } from '@angulon/interfaces';
@@ -13,9 +13,13 @@ import {
 } from '../../../redux/ledstrip/ledstrip.action';
 
 @Component({
-  selector: 'app-shortcut-page',
-  templateUrl: './shortcut-page.component.html',
-  styleUrls: ['./shortcut-page.component.scss']
+  selector: "app-shortcut-page",
+  templateUrl: "./shortcut-page.component.html",
+  styleUrls: ["./shortcut-page.component.scss"],
+  imports: [
+    RouterLink
+  ],
+  standalone: true
 })
 export class ShortcutPageComponent {
   private static wasShortcutActivated = false;
