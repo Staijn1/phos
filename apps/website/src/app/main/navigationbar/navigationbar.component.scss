@@ -23,7 +23,8 @@
     tw-rounded-2xl
     tw-h-14
     tw-w-full
-    tw-overflow-hidden;
+    tw-overflow-hidden
+    md:tw-w-[56px];
     transition: 200ms;
 
     fa-icon {
@@ -37,7 +38,7 @@
     }
 
     span {
-      @apply tw-ms-4;
+      @apply tw-ms-4 md:tw-hidden;
     }
   }
 
@@ -57,14 +58,6 @@
     @apply
     tw-bg-primary
     tw-text-primary-content;
-  }
-}
-
-.nav-menu a {
-  @apply md:tw-w-[56px];
-
-  span {
-    @apply md:tw-hidden;
   }
 }
 
