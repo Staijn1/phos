@@ -1,6 +1,5 @@
 import { NgModule } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import { VisualizerPageComponent } from './visualizer-page/visualizer-page.component';
 import { FormsModule } from '@angular/forms';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { SharedModule } from '../shared/shared.module';
@@ -9,7 +8,6 @@ import { ThemeVisualizationComponent } from "../shared/components/theme-visualiz
 
 @NgModule({
   declarations: [
-    VisualizerPageComponent,
   ],
   imports: [
     FormsModule,

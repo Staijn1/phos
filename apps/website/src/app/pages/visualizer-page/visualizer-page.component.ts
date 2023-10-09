@@ -24,11 +24,18 @@ import { mapNumber } from "../../shared/functions";
 import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
 import { combineLatest, distinctUntilChanged, map, skipWhile } from "rxjs";
 import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
+import { CommonModule } from "@angular/common";
+import { FormsModule } from "@angular/forms";
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import { SharedModule } from "../../shared/shared.module";
+import { NgxSliderModule } from "ngx-slider-v2";
 
 @Component({
   selector: "app-visualizer",
   templateUrl: "./visualizer-page.component.html",
-  styleUrls: ["./visualizer-page.component.scss"]
+  styleUrls: ["./visualizer-page.component.scss"],
+  standalone: true,
+  imports: [CommonModule, FormsModule, FontAwesomeModule, SharedModule, NgxSliderModule]
 })
 export class VisualizerPageComponent implements OnDestroy {
   @ViewChild(VisualizerComponent) visualizerComponent!: VisualizerComponent;
