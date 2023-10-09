@@ -6,6 +6,9 @@ import { VisualizerPageComponent } from '../pages/visualizer-page/visualizer-pag
 import { ShortcutPageComponent } from '../pages/shortcut-page/shortcut-page.component';
 import { HomePageComponent } from "../pages/home-page/home-page.component";
 import { NotFoundPageComponent } from "../pages/not-found-page/not-found-page.component";
+import {
+  SpotifyAuthenticationCallbackComponent
+} from "../pages/spotify-callback-page/spotify-authentication-callback.component";
 
 
 const routes: Routes = [
@@ -15,7 +18,7 @@ const routes: Routes = [
   { path: 'mode', component: ModePageComponent },
   {
     path: 'spotify-callback',
-    loadChildren: () => import('../pages/spotify-callback-page/spotify-callback-page.module').then(m => m.SpotifyCallbackPageModule)
+    component: SpotifyAuthenticationCallbackComponent
   },
   { path: 'settings', component: SettingsPageComponent },
   {
