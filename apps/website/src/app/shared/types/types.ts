@@ -9,7 +9,6 @@ export interface AngulonVisualizerOptions extends Options {
 export type GeneralSettings = {
   chromaSupportEnabled: boolean;
   theme: string;
-  darkModeEnabled: boolean
 };
 
 export type RGBObject = {

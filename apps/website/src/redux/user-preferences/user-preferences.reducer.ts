@@ -6,7 +6,6 @@ const defaultUserPreferences: UserPreferences = {
   settings: {
     chromaSupportEnabled: false,
     theme: 'default',
-    darkModeEnabled: false
   },
   visualizerOptions: {
     barSpace: 0.1,
