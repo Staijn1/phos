@@ -76,12 +76,9 @@
   tw-cursor-pointer
   tw-text-right
   tw-block
-  md:tw-hidden;
+  md:tw-hidden
+  tw-text-primary;
   line-height: 1;
-
-  fa-icon {
-    color: $secondary;
-  }
 }
 
 #desktopNavigationContainer {
