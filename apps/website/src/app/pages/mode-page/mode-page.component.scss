@@ -7,11 +7,12 @@
 }
 
 .icon-box {
-  @apply tw-bg-base-200 tw-p-10 tw-text-center tw-mb-3 tw-cursor-pointer tw-rounded-lg tw-border-2;
+  @apply tw-bg-base-100 tw-p-10 tw-text-center tw-mb-3 tw-cursor-pointer tw-rounded-lg tw-border-2;
   transition: all ease-in-out 0.3s;
   box-shadow: 0 5px 90px 0 rgba(84, 95, 100, 0.05);
 
   h4 {
+    transition: all ease-in-out 300ms;
     font-weight: 600;
     text-transform: uppercase;
     padding-bottom: 20px;
@@ -43,9 +44,6 @@
 
   &:hover {
     @apply tw-shadow-xl tw-shadow-base-300;
-    h4 {
-      color: white;
-    }
   }
 }
 
@@ -55,6 +53,10 @@
   h4:after {
     @apply tw-bg-primary;
   }
+
+  &:hover h4{
+    @apply tw-text-primary;
+  }
 }
 
 .icon-box-secondary {
@@ -62,6 +64,10 @@
 
   h4:after {
     @apply tw-bg-secondary;
+  }
+
+  &:hover h4{
+    @apply tw-text-secondary;
   }
 }
 
@@ -71,6 +77,10 @@
   h4:after {
     @apply tw-bg-success;
   }
+
+  &:hover h4{
+    @apply tw-text-success;
+  }
 }
 
 .icon-box-info {
@@ -78,6 +88,10 @@
 
   h4:after {
     @apply tw-bg-info;
+  }
+
+  &:hover h4{
+    @apply tw-text-info;
   }
 }
 
@@ -87,6 +101,10 @@
   h4:after {
     @apply tw-bg-warning;
   }
+
+  &:hover h4{
+    @apply tw-text-warning;
+  }
 }
 
 .icon-box-error {
@@ -95,6 +113,10 @@
   h4:after {
     @apply tw-bg-error;
   }
+
+  &:hover h4{
+    @apply tw-text-error;
+  }
 }
 
 .icon-box-accent {
@@ -102,6 +124,10 @@
 
   h4:after {
     @apply tw-bg-accent;
+  }
+
+  &:hover h4{
+    @apply tw-text-accent;
   }
 }
 
