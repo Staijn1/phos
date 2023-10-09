@@ -7,13 +7,24 @@ import {
   ChangeGeneralSettings,
   SetDefaultUserPreferences
 } from "../../../redux/user-preferences/user-preferences.action";
-import { NgForm } from "@angular/forms";
+import { FormsModule, NgForm } from "@angular/forms";
 import { debounceTime, skip } from "rxjs";
+import { ThemeVisualizationComponent } from "../../shared/components/theme-visualization/theme-visualization.component";
+import { NgForOf, NgIf } from "@angular/common";
+import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 
 @Component({
   selector: "app-settings",
   templateUrl: "./settings-page.component.html",
-  styleUrls: ["./settings-page.component.scss"]
+  styleUrls: ["./settings-page.component.scss"],
+  imports: [
+    ThemeVisualizationComponent,
+    NgForOf,
+    FontAwesomeModule,
+    FormsModule,
+    NgIf
+  ],
+  standalone: true
 })
 export class SettingsPageComponent implements OnInit{
   @ViewChild("form", { static: true }) form!: NgForm;

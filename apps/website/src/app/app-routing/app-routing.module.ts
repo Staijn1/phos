@@ -4,16 +4,21 @@ import { SettingsPageComponent } from '../pages/settings-page/settings-page.comp
 import { ModePageComponent } from '../pages/mode-page/mode-page.component';
 import { VisualizerPageComponent } from '../pages/visualizer-page/visualizer-page.component';
 import { ShortcutPageComponent } from '../pages/shortcut-page/shortcut-page.component';
+import { HomePageComponent } from "../pages/home-page/home-page.component";
+import { NotFoundPageComponent } from "../pages/not-found-page/not-found-page.component";
+import {
+  SpotifyAuthenticationCallbackComponent
+} from "../pages/spotify-callback-page/spotify-authentication-callback.component";
 
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
-  { path: 'home', loadChildren: () => import('../pages/home-page/home-page.module').then(m => m.HomePageModule) },
+  { path: 'home', component: HomePageComponent },
   { path: 'visualizer', component: VisualizerPageComponent },
   { path: 'mode', component: ModePageComponent },
   {
     path: 'spotify-callback',
-    loadChildren: () => import('../pages/spotify-callback-page/spotify-callback-page.module').then(m => m.SpotifyCallbackPageModule)
+    component: SpotifyAuthenticationCallbackComponent
   },
   { path: 'settings', component: SettingsPageComponent },
   {
@@ -22,7 +27,7 @@ const routes: Routes = [
   },
   {
     path: '**',
-    loadChildren: () => import('../pages/not-found-page/not-found-page.module').then(m => m.NotFoundPageModule)
+    component: NotFoundPageComponent
   }
 ];
 

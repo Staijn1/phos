@@ -4,7 +4,6 @@ import { AppComponent } from './main/app/app.component';
 import { CommonModule } from '@angular/common';
 import { BrowserModule } from '@angular/platform-browser';
 import { SharedModule } from './shared/shared.module';
-import { PagesModule } from './pages/pages.module';
 import { NavigationbarComponent } from './main/navigationbar/navigationbar.component';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 import { ServiceWorkerModule } from '@angular/service-worker';
@@ -25,7 +24,6 @@ const StoreDevtools = StoreDevtoolsModule.instrument();
     BrowserAnimationsModule,
     AppRoutingModule,
     SharedModule,
-    PagesModule,
     StoreModule.forRoot({
       ledstripState: ledstripStateReducer,
       modes: modesReducer,

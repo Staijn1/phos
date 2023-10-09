@@ -5,7 +5,8 @@ import { Router } from '@angular/router';
 @Component({
   selector: 'app-spotify-authentication-callback',
   templateUrl: './spotify-authentication-callback.component.html',
-  styleUrls: ['./spotify-authentication-callback.component.scss']
+  styleUrls: ['./spotify-authentication-callback.component.scss'],
+  standalone: true
 })
 export class SpotifyAuthenticationCallbackComponent implements OnInit {
   authenticationSuccessfull = true;
