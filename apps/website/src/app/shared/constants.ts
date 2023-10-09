@@ -14,7 +14,6 @@ export const themes: Theme[] = [
   "corporate",
   "synthwave",
   "retro",
-  "cyberpunk",
   "valentine",
   "halloween",
   "garden",
