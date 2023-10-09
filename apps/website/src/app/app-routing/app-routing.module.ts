@@ -4,11 +4,12 @@ import { SettingsPageComponent } from '../pages/settings-page/settings-page.comp
 import { ModePageComponent } from '../pages/mode-page/mode-page.component';
 import { VisualizerPageComponent } from '../pages/visualizer-page/visualizer-page.component';
 import { ShortcutPageComponent } from '../pages/shortcut-page/shortcut-page.component';
+import { HomePageComponent } from "../pages/home-page/home-page.component";
 
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
-  { path: 'home', loadChildren: () => import('../pages/home-page/home-page.module').then(m => m.HomePageModule) },
+  { path: 'home', component: HomePageComponent },
   { path: 'visualizer', component: VisualizerPageComponent },
   { path: 'mode', component: ModePageComponent },
   {
