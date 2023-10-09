@@ -1,10 +1,11 @@
 @import '../../../styles/variables';
 
-#powerOff, #powerOffMobile{
+#powerOff, #powerOffMobile {
   &:hover {
     @apply tw-bg-error tw-text-error-content;
   }
 }
+
 /* Desktop Navigation */
 .nav-menu {
   ul li {
@@ -59,14 +60,11 @@
   }
 }
 
-@media (min-width: 992px) {
-  .nav-menu a {
-    width: 56px;
+.nav-menu a {
+  @apply md:tw-w-[56px];
 
-    span {
-      display: none;
-      color: #fff;
-    }
+  span {
+    @apply md:tw-hidden;
   }
 }
 
@@ -116,6 +114,7 @@
     @apply tw-bg-primary-focus tw-rounded-full;
   }
 }
+
 /**
 CSS Required for the page transitions
  */
