@@ -12,4 +12,19 @@
   color: hsl(var(--p));
 }
 
+.tw-card {
+  @apply tw-shadow-xl tw-bg-neutral tw-text-neutral-content;
+}
+
+.tw-btn {
+  transition: 200ms ease-in-out;
+}
+
+.ngx-slider .ngx-slider-pointer {
+  background: hsl(var(--p)) !important;
+
+  &:after {
+    background: hsl(var(--a)) !important;
+  }
+}
 @import 'aos/dist/aos.css';
