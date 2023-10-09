@@ -1,0 +1,31 @@
+<div
+  (click)="selectTheme()"
+  [attr.data-theme]="themeName"
+  class="tw-bg-base-100 tw-text-base-content tw-w-full tw-cursor-pointer">
+  <div class="tw-grid tw-grid-cols-5 tw-grid-rows-3">
+    <div class="tw-bg-base-200 tw-col-start-1 tw-row-span-2 tw-row-start-1"></div>
+    <div class="tw-bg-base-300 tw-col-start-1 tw-row-start-3"></div>
+    <div
+      class="tw-bg-base-100 tw-col-span-4 tw-col-start-2 tw-row-span-3 tw-row-start-1 tw-flex tw-flex-col tw-gap-1 tw-p-2">
+      <div class="tw-font-bold">{{themeName ?? "Please provide theme"}}</div>
+      <div class="tw-flex tw-flex-wrap tw-gap-1">
+        <div
+          class="tw-bg-primary tw-flex tw-aspect-square tw-w-5 tw-items-center tw-justify-center tw-rounded lg:tw-w-6">
+          <div class="tw-text-primary-content tw-text-sm tw-font-bold">P</div>
+        </div>
+        <div
+          class="tw-bg-secondary tw-flex tw-aspect-square tw-w-5 tw-items-center tw-justify-center tw-rounded lg:tw-w-6">
+          <div class="tw-text-secondary-content tw-text-sm tw-font-bold">S</div>
+        </div>
+        <div
+          class="tw-bg-accent tw-flex tw-aspect-square tw-w-5 tw-items-center tw-justify-center tw-rounded lg:tw-w-6">
+          <div class="tw-text-accent-content tw-text-sm tw-font-bold">A</div>
+        </div>
+        <div
+          class="tw-bg-neutral tw-flex tw-aspect-square tw-w-5 tw-items-center tw-justify-center tw-rounded lg:tw-w-6">
+          <div class="tw-text-neutral-content tw-text-sm tw-font-bold">N</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
