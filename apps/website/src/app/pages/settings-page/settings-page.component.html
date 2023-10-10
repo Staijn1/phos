@@ -25,6 +25,8 @@
           <app-theme-visualization
             *ngFor="let availableTheme of availableThemes"
             [themeName]="availableTheme"
+            class="theme-visualization"
+            [class.active]="availableTheme === settings.theme"
           >
           </app-theme-visualization>
         </div>
