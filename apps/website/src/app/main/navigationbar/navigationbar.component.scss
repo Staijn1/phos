@@ -1,5 +1,3 @@
-@import '../../../styles/variables';
-
 #powerOff, #powerOffMobile {
   &:hover {
     @apply tw-bg-error tw-text-error-content;
@@ -15,7 +13,8 @@
 
   a {
     @apply
-    tw-bg-base-200
+    tw-bg-base-300
+    tw-text-base-content
     tw-flex
     tw-items-center
     tw-p-[1.1rem]

@@ -1,6 +1,6 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { Server, Socket } from 'socket.io';
-import { LedstripState, WebsocketMessage } from '@angulon/interfaces';
+import { INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage } from "@angulon/interfaces";
 
 @Injectable()
 export class WebsocketClientsManagerService {
@@ -8,13 +8,7 @@ export class WebsocketClientsManagerService {
   /**
    * This variable is the primary state, which will be sent to all ledstrips and users
    */
-  private state: LedstripState = {
-    brightness: 255,
-    colors: ['#000000', '#000000', '#000000'],
-    fftValue: 0,
-    mode: 0,
-    speed: 1000
-  };
+  private state: LedstripState = INITIAL_LEDSTRIP_STATE;
   private logger: Logger = new Logger('WebsocketClientsManagerService');
 
   /**

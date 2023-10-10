@@ -1,5 +1,5 @@
 import { LedstripAction } from './ledstrip.action';
-import { constrain, LedstripState, mergeArrays } from '@angulon/interfaces';
+import { constrain, INITIAL_LEDSTRIP_STATE, LedstripState, mergeArrays } from "@angulon/interfaces";
 import {
   MAXIMUM_BRIGHTNESS,
   MINIMUM_BRIGHTNESS,
@@ -7,12 +7,7 @@ import {
   SPEED_MINIMUM_INTERVAL_MS
 } from "../../app/shared/constants";
 
-export const ledstripStateReducer = (state: LedstripState | undefined, action: any): LedstripState | undefined => {
-  if (!state && ![LedstripAction.RECEIVE_STATE, '@ngrx/store/init'].includes(action.type)) {
-    throw new Error(`Ledstrip state must first be fetched from the server before manipulation can be done. Received action: ${action.type}`);
-  }
-  state = state as LedstripState;
-
+export const ledstripStateReducer = (state: LedstripState = INITIAL_LEDSTRIP_STATE, action: any): LedstripState | undefined => {
   switch (action.type) {
     case LedstripAction.RECEIVE_STATE: {
       return action.payload;

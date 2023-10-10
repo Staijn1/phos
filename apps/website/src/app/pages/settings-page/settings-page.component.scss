@@ -1,11 +1,25 @@
-@import "../../../styles/variables";
+.theme-visualization {
+  transition: 300ms opacity ease;
+  @apply tw-rounded-lg tw-overflow-hidden;
 
-.theme-option {
-  text-align: center;
-  height: 5em;
-  transition: box-shadow 250ms ease-out;
+  &:hover {
+    @apply tw-opacity-80;
+  }
 }
 
 .active {
-  box-shadow: 2px 1px 8px 2px #444;
+  @apply tw-relative;
+
+  &:before {
+    @apply
+    tw-absolute
+    tw-block
+    tw-w-3
+    tw-h-3
+    tw-right-1
+    tw-top-1
+    tw-rounded-full
+    tw-bg-accent;
+    content: '';
+  }
 }
