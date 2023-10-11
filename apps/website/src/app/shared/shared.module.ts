@@ -8,6 +8,7 @@ import { OffCanvasComponent } from './components/offcanvas/off-canvas.component'
 import { ColorpickerComponent } from './components/colorpicker/colorpicker.component';
 import { SpotifyPlayerComponent } from './components/spotify-player/spotify-player.component';
 import { FormsModule } from '@angular/forms';
+import { MsToTimePipe } from "./pipe/MsToTime";
 
 @NgModule({
   declarations: [
@@ -15,7 +16,8 @@ import { FormsModule } from '@angular/forms';
     VisualizerComponent,
     CastPipe,
     OffCanvasComponent,
-    SpotifyPlayerComponent
+    SpotifyPlayerComponent,
+    MsToTimePipe
   ],
   imports: [RouterModule, CommonModule, FontAwesomeModule, NgOptimizedImage, FormsModule],
   exports: [
