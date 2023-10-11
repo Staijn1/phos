@@ -9,12 +9,27 @@
   }
 }
 
-.track {
-  transition: opacity 0.3s ease-in-out;
-  cursor: pointer;
+.album-cover {
+  @apply tw-w-full md:tw-w-72 tw-block tw-rounded;
+}
 
-  &:hover {
-    // Use !important to override style of previous class
-    opacity: 100% !important;
+.playback-controls-container {
+  @apply
+  tw-absolute
+  tw-bg-black
+  tw-rounded
+  tw-bg-opacity-0
+  group-hover:tw-bg-opacity-60
+  tw-w-full
+  tw-h-full
+  tw-top-0
+  tw-flex
+  tw-items-center
+  group-hover:tw-opacity-100
+  tw-transition
+  tw-justify-evenly;
+
+  button {
+    @apply hover:tw-scale-110 tw-text-white tw-opacity-0 tw-transform tw-translate-y-3 group-hover:tw-translate-y-0 group-hover:tw-opacity-100 tw-transition;
   }
 }
