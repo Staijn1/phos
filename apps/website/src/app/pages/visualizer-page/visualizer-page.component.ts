@@ -29,6 +29,7 @@ import { FormsModule } from "@angular/forms";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { SharedModule } from "../../shared/shared.module";
 import { NgxSliderModule } from "ngx-slider-v2";
+import { SpotifyAuthenticationService } from "../../services/spotify-authentication/spotify-authentication.service";
 
 @Component({
   selector: "app-visualizer",
@@ -100,11 +101,13 @@ export class VisualizerPageComponent implements OnDestroy {
   private wakeLock: WakeLockSentinel | undefined;
   private currentTrackId: string | null | undefined;
 
+
   constructor(
     private cdr: ChangeDetectorRef,
     private connection: WebsocketService,
     private information: InformationService,
     private chromaEffect: ChromaEffectService,
+    public spotifyAuth: SpotifyAuthenticationService,
     private store: Store<{
       ledstripState: LedstripState | undefined,
       gradients: GradientInformation[],
@@ -147,6 +150,8 @@ export class VisualizerPageComponent implements OnDestroy {
 
         this.visualizerOptions = settingsToApply;
         this.cdr.detectChanges();
+        this.offcanvas.open();
+        this.selectTab(3)
       });
 
     if ("wakeLock" in navigator) {

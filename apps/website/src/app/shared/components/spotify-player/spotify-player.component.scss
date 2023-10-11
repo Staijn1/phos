@@ -1,35 +1,27 @@
 .btn-spotify {
-  background-color: #1db954 !important;
-  border-color: #1db954 !important;
-  color: #fff;
+  @apply tw-bg-spotify tw-text-white tw-border-spotify;
 
   &:hover {
-    background-color: #1ed760;
-    border-color: #1ed760;
+    @apply tw-bg-spotify-light tw-border-spotify-light;
   }
 }
 
-.album-cover {
-  @apply tw-w-full md:tw-w-72 tw-block tw-rounded;
-}
-
 .playback-controls-container {
-  @apply
-  tw-absolute
-  tw-bg-black
-  tw-rounded
-  tw-bg-opacity-0
-  group-hover:tw-bg-opacity-60
-  tw-w-full
-  tw-h-full
-  tw-top-0
-  tw-flex
-  tw-items-center
-  group-hover:tw-opacity-100
-  tw-transition
-  tw-justify-evenly;
+  @apply tw-flex tw-space-x-3 tw-p-2 tw-transition;
 
   button {
-    @apply hover:tw-scale-110 tw-text-white tw-opacity-0 tw-transform tw-translate-y-3 group-hover:tw-translate-y-0 group-hover:tw-opacity-100 tw-transition;
+    @apply focus:tw-outline-none hover:tw-scale-110 tw-transition;
+  }
+}
+
+.upcoming-track-list {
+  @apply tw-divide-y tw-border-t tw-cursor-default;
+}
+
+.upcoming-track {
+  @apply tw-flex tw-p-2 tw-items-center tw-transition;
+
+  &:hover {
+    opacity: 1 !important;
   }
 }
