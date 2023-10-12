@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
-import { calculateBGRInteger, mapNumber } from '../../../../shared/functions';
+import { calculateBGRInteger, mapNumber } from '../../../../../shared/functions';
 import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../old/chromaSDK/old-chroma-s-d-k.service';
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class VisualizerBrightnessState extends State {
   protected _BGRIntegerForeground = 0;

@@ -1,11 +1,11 @@
 import { Injectable } from '@angular/core';
 import { OldChromaSDKService } from '../chromaSDK/old-chroma-s-d-k.service';
-import { State } from '../../chromaEffect/state/abstract/state';
-import { StaticState } from '../../chromaEffect/state/static-state/static-state';
+import { State } from './state/abstract/state';
+import { StaticState } from './state/static-state/static-state';
 import iro from '@jaames/iro';
-import { VisualizerState } from '../../chromaEffect/state/visualizer-state/visualizer-state';
+import { VisualizerState } from './state/visualizer-state/visualizer-state';
 import { MessageService } from '../../message-service/message.service';
-import { VisualizerBrightnessState } from '../../chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state';
+import { VisualizerBrightnessState } from './state/visualizer-brightness-state/visualizer-brightness-state';
 import { Store } from '@ngrx/store';
 import { UserPreferences } from '../../../shared/types/types';
 

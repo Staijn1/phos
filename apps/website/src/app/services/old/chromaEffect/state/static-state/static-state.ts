@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
-import { calculateBGRInteger } from '../../../../shared/functions';
+import { calculateBGRInteger } from '../../../../../shared/functions';
 import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../old/chromaSDK/old-chroma-s-d-k.service';
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class StaticState extends State {
   handle(colors: iro.Color[]): void {

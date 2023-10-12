@@ -1,4 +1,4 @@
-import { OldChromaEffectService } from '../../../old/chromaEffect/old-chroma-effect.service';
+import { OldChromaEffectService } from '../../old-chroma-effect.service';
 import iro from '@jaames/iro';
 
 
