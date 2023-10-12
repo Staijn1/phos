@@ -167,9 +167,8 @@ export class SpotifyPlayerComponent implements OnInit, OnDestroy {
   private onSpotifyStateChanged(state: Spotify.PlaybackState) {
     this.currentTrackProgress = state.position;
     this.state = state;
-    this.updateProgressInterval = setInterval(() => {
-      this.currentTrackProgress += 500;
-    }, 500);
+    clearInterval(this.updateProgressInterval);
+    this.updateProgressInterval = setInterval(() => this.currentTrackProgress += state.paused ? 0 : 300, 300);
   }
 
   /**
