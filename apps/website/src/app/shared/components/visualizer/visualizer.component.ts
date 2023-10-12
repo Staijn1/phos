@@ -57,17 +57,6 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
     this.applyOptions();
   }
 
-  /**
-   * Register one single gradient.
-   * Does not emit the gradients because the gradient is only used internally for the visualizer.
-   * @param name
-   * @param gradient
-   */
-  registerGradient(name: string, gradient: GradientOptions) {
-    if (!this.audioMotion) throw Error("No visualizer!");
-    this.audioMotion.registerGradient(name, gradient);
-  }
-
   private setSource(): void {
     navigator.mediaDevices.getUserMedia({ audio: true, video: false })
       .then(stream => {
