@@ -1,5 +1,5 @@
-import { Injectable } from '@angular/core';
-import { MessageService } from '../message-service/message.service';
+import { Injectable, OnDestroy } from "@angular/core";
+import { MessageService } from "../message-service/message.service";
 
 /**
  * Handles the authentication process with Spotify, using the Spotify Web API.
@@ -7,19 +7,19 @@ import { MessageService } from '../message-service/message.service';
  * @see https://developer.spotify.com/documentation/general/guides/authorization-guide/
  */
 @Injectable({
-  providedIn: 'root'
+  providedIn: "root"
 })
-export class SpotifyAuthenticationService {
+export class SpotifyAuthenticationService implements OnDestroy {
   /**
    * The ID of the spotify application registered in the Spotify developer portal.
    */
-  private readonly CLIENT_ID = '8df4bf11f92b4d3286f0f26ea96d9241';
+  private readonly CLIENT_ID = "8df4bf11f92b4d3286f0f26ea96d9241";
   /**
    *  Scopes are used to grant your app access to different parts of the Spotify API.
    *  The scopes are separated by a space.
    *  The scope 'streaming' is required to play music.
    */
-  private readonly SCOPES = 'streaming user-modify-playback-state user-read-playback-state';
+  private readonly SCOPES = "streaming user-modify-playback-state user-read-playback-state";
 
   /**
    * The redirect URI is the URL where the user will be redirected after the authentication process.
@@ -27,9 +27,25 @@ export class SpotifyAuthenticationService {
    * The redirect URI is the current URL, with the last part replaced by 'spotify-callback'.
    * Example, current URL = 'https://some-subdomain.domain.nl/some-path/home' will become 'https://some-subdomain.domain.nl/some-path/spotify-callback'
    */
-  private readonly REDIRECT_URI = window.location.href.replace(/\/[^/]*$/, '/spotify-callback');
+  private readonly REDIRECT_URI = window.location.href.replace(/\/[^/]*$/, "/spotify-callback");
+  private refreshAccesTokenInterval: NodeJS.Timer | undefined;
 
   constructor(private messageService: MessageService) {
+    this.startRefreshAccessTokenCycle();
+  }
+
+  private startRefreshAccessTokenCycle() {
+    if (this.isLoggedIn()) {
+      console.log("Starting refresh token interval");
+      clearInterval(this.refreshAccesTokenInterval);
+      this.refreshAccesTokenInterval = setInterval(() => {
+        this.refreshAccessToken().catch(e => this.messageService.setMessage(e));
+      }, 60000); // Refresh token every minute
+    }
+  }
+
+  ngOnDestroy() {
+    clearInterval(this.refreshAccesTokenInterval);
   }
 
   /**
@@ -45,16 +61,16 @@ export class SpotifyAuthenticationService {
 
     const params = new URLSearchParams({
       client_id: this.CLIENT_ID,
-      response_type: 'code',
+      response_type: "code",
       redirect_uri: this.REDIRECT_URI,
-      code_challenge_method: 'S256',
+      code_challenge_method: "S256",
       code_challenge: await this.generateCodeChallenge(codeVerifier),
       state: generatedState,
       scope: this.SCOPES
     });
 
-    sessionStorage.setItem('spotifyCodeVerifier', codeVerifier);
-    sessionStorage.setItem('spotifyAuthenticationState', generatedState);
+    sessionStorage.setItem("spotifyCodeVerifier", codeVerifier);
+    sessionStorage.setItem("spotifyAuthenticationState", generatedState);
 
     return `https://accounts.spotify.com/authorize?${params}`;
   }
@@ -66,7 +82,7 @@ export class SpotifyAuthenticationService {
    */
   async generateCodeChallenge(codeVerifier: string): Promise<string> {
     const codeVerifierBytes = new TextEncoder().encode(codeVerifier);
-    const hashBuffer = await crypto.subtle.digest('SHA-256', codeVerifierBytes);
+    const hashBuffer = await crypto.subtle.digest("SHA-256", codeVerifierBytes);
     return this.base64urlEncode(new Uint8Array(hashBuffer));
   }
 
@@ -84,9 +100,9 @@ export class SpotifyAuthenticationService {
    */
   base64urlEncode(bytes: Uint8Array): string {
     return btoa(String.fromCharCode(...bytes))
-      .replace(/=/g, '')
-      .replace(/\+/g, '-')
-      .replace(/\//g, '_');
+      .replace(/=/g, "")
+      .replace(/\+/g, "-")
+      .replace(/\//g, "_");
   }
 
   /**
@@ -94,7 +110,7 @@ export class SpotifyAuthenticationService {
    * @returns {boolean}
    */
   isLoggedIn(): boolean {
-    return (!!sessionStorage.getItem('spotifyToken'));
+    return (!!sessionStorage.getItem("spotifyToken"));
   }
 
   /**
@@ -102,24 +118,18 @@ export class SpotifyAuthenticationService {
    * @returns {Promise<void>}
    */
   async completeLogin(): Promise<string | null> {
-    const codeVerifier = sessionStorage.getItem('spotifyCodeVerifier') as string;
+    const codeVerifier = sessionStorage.getItem("spotifyCodeVerifier") as string;
 
     const params = new URLSearchParams(location.search);
 
     const token = await this.createAccessToken({
-      grant_type: 'authorization_code',
-      code: params.get('code') as string,
+      grant_type: "authorization_code",
+      code: params.get("code") as string,
       redirect_uri: this.REDIRECT_URI,
       code_verifier: codeVerifier
     });
 
-    // If token is not null, then the authentication was successful. We then start the refresh token process to keep the user logged in.
-    if (token) {
-      setInterval(async () => {
-        await this.refreshAccessToken();
-      }, 1000 * 60 * 30); // Refresh token every 30 minutes
-    }
-
+    this.startRefreshAccessTokenCycle();
     return token;
   }
 
@@ -129,8 +139,8 @@ export class SpotifyAuthenticationService {
    */
   async createAccessToken(params: Record<string, string>): Promise<string | null> {
     try {
-      const response = await fetch('https://accounts.spotify.com/api/token', {
-        method: 'POST',
+      const response = await fetch("https://accounts.spotify.com/api/token", {
+        method: "POST",
         body: new URLSearchParams({
           client_id: this.CLIENT_ID,
           ...params
@@ -139,7 +149,7 @@ export class SpotifyAuthenticationService {
       const json = await response.json();
       const accessToken = json.access_token;
 
-      sessionStorage.setItem('spotifyToken', JSON.stringify(json));
+      sessionStorage.setItem("spotifyToken", JSON.stringify(json));
       return accessToken;
     } catch (e) {
       if (e instanceof Error) this.messageService.setMessage(e);
@@ -152,7 +162,8 @@ export class SpotifyAuthenticationService {
    * @returns Contains the current tokenset if still valid otherwise null
    */
   async refreshAccessToken(): Promise<string | null> {
-    let tokenSet = JSON.parse(sessionStorage.getItem('spotifyToken') as string);
+    console.log("Refreshing spotify access token");
+    let tokenSet = JSON.parse(sessionStorage.getItem("spotifyToken") as string);
 
     if (!tokenSet) {
       return null;
@@ -160,7 +171,7 @@ export class SpotifyAuthenticationService {
 
     if (tokenSet.expires_at < Date.now()) {
       tokenSet = await this.createAccessToken({
-        grant_type: 'refresh_token',
+        grant_type: "refresh_token",
         refresh_token: tokenSet.refresh_token
       });
     }
@@ -176,6 +187,6 @@ export class SpotifyAuthenticationService {
   }
 
   getToken() {
-    return JSON.parse(sessionStorage.getItem('spotifyToken') as string).access_token;
+    return JSON.parse(sessionStorage.getItem("spotifyToken") as string).access_token;
   }
 }
