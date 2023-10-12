@@ -1,5 +1,5 @@
 import { AfterViewInit, Component, ElementRef, EventEmitter, OnDestroy, Output, ViewChild } from "@angular/core";
-import AudioMotionAnalyzer, { GradientOptions, Options } from "audiomotion-analyzer";
+import AudioMotionAnalyzer, { Options } from "audiomotion-analyzer";
 import { GradientInformation } from "@angulon/interfaces";
 import { MessageService } from "../../../services/message-service/message.service";
 import { UserPreferences } from "../../types/types";
