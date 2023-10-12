@@ -255,8 +255,8 @@ export class VisualizerPageComponent implements OnDestroy {
           this.store.dispatch(new RegisterGradientAction({...gradient, name: "spotify", id: 999}));
 
           this.visualizerOptions.gradient = "spotify";
-          this.visualizerOptions.gradientLeft = undefined;
-          this.visualizerOptions.gradientRight = undefined;
+          delete this.visualizerOptions.gradientLeft;
+          delete this.visualizerOptions.gradientRight;
           this.applySettings();
         });
       }
