@@ -30,6 +30,7 @@ import { FormsModule } from "@angular/forms";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { SharedModule } from "../../shared/shared.module";
 import { SpotifyAuthenticationService } from "../../services/spotify-authentication/spotify-authentication.service";
+import { RegisterGradientAction } from "../../../redux/gradients/gradients.action";
 
 @Component({
   selector: "app-visualizer",
@@ -205,7 +206,6 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   applySettings() {
-    this.visualizerOptions = Object.assign({}, this.visualizerOptions);
     this.store.dispatch(new ChangeVisualizerOptions(this.visualizerOptions));
   }
 
@@ -250,12 +250,14 @@ export class VisualizerPageComponent implements OnDestroy {
             bgColor: "#000",
             colorStops: colorsStops
           };
-          this.visualizerComponent.registerGradient("Spotify", gradient);
-          this.visualizerOptions.gradient = "Spotify";
-          this.visualizerOptions.gradientLeft = "Spotify";
-          this.visualizerOptions.gradientRight = "Spotify";
-          this.applySettings();
+
           this.store.dispatch(new ChangeLedstripColors([primaryColor, secondaryColor]));
+          this.store.dispatch(new RegisterGradientAction({...gradient, name: "spotify", id: 999}));
+
+          this.visualizerOptions.gradient = "spotify";
+          this.visualizerOptions.gradientLeft = undefined;
+          this.visualizerOptions.gradientRight = undefined;
+          this.applySettings();
         });
       }
     }

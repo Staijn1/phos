@@ -1,18 +1,18 @@
-import { UserPreferences } from '../../app/shared/types/types';
-import { UserPreferencesAction } from './user-preferences.action';
-import { loadObjectFromLocalStorage } from '../../app/shared/functions';
+import { UserPreferences } from "../../app/shared/types/types";
+import { UserPreferencesAction } from "./user-preferences.action";
+import { loadObjectFromLocalStorage } from "../../app/shared/functions";
 
 const defaultUserPreferences: UserPreferences = {
   settings: {
     chromaSupportEnabled: false,
-    theme: 'default',
+    theme: "synthwave"
   },
   visualizerOptions: {
     barSpace: 0.1,
     bgAlpha: 0.7,
     fftSize: 8192,
     fillAlpha: 1,
-    gradientLeft: 'classic',
+    gradient: "classic",
     lineWidth: 0,
     loRes: false,
     lumiBars: false,
@@ -37,12 +37,15 @@ const defaultUserPreferences: UserPreferences = {
     showScaleY: false,
     smoothing: 0.7,
     spinSpeed: 0,
-    weightingFilter: '',
-    energyPreset: 'bass'
+    weightingFilter: "",
+    energyPreset: "bass"
   }
 };
 
-const initialState: UserPreferences = loadObjectFromLocalStorage('userPreferences', defaultUserPreferences);
+const initialState: UserPreferences = loadObjectFromLocalStorage("userPreferences", defaultUserPreferences);
+if (initialState.visualizerOptions.gradient === "spotify") {
+  initialState.visualizerOptions.gradient = "classic";
+}
 
 export const userPreferencesReducer = (state: UserPreferences = initialState, action: any): UserPreferences => {
   switch (action.type) {
