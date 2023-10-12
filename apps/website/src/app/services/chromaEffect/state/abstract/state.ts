@@ -1,15 +1,15 @@
-import { ChromaEffectService } from '../../chroma-effect.service';
+import { OldChromaEffectService } from '../../../old/chromaEffect/old-chroma-effect.service';
 import iro from '@jaames/iro';
 
 
 export abstract class State {
-  protected _context!: ChromaEffectService;
+  protected _context!: OldChromaEffectService;
 
-  get context(): ChromaEffectService {
+  get context(): OldChromaEffectService {
     return this._context;
   }
 
-  set context(newContext: ChromaEffectService) {
+  set context(newContext: OldChromaEffectService) {
     this._context = newContext;
   }
 

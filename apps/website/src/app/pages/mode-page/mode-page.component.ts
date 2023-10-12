@@ -1,5 +1,5 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
-import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
+import { OldChromaEffectService } from "../../services/old/chromaEffect/old-chroma-effect.service";
 import { BlinkState } from "../../services/chromaEffect/state/blink-state/blink-state";
 import { SingleDynamicState } from "../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state";
 import { MultiDynamicState } from "../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state";
@@ -61,7 +61,7 @@ export class ModePageComponent implements OnDestroy {
 
 
   constructor(
-    private readonly chromaService: ChromaEffectService,
+    private readonly chromaService: OldChromaEffectService,
     private readonly store: Store<{ modes: ModeInformation[], ledstripState: LedstripState | undefined }>,
     public readonly themeService: ThemeService) {
     this.store.select('modes').subscribe(modes => this.modes = modes);

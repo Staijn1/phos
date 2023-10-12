@@ -9,7 +9,7 @@ import {
   faTimes,
   faWrench
 } from "@fortawesome/free-solid-svg-icons";
-import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
+import { OldChromaEffectService } from "../../services/old/chromaEffect/old-chroma-effect.service";
 import { VisualizerComponent } from "../../shared/components/visualizer/visualizer.component";
 import { GradientInformation, LedstripState } from "@angulon/interfaces";
 import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas.component";
@@ -109,7 +109,7 @@ export class VisualizerPageComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     private connection: WebsocketService,
     private information: InformationService,
-    private chromaEffect: ChromaEffectService,
+    private chromaEffect: OldChromaEffectService,
     public spotifyAuth: SpotifyAuthenticationService,
     private store: Store<{
       ledstripState: LedstripState | undefined,

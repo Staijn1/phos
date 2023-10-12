@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
 import { calculateBGRInteger, color_wheel } from '../../../../shared/functions';
 import iro from '@jaames/iro';
-import { KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
+import { KeyboardEffect, MouseEffect } from '../../../old/chromaSDK/old-chroma-s-d-k.service';
 
 export class RainbowCycleState extends State {
   effect: string | number | NodeJS.Timeout | undefined;

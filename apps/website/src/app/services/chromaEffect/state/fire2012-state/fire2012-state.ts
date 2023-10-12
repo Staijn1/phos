@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
 import { calculateBGRInteger, mapNumber, qadd8, qsub8, randomInteger, WarmColor } from '../../../../shared/functions';
 import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../old/chromaSDK/old-chroma-s-d-k.service';
 
 export class Fire2012State extends State {
   readonly COOLING = 55;
