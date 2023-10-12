@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
-import { calculateBGRInteger } from '../../../../shared/functions';
+import { calculateBGRInteger } from '../../../../../shared/functions';
 import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/chromaSDK.service';
+import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class BlinkState extends State {
   blinkEffect: string | number | NodeJS.Timeout | undefined;

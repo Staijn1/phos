@@ -1,18 +1,18 @@
 import { Component, OnDestroy, ViewChild } from "@angular/core";
-import { ChromaEffectService } from "../../services/chromaEffect/chroma-effect.service";
-import { BlinkState } from "../../services/chromaEffect/state/blink-state/blink-state";
-import { SingleDynamicState } from "../../services/chromaEffect/state/single-dynamic-state/single-dynamic-state";
-import { MultiDynamicState } from "../../services/chromaEffect/state/multi-dynamic-state/multi-dynamic-state";
-import { RainbowState } from "../../services/chromaEffect/state/rainbow-state/rainbow-state";
-import { Fire2012State } from "../../services/chromaEffect/state/fire2012-state/fire2012-state";
-import { WaterfallState } from "../../services/chromaEffect/state/waterfall-state/waterfall-state";
-import { RainbowCycleState } from "../../services/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state";
-import { VisualizerState } from "../../services/chromaEffect/state/visualizer-state/visualizer-state";
+import { OldChromaEffectService } from "../../services/old/chromaEffect/old-chroma-effect.service";
+import { BlinkState } from "../../services/old/chromaEffect/state/blink-state/blink-state";
+import { SingleDynamicState } from "../../services/old/chromaEffect/state/single-dynamic-state/single-dynamic-state";
+import { MultiDynamicState } from "../../services/old/chromaEffect/state/multi-dynamic-state/multi-dynamic-state";
+import { RainbowState } from "../../services/old/chromaEffect/state/rainbow-state/rainbow-state";
+import { Fire2012State } from "../../services/old/chromaEffect/state/fire2012-state/fire2012-state";
+import { WaterfallState } from "../../services/old/chromaEffect/state/waterfall-state/waterfall-state";
+import { RainbowCycleState } from "../../services/old/chromaEffect/state/rainbow-cycle-state/rainbow-cycle-state";
+import { VisualizerState } from "../../services/old/chromaEffect/state/visualizer-state/visualizer-state";
 import { LedstripState, ModeInformation } from "@angulon/interfaces";
 import { ThemeService } from "../../services/theme/theme.service";
 import {
   VisualizerBrightnessState
-} from "../../services/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
+} from "../../services/old/chromaEffect/state/visualizer-brightness-state/visualizer-brightness-state";
 import { ColorpickerComponent } from "../../shared/components/colorpicker/colorpicker.component";
 import { ChangeLedstripMode } from "../../../redux/ledstrip/ledstrip.action";
 import { Store } from "@ngrx/store";
@@ -61,7 +61,7 @@ export class ModePageComponent implements OnDestroy {
 
 
   constructor(
-    private readonly chromaService: ChromaEffectService,
+    private readonly chromaService: OldChromaEffectService,
     private readonly store: Store<{ modes: ModeInformation[], ledstripState: LedstripState | undefined }>,
     public readonly themeService: ThemeService) {
     this.store.select('modes').subscribe(modes => this.modes = modes);

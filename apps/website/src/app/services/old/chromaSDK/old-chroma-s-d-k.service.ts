@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
-import { MessageService } from '../message-service/message.service';
+import { MessageService } from '../../message-service/message.service';
 import { Store } from '@ngrx/store';
-import { UserPreferences } from '../../shared/types/types';
+import { UserPreferences } from '../../../shared/types/types';
 import { distinctUntilChanged, map } from 'rxjs';
 
 export enum KeyboardEffect {
@@ -27,11 +27,12 @@ export enum MouseEffect {
 /**
  * This class contains the necessary methods to register this application with the Razer SDK and to keep the connection alive (or destroy it)
  * All colors sent to the Razer API must first be converted to BGR format instead of RGB
+ * @deprecated
  */
 @Injectable({
   providedIn: 'root'
 })
-export class ChromaSDKService {
+export class OldChromaSDKService {
   mouseColors = [
     [0, 0, 0, 0, 0, 0, 0],
     [0, 0, 0, 0, 0, 0, 0],
