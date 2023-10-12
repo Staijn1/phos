@@ -14,6 +14,7 @@ import { VisualizerComponent } from "../../shared/components/visualizer/visualiz
 import { GradientInformation, LedstripState } from "@angulon/interfaces";
 import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas.component";
 import * as slider from "ngx-slider-v2";
+import { NgxSliderModule } from "ngx-slider-v2";
 import { InformationService } from "../../services/information-service/information.service";
 import { visualizerModeId } from "../../shared/constants";
 import { faSpotify } from "@fortawesome/free-brands-svg-icons";
@@ -28,7 +29,8 @@ import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { SharedModule } from "../../shared/shared.module";
-import { NgxSliderModule } from "ngx-slider-v2";
+import { SpotifyAuthenticationService } from "../../services/spotify-authentication/spotify-authentication.service";
+import { RegisterGradientAction } from "../../../redux/gradients/gradients.action";
 
 @Component({
   selector: "app-visualizer",
@@ -99,12 +101,16 @@ export class VisualizerPageComponent implements OnDestroy {
   readonly spotifyIcon = faSpotify;
   private wakeLock: WakeLockSentinel | undefined;
   private currentTrackId: string | null | undefined;
+  private spotifyPlaybackState: Spotify.PlaybackState | undefined;
+  private albumCoverHTMLElement: HTMLImageElement | undefined;
+
 
   constructor(
     private cdr: ChangeDetectorRef,
     private connection: WebsocketService,
     private information: InformationService,
     private chromaEffect: ChromaEffectService,
+    public spotifyAuth: SpotifyAuthenticationService,
     private store: Store<{
       ledstripState: LedstripState | undefined,
       gradients: GradientInformation[],
@@ -170,9 +176,25 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
+    const ctx = instance.canvasCtx;
+    const canvas = instance.canvas;
+
+    // Send the fft value to the ledstrip and update the chroma effect
     const value = instance.getEnergy("bass");
     this.connection.sendFFTValue(Math.floor(mapNumber(value, 0, 1, 0, 255)));
     this.chromaEffect.intensity = value;
+
+
+
+    // Draw the album cover of the current song on the canvas in the top right
+    if (this.spotifyPlaybackState && this.albumCoverHTMLElement) {
+      const margin = 25;
+      const imageSize = 250;
+      ctx.globalAlpha = .7;
+      this.albumCoverHTMLElement.style.borderRadius = getComputedStyle(document.documentElement).getPropertyValue("--rounded-btn") ?? 0;
+      ctx.drawImage(this.albumCoverHTMLElement, canvas.width - (margin + imageSize), margin, imageSize, imageSize);
+      ctx.globalAlpha = 1;
+    }
   }
 
   fullscreen(): void {
@@ -184,7 +206,6 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   applySettings() {
-    this.visualizerOptions = Object.assign({}, this.visualizerOptions);
     this.store.dispatch(new ChangeVisualizerOptions(this.visualizerOptions));
   }
 
@@ -200,11 +221,18 @@ export class VisualizerPageComponent implements OnDestroy {
    * @param state
    */
   onSpotifyStateChanged(state: Spotify.PlaybackState) {
-    if (state?.track_window?.current_track?.id !== this.currentTrackId) {
+    this.spotifyPlaybackState = state;
+
+    if (this.spotifyPlaybackState?.track_window?.current_track?.id !== this.currentTrackId) {
       this.currentTrackId = state?.track_window?.current_track?.id;
-      const albumCover = state?.track_window?.current_track?.album?.images[0]?.url;
-      if (albumCover) {
-        this.information.getColorsFromImageUrl(albumCover).then((colors) => {
+      const albumCoverImageUrl = state?.track_window?.current_track?.album?.images[0]?.url;
+      if (albumCoverImageUrl) {
+        // This variable will be used to draw the album cover on the canvas. It is added to the canvas with the drawCallback
+        // This is called many times per second so for performance reasons we load the image only once and then draw it on the canvas many times
+        this.albumCoverHTMLElement = new Image();
+        this.albumCoverHTMLElement.src = albumCoverImageUrl;
+
+        this.information.getColorsFromImageUrl(albumCoverImageUrl).then((colors) => {
           const primaryColor = colors.Average.hex;
           const secondaryColor = colors.Vibrant?.hex ?? "#000";
           const colorsStops: GradientColorStop[] = [
@@ -222,12 +250,14 @@ export class VisualizerPageComponent implements OnDestroy {
             bgColor: "#000",
             colorStops: colorsStops
           };
-          this.visualizerComponent.registerGradient("Spotify", gradient);
-          this.visualizerOptions.gradient = "Spotify";
-          this.visualizerOptions.gradientLeft = "Spotify";
-          this.visualizerOptions.gradientRight = "Spotify";
-          this.applySettings();
+
           this.store.dispatch(new ChangeLedstripColors([primaryColor, secondaryColor]));
+          this.store.dispatch(new RegisterGradientAction({...gradient, name: "spotify", id: 999}));
+
+          this.visualizerOptions.gradient = "spotify";
+          delete this.visualizerOptions.gradientLeft;
+          delete this.visualizerOptions.gradientRight;
+          this.applySettings();
         });
       }
     }

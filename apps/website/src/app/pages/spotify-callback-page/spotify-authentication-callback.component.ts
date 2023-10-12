@@ -1,11 +1,15 @@
 import { Component, OnInit } from '@angular/core';
 import { SpotifyAuthenticationService } from '../../services/spotify-authentication/spotify-authentication.service';
 import { Router } from '@angular/router';
+import { NgIf } from "@angular/common";
 
 @Component({
-  selector: 'app-spotify-authentication-callback',
-  templateUrl: './spotify-authentication-callback.component.html',
-  styleUrls: ['./spotify-authentication-callback.component.scss'],
+  selector: "app-spotify-authentication-callback",
+  templateUrl: "./spotify-authentication-callback.component.html",
+  styleUrls: ["./spotify-authentication-callback.component.scss"],
+  imports: [
+    NgIf
+  ],
   standalone: true
 })
 export class SpotifyAuthenticationCallbackComponent implements OnInit {

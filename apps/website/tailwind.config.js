@@ -10,6 +10,12 @@ module.exports = {
   ],
   theme: {
     extend: {
+      colors: {
+        spotify: {
+          DEFAULT: '#1db954',
+          light: '#1ed760',
+        }
+      },
       borderRadius: {
         '2xl': '50px'
       },

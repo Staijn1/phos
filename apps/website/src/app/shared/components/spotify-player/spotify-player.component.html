@@ -1,65 +1,55 @@
-<div *ngIf='spotifyAuth.isLoggedIn(); else notLoggedIn'>
-  <div *ngIf='isActive; else notActive'>
-    <div class='tw-mt-3'>
-      <!-- Create a music player -->
-      <div class='row'>
-        <div class='col-md-5'>
-          <div class='tw-flex tw-items-center tw-h-full'>
-            <img [src]='albumImageSrc' alt='Album Image' class='img-fluid'>
-          </div>
-        </div>
-        <div class='col-md-7'>
-          <div class='tw-flex tw-flex-col tw-h-full tw-justify-between'>
-            <div>
-              <h5>{{trackName}}</h5>
-              <p>{{artistName}}</p>
-            </div>
-            <div class='tw-w-full tw-flex tw-justify-center'>
-              <div>
-                <div class='tw-btn-group tw-btn-group-sm tw-w-full' role='group'>
-                  <button (click)='previousSong()' class='tw-btn tw-btn-secondary' type='button'>
-                    <fa-icon [icon]='previousSongIcon'></fa-icon>
-                  </button>
-                  <button (click)='togglePlay()' class='tw-btn tw-btn-secondary' type='button'>
-                    <fa-icon [icon]='getIconForPlayStatus'></fa-icon>
-                  </button>
-                  <button (click)='skipSong()' class='tw-btn tw-btn-secondary' type='button'>
-                    <fa-icon [icon]='skipSongIcon'></fa-icon>
-                  </button>
-                </div>
-                <div class='tw-mt-3 tw-flex tw-items-center'>
-                  <fa-icon [icon]='volumeLowIcon'></fa-icon>
-                  <input (input)='changeVolume()' [(ngModel)]='volume' class='form-range flex-grow-1 mx-2' max='1'
-                         min='0'
-                         step='0.1' type='range'>
-                  <fa-icon [icon]='volumeHighIcon'></fa-icon>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
+<div *ngIf="spotifyAuth.isLoggedIn(); else notLoggedIn">
+  <div *ngIf="isActive; else notActive">
+    <div class="tw-mt-3">
 
-      <!-- Playlist Section -->
-      <div class='mt-5'>
-        <h6>Upcoming Songs</h6>
-        <ul class='list-unstyled'>
+
+      <div class="tw-bg-base-100 tw-rounded-lg tw-shadow-lg tw-overflow-hidden">
+        <div class="tw-relative">
+          <img
+            [src]="albumImageSrc"
+            alt="Album Cover"
+            class="tw-h-60 tw-w-full tw-object-cover">
+          <div
+            class="tw-absolute tw-p-4 tw-inset-0 tw-flex tw-flex-col tw-justify-end tw-bg-gradient-to-b tw-from-transparent tw-to-gray-900 tw-backdrop tw-backdrop-blur-5 tw-text-white">
+            <h3 class="tw-font-bold">{{trackName}}</h3>
+            <span class="tw-opacity-70">{{artistName}}</span>
+          </div>
+        </div>
+        <div class="tw-h-[10px]">
+          <progress class="tw-relative tw-top-[-10px] tw-progress tw-progress-primary tw-w-full"
+                    [value]="currentTrackProgress"
+                    [max]="currentTrack.duration_ms"></progress>
+        </div>
+        <div class="tw-flex tw-justify-between tw-font-semibold tw-text-base-content tw-px-4 tw-pb-2">
+          <div class="tw-text-xs">
+            {{currentTrackProgress | msToTime}}
+          </div>
+          <div class="playback-controls-container">
+            <button (click)="previousSong()" class="tw-opacity-70 hover:tw-opacity-100">
+              <fa-icon [icon]="previousSongIcon"></fa-icon>
+            </button>
+            <button (click)="togglePlay()">
+              <fa-icon [icon]="getIconForPlayStatus" size="2x"></fa-icon>
+            </button>
+            <button (click)="skipSong()" class="tw-opacity-70 hover:tw-opacity-100">
+              <fa-icon [icon]="skipSongIcon"></fa-icon>
+            </button>
+          </div>
+          <div class="tw-text-xs">
+            {{currentTrack.duration_ms | msToTime}}
+          </div>
+        </div>
+        <ul class="upcoming-track-list">
           <li
-            *ngFor='let song of allTracks; let i = index'
-            [class.currentTrack]='currentTrack === song'
-            [class.previousTrack]='previousTracks.includes(song)'
-            [class.upcomingTrack]='upcomingTracks.includes(song)'
-            [style.opacity]='calculateOpacityForTrack(song, i)'
-            class='track'
-          >
-            <div class='row'>
-              <div class='col-md-3'>
-                <img [src]='song.album.images[0].url' alt='Album Image' class='img-fluid'>
-              </div>
-              <div class='col-md-9 song-info'>
-                <h6>{{song.name}}</h6>
-                <p>{{getArtistNames(song)}}</p>
-              </div>
+            class="upcoming-track"
+            *ngFor="let track of upcomingTracks;let i = index"
+            [style.opacity]="calculateOpacityForUpcomingTrack(track, i)">
+            <div class="tw-flex-1">
+              <h3 class="tw-font-bold">{{track.name}}</h3>
+              <span class="tw-opacity-70">{{getAllArtistsNamesForTrack(track)}}</span>
+            </div>
+            <div class="tw-text-xs tw-text-gray-400">
+              {{track.duration_ms | msToTime}}
             </div>
           </li>
         </ul>
@@ -69,8 +59,8 @@
 </div>
 
 <ng-template #notLoggedIn>
-  <a [href]='spotifyAuthenticationURL' class='tw-btn tw-btn-primary btn-spotify tw-w-full tw-mt-3'>
-    <fa-icon [icon]='spotifyIcon'></fa-icon>
+  <a [href]="spotifyAuthenticationURL" class="tw-btn tw-btn-primary btn-spotify tw-w-full tw-mt-3">
+    <fa-icon [icon]="spotifyIcon"></fa-icon>
     Login with Spotify
   </a>
 </ng-template>

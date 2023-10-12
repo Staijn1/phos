@@ -16,7 +16,7 @@
     </div>
   </div>
   <div class="tw-h-full">
-    <app-shared-visualizer (ready)="init()" [options]="visualizerOptions"></app-shared-visualizer>
+    <app-shared-visualizer (ready)="init()"></app-shared-visualizer>
   </div>
 </div>
 <app-offcanvas position="right" width="300px">
@@ -328,6 +328,14 @@
       <div class="tab-content" [class.active-tab]="activeTab === 3">
         <div>
           <app-spotify-player (playbackChanged)="onSpotifyStateChanged($event)"></app-spotify-player>
+
+          <div class="tw-mt-5" *ngIf="!spotifyAuth.isLoggedIn()">
+            <p>
+              With the Spotify Integration, the visualizer and ledstrip(s) will automatically adjust to the dominant
+              colors in the album-cover of the song you are currently listening.
+            </p>
+            <p class="tw-mt-5">To get started, log in first. Then, in the Spotify app select "Phos" under the list of devices. Then let the magic happen!</p>
+          </div>
         </div>
       </div>
     </div>
