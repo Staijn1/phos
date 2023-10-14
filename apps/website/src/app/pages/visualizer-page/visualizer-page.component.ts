@@ -145,11 +145,6 @@ export class VisualizerPageComponent implements OnDestroy {
         const settingsToApply = { ...visualizerOptions };
 
         settingsToApply.onCanvasDraw = this.drawCallback.bind(this);
-        if (settingsToApply.gradientRight === "Spotify" || settingsToApply.gradientLeft === "Spotify" || settingsToApply.gradient === "Spotify") {
-          settingsToApply.gradient = "prism";
-          settingsToApply.gradientLeft = "prism";
-          settingsToApply.gradientRight = "prism";
-        }
 
         this.visualizerOptions = settingsToApply;
         this.cdr.detectChanges();
@@ -254,9 +249,8 @@ export class VisualizerPageComponent implements OnDestroy {
           this.store.dispatch(new ChangeLedstripColors([primaryColor, secondaryColor]));
           this.store.dispatch(new RegisterGradientAction({...gradient, name: "spotify", id: 999}));
 
-          this.visualizerOptions.gradient = "spotify";
-          delete this.visualizerOptions.gradientLeft;
-          delete this.visualizerOptions.gradientRight;
+          this.visualizerOptions.gradientLeft = "spotify";
+          this.visualizerOptions.gradientRight = "spotify";
           this.applySettings();
         });
       }
