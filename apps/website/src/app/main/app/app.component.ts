@@ -1,15 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
-import { MessageService } from '../../services/message-service/message.service';
-import { ThemeService } from '../../services/theme/theme.service';
-import { Message } from '../../shared/types/Message';
-import { swipeRight } from '@angulon/ui';
+import {Component, OnInit} from '@angular/core';
+import {SwUpdate} from '@angular/service-worker';
+import {MessageService} from '../../services/message-service/message.service';
+import {ThemeService} from '../../services/theme/theme.service';
+import {Message} from '../../shared/types/Message';
+import {swipeRight} from '@angulon/ui';
 import * as AOS from 'aos';
-import { debounceTime } from 'rxjs';
-import { UserPreferences } from '../../shared/types/types';
-import { Store } from '@ngrx/store';
+import {debounceTime} from 'rxjs';
+import {UserPreferences} from '../../shared/types/types';
+import {Store} from '@ngrx/store';
 import {ChromaConnection} from "../../services/chroma-sdk/ChromaConnection";
-import {WebsocketChromaConnectionService} from "../../services/chroma-sdk/websocket-chroma-connection.service";
 
 @Component({
   selector: 'app-root',

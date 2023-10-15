@@ -1,6 +1,7 @@
 import {Injectable} from '@angular/core';
-import {ChromaConnection, KeyboardChromaEffectPayload} from "./ChromaConnection";
+import {ChromaConnection} from "./ChromaConnection";
 import {ChromaKeyboardEffectType} from "../old/chromaSDK/old-chroma-s-d-k.service";
+import {RazerChromaSDKTypes} from "./RazerChromaSDKTypes";
 
 @Injectable({
   providedIn: 'root'
@@ -99,7 +100,7 @@ export class RestChromaConnectionService extends ChromaConnection {
    * @param effectType
    * @param keyboardData
    */
-  override async createKeyboardEffect(effectType: ChromaKeyboardEffectType, keyboardData: any): Promise<KeyboardChromaEffectPayload> {
+  override async createKeyboardEffect(effectType: ChromaKeyboardEffectType, keyboardData: any): Promise<RazerChromaSDKTypes> {
     const effect = await super.createKeyboardEffect(effectType, keyboardData);
     await this.call("/keyboard", effect, {method: "PUT"});
 

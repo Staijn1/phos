@@ -4,8 +4,7 @@ import {Store} from "@ngrx/store";
 import {UserPreferences} from "../../shared/types/types";
 import {distinctUntilChanged, map} from "rxjs";
 import {ChromaKeyboardEffectType} from "../old/chromaSDK/old-chroma-s-d-k.service";
-
-export type KeyboardChromaEffectPayload = unknown;
+import {RazerChromaSDKTypes} from "./RazerChromaSDKTypes";
 
 /**
  * Base class for Razer Chroma SDK integrations. With this integration we can control the RGB lights on Razer peripherals.
@@ -126,7 +125,7 @@ export abstract class ChromaConnection {
    * @param payload Please refer to the Razer Chroma SDK documentation for the payload structure {@link https://assets.razerzone.com/dev_portal/REST/html/md__r_e_s_t_external_03_keyboard.html}
    * @protected
    */
-  protected createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): KeyboardChromaEffectPayload {
+  protected createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): RazerChromaSDKTypes {
     if (effect === ChromaKeyboardEffectType.CHROMA_NONE) {
       return {effect};
     } else if (effect === ChromaKeyboardEffectType.CHROMA_CUSTOM && typeof payload === "object") {
