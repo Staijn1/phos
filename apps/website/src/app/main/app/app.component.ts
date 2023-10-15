@@ -8,7 +8,7 @@ import * as AOS from 'aos';
 import {debounceTime} from 'rxjs';
 import {UserPreferences} from '../../shared/types/types';
 import {Store} from '@ngrx/store';
-import {ChromaConnection} from "../../services/chroma-sdk/ChromaConnection";
+import {BaseChromaConnection} from "../../services/chroma-sdk/base-chroma-connection.service";
 
 @Component({
   selector: 'app-root',
@@ -21,7 +21,7 @@ export class AppComponent implements OnInit {
     public readonly errorService: MessageService,
     private readonly updates: SwUpdate,
     private readonly theme: ThemeService,
-    private readonly chromaConnection: ChromaConnection,
+    private readonly chromaConnection: BaseChromaConnection,
     private readonly store: Store<{
       userPreferences: UserPreferences
     }>) {

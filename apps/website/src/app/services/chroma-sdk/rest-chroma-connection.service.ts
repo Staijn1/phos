@@ -1,12 +1,12 @@
 import {Injectable} from '@angular/core';
-import {ChromaConnection} from "./ChromaConnection";
+import {BaseChromaConnection} from "./base-chroma-connection.service";
 import {ChromaKeyboardEffectType} from "../old/chromaSDK/old-chroma-s-d-k.service";
 import {RazerChromaSDKTypes} from "./RazerChromaSDKTypes";
 
 @Injectable({
   providedIn: 'root'
 })
-export class RestChromaConnectionService extends ChromaConnection {
+export class RestChromaConnectionService extends BaseChromaConnection {
   private initializedURL: string | undefined;
 
   getChromaSDKUrl(): string {

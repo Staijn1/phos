@@ -31,6 +31,7 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
 import { SharedModule } from "../../shared/shared.module";
 import { SpotifyAuthenticationService } from "../../services/spotify-authentication/spotify-authentication.service";
 import { RegisterGradientAction } from "../../../redux/gradients/gradients.action";
+import iro from "@jaames/iro";
 
 @Component({
   selector: "app-visualizer",
@@ -246,7 +247,7 @@ export class VisualizerPageComponent implements OnDestroy {
             colorStops: colorsStops
           };
 
-          this.store.dispatch(new ChangeLedstripColors([primaryColor, secondaryColor]));
+          this.store.dispatch(new ChangeLedstripColors([new iro.Color(primaryColor), new iro.Color(secondaryColor)]));
           this.store.dispatch(new RegisterGradientAction({...gradient, name: "spotify", id: 999}));
 
           this.visualizerOptions.gradientLeft = "spotify";

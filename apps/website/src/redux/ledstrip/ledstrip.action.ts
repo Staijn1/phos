@@ -1,8 +1,9 @@
-import { LedstripState } from '@angulon/interfaces';
+import { ClientSideLedstripState, LedstripState } from "@angulon/interfaces";
 import { Action } from '@ngrx/store';
+import iro from "@jaames/iro";
 
 export enum LedstripAction {
-  RECEIVE_STATE = 'RECEIVE_STATE',
+  RECEIVE_SERVER_STATE = 'RECEIVE_SERVER_STATE',
   CHANGE_COLORS = 'CHANGE_COLORS',
   CHANGE_MODE = 'CHANGE_MODE',
   INCREASE_BRIGHTNESS = 'INCREASE_BRIGHTNESS',
@@ -12,8 +13,8 @@ export enum LedstripAction {
   MULTIPLE_PROPERTIES = 'MULTIPLE_PROPERTIES',
 }
 
-export class ReceiveLedstripState implements Action {
-  readonly type = LedstripAction.RECEIVE_STATE;
+export class ReceiveServerLedstripState implements Action {
+  readonly type = LedstripAction.RECEIVE_SERVER_STATE;
 
   constructor(public payload: LedstripState) {
   }
@@ -30,7 +31,7 @@ export class DecreaseLedstripBrightness implements Action {
 export class ChangeLedstripColors implements Action {
   readonly type = LedstripAction.CHANGE_COLORS;
 
-  constructor(public payload: string[]) {
+  constructor(public payload: iro.Color[]) {
   }
 }
 
@@ -52,6 +53,6 @@ export class DecreaseLedstripSpeed implements Action {
 export class ChangeMultipleLedstripProperties implements Action {
   readonly type = LedstripAction.MULTIPLE_PROPERTIES;
 
-  constructor(public payload: Partial<LedstripState>) {
+  constructor(public payload: Partial<ClientSideLedstripState>) {
   }
 }

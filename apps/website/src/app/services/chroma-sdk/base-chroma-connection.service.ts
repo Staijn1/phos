@@ -1,35 +1,39 @@
-import {inject, Injectable} from "@angular/core";
-import {MessageService} from "../message-service/message.service";
-import {Store} from "@ngrx/store";
-import {UserPreferences} from "../../shared/types/types";
-import {distinctUntilChanged, map} from "rxjs";
-import {ChromaKeyboardEffectType} from "../old/chromaSDK/old-chroma-s-d-k.service";
-import {RazerChromaSDKTypes} from "./RazerChromaSDKTypes";
+import { inject, Injectable } from "@angular/core";
+import { MessageService } from "../message-service/message.service";
+import { Store } from "@ngrx/store";
+import { UserPreferences } from "../../shared/types/types";
+import { distinctUntilChanged, map } from "rxjs";
+import { ChromaKeyboardEffectType } from "../old/chromaSDK/old-chroma-s-d-k.service";
+import { RazerChromaSDKTypes } from "./RazerChromaSDKTypes";
+import { ClientSideLedstripState } from "@angulon/interfaces";
+import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
+import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
 
 /**
  * Base class for Razer Chroma SDK integrations. With this integration we can control the RGB lights on Razer peripherals.
  * The Razer chroma SDK provides two types of connections: REST API & WebSocket.
  * To abstract away the connection type, this class provides a common interface for both types of connections, with some common methods already implemented.
  */
-@Injectable({providedIn: 'root'})
-export abstract class ChromaConnection {
+@Injectable({ providedIn: "root" })
+export abstract class BaseChromaConnection {
   protected readonly APPLICATION_DATA = {
-    "title": "Phos",
-    "description": "Integrates with the Phos LED control application",
-    "author": {
-      "name": "Stein Jonker (Staijn)",
-      "contact": "https://github.com/Staijn1/angulon"
+    title: "Phos",
+    description: "Integrates with the Phos LED control application",
+    author: {
+      name: "Stein Jonker (Staijn)",
+      contact: "https://github.com/Staijn1/angulon"
     },
-    "device_supported": [
+    device_supported: [
       "keyboard"
     ],
-    "category": "application"
+    category: "application"
   };
 
   protected readonly messageService = inject(MessageService);
-  protected readonly store: Store<{ userPreferences: UserPreferences }> = inject(Store);
+  protected readonly store: Store<{ userPreferences: UserPreferences, ledstripState: ClientSideLedstripState }> = inject(Store);
   protected heartbeatInterval: NodeJS.Timer | undefined;
   protected isInitialized = false;
+  protected activeEffect: BaseChromaSDKEffect | undefined;
 
   constructor() {
     // Subscribes to changes in the user preferences to receive changes in the Chroma SDK setting
@@ -39,6 +43,23 @@ export abstract class ChromaConnection {
         distinctUntilChanged()
       ).subscribe(chromaSupportEnabled => {
       this.toggleChromaSupport(chromaSupportEnabled);
+    });
+
+    this.store.select("ledstripState").pipe(
+      map(state => state.mode),
+      distinctUntilChanged()
+    ).subscribe(mode => {
+      const effect = ChromaEffectRegistery.getAssociatedEffectForMode(mode);
+      if (effect) this.activeEffect = effect;
+    });
+
+    this.store.select("ledstripState").pipe(
+      map(state => state.colors),
+      distinctUntilChanged()
+    ).subscribe(colors => {
+      if (this.activeEffect) {
+        this.activeEffect.updateEffect(colors);
+      }
     });
   }
 
@@ -101,7 +122,7 @@ export abstract class ChromaConnection {
           this.unInitialize().then(() => this.toggleChromaSupport(true));
         }).catch(e => {
         this.messageService.setMessage({
-          message: 'Failed to perform ChromaSDK Heartbeat. Is Razer Synapse still running?',
+          message: "Failed to perform ChromaSDK Heartbeat. Is Razer Synapse still running?",
           name: "CHROMA_SDK_HEARTBEAT_FAILED"
         });
         console.error(e);
@@ -125,15 +146,15 @@ export abstract class ChromaConnection {
    * @param payload Please refer to the Razer Chroma SDK documentation for the payload structure {@link https://assets.razerzone.com/dev_portal/REST/html/md__r_e_s_t_external_03_keyboard.html}
    * @protected
    */
-  protected createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): RazerChromaSDKTypes {
+  createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): RazerChromaSDKTypes {
     if (effect === ChromaKeyboardEffectType.CHROMA_NONE) {
-      return {effect};
+      return { effect };
     } else if (effect === ChromaKeyboardEffectType.CHROMA_CUSTOM && typeof payload === "object") {
-      return {effect, param: payload};
+      return { effect, param: payload };
     } else if (effect === ChromaKeyboardEffectType.CHROMA_STATIC && typeof payload === "number") {
-      return {effect, param: {color: payload}};
+      return { effect, param: { color: payload } };
     } else if (effect === ChromaKeyboardEffectType.CHROMA_CUSTOM_KEY && typeof payload === "object") {
-      return {effect, param: payload};
+      return { effect, param: payload };
     } else {
       throw new Error(`The effect ${effect} with the received payload is not supported`);
     }

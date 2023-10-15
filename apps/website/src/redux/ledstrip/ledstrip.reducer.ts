@@ -1,16 +1,23 @@
-import { LedstripAction } from './ledstrip.action';
-import { constrain, INITIAL_LEDSTRIP_STATE, LedstripState, mergeArrays } from "@angulon/interfaces";
+import { LedstripAction } from "./ledstrip.action";
+import { ClientSideLedstripState, constrain, mergeArrays } from "@angulon/interfaces";
 import {
+  INITIAL_CLIENT_LEDSTRIP_STATE,
   MAXIMUM_BRIGHTNESS,
   MINIMUM_BRIGHTNESS,
   SPEED_MAXIMUM_INTERVAL_MS,
   SPEED_MINIMUM_INTERVAL_MS
 } from "../../app/shared/constants";
+import iro from "@jaames/iro";
 
-export const ledstripStateReducer = (state: LedstripState = INITIAL_LEDSTRIP_STATE, action: any): LedstripState | undefined => {
+export const ledstripStateReducer = (state: ClientSideLedstripState = INITIAL_CLIENT_LEDSTRIP_STATE, action: any): ClientSideLedstripState | undefined => {
   switch (action.type) {
-    case LedstripAction.RECEIVE_STATE: {
-      return action.payload;
+    case LedstripAction.RECEIVE_SERVER_STATE: {
+      // Convert the colors from hex to iro.Color
+      const iroColors = action.payload.colors.map((color: string) => new iro.Color(color));
+      return {
+        ...action.payload,
+        colors: iroColors
+      };
     }
     case LedstripAction.INCREASE_BRIGHTNESS: {
       return {

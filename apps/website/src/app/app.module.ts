@@ -15,7 +15,7 @@ import {ledstripStateReducer} from '../redux/ledstrip/ledstrip.reducer';
 import {modesReducer} from '../redux/modes/modes.reducer';
 import {gradientsReducer} from '../redux/gradients/gradients.reducer';
 import {userPreferencesReducer} from '../redux/user-preferences/user-preferences.reducer';
-import {ChromaConnection} from "./services/chroma-sdk/ChromaConnection";
+import {BaseChromaConnection} from "./services/chroma-sdk/base-chroma-connection.service";
 import {RestChromaConnectionService} from "./services/chroma-sdk/rest-chroma-connection.service";
 
 const StoreDevtools = StoreDevtoolsModule.instrument();
@@ -48,7 +48,7 @@ const StoreDevtools = StoreDevtoolsModule.instrument();
   bootstrap: [AppComponent],
   providers: [
     {
-      provide: ChromaConnection,
+      provide: BaseChromaConnection,
       useClass: RestChromaConnectionService
     }
   ]

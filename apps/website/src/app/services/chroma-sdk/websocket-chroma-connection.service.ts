@@ -1,11 +1,11 @@
 import {Injectable} from '@angular/core';
-import {ChromaConnection} from "./ChromaConnection";
+import {BaseChromaConnection} from "./base-chroma-connection.service";
 import {io, Socket} from "socket.io-client";
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketChromaConnectionService extends ChromaConnection {
+export class WebsocketChromaConnectionService extends BaseChromaConnection {
   private connection!: Socket;
 
   getChromaSDKUrl(): string {
