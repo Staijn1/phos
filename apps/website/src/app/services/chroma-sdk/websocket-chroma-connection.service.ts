@@ -41,7 +41,7 @@ export class WebsocketChromaConnectionService extends ChromaConnection {
     return Promise.resolve(undefined);
   }
 
-  uninitialize(): Promise<void> {
+  unInitialize(): Promise<void> {
     return Promise.resolve(undefined);
   }
 }

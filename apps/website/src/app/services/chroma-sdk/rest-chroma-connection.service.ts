@@ -1,13 +1,10 @@
 import {Injectable} from '@angular/core';
 import {ChromaConnection} from "./ChromaConnection";
-import {MessageService} from "../message-service/message.service";
-import {io, Socket} from "socket.io-client";
 
 @Injectable({
   providedIn: 'root'
 })
 export class RestChromaConnectionService extends ChromaConnection {
-  private isInitialized = false;
   private initializedURL: string | undefined;
 
   getChromaSDKUrl(): string {
@@ -21,7 +18,7 @@ export class RestChromaConnectionService extends ChromaConnection {
    * @see https://assets.razerzone.com/dev_portal/REST/html/index.html#uri
    */
   async initialize(): Promise<void> {
-    const response = await this.call("/razer/chromasdk", {
+    const response = await this.call("", {
         method: "POST",
         body: JSON.stringify(this.APPLICATION_DATA),
       },
@@ -37,8 +34,12 @@ export class RestChromaConnectionService extends ChromaConnection {
     });
   }
 
-  uninitialize(): Promise<void> {
-    return Promise.resolve(undefined);
+  async unInitialize(): Promise<void> {
+    await this.call("", {
+      method: "DELETE"
+    });
+
+    this.isInitialized = false;
   }
 
 

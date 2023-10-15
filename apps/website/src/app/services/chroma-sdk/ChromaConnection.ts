@@ -1,5 +1,8 @@
 import {inject, Injectable, OnDestroy} from "@angular/core";
 import {MessageService} from "../message-service/message.service";
+import {Store} from "@ngrx/store";
+import {UserPreferences} from "../../shared/types/types";
+import {distinctUntilChanged, map} from "rxjs";
 
 /**
  * Base class for Razer Chroma SDK integrations. With this integration we can control the RGB lights on Razer peripherals.
@@ -7,7 +10,7 @@ import {MessageService} from "../message-service/message.service";
  * To abstract away the connection type, this class provides a common interface for both types of connections, with some common methods already implemented.
  */
 @Injectable({providedIn: 'root'})
-export abstract class ChromaConnection implements OnDestroy {
+export abstract class ChromaConnection {
   protected readonly APPLICATION_DATA = {
     "title": "Phos",
     "description": "Integrates with the Phos LED control application",
@@ -16,27 +19,37 @@ export abstract class ChromaConnection implements OnDestroy {
       "contact": "https://github.com/Staijn1/angulon"
     },
     "device_supported": [
-      "keyboard",
-      "mouse",
-      "headset",
-      "mousepad",
-      "keypad",
-      "chromalink"
+      "keyboard"
     ],
     "category": "application"
   };
 
   protected readonly messageService = inject(MessageService);
-
+  protected readonly store: Store<{ userPreferences: UserPreferences }> = inject(Store);
   protected heartbeatInterval: NodeJS.Timer | undefined;
+  protected isInitialized = false;
 
   /**
    * Starts the connection with the Razer SDK
    */
   public start(): void {
-    this.initialize()
-      .then(() => this.startHeartbeat())
-      .catch(e => this.messageService.setMessage(e));
+    this.store.select("userPreferences")
+      .pipe(
+        map(preferences => preferences.settings.chromaSupportEnabled),
+        distinctUntilChanged()
+      ).subscribe(chromaSupportEnabled => {
+
+      if (chromaSupportEnabled && !this.isInitialized) {
+        this.initialize()
+          .then(() => this.startHeartbeat())
+          .catch(e => this.messageService.setMessage(e));
+      } else if (this.isInitialized){
+        this.unInitialize()
+          .then(() => clearInterval(this.heartbeatInterval))
+          .catch(e => this.messageService.setMessage(e));
+      }
+    });
+
   }
 
   /**
@@ -47,7 +60,7 @@ export abstract class ChromaConnection implements OnDestroy {
   /**
    * Implement this method to uninitialize the Chroma SDK
    */
-  abstract uninitialize(): Promise<void>;
+  abstract unInitialize(): Promise<void>;
 
   /**
    * Returns the URL to the Razer Chroma SDK
@@ -66,13 +79,10 @@ export abstract class ChromaConnection implements OnDestroy {
    * @private
    */
   private startHeartbeat(): void {
+    clearInterval(this.heartbeatInterval);
     this.heartbeatInterval = setInterval(() => {
       this.performHeartbeat().catch(e => this.messageService.setMessage(e));
     }, this.HEARTBEAT_INTERVAL_MS);
-  }
-
-  ngOnDestroy(): void {
-    this.uninitialize().catch(e => this.messageService.setMessage(e));
   }
 
   /**
