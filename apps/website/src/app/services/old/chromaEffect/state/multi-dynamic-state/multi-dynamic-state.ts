@@ -1,6 +1,6 @@
 import { State } from '../abstract/state';
 import { color_wheel, randomInteger } from '../../../../../shared/functions';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
+import { HeadsetEffect, ChromaKeyboardEffectType, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class MultiDynamicState extends State {
   private headsetColors = [0, 0, 0, 0, 0];
@@ -40,7 +40,7 @@ export class MultiDynamicState extends State {
         this._context.keyboardColors[row][column] = color_wheel(randomInteger(0, 255));
       }
     }
-    this._context.createKeyboardEffect(KeyboardEffect.CHROMA_CUSTOM, this._context.keyboardColors).then();
+    this._context.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM, this._context.keyboardColors).then();
   }
 
 

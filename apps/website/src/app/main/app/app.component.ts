@@ -33,8 +33,6 @@ export class AppComponent implements OnInit {
 
     this.theme.initialize();
 
-    this.chromaConnection.start();
-
     // Service worker update, but only in production. During development, the service worker is disabled which results in an error.
     // Enabling the service worker would result in a lot of caching, which is not desired during development because it would be hard to test changes.
     if (updates.isEnabled) {

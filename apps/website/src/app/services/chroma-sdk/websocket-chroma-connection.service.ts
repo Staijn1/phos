@@ -16,7 +16,7 @@ export class WebsocketChromaConnectionService extends ChromaConnection {
    * Connects to the Razer chroma SDK and registers this application
    */
   initialize(): Promise<void> {
-    const socket = new WebSocket("wss://localhost:13339/razer/chromasdk");
+/*    const socket = new WebSocket("wss://localhost:13339/razer/chromasdk");
     // create socket
     this.connection = io(this.getChromaSDKUrl(), {
       transports: ['websocket'],
@@ -31,17 +31,21 @@ export class WebsocketChromaConnectionService extends ChromaConnection {
     this.connection.on('connect_error', (error: Error) => {
       console.error(`Failed to connect to websocket at ${this.getChromaSDKUrl()}`, error);
       this.messageService.setMessage(error);
-    });
+    });*/
 
 
-    return Promise.resolve();
+    return Promise.reject("Not implemented");
   }
 
   performHeartbeat(): Promise<void> {
-    return Promise.resolve(undefined);
+    return Promise.reject("Not implemented");
   }
 
   unInitialize(): Promise<void> {
-    return Promise.resolve(undefined);
+    return Promise.reject("Not implemented");
+  }
+
+  override call(endpoint: string, payload: unknown): Promise<unknown> {
+    return Promise.reject("Not implemented");
   }
 }

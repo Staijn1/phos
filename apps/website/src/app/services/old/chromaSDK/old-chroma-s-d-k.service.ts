@@ -4,7 +4,7 @@ import { Store } from '@ngrx/store';
 import { UserPreferences } from '../../../shared/types/types';
 import { distinctUntilChanged, map } from 'rxjs';
 
-export enum KeyboardEffect {
+export enum ChromaKeyboardEffectType {
   CHROMA_CUSTOM_KEY = 'CHROMA_CUSTOM_KEY',
   CHROMA_STATIC = 'CHROMA_STATIC',
   CHROMA_CUSTOM = 'CHROMA_CUSTOM',
@@ -146,7 +146,7 @@ export class OldChromaSDKService {
     });
   }
 
-  async createKeyboardEffect(effect: KeyboardEffect, data: any): Promise<any> {
+  async createKeyboardEffect(effect: ChromaKeyboardEffectType, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return;
     }

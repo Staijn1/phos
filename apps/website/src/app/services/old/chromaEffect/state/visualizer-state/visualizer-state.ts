@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
 import { calculateBGRInteger, mapNumber } from '../../../../../shared/functions';
 import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
+import { HeadsetEffect, ChromaKeyboardEffectType, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class VisualizerState extends State {
   protected _BGRIntegerForeground = 0;
@@ -89,7 +89,7 @@ export class VisualizerState extends State {
     }
     const data = { color, key };
 
-    this._context.createKeyboardEffect(KeyboardEffect.CHROMA_CUSTOM_KEY, data).then();
+    this._context.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM_KEY, data).then();
   }
 
   protected createHeadsetVisualizer() {
