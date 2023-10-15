@@ -1,4 +1,4 @@
-import {OnDestroy} from "@angular/core";
+import {inject, Injectable, OnDestroy} from "@angular/core";
 import {MessageService} from "../message-service/message.service";
 
 /**
@@ -6,20 +6,43 @@ import {MessageService} from "../message-service/message.service";
  * The Razer chroma SDK provides two types of connections: REST API & WebSocket.
  * To abstract away the connection type, this class provides a common interface for both types of connections, with some common methods already implemented.
  */
-export abstract class ChromaConnection implements  OnDestroy {
+@Injectable({providedIn: 'root'})
+export abstract class ChromaConnection implements OnDestroy {
+  protected readonly APPLICATION_DATA = {
+    "title": "Phos",
+    "description": "Integrates with the Phos LED control application",
+    "author": {
+      "name": "Stein Jonker (Staijn)",
+      "contact": "https://github.com/Staijn1/angulon"
+    },
+    "device_supported": [
+      "keyboard",
+      "mouse",
+      "headset",
+      "mousepad",
+      "keypad",
+      "chromalink"
+    ],
+    "category": "application"
+  };
 
-  protected constructor(private readonly messageService: MessageService) {
+  protected readonly messageService = inject(MessageService);
+
+  protected heartbeatInterval: NodeJS.Timer | undefined;
+
+  /**
+   * Starts the connection with the Razer SDK
+   */
+  public start(): void {
     this.initialize()
       .then(() => this.startHeartbeat())
       .catch(e => this.messageService.setMessage(e));
   }
 
-  protected heartbeatInterval: NodeJS.Timer | undefined;
-
   /**
    * Implement this method to register this application with the Razer SDK and set up the connection
    */
-  abstract initialize(): Promise<void>;
+  protected abstract initialize(): Promise<void>;
 
   /**
    * Implement this method to uninitialize the Chroma SDK
@@ -36,7 +59,13 @@ export abstract class ChromaConnection implements  OnDestroy {
    */
   abstract performHeartbeat(): Promise<void>
 
-  startHeartbeat(): void {
+  /**
+   * After initializing, the connection should send a heartbeat to the Razer SDK every {@link HEARTBEAT_INTERVAL_MS} milliseconds.
+   * This method starts the interval that sends the heartbeat
+   * Also see {@link performHeartbeat}
+   * @private
+   */
+  private startHeartbeat(): void {
     this.heartbeatInterval = setInterval(() => {
       this.performHeartbeat().catch(e => this.messageService.setMessage(e));
     }, this.HEARTBEAT_INTERVAL_MS);
