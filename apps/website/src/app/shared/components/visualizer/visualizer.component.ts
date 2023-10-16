@@ -38,7 +38,7 @@ export class VisualizerComponent implements OnDestroy, AfterViewInit {
   private options!: Options;
 
   ngOnDestroy(): void {
-    this.audioMotion?.toggleAnalyzer();
+    this.audioMotion?.destroy();
     this.audioMotion = undefined;
   }
 
