@@ -95,7 +95,8 @@
 .actions fa-icon {
   transition: 300ms;
   @apply
-  tw-ms-2
+  tw-ms-0.5
+  md:tw-ms-2
   lg:tw-ms-4
   tw-p-4;
 

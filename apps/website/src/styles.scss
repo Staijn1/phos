@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .tw-container {
-  @apply tw-mx-auto;
+  @apply tw-mx-auto tw-p-5 md:tw-p-0;
 }
 
 .tw-tab-active {
