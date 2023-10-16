@@ -6,7 +6,7 @@ import {
   ChromaMouseEffectType
 } from "../../old/chromaSDK/old-chroma-s-d-k.service";
 import { BaseReactiveChromaSDKEffect } from "./BaseReactiveChromaSDKEffect";
-import { KEYBOARD_COLUMNS, KEYBOARD_ROWS, MOUSE_COLUMNS, MOUSE_ROWS } from "../RazerChromaSDKTypes";
+import { KEYBOARD_COLUMNS, KEYBOARD_ROWS, MOUSE_COLUMNS, MOUSE_ROWS, MouseLayout } from "../RazerChromaSDKTypes";
 
 export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   protected _BGRIntegerForeground = 0;
@@ -38,10 +38,10 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   }
 
   protected createMouseVisualizer(backgroundColor: number) {
-    // Mouse
-    const mouseLed = new Array(9);
+    // Mouse, first set all to background color
+    const mouseLed = new Array(MOUSE_ROWS);
     for (let r = 0; r < 9; r++) {
-      mouseLed[r] = new Array(7);
+      mouseLed[r] = new Array(MOUSE_COLUMNS);
       for (let c = 0; c < 7; c++) {
         mouseLed[r][c] = backgroundColor;
       }
@@ -50,7 +50,7 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
     // Column 0 is left side
     // Column 6 is right side
     // Razer mamba only has 7 visible.
-    const amountOfRows = mapNumber(this.fftIntensity, 0, 255, 0, 7, true);
+    const amountOfRows = Math.round(mapNumber(this.fftIntensity, 0, 255, 0, 7, true));
     for (let r = 0; r < amountOfRows; r++) {
       mouseLed[r][0] = this._BGRIntegerForeground;
       mouseLed[r][6] = this._BGRIntegerForeground;
