@@ -65,19 +65,19 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   protected createKeyBoardVisualizer(backgroundColor: number) {
     const amountOfColumns = Math.round(mapNumber(this.fftIntensity, 255, 0, KEYBOARD_COLUMNS, 0, true));
 
-    const color = new Array(KEYBOARD_ROWS).fill(new Array(KEYBOARD_COLUMNS).fill(backgroundColor));
+    // const color = new Array(KEYBOARD_ROWS).fill(new Array(KEYBOARD_COLUMNS).fill(backgroundColor));
     const key = new Array(KEYBOARD_ROWS).fill(new Array(KEYBOARD_COLUMNS).fill(backgroundColor));
 
-    for (let r = 0; r < KEYBOARD_ROWS; r++) {
-      for (let c = 0; c < amountOfColumns; c++) {
-        key[r][c] = 0x01000000 | this._BGRIntegerForeground;
+    for (let row = 0; row < KEYBOARD_ROWS; row++) {
+      for (let column = 0; column < KEYBOARD_COLUMNS; column++) {
+        let color = this._BGRIntegerForeground;
+        if (column > amountOfColumns) color = backgroundColor;
+
+        key[row][column] = color;
       }
     }
 
-
-
-    const data = { color, key };
-    this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM_KEY, data).then();
+    this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM, key).then();
   }
 
 
