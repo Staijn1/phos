@@ -19,6 +19,8 @@ export class SpotifyAuthenticationCallbackComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.spotifyAuth.completeLogin().then(r => this.router.navigate(['/'])).catch(e => this.authenticationSuccessfull = false);
+    this.spotifyAuth.completeLogin()
+      .then(() => this.router.navigate(['/visualizer']))
+      .catch(() => this.authenticationSuccessfull = false);
   }
 }
