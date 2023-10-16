@@ -27,8 +27,6 @@ export class RestChromaConnectionService extends BaseChromaConnection {
 
     this.initializedURL = response.uri;
     this.isInitialized = true;
-
-    await this.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_STATIC, 255);
   }
 
   /**

@@ -2,12 +2,13 @@ import { inject, Injectable } from "@angular/core";
 import { MessageService } from "../message-service/message.service";
 import { Store } from "@ngrx/store";
 import { UserPreferences } from "../../shared/types/types";
-import { distinctUntilChanged, map } from "rxjs";
+import { combineLatest, debounceTime, distinctUntilChanged, map } from "rxjs";
 import { ChromaKeyboardEffectType } from "../old/chromaSDK/old-chroma-s-d-k.service";
 import { RazerChromaSDKTypes } from "./RazerChromaSDKTypes";
 import { ClientSideLedstripState } from "@angulon/interfaces";
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
 import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
+import { StaticChromaSDKEffect } from "./effects/StaticChromaSDKEffect";
 
 /**
  * Base class for Razer Chroma SDK integrations. With this integration we can control the RGB lights on Razer peripherals.
@@ -30,51 +31,65 @@ export abstract class BaseChromaConnection {
   };
 
   protected readonly messageService = inject(MessageService);
-  protected readonly store: Store<{ userPreferences: UserPreferences, ledstripState: ClientSideLedstripState }> = inject(Store);
+  protected readonly store: Store<{
+    userPreferences: UserPreferences,
+    ledstripState: ClientSideLedstripState
+  }> = inject(Store);
   protected heartbeatInterval: NodeJS.Timer | undefined;
   protected isInitialized = false;
   protected activeEffect: BaseChromaSDKEffect | undefined;
 
   constructor() {
     // Subscribes to changes in the user preferences to receive changes in the Chroma SDK setting
-    this.store.select("userPreferences")
-      .pipe(
+    combineLatest([
+      this.store.select("userPreferences").pipe(
         map(preferences => preferences.settings.chromaSupportEnabled),
         distinctUntilChanged()
-      ).subscribe(chromaSupportEnabled => {
-      this.toggleChromaSupport(chromaSupportEnabled);
-    });
-
-    this.store.select("ledstripState").pipe(
-      map(state => state.mode),
-      distinctUntilChanged()
-    ).subscribe(mode => {
-      const effect = ChromaEffectRegistery.getAssociatedEffectForMode(mode);
-      if (effect) this.activeEffect = effect;
-    });
+      ),
+      this.store.select("ledstripState").pipe(
+        map(state => state.mode),
+        distinctUntilChanged()
+      )
+    ])
+      .subscribe(([isChromaSupportEnabled, mode]) => {
+        this.toggleChromaSupport(isChromaSupportEnabled)
+          .then(() => {
+            const effect = ChromaEffectRegistery.getAssociatedEffectForMode(mode);
+            if (effect) this.activeEffect = effect;
+          });
+      });
 
     this.store.select("ledstripState").pipe(
       map(state => state.colors),
-      distinctUntilChanged()
+      distinctUntilChanged(),
+      debounceTime(20)
     ).subscribe(colors => {
       if (this.activeEffect) {
         this.activeEffect.updateEffect(colors);
       }
     });
+
+    this.registerEffects();
   }
 
   /**
-   * If the chroma SDK setting is disabled this function will destroy the connection to Razer if it was already set up.
-   * If the setting is enabled the connection to the Razer Chroma SDK will be set up.
+   * If the chroma SDK setting is disabled, this function will destroy the connection to Razer if it was already set up.
+   * If the setting is enabled, the connection to the Razer Chroma SDK will be set up.
    */
-  private toggleChromaSupport(chromaSupportEnabled: boolean): void {
+  private async toggleChromaSupport(chromaSupportEnabled: boolean): Promise<void> {
     if (chromaSupportEnabled && !this.isInitialized) {
       this.initialize()
-        .then(() => this.startHeartbeat())
+        .then(() => {
+          this.startHeartbeat();
+          return Promise.resolve();
+        })
         .catch(e => this.messageService.setMessage(e));
-    } else if (this.isInitialized) {
+    } else if (this.isInitialized && !chromaSupportEnabled) {
       this.unInitialize()
-        .then(() => clearInterval(this.heartbeatInterval))
+        .then(() => {
+          clearInterval(this.heartbeatInterval);
+          return Promise.resolve();
+        })
         .catch(e => this.messageService.setMessage(e));
     }
   }
@@ -142,11 +157,12 @@ export abstract class BaseChromaConnection {
 
   /**
    * Construct the payload for the keyboard effect
+   * Must be async because overriding methods create API calls
    * @param effect
    * @param payload Please refer to the Razer Chroma SDK documentation for the payload structure {@link https://assets.razerzone.com/dev_portal/REST/html/md__r_e_s_t_external_03_keyboard.html}
    * @protected
    */
-  createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): RazerChromaSDKTypes {
+  async createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): Promise<RazerChromaSDKTypes> {
     if (effect === ChromaKeyboardEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaKeyboardEffectType.CHROMA_CUSTOM && typeof payload === "object") {
@@ -212,4 +228,12 @@ export abstract class BaseChromaConnection {
       }
       return response.json();
     }*/
+
+  /**
+   * Registers all effects with the {@link ChromaEffectRegistery}
+   * @private
+   */
+  private registerEffects() {
+    ChromaEffectRegistery.registerEffect(0, new StaticChromaSDKEffect(this));
+  }
 }

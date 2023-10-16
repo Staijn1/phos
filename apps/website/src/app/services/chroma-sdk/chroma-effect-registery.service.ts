@@ -3,7 +3,7 @@ import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
 /**
  * This class is used to link a chroma effect with a ledstrip mode.
  */
-export class ChromaEffectRegistery {
+export class ChromaEffectRegistery{
   private static readonly EFFECTS: Map<number, BaseChromaSDKEffect> = new Map();
 
   /**
@@ -19,7 +19,7 @@ export class ChromaEffectRegistery {
    * @param mode
    * @param effectClass
    */
-  static registerEffect(mode: number, effectClass: BaseChromaSDKEffect) {
+  public static registerEffect(mode: number, effectClass: BaseChromaSDKEffect) {
     this.EFFECTS.set(mode, effectClass);
   }
 }
