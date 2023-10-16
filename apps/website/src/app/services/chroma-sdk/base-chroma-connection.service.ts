@@ -55,7 +55,11 @@ export abstract class BaseChromaConnection {
         this.toggleChromaSupport(isChromaSupportEnabled)
           .then(() => {
             const effect = ChromaEffectRegistery.getAssociatedEffectForMode(mode);
-            if (effect) this.activeEffect = effect;
+            if (effect) {
+              this.activeEffect?.onExit();
+              this.activeEffect = effect;
+              this.activeEffect.onEntry();
+            }
           });
       });
 
