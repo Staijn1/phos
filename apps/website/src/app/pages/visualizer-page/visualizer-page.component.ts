@@ -255,18 +255,24 @@ export class VisualizerPageComponent implements OnDestroy {
         this.albumCoverHTMLElement.src = albumCoverImageUrl;
 
         this.information.getColorsFromImageUrl(albumCoverImageUrl).then((colors) => {
-          const primaryColor = colors.Average.hex;
-          const secondaryColor = colors.Vibrant?.hex ?? "#000";
+          const primaryColor = new iro.Color(colors.Average.hex);
+          let secondaryColor = new iro.Color(colors.Vibrant?.hex ?? "#000");
+          // In case the difference in brightness between the primary and secondary color is too small, we will use black as the secondary color
+          if (Math.abs(primaryColor.value - secondaryColor.value) < 0.1) {
+            secondaryColor = new iro.Color("#000");
+          }
+
           const colorsStops: GradientColorStop[] = [
             {
-              color: primaryColor,
-              pos: 0
+              color: primaryColor.hexString,
+              pos: 1
             },
             {
-              color: secondaryColor,
-              pos: 1
+              color: secondaryColor.hexString,
+              pos: 0
             }
           ];
+
 
           const gradient: GradientOptions = {
             bgColor: "#000",
