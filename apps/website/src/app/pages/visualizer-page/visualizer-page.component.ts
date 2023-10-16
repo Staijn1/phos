@@ -157,7 +157,7 @@ export class VisualizerPageComponent implements OnDestroy {
       });
     }
   }
-  
+
   ngOnDestroy(): void {
     this.gradients = [];
     this.wakeLock?.release()
@@ -198,13 +198,13 @@ export class VisualizerPageComponent implements OnDestroy {
       let alpha = 1;
       if (this.visualizerOptions.radial) {
         imageSize = 275;
+        imageX = canvas.width / 2 - imageSize / 2;
+        imageY = canvas.height / 2 - imageSize / 2;
         ctx.beginPath();
-        ctx.arc(canvas.width / 2, canvas.height / 2, 130, 0, 2 * Math.PI);
+        ctx.arc(imageX + imageSize / 2, imageY + imageSize / 2, 130, 0, 2 * Math.PI);
         ctx.clip();
         ctx.stroke();
 
-        imageX = canvas.width / 2 - imageSize / 2;
-        imageY = canvas.height / 2 - imageSize / 2;
       } else {
         margin = 25;
         imageSize = 250;
