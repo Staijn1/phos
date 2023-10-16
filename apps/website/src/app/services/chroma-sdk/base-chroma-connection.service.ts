@@ -3,7 +3,7 @@ import { MessageService } from "../message-service/message.service";
 import { Store } from "@ngrx/store";
 import { UserPreferences } from "../../shared/types/types";
 import { combineLatest, debounceTime, distinctUntilChanged, map } from "rxjs";
-import { ChromaKeyboardEffectType } from "../old/chromaSDK/old-chroma-s-d-k.service";
+import { ChromaKeyboardEffectType, HeadsetEffect, MouseEffect } from "../old/chromaSDK/old-chroma-s-d-k.service";
 import { RazerChromaSDKTypes } from "./RazerChromaSDKTypes";
 import { ClientSideLedstripState } from "@angulon/interfaces";
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
@@ -11,7 +11,7 @@ import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
 import { StaticChromaSDKEffect } from "./effects/StaticChromaSDKEffect";
 
 /**
- * Base class for Razer Chroma SDK integrations. With this integration we can control the RGB lights on Razer peripherals.
+ * Base class for Razer Chroma SDK integrations. With this integration, we can control the RGB lights on Razer peripherals.
  * The Razer chroma SDK provides two types of connections: REST API & WebSocket.
  * To abstract away the connection type, this class provides a common interface for both types of connections, with some common methods already implemented.
  */
@@ -80,6 +80,14 @@ export abstract class BaseChromaConnection {
     this.registerEffects();
   }
 
+  /**
+   * Registers all effects with the {@link ChromaEffectRegistery}
+   * @private
+   */
+  private registerEffects() {
+    ChromaEffectRegistery.registerEffect(0, new StaticChromaSDKEffect(this));
+  }
+  
   /**
    * If the chroma SDK setting is disabled, this function will destroy the connection to Razer if it was already set up.
    * If the setting is enabled, the connection to the Razer Chroma SDK will be set up.
@@ -168,7 +176,6 @@ export abstract class BaseChromaConnection {
    * Must be async because overriding methods create API calls
    * @param effect
    * @param payload Please refer to the Razer Chroma SDK documentation for the payload structure {@link https://assets.razerzone.com/dev_portal/REST/html/md__r_e_s_t_external_03_keyboard.html}
-   * @protected
    */
   async createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): Promise<RazerChromaSDKTypes> {
     if (effect === ChromaKeyboardEffectType.CHROMA_NONE) {
@@ -184,64 +191,40 @@ export abstract class BaseChromaConnection {
     }
   }
 
-  /*  async createMouseEffect(effect: MouseEffect, data: any): Promise<any> {
-      if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
-        return;
-      }
-      let jsonObj;
-
-      if (effect === 'CHROMA_NONE') {
-        jsonObj = JSON.stringify({ effect });
-      } else if (effect === 'CHROMA_CUSTOM2') {
-        jsonObj = JSON.stringify({ effect, param: data });
-      } else if (effect === 'CHROMA_STATIC') {
-        const color = { color: data };
-        jsonObj = JSON.stringify({ effect, param: color });
-      }
-
-      const response = await fetch(`${this.initializedApiURL}/mouse`, {
-        method: 'PUT',
-        body: jsonObj,
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-      });
-
-      if (!response.ok) {
-        throw new Error('error! ' + response.status);
-      }
-      return response.json();
-    }
-
-    async createHeadsetEffect(effect: HeadsetEffect, data: any): Promise<any> {
-      let jsonObj;
-
-      if (effect === 'CHROMA_NONE') {
-        jsonObj = JSON.stringify({ effect });
-      } else if (effect === 'CHROMA_CUSTOM') {
-        jsonObj = JSON.stringify({ effect, param: data });
-      } else if (effect === 'CHROMA_STATIC') {
-        const color = { color: data };
-        jsonObj = JSON.stringify({ effect, param: color });
-      } else if (effect === 'CHROMA_CUSTOM_KEY') {
-        jsonObj = JSON.stringify({ effect, param: data });
-      }
-
-      const response = await fetch(`${this.initializedApiURL}/headset`, {
-        method: 'PUT',
-        body: jsonObj,
-        headers: { 'Content-type': 'application/json; charset=UTF-8' }
-      });
-
-      if (!response.ok) {
-        throw new Error('error! ' + response.status);
-      }
-      return response.json();
-    }*/
 
   /**
-   * Registers all effects with the {@link ChromaEffectRegistery}
-   * @private
+   * Construct the payload for the mouse effect
    */
-  private registerEffects() {
-    ChromaEffectRegistery.registerEffect(0, new StaticChromaSDKEffect(this));
+  async createMouseEffect(effect: MouseEffect, data: any): Promise<any> {
+    if (effect === "CHROMA_NONE") {
+      return { effect };
+    } else if (effect === "CHROMA_CUSTOM2" && typeof data === "object") {
+      return { effect, param: data };
+    } else if (effect === "CHROMA_STATIC" && typeof data === "number") {
+      const color = { color: data };
+      return { effect, param: color };
+    } else {
+      throw new Error(`The effect ${effect} with the received payload is not supported`);
+    }
+  }
+
+  /**
+   * Construct the payload for the headset effect
+   * @param effect
+   * @param data
+   */
+  async createHeadsetEffect(effect: HeadsetEffect, data: any): Promise<any> {
+    if (effect === "CHROMA_NONE") {
+      return { effect };
+    } else if (effect === "CHROMA_CUSTOM" && Array.isArray(data)) {
+      return { effect, param: data };
+    } else if (effect === "CHROMA_STATIC" && typeof data === "number") {
+      const color = { color: data };
+      return { effect, param: color };
+    } else if (effect === "CHROMA_CUSTOM_KEY" && typeof data === "object") {
+      return { effect, param: data };
+    } else {
+      throw new Error(`The effect ${effect} with the received payload is not supported`);
+    }
   }
 }
