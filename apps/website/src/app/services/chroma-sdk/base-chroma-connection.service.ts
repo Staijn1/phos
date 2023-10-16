@@ -3,12 +3,19 @@ import { MessageService } from "../message-service/message.service";
 import { Store } from "@ngrx/store";
 import { UserPreferences } from "../../shared/types/types";
 import { combineLatest, debounceTime, distinctUntilChanged, map } from "rxjs";
-import { ChromaKeyboardEffectType, ChromaHeadsetEffectType, ChromaMouseEffectType } from "../old/chromaSDK/old-chroma-s-d-k.service";
+import {
+  ChromaHeadsetEffectType,
+  ChromaKeyboardEffectType,
+  ChromaMouseEffectType
+} from "../old/chromaSDK/old-chroma-s-d-k.service";
 import { RazerChromaSDKTypes } from "./RazerChromaSDKTypes";
 import { ClientSideLedstripState } from "@angulon/interfaces";
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
 import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
 import { StaticChromaSDKEffect } from "./effects/StaticChromaSDKEffect";
+import { BaseReactiveChromaSDKEffect } from "./effects/BaseReactiveChromaSDKEffect";
+import { VisualizerChromaSDKEffect } from "./effects/VisualizerChromaSDKEffect";
+import { visualizerModeId } from "../../shared/constants";
 
 /**
  * Base class for Razer Chroma SDK integrations. With this integration, we can control the RGB lights on Razer peripherals.
@@ -39,6 +46,14 @@ export abstract class BaseChromaConnection {
   protected isInitialized = false;
   protected activeEffect: BaseChromaSDKEffect | undefined;
 
+  set intensity(value: number) {
+    if (
+      !(this.activeEffect instanceof BaseReactiveChromaSDKEffect) ||
+      !this.isInitialized ||
+      this.activeEffect.colors.length == 0) return;
+    this.activeEffect.fftIntensity = value;
+  }
+
   constructor() {
     // Subscribes to changes in the user preferences to receive changes in the Chroma SDK setting.
     // Also subscribes to changes in the LED strip state to receive changes in the mode.
@@ -52,30 +67,27 @@ export abstract class BaseChromaConnection {
       this.store.select("ledstripState").pipe(
         map(state => state.mode),
         distinctUntilChanged()
+      ),
+      this.store.select("ledstripState").pipe(
+        map(state => state.colors),
+        distinctUntilChanged(),
+        debounceTime(20)
       )
     ])
-      .subscribe(([isChromaSupportEnabled, mode]) => {
+      .subscribe(([isChromaSupportEnabled, mode, colors]) => {
         this.toggleChromaSupport(isChromaSupportEnabled)
           .then(() => {
+            if (!isChromaSupportEnabled) return;
+
             const effect = ChromaEffectRegistery.getAssociatedEffectForMode(mode);
             if (effect) {
               this.activeEffect?.onExit();
               this.activeEffect = effect;
+              this.activeEffect.colors = colors;
               this.activeEffect.onEntry();
             }
           });
       });
-
-    // Subcribes to changes in the colors to update the active effect with the new colors.
-    this.store.select("ledstripState").pipe(
-      map(state => state.colors),
-      distinctUntilChanged(),
-      debounceTime(20)
-    ).subscribe(colors => {
-      if (this.activeEffect && this.isInitialized) {
-        this.activeEffect.updateEffect(colors);
-      }
-    });
 
     this.registerEffects();
   }
@@ -86,6 +98,7 @@ export abstract class BaseChromaConnection {
    */
   private registerEffects() {
     ChromaEffectRegistery.registerEffect(0, new StaticChromaSDKEffect(this));
+    ChromaEffectRegistery.registerEffect(visualizerModeId, new VisualizerChromaSDKEffect(this));
   }
 
   /**
@@ -94,19 +107,13 @@ export abstract class BaseChromaConnection {
    */
   private async toggleChromaSupport(chromaSupportEnabled: boolean): Promise<void> {
     if (chromaSupportEnabled && !this.isInitialized) {
-      this.initialize()
-        .then(() => {
-          this.startHeartbeat();
-          return Promise.resolve();
-        })
-        .catch(e => this.messageService.setMessage(e));
+      await this.initialize();
+      this.startHeartbeat();
+      this.isInitialized = true;
     } else if (this.isInitialized && !chromaSupportEnabled) {
-      this.unInitialize()
-        .then(() => {
-          clearInterval(this.heartbeatInterval);
-          return Promise.resolve();
-        })
-        .catch(e => this.messageService.setMessage(e));
+      await this.unInitialize();
+      clearInterval(this.heartbeatInterval);
+      this.isInitialized = false;
     }
   }
 

@@ -10,8 +10,8 @@ export class StaticChromaSDKEffect extends BaseChromaSDKEffect {
   onExit(): void {
   }
 
-  updateEffect(colors: iro.Color[]): void {
-    this.setStatic(colors[0]);
+  updateEffect(): void {
+    this.setStatic(this.colors[0]);
   }
 
   setStatic(color: iro.Color): void {

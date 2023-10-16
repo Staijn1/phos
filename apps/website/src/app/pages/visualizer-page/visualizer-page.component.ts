@@ -9,7 +9,6 @@ import {
   faTimes,
   faWrench
 } from "@fortawesome/free-solid-svg-icons";
-import { OldChromaEffectService } from "../../services/old/chromaEffect/old-chroma-effect.service";
 import { VisualizerComponent } from "../../shared/components/visualizer/visualizer.component";
 import { GradientInformation, LedstripState } from "@angulon/interfaces";
 import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas.component";
@@ -32,6 +31,7 @@ import { SharedModule } from "../../shared/shared.module";
 import { SpotifyAuthenticationService } from "../../services/spotify-authentication/spotify-authentication.service";
 import { RegisterGradientAction } from "../../../redux/gradients/gradients.action";
 import iro from "@jaames/iro";
+import { BaseChromaConnection } from "../../services/chroma-sdk/base-chroma-connection.service";
 
 @Component({
   selector: "app-visualizer",
@@ -110,7 +110,7 @@ export class VisualizerPageComponent implements OnDestroy {
     private cdr: ChangeDetectorRef,
     private connection: WebsocketService,
     private information: InformationService,
-    private chromaEffect: OldChromaEffectService,
+    private chromaEffect: BaseChromaConnection,
     public spotifyAuth: SpotifyAuthenticationService,
     private store: Store<{
       ledstripState: LedstripState | undefined,
@@ -131,6 +131,8 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   init(): void {
+    this.store.dispatch(new ChangeVisualizerOptions({ onCanvasDraw: this.drawCallback.bind(this) }));
+
     combineLatest([
       this.store.select("userPreferences").pipe(map(userPref => userPref.visualizerOptions)),
       this.store.select("gradients").pipe(skipWhile(gradients => gradients.length === 0))])
@@ -142,12 +144,8 @@ export class VisualizerPageComponent implements OnDestroy {
 
         this.visualizerComponent.registerGradients(this.gradients);
         this.cdr.detectChanges();
-        // Set some overrides on the settings before applying
-        const settingsToApply = { ...visualizerOptions };
 
-        settingsToApply.onCanvasDraw = this.drawCallback.bind(this);
-
-        this.visualizerOptions = settingsToApply;
+        this.visualizerOptions = { ...visualizerOptions };
         this.cdr.detectChanges();
       });
 
@@ -176,10 +174,11 @@ export class VisualizerPageComponent implements OnDestroy {
     const canvas = instance.canvas;
 
     // Send the fft value to the ledstrip and update the chroma effect
-    const value = instance.getEnergy("bass");
-    this.connection.sendFFTValue(Math.floor(mapNumber(value, 0, 1, 0, 255)));
-    this.chromaEffect.intensity = value;
+    const mappedFFTValue = Math.floor(mapNumber(instance.getEnergy(this.visualizerOptions.energyPreset), 0, 1, 0, 255));
+    this.connection.sendFFTValue(mappedFFTValue);
 
+    // Update the chroma effect every X ms
+    this.chromaEffect.intensity = mappedFFTValue;
 
 
     // Draw the album cover of the current song on the canvas in the top right
@@ -248,7 +247,7 @@ export class VisualizerPageComponent implements OnDestroy {
           };
 
           this.store.dispatch(new ChangeLedstripColors([new iro.Color(primaryColor), new iro.Color(secondaryColor)]));
-          this.store.dispatch(new RegisterGradientAction({...gradient, name: "spotify", id: 999}));
+          this.store.dispatch(new RegisterGradientAction({ ...gradient, name: "spotify", id: 999 }));
 
           this.visualizerOptions.gradientLeft = "spotify";
           this.visualizerOptions.gradientRight = "spotify";
