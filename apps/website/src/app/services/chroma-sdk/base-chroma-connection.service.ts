@@ -17,6 +17,12 @@ import { StaticChromaSDKEffect } from "./effects/StaticChromaSDKEffect";
  */
 @Injectable({ providedIn: "root" })
 export abstract class BaseChromaConnection {
+  protected readonly messageService = inject(MessageService);
+  protected readonly store: Store<{
+    userPreferences: UserPreferences,
+    ledstripState: ClientSideLedstripState
+  }> = inject(Store);
+
   protected readonly APPLICATION_DATA = {
     title: "Phos",
     description: "Integrates with the Phos LED control application",
@@ -29,12 +35,6 @@ export abstract class BaseChromaConnection {
     ],
     category: "application"
   };
-
-  protected readonly messageService = inject(MessageService);
-  protected readonly store: Store<{
-    userPreferences: UserPreferences,
-    ledstripState: ClientSideLedstripState
-  }> = inject(Store);
   protected heartbeatInterval: NodeJS.Timer | undefined;
   protected isInitialized = false;
   protected activeEffect: BaseChromaSDKEffect | undefined;
