@@ -138,7 +138,7 @@ export class VisualizerPageComponent implements OnDestroy {
       this.store.select("gradients").pipe(skipWhile(gradients => gradients.length === 0))])
       .pipe(distinctUntilChanged())
       .subscribe(([visualizerOptions, gradients]) => {
-        // Create a clone otherwise you will receive "Object is not extensible" error if Audiomotion decides to update the gradient when registering it
+        // Create a clone otherwise you will receive "Object is not extensible" error if Audiomotion decides to update the gradient when registering it.
         // This method of assigning will also trigger change detection in the visualizer component, causing it to register the gradients
         this.gradients = structuredClone(gradients);
 
@@ -157,7 +157,7 @@ export class VisualizerPageComponent implements OnDestroy {
       });
     }
   }
-
+  
   ngOnDestroy(): void {
     this.gradients = [];
     this.wakeLock?.release()
@@ -170,8 +170,7 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
-    const ctx = instance.canvasCtx;
-    const canvas = instance.canvas;
+
 
     // Send the fft value to the ledstrip and update the chroma effect
     const mappedFFTValue = Math.floor(mapNumber(instance.getEnergy(this.visualizerOptions.energyPreset), 0, 1, 0, 255));
@@ -179,15 +178,43 @@ export class VisualizerPageComponent implements OnDestroy {
 
     // Update the chroma effect every X ms
     this.chromaEffect.intensity = mappedFFTValue;
+    this.drawAlbumCoverOnCanvas(instance);
+  }
 
-
+  /**
+   * Draw the album cover on the canvas when you are playing a song on spotify
+   * @param instance
+   * @private
+   */
+  private drawAlbumCoverOnCanvas(instance: AudioMotionAnalyzer) {
+    const ctx = instance.canvasCtx;
+    const canvas = instance.canvas;
     // Draw the album cover of the current song on the canvas in the top right
     if (this.spotifyPlaybackState && this.albumCoverHTMLElement) {
-      const margin = 25;
-      const imageSize = 250;
-      ctx.globalAlpha = .7;
-      this.albumCoverHTMLElement.style.borderRadius = getComputedStyle(document.documentElement).getPropertyValue("--rounded-btn") ?? 0;
-      ctx.drawImage(this.albumCoverHTMLElement, canvas.width - (margin + imageSize), margin, imageSize, imageSize);
+      let imageSize;
+      let margin = 0;
+      let imageX;
+      let imageY;
+      let alpha = 1;
+      if (this.visualizerOptions.radial) {
+        imageSize = 275;
+        ctx.beginPath();
+        ctx.arc(canvas.width / 2, canvas.height / 2, 130, 0, 2 * Math.PI);
+        ctx.clip();
+        ctx.stroke();
+
+        imageX = canvas.width / 2 - imageSize / 2;
+        imageY = canvas.height / 2 - imageSize / 2;
+      } else {
+        margin = 25;
+        imageSize = 250;
+        imageX = canvas.width - (margin + imageSize);
+        imageY = margin;
+        alpha = .7;
+      }
+
+      ctx.globalAlpha = alpha;
+      ctx.drawImage(this.albumCoverHTMLElement, imageX, imageY, imageSize, imageSize);
       ctx.globalAlpha = 1;
     }
   }
@@ -209,8 +236,8 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   /**
-   * Fired when the spotify player state changes
-   * This handler checks if the song has changed and if so, it will extract the average colors from the album cover
+   * Fired when the spotify player state changes.
+   * This handler checks if the song has changed and if so, it will extract the average colors from the album cover.
    * Then it creates a gradient from the colors and sets it as the current gradient in the visualizer
    * Then it will send the average colors to the ledstrip
    * @param state
