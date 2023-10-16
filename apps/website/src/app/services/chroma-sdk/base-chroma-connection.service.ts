@@ -72,7 +72,7 @@ export abstract class BaseChromaConnection {
       distinctUntilChanged(),
       debounceTime(20)
     ).subscribe(colors => {
-      if (this.activeEffect) {
+      if (this.activeEffect && this.isInitialized) {
         this.activeEffect.updateEffect(colors);
       }
     });
@@ -87,7 +87,7 @@ export abstract class BaseChromaConnection {
   private registerEffects() {
     ChromaEffectRegistery.registerEffect(0, new StaticChromaSDKEffect(this));
   }
-  
+
   /**
    * If the chroma SDK setting is disabled, this function will destroy the connection to Razer if it was already set up.
    * If the setting is enabled, the connection to the Razer Chroma SDK will be set up.
