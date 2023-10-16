@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
 import { calculateBGRInteger, color_wheel, convertRGBIntegerToArray } from '../../../../../shared/functions';
 import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
+import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class RainbowState extends State {
   private counter = 0;
@@ -25,9 +25,9 @@ export class RainbowState extends State {
         this.counter++;
         this.counter = this.counter % 255;
 
-        this._context.createHeadsetEffect(HeadsetEffect.CHROMA_STATIC, BGRInteger).then();
-        this._context.createKeyboardEffect(KeyboardEffect.CHROMA_STATIC, BGRInteger).then();
-        this._context.createMouseEffect(MouseEffect.CHROMA_STATIC, BGRInteger).then();
+        this._context.createHeadsetEffect(ChromaHeadsetEffectType.CHROMA_STATIC, BGRInteger).then();
+        this._context.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_STATIC, BGRInteger).then();
+        this._context.createMouseEffect(ChromaMouseEffectType.CHROMA_STATIC, BGRInteger).then();
       }, (Math.ceil(this._context.speed / 256)));
     }
   }

@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
 import { calculateBGRInteger, mapNumber } from '../../../../../shared/functions';
 import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
+import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class VisualizerState extends State {
   protected _BGRIntegerForeground = 0;
@@ -61,7 +61,7 @@ export class VisualizerState extends State {
     // Row 7 Column 3 has logo
     mouseLed[2][3] = this._BGRIntegerForeground;
     mouseLed[7][3] = this._BGRIntegerForeground;
-    this._context.createMouseEffect(MouseEffect.CHROMA_CUSTOM2, mouseLed).then();
+    this._context.createMouseEffect(ChromaMouseEffectType.CHROMA_CUSTOM2, mouseLed).then();
   }
 
   protected createKeyBoardVisualizer(backgroundColor: number) {
@@ -89,12 +89,12 @@ export class VisualizerState extends State {
     }
     const data = { color, key };
 
-    this._context.createKeyboardEffect(KeyboardEffect.CHROMA_CUSTOM_KEY, data).then();
+    this._context.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM_KEY, data).then();
   }
 
   protected createHeadsetVisualizer() {
     if (this._BGRIntegerForeground !== this._previousBGRIntegerForeground) {
-      this._context.createHeadsetEffect(HeadsetEffect.CHROMA_STATIC, this._BGRIntegerForeground).then();
+      this._context.createHeadsetEffect(ChromaHeadsetEffectType.CHROMA_STATIC, this._BGRIntegerForeground).then();
     }
   }
 }

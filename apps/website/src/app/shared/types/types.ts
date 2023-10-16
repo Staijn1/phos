@@ -1,7 +1,7 @@
 import { Options } from 'audiomotion-analyzer';
 
 
-export interface AngulonVisualizerOptions extends Options {
+export interface AngulonVisualizerOptions extends Omit<Options, "gradient"> {
   energyPreset?: 'peak' | 'bass' | 'lowMid' | 'mid' | 'highMid' | 'treble';
 }
 

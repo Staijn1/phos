@@ -5,18 +5,12 @@
         <h1 class="tw-text-center">Settings</h1>
       </div>
       <div>
-        <div class="input-group mb-3">
-          Todo: Add support for chroma back in
-          <div class="form-check">
-            <input [(ngModel)]="settings.chromaSupportEnabled" class="form-check-input" id="chromaSupportEnabled"
-                   name="chromaSupportEnabled"
-                   type="checkbox"
-                   disabled
-            >
-            <label class="form-check-label" for="chromaSupportEnabled">
-              Enable chroma support
-            </label>
-          </div>
+        <div class="tw-form-control tw-w-full md:tw-w-1/4">
+          <label class="tw-label tw-cursor-pointer" for="chromaSupportEnabled">
+            <span>Enable chroma support</span>
+            <input [(ngModel)]="settings.chromaSupportEnabled"
+                   class="tw-checkbox tw-checkbox-sm tw-checkbox-primary" type="checkbox" id="chromaSupportEnabled" name="chromaSupportEnabled" />
+          </label>
         </div>
       </div>
       <div>

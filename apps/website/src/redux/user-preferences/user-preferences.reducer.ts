@@ -12,7 +12,6 @@ const defaultUserPreferences: UserPreferences = {
     bgAlpha: 0.7,
     fftSize: 8192,
     fillAlpha: 1,
-    gradient: "classic",
     lineWidth: 0,
     loRes: false,
     lumiBars: false,
@@ -43,8 +42,13 @@ const defaultUserPreferences: UserPreferences = {
 };
 
 const initialState: UserPreferences = loadObjectFromLocalStorage("userPreferences", defaultUserPreferences);
-if (initialState.visualizerOptions.gradient === "spotify") {
-  initialState.visualizerOptions.gradient = "classic";
+
+if (initialState.visualizerOptions.gradientLeft === "spotify") {
+  initialState.visualizerOptions.gradientLeft = "classic";
+}
+
+if (initialState.visualizerOptions.gradientRight === "spotify") {
+  initialState.visualizerOptions.gradientRight = "classic";
 }
 
 export const userPreferencesReducer = (state: UserPreferences = initialState, action: any): UserPreferences => {

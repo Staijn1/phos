@@ -1,6 +1,6 @@
 import { State } from '../abstract/state';
 import { color_wheel, randomInteger } from '../../../../../shared/functions';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
+import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class SingleDynamicState extends State {
   private interval: string | number | NodeJS.Timeout | undefined;
@@ -19,16 +19,16 @@ export class SingleDynamicState extends State {
         const randomKeyboardRow = randomInteger(0, this._context.keyboard.rows - 1);
         const randomKeyboardColumn = randomInteger(0, this._context.keyboard.columns - 1);
         this._context.keyboardColors[randomKeyboardRow][randomKeyboardColumn] = color_wheel(randomInteger(0, 255));
-        this._context.createKeyboardEffect(KeyboardEffect.CHROMA_CUSTOM, this._context.keyboardColors).then();
+        this._context.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM, this._context.keyboardColors).then();
 
         const randomMouseRow = randomInteger(0, this._context.mouse.rows - 1);
         const randomMouseColumn = randomInteger(0, this._context.mouse.columns - 1);
         this._context.mouseColors[randomMouseRow][randomMouseColumn] = color_wheel(randomInteger(0, 255));
-        this._context.createMouseEffect(MouseEffect.CHROMA_CUSTOM2, this._context.mouseColors).then();
+        this._context.createMouseEffect(ChromaMouseEffectType.CHROMA_CUSTOM2, this._context.mouseColors).then();
 
         const randomIndex = randomInteger(0, this._context.headset.amount - 1);
         this.headsetColors[randomIndex] = color_wheel(randomInteger(0, 255));
-        this._context.createHeadsetEffect(HeadsetEffect.CHROMA_CUSTOM, this.headsetColors).then();
+        this._context.createHeadsetEffect(ChromaHeadsetEffectType.CHROMA_CUSTOM, this.headsetColors).then();
       }, this._context.speed);
     }
   }

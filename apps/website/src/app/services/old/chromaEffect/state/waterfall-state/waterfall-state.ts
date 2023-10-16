@@ -1,7 +1,7 @@
 import { State } from '../abstract/state';
 import { calculateBGRInteger, ColdColor, mapNumber, qadd8, qsub8, randomInteger } from '../../../../../shared/functions';
 import iro from '@jaames/iro';
-import { HeadsetEffect, KeyboardEffect, MouseEffect } from '../../../chromaSDK/old-chroma-s-d-k.service';
+import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from '../../../chromaSDK/old-chroma-s-d-k.service';
 
 export class WaterfallState extends State {
   readonly COOLING = 55;
@@ -22,7 +22,7 @@ export class WaterfallState extends State {
         this.waterfallMouse();
 
         const headsetColors = this._context.keyboardColors[0].splice(0, this._context.headset.amount);
-        this._context.createHeadsetEffect(HeadsetEffect.CHROMA_CUSTOM, headsetColors);
+        this._context.createHeadsetEffect(ChromaHeadsetEffectType.CHROMA_CUSTOM, headsetColors);
       }, this._context.speed / this._context.keyboard.columns);
     }
   }
@@ -70,7 +70,7 @@ export class WaterfallState extends State {
       }
     }
 
-    this._context.createKeyboardEffect(KeyboardEffect.CHROMA_CUSTOM, this._context.keyboardColors).then();
+    this._context.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM, this._context.keyboardColors).then();
   }
 
   private waterfallMouse(): void {
@@ -93,7 +93,7 @@ export class WaterfallState extends State {
       }
     }
 
-    this._context.createMouseEffect(MouseEffect.CHROMA_CUSTOM2, this._context.mouseColors).then();
+    this._context.createMouseEffect(ChromaMouseEffectType.CHROMA_CUSTOM2, this._context.mouseColors).then();
   }
 
   private ignite(arrayToManipulate: number[], maxLeds: number, bottom: number): void {

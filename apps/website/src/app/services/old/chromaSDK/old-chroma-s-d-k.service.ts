@@ -4,21 +4,21 @@ import { Store } from '@ngrx/store';
 import { UserPreferences } from '../../../shared/types/types';
 import { distinctUntilChanged, map } from 'rxjs';
 
-export enum KeyboardEffect {
+export enum ChromaKeyboardEffectType {
   CHROMA_CUSTOM_KEY = 'CHROMA_CUSTOM_KEY',
   CHROMA_STATIC = 'CHROMA_STATIC',
   CHROMA_CUSTOM = 'CHROMA_CUSTOM',
   CHROMA_NONE = 'CHROMA_NONE',
 }
 
-export enum HeadsetEffect {
+export enum ChromaHeadsetEffectType {
   CHROMA_CUSTOM_KEY = 'CHROMA_CUSTOM_KEY',
   CHROMA_STATIC = 'CHROMA_STATIC',
   CHROMA_CUSTOM = 'CHROMA_CUSTOM',
   CHROMA_NONE = 'CHROMA_NONE',
 }
 
-export enum MouseEffect {
+export enum ChromaMouseEffectType {
   CHROMA_NONE = 'CHROMA_NONE',
   CHROMA_CUSTOM2 = 'CHROMA_CUSTOM2',
   CHROMA_STATIC = 'CHROMA_STATIC',
@@ -146,7 +146,7 @@ export class OldChromaSDKService {
     });
   }
 
-  async createKeyboardEffect(effect: KeyboardEffect, data: any): Promise<any> {
+  async createKeyboardEffect(effect: ChromaKeyboardEffectType, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return;
     }
@@ -175,7 +175,7 @@ export class OldChromaSDKService {
     return response.json();
   }
 
-  async createMouseEffect(effect: MouseEffect, data: any): Promise<any> {
+  async createMouseEffect(effect: ChromaMouseEffectType, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return;
     }
@@ -202,7 +202,7 @@ export class OldChromaSDKService {
     return response.json();
   }
 
-  async createHeadsetEffect(effect: HeadsetEffect, data: any): Promise<any> {
+  async createHeadsetEffect(effect: ChromaHeadsetEffectType, data: any): Promise<any> {
     if (this.initializedApiURL === undefined || this.initializedApiURL === null) {
       return;
     }

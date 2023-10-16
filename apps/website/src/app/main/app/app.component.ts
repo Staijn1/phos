@@ -1,13 +1,14 @@
-import { Component, OnInit } from '@angular/core';
-import { SwUpdate } from '@angular/service-worker';
-import { MessageService } from '../../services/message-service/message.service';
-import { ThemeService } from '../../services/theme/theme.service';
-import { Message } from '../../shared/types/Message';
-import { swipeRight } from '@angulon/ui';
+import {Component, OnInit} from '@angular/core';
+import {SwUpdate} from '@angular/service-worker';
+import {MessageService} from '../../services/message-service/message.service';
+import {ThemeService} from '../../services/theme/theme.service';
+import {Message} from '../../shared/types/Message';
+import {swipeRight} from '@angulon/ui';
 import * as AOS from 'aos';
-import { debounceTime } from 'rxjs';
-import { UserPreferences } from '../../shared/types/types';
-import { Store } from '@ngrx/store';
+import {debounceTime} from 'rxjs';
+import {UserPreferences} from '../../shared/types/types';
+import {Store} from '@ngrx/store';
+import {BaseChromaConnection} from "../../services/chroma-sdk/base-chroma-connection.service";
 
 @Component({
   selector: 'app-root',
@@ -16,9 +17,14 @@ import { Store } from '@ngrx/store';
   styleUrls: ['./app.component.scss']
 })
 export class AppComponent implements OnInit {
-  constructor(readonly updates: SwUpdate, public errorService: MessageService, private theme: ThemeService, private readonly store: Store<{
-    userPreferences: UserPreferences
-  }>) {
+  constructor(
+    public readonly errorService: MessageService,
+    private readonly updates: SwUpdate,
+    private readonly theme: ThemeService,
+    private readonly chromaConnection: BaseChromaConnection,
+    private readonly store: Store<{
+      userPreferences: UserPreferences
+    }>) {
     // Subscribe to all changes in the user preferences so we can write the current state to local storage
     store.select('userPreferences')
       .pipe(debounceTime(500))
