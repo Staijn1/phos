@@ -1,6 +1,6 @@
 import {Injectable} from '@angular/core';
 import {BaseChromaConnection} from "./base-chroma-connection.service";
-import {ChromaKeyboardEffectType} from "../old/chromaSDK/old-chroma-s-d-k.service";
+import { ChromaKeyboardEffectType, HeadsetEffect, MouseEffect } from "../old/chromaSDK/old-chroma-s-d-k.service";
 import {RazerChromaSDKTypes} from "./RazerChromaSDKTypes";
 
 @Injectable({
@@ -101,6 +101,30 @@ export class RestChromaConnectionService extends BaseChromaConnection {
   override async createKeyboardEffect(effectType: ChromaKeyboardEffectType, keyboardData: any): Promise<RazerChromaSDKTypes> {
     const effect = await super.createKeyboardEffect(effectType, keyboardData);
     await this.call("/keyboard", effect, {method: "PUT"});
+
+    return effect;
+  }
+
+  /**
+   * Overrides the default implementation to create the effect and then send it to the Razer Chroma SDK
+   * @param effectType
+   * @param mouseData
+   */
+  override async createMouseEffect(effectType: MouseEffect, mouseData: any): Promise<RazerChromaSDKTypes> {
+    const effect = await super.createMouseEffect(effectType, mouseData);
+    await this.call("/mouse", effect, {method: "PUT"});
+
+    return effect;
+  }
+
+  /**
+   * Overrides the default implementation to create the effect and then send it to the Razer Chroma SDK
+   * @param effectType
+   * @param headsetData
+   */
+  override async createHeadsetEffect(effectType: HeadsetEffect, headsetData: any): Promise<RazerChromaSDKTypes> {
+    const effect = await super.createHeadsetEffect(effectType, headsetData);
+    await this.call("/headset", effect, {method: "PUT"});
 
     return effect;
   }
