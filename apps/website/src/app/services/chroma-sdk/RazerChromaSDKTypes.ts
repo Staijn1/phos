@@ -15,3 +15,7 @@ export type KeyboardLayout =
   ]
 
 export type KeyboardRow = [number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number, number]
+
+export const KEYBOARD_ROWS = 6;
+
+export const KEYBOARD_COLUMNS = 22;
