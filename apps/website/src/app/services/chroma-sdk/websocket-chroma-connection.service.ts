@@ -1,6 +1,6 @@
-import {Injectable} from '@angular/core';
-import {BaseChromaConnection} from "./base-chroma-connection.service";
-import {io, Socket} from "socket.io-client";
+import { Injectable } from "@angular/core";
+import { BaseChromaConnection } from "./base-chroma-connection.service";
+import { Socket } from "socket.io-client";
 
 @Injectable({
   providedIn: 'root'
@@ -34,18 +34,18 @@ export class WebsocketChromaConnectionService extends BaseChromaConnection {
     });*/
 
 
-    return Promise.reject("Not implemented");
+    return Promise.reject(new Error("Not implemented"));
   }
 
   performHeartbeat(): Promise<void> {
-    return Promise.reject("Not implemented");
+    return Promise.reject(new Error("Not implemented"));
   }
 
   unInitialize(): Promise<void> {
-    return Promise.reject("Not implemented");
+    return Promise.reject(new Error("Not implemented"));
   }
 
   override call(endpoint: string, payload: unknown): Promise<unknown> {
-    return Promise.reject("Not implemented");
+    return Promise.reject(new Error("Not implemented"));
   }
 }

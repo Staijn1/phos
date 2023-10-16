@@ -1,9 +1,9 @@
-import { AfterViewInit, Component, Input } from '@angular/core';
-import iro from '@jaames/iro';
-import { IroColorPicker } from '@jaames/iro/dist/ColorPicker';
-import { Store } from '@ngrx/store';
-import { ChangeLedstripColors } from '../../../../redux/ledstrip/ledstrip.action';
-import { ClientSideLedstripState, LedstripState } from "@angulon/interfaces";
+import { AfterViewInit, Component, Input } from "@angular/core";
+import iro from "@jaames/iro";
+import { IroColorPicker } from "@jaames/iro/dist/ColorPicker";
+import { Store } from "@ngrx/store";
+import { ChangeLedstripColors } from "../../../../redux/ledstrip/ledstrip.action";
+import { ClientSideLedstripState } from "@angulon/interfaces";
 
 @Component({
   selector: 'app-colorpicker',
