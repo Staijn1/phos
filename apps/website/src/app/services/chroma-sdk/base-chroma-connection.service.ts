@@ -3,7 +3,7 @@ import { MessageService } from "../message-service/message.service";
 import { Store } from "@ngrx/store";
 import { UserPreferences } from "../../shared/types/types";
 import { combineLatest, debounceTime, distinctUntilChanged, map } from "rxjs";
-import { ChromaKeyboardEffectType, HeadsetEffect, MouseEffect } from "../old/chromaSDK/old-chroma-s-d-k.service";
+import { ChromaKeyboardEffectType, ChromaHeadsetEffectType, ChromaMouseEffectType } from "../old/chromaSDK/old-chroma-s-d-k.service";
 import { RazerChromaSDKTypes } from "./RazerChromaSDKTypes";
 import { ClientSideLedstripState } from "@angulon/interfaces";
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
@@ -195,12 +195,12 @@ export abstract class BaseChromaConnection {
   /**
    * Construct the payload for the mouse effect
    */
-  async createMouseEffect(effect: MouseEffect, data: any): Promise<RazerChromaSDKTypes> {
-    if (effect === MouseEffect.CHROMA_NONE) {
+  async createMouseEffect(effect: ChromaMouseEffectType, data: any): Promise<RazerChromaSDKTypes> {
+    if (effect === ChromaMouseEffectType.CHROMA_NONE) {
       return { effect };
-    } else if (effect === MouseEffect.CHROMA_CUSTOM2 && typeof data === "object") {
+    } else if (effect === ChromaMouseEffectType.CHROMA_CUSTOM2 && typeof data === "object") {
       return { effect, param: data };
-    } else if (effect === MouseEffect.CHROMA_STATIC && typeof data === "number") {
+    } else if (effect === ChromaMouseEffectType.CHROMA_STATIC && typeof data === "number") {
       const color = { color: data };
       return { effect, param: color };
     } else {
@@ -213,15 +213,15 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param data
    */
-  async createHeadsetEffect(effect: HeadsetEffect, data: any): Promise<RazerChromaSDKTypes> {
-    if (effect === HeadsetEffect.CHROMA_NONE) {
+  async createHeadsetEffect(effect: ChromaHeadsetEffectType, data: any): Promise<RazerChromaSDKTypes> {
+    if (effect === ChromaHeadsetEffectType.CHROMA_NONE) {
       return { effect };
-    } else if (effect === HeadsetEffect.CHROMA_CUSTOM && Array.isArray(data)) {
+    } else if (effect === ChromaHeadsetEffectType.CHROMA_CUSTOM && Array.isArray(data)) {
       return { effect, param: data };
-    } else if (effect === HeadsetEffect.CHROMA_STATIC && typeof data === "number") {
+    } else if (effect === ChromaHeadsetEffectType.CHROMA_STATIC && typeof data === "number") {
       const color = { color: data };
       return { effect, param: color };
-    } else if (effect === HeadsetEffect.CHROMA_CUSTOM_KEY && typeof data === "object") {
+    } else if (effect === ChromaHeadsetEffectType.CHROMA_CUSTOM_KEY && typeof data === "object") {
       return { effect, param: data };
     } else {
       throw new Error(`The effect ${effect} with the received payload is not supported`);
