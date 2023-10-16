@@ -40,7 +40,10 @@ export abstract class BaseChromaConnection {
   protected activeEffect: BaseChromaSDKEffect | undefined;
 
   constructor() {
-    // Subscribes to changes in the user preferences to receive changes in the Chroma SDK setting
+    // Subscribes to changes in the user preferences to receive changes in the Chroma SDK setting.
+    // Also subscribes to changes in the LED strip state to receive changes in the mode.
+    // That way we can initialize/uninitialize the Chroma SDK when the setting is changed,
+    // and also look up the associated effect for the selected mode and activate it immediately.
     combineLatest([
       this.store.select("userPreferences").pipe(
         map(preferences => preferences.settings.chromaSupportEnabled),
@@ -63,6 +66,7 @@ export abstract class BaseChromaConnection {
           });
       });
 
+    // Subcribes to changes in the colors to update the active effect with the new colors.
     this.store.select("ledstripState").pipe(
       map(state => state.colors),
       distinctUntilChanged(),
