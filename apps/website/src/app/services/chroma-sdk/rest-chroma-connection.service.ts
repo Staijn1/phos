@@ -26,7 +26,6 @@ export class RestChromaConnectionService extends BaseChromaConnection {
       true) as { uri: string, sessionid: string };
 
     this.initializedURL = response.uri;
-    this.isInitialized = true;
   }
 
   /**
@@ -42,9 +41,6 @@ export class RestChromaConnectionService extends BaseChromaConnection {
    * Stop the connection with the Razer SDK
    */
   async unInitialize(): Promise<void> {
-    // print callstack
-    console.trace();
-
     await this.call("", undefined, {
       method: "DELETE"
     });
