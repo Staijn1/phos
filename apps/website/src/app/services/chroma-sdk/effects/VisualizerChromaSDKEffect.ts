@@ -6,7 +6,7 @@ import {
   ChromaMouseEffectType
 } from "../../old/chromaSDK/old-chroma-s-d-k.service";
 import { BaseReactiveChromaSDKEffect } from "./BaseReactiveChromaSDKEffect";
-import { KEYBOARD_COLUMNS, KEYBOARD_ROWS } from "../RazerChromaSDKTypes";
+import { KEYBOARD_COLUMNS, KEYBOARD_ROWS, MOUSE_COLUMNS, MOUSE_ROWS } from "../RazerChromaSDKTypes";
 
 export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   protected _BGRIntegerForeground = 0;
@@ -50,10 +50,10 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
     // Column 0 is left side
     // Column 6 is right side
     // Razer mamba only has 7 visible.
-    const amountOfRows = mapNumber(this.fftIntensity, 0, 1, 0, 7, true);
+    const amountOfRows = mapNumber(this.fftIntensity, 0, 255, 0, 7, true);
     for (let r = 0; r < amountOfRows; r++) {
       mouseLed[r][0] = this._BGRIntegerForeground;
-      mouseLed[r][KEYBOARD_ROWS] = this._BGRIntegerForeground;
+      mouseLed[r][6] = this._BGRIntegerForeground;
     }
     // Row 2 Column 3 has wheel
     // Row 7 Column 3 has logo
@@ -61,6 +61,7 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
     mouseLed[7][3] = this._BGRIntegerForeground;
     this.connection.createMouseEffect(ChromaMouseEffectType.CHROMA_CUSTOM2, mouseLed).then();
   }
+
 
   protected createKeyBoardVisualizer(backgroundColor: number) {
     const amountOfColumns = Math.round(mapNumber(this.fftIntensity, 255, 0, KEYBOARD_COLUMNS, 0, true));
