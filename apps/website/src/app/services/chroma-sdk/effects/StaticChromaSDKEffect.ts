@@ -16,8 +16,7 @@ export class StaticChromaSDKEffect extends BaseChromaSDKEffect {
 
   setStatic(color: iro.Color): void {
     const BGRColor = calculateBGRInteger(color.red, color.green, color.blue);
-    this.connection
-      .createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_STATIC, BGRColor);
+    this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_STATIC, BGRColor);
     this.connection.createHeadsetEffect(HeadsetEffect.CHROMA_STATIC, BGRColor);
     this.connection.createMouseEffect(MouseEffect.CHROMA_STATIC, BGRColor);
   }
