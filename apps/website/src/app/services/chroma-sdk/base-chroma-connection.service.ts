@@ -148,7 +148,7 @@ export abstract class BaseChromaConnection {
     this.heartbeatInterval = setInterval(() => {
       // Perform the heartbet and if it fails, try to restart the connection
       this.performHeartbeat()
-        .catch(e => {
+        .catch(() => {
           // Attempt to restart the connection when the connection fails
           this.unInitialize().then(() => this.toggleChromaSupport(true));
         }).catch(e => {
@@ -195,12 +195,12 @@ export abstract class BaseChromaConnection {
   /**
    * Construct the payload for the mouse effect
    */
-  async createMouseEffect(effect: MouseEffect, data: any): Promise<any> {
-    if (effect === "CHROMA_NONE") {
+  async createMouseEffect(effect: MouseEffect, data: any): Promise<RazerChromaSDKTypes> {
+    if (effect === MouseEffect.CHROMA_NONE) {
       return { effect };
-    } else if (effect === "CHROMA_CUSTOM2" && typeof data === "object") {
+    } else if (effect === MouseEffect.CHROMA_CUSTOM2 && typeof data === "object") {
       return { effect, param: data };
-    } else if (effect === "CHROMA_STATIC" && typeof data === "number") {
+    } else if (effect === MouseEffect.CHROMA_STATIC && typeof data === "number") {
       const color = { color: data };
       return { effect, param: color };
     } else {
@@ -213,15 +213,15 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param data
    */
-  async createHeadsetEffect(effect: HeadsetEffect, data: any): Promise<any> {
-    if (effect === "CHROMA_NONE") {
+  async createHeadsetEffect(effect: HeadsetEffect, data: any): Promise<RazerChromaSDKTypes> {
+    if (effect === HeadsetEffect.CHROMA_NONE) {
       return { effect };
-    } else if (effect === "CHROMA_CUSTOM" && Array.isArray(data)) {
+    } else if (effect === HeadsetEffect.CHROMA_CUSTOM && Array.isArray(data)) {
       return { effect, param: data };
-    } else if (effect === "CHROMA_STATIC" && typeof data === "number") {
+    } else if (effect === HeadsetEffect.CHROMA_STATIC && typeof data === "number") {
       const color = { color: data };
       return { effect, param: color };
-    } else if (effect === "CHROMA_CUSTOM_KEY" && typeof data === "object") {
+    } else if (effect === HeadsetEffect.CHROMA_CUSTOM_KEY && typeof data === "object") {
       return { effect, param: data };
     } else {
       throw new Error(`The effect ${effect} with the received payload is not supported`);
