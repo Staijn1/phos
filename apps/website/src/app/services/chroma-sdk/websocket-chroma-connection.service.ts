@@ -9,7 +9,7 @@ export class WebsocketChromaConnectionService extends BaseChromaConnection {
   private connection!: Socket;
 
   getChromaSDKUrl(): string {
-    return "wss://chromasdk.io:13339/razer/chromasdk";
+    return "ws://localhost:13344/razer/stream";
   }
 
   /**
