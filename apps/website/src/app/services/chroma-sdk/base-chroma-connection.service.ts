@@ -16,6 +16,7 @@ import { StaticChromaSDKEffect } from "./effects/StaticChromaSDKEffect";
 import { BaseReactiveChromaSDKEffect } from "./effects/BaseReactiveChromaSDKEffect";
 import { VisualizerChromaSDKEffect } from "./effects/VisualizerChromaSDKEffect";
 import { visualizerModeId } from "../../shared/constants";
+import { VisualizerBrightnessChromaSDKEffect } from "./effects/VisualizerBrightnessChromaSDKEffect";
 
 /**
  * Base class for Razer Chroma SDK integrations. With this integration, we can control the RGB lights on Razer peripherals.
@@ -98,6 +99,7 @@ export abstract class BaseChromaConnection {
   private registerEffects() {
     ChromaEffectRegistery.registerEffect(0, new StaticChromaSDKEffect(this));
     ChromaEffectRegistery.registerEffect(visualizerModeId, new VisualizerChromaSDKEffect(this));
+    ChromaEffectRegistery.registerEffect(visualizerModeId + 1, new VisualizerBrightnessChromaSDKEffect(this));
   }
 
   /**
