@@ -155,10 +155,13 @@ export abstract class BaseChromaConnection {
     this.heartbeatInterval = setInterval(() => {
       // Perform the heartbet and if it fails, try to restart the connection
       this.performHeartbeat()
-        .catch(() => {
+        .catch((e) => {
+          console.warn("Failed to perform heartbeat", e);
+
           // Attempt to restart the connection when the connection fails
           this.unInitialize().then(() => this.toggleChromaSupport(true));
         }).catch(e => {
+        console.warn("Failed to restart connection", e);
         this.messageService.setMessage({
           message: "Failed to perform ChromaSDK Heartbeat. Is Razer Synapse still running?",
           name: "CHROMA_SDK_HEARTBEAT_FAILED"
