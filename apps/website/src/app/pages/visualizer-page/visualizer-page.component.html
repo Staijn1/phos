@@ -9,9 +9,14 @@
         <button class="tw-btn tw-btn-primary tw-join-item" (click)="fullscreen()">
           <fa-icon [icon]="fullscreenIcon"></fa-icon>
         </button>
-        <button class="tw-btn tw-btn-primary tw-join-item" (click)="updateLedstrip()">
-          <fa-icon [icon]="modeIcon"></fa-icon>
-        </button>
+        <div class="tw-dropdown">
+          <label tabindex="0" class="tw-btn tw-btn-primary  tw-join-item"><fa-icon [icon]="modeIcon"></fa-icon></label>
+          <ul tabindex="0" class="tw-dropdown-content z-[1] tw-menu tw-p-2 tw-shadow tw-bg-base-100 tw-rounded-box tw-w-52">
+            <li *ngFor="let mode of reactiveModes">
+              <a (click)="setMode(mode.mode)">{{mode.name}}</a>
+            </li>
+          </ul>
+        </div>
       </div>
     </div>
   </div>
@@ -76,7 +81,7 @@
             </label>
             <select (change)="applySettings()" [(ngModel)]="visualizerOptions.mode"
                     class="tw-select focus:tw-select-primary tw-select-bordered">
-              <option *ngFor="let mode of modes" [ngValue]="mode.value">{{mode.text}}</option>
+              <option *ngFor="let mode of visualizerModes" [ngValue]="mode.value">{{mode.text}}</option>
             </select>
           </div>
 

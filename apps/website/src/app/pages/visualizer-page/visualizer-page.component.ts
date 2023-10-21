@@ -10,7 +10,7 @@ import {
   faWrench
 } from "@fortawesome/free-solid-svg-icons";
 import { VisualizerComponent } from "../../shared/components/visualizer/visualizer.component";
-import { GradientInformation, LedstripState } from "@angulon/interfaces";
+import { GradientInformation, LedstripState, ModeInformation } from "@angulon/interfaces";
 import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas.component";
 import * as slider from "ngx-slider-v2";
 import { NgxSliderModule } from "ngx-slider-v2";
@@ -32,6 +32,7 @@ import { SpotifyAuthenticationService } from "../../services/spotify-authenticat
 import { RegisterGradientAction } from "../../../redux/gradients/gradients.action";
 import iro from "@jaames/iro";
 import { BaseChromaConnection } from "../../services/chroma-sdk/base-chroma-connection.service";
+import { ChromaEffectRegistery } from "../../services/chroma-sdk/chroma-effect-registery.service";
 
 @Component({
   selector: "app-visualizer",
@@ -48,7 +49,7 @@ export class VisualizerPageComponent implements OnDestroy {
   // Gradient definitions
   gradients: GradientInformation[] = [];
   // Visualization modes
-  modes = [
+  visualizerModes = [
     { value: 0, text: "Discrete frequencies", disabled: false },
     { value: 1, text: "1/24th octave bands", disabled: false },
     { value: 2, text: "1/12th octave bands", disabled: false },
@@ -104,6 +105,7 @@ export class VisualizerPageComponent implements OnDestroy {
   private currentTrackId: string | null | undefined;
   private spotifyPlaybackState: Spotify.PlaybackState | undefined;
   private albumCoverHTMLElement: HTMLImageElement | undefined;
+  public reactiveModes: ModeInformation[] = [];
 
 
   constructor(
@@ -115,7 +117,8 @@ export class VisualizerPageComponent implements OnDestroy {
     private store: Store<{
       ledstripState: LedstripState | undefined,
       gradients: GradientInformation[],
-      userPreferences: UserPreferences
+      userPreferences: UserPreferences,
+      modes: ModeInformation[],
     }>
   ) {
   }
@@ -126,12 +129,18 @@ export class VisualizerPageComponent implements OnDestroy {
    */
   get isOctaveBandMode() {
     const currentMode = this.visualizerOptions.mode;
-    const mode = this.modes.find((mode) => mode.value === currentMode);
+    const mode = this.visualizerModes.find((mode) => mode.value === currentMode);
     return mode?.text.includes("octave");
   }
 
   init(): void {
     this.store.dispatch(new ChangeVisualizerOptions({ onCanvasDraw: this.drawCallback.bind(this) }));
+
+    this.store.select("modes").subscribe(modes => {
+      const reactiveModesById = ChromaEffectRegistery.getAllReactiveModeIds();
+      // For each id find the corresponding mode object
+      this.reactiveModes = modes.filter(mode => reactiveModesById.includes(mode.mode));
+    });
 
     combineLatest([
       this.store.select("userPreferences").pipe(map(userPref => userPref.visualizerOptions)),
@@ -164,11 +173,7 @@ export class VisualizerPageComponent implements OnDestroy {
       .then()
       .catch((error: Error) => console.error("Failed to release wake lock", error));
   }
-
-  updateLedstrip(): void {
-    this.store.dispatch(new ChangeLedstripMode(visualizerModeId));
-  }
-
+  
   drawCallback(instance: AudioMotionAnalyzer): void {
     // Send the fft value to the ledstrip and update the chroma effect
     const mappedFFTValue = Math.floor(mapNumber(instance.getEnergy(this.visualizerOptions.energyPreset), 0, 1, 0, 255));
@@ -294,5 +299,9 @@ export class VisualizerPageComponent implements OnDestroy {
    */
   selectTab(index: number) {
     this.activeTab = index;
+  }
+
+  setMode(mode: number) {
+    this.store.dispatch(new ChangeLedstripMode(mode));
   }
 }
