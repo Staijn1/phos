@@ -170,8 +170,6 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
-
-
     // Send the fft value to the ledstrip and update the chroma effect
     const mappedFFTValue = Math.floor(mapNumber(instance.getEnergy(this.visualizerOptions.energyPreset), 0, 1, 0, 255));
     this.connection.sendFFTValue(mappedFFTValue);
