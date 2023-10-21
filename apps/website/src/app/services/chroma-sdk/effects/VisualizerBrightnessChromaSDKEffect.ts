@@ -8,12 +8,12 @@ export class VisualizerBrightnessChromaSDKEffect extends BaseReactiveChromaSDKEf
 
 
   updateEffect(): void {
-    this.createVisualizer(this.colors[0]);
+    this.createVisualizer(new iro.Color(this.colors[0]));
   }
 
-  createVisualizer(foregroundColor: iro.Color): void {
-    foregroundColor.value = mapNumber(this.fftIntensity, 0, 255, 0, 100, true);
-    this._BGRIntegerForeground = calculateBGRInteger(foregroundColor.red, foregroundColor.green, foregroundColor.blue);
+  createVisualizer(color: iro.Color): void {
+    color.value = mapNumber(this.fftIntensity, 0, 255, 0, 100, true);
+    this._BGRIntegerForeground = calculateBGRInteger(color.red, color.green, color.blue);
 
     this.createKeyBoardVisualizer(this._BGRIntegerForeground);
     this.createMouseVisualizer(this._BGRIntegerForeground);
@@ -27,12 +27,12 @@ export class VisualizerBrightnessChromaSDKEffect extends BaseReactiveChromaSDKEf
   }
 
   protected createMouseVisualizer(color: number) {
-    this.connection.createMouseEffect(ChromaMouseEffectType.CHROMA_CUSTOM2, color).then();
+    this.connection.createMouseEffect(ChromaMouseEffectType.CHROMA_STATIC, color).then();
   }
 
 
   protected createKeyBoardVisualizer(color: number) {
-    this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM, color).then();
+    this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_STATIC, color).then();
   }
 
 
