@@ -1,9 +1,10 @@
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
+import { BaseReactiveChromaSDKEffect } from "./effects/BaseReactiveChromaSDKEffect";
 
 /**
  * This class is used to link a chroma effect with a ledstrip mode.
  */
-export class ChromaEffectRegistery{
+export class ChromaEffectRegistery {
   private static readonly EFFECTS: Map<number, BaseChromaSDKEffect> = new Map();
 
   /**
@@ -21,5 +22,15 @@ export class ChromaEffectRegistery{
    */
   public static registerEffect(mode: number, effectClass: BaseChromaSDKEffect) {
     this.EFFECTS.set(mode, effectClass);
+  }
+
+  /**
+   * Returns all the chroma effects that are an instance of the ReactiveEffect class.
+   * @constructor
+   */
+  public static getAllReactiveModeIds(): number[] {
+    return Array.from(this.EFFECTS.keys()).filter((key) => {
+      return this.EFFECTS.get(key) instanceof BaseReactiveChromaSDKEffect;
+    });
   }
 }
