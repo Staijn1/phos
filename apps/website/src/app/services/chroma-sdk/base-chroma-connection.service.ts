@@ -42,7 +42,6 @@ export abstract class BaseChromaConnection {
     ],
     category: "application"
   };
-  protected heartbeatInterval: NodeJS.Timer | undefined;
   protected isInitialized = false;
   protected activeEffect: BaseChromaSDKEffect | undefined;
 
@@ -105,14 +104,12 @@ export abstract class BaseChromaConnection {
    * If the chroma SDK setting is disabled, this function will destroy the connection to Razer if it was already set up.
    * If the setting is enabled, the connection to the Razer Chroma SDK will be set up.
    */
-  private async toggleChromaSupport(chromaSupportEnabled: boolean): Promise<void> {
+  protected async toggleChromaSupport(chromaSupportEnabled: boolean): Promise<void> {
     if (chromaSupportEnabled && !this.isInitialized) {
       await this.initialize();
-      this.startHeartbeat();
       this.isInitialized = true;
     } else if (this.isInitialized && !chromaSupportEnabled) {
       await this.unInitialize();
-      clearInterval(this.heartbeatInterval);
       this.isInitialized = false;
     }
   }
@@ -133,53 +130,11 @@ export abstract class BaseChromaConnection {
   abstract getChromaSDKUrl(): string;
 
   /**
-   * Implement this method to keep the connection alive with the Razer SDK
-   */
-  abstract performHeartbeat(): Promise<void>
-
-  /**
    * Executes an endpoint
    * @param endpoint
    * @param payload
    */
   abstract call(endpoint: string, payload: unknown): Promise<unknown>;
-
-  /**
-   * After initializing, the connection should send a heartbeat to the Razer SDK every {@link HEARTBEAT_INTERVAL_MS} milliseconds.
-   * This method starts the interval that sends the heartbeat
-   * Also see {@link performHeartbeat}
-   * @private
-   */
-  private startHeartbeat(): void {
-    clearInterval(this.heartbeatInterval);
-    this.heartbeatInterval = setInterval(() => {
-      // Perform the heartbet and if it fails, try to restart the connection
-      this.performHeartbeat()
-        .catch((e) => {
-          console.warn("Failed to perform heartbeat", e);
-
-          // Attempt to restart the connection when the connection fails
-          this.unInitialize().then(() => this.toggleChromaSupport(true));
-        }).catch(e => {
-        console.warn("Failed to restart connection", e);
-        this.messageService.setMessage({
-          message: "Failed to perform ChromaSDK Heartbeat. Is Razer Synapse still running?",
-          name: "CHROMA_SDK_HEARTBEAT_FAILED"
-        });
-        console.error(e);
-      });
-    }, this.HEARTBEAT_INTERVAL_MS);
-  }
-
-  /**
-   * Returns a value in milliseconds for how often the heartbeat should be sent to the Razer SDK (see  {@link performHeartbeat})
-   * If this value is too high, the connection will be lost
-   * If this value is too low, the Razer SDK will consume more resources than necessary
-   * In case the default value needs overriding, override this method in the child class
-   */
-  protected get HEARTBEAT_INTERVAL_MS(): number {
-    return 5000;
-  }
 
   /**
    * Construct the payload for the keyboard effect

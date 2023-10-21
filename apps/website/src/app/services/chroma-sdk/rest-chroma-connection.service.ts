@@ -8,7 +8,7 @@ import {RazerChromaSDKTypes} from "./RazerChromaSDKTypes";
 })
 export class RestChromaConnectionService extends BaseChromaConnection {
   private initializedURL: string | undefined;
-
+  private heartbeatInterval: NodeJS.Timer | undefined;
   getChromaSDKUrl(): string {
     if (this.isInitialized) return this.initializedURL as string;
     return "http://localhost:54235/razer/chromasdk";
@@ -25,8 +25,47 @@ export class RestChromaConnectionService extends BaseChromaConnection {
       },
       true) as { uri: string, sessionid: string };
 
+    this.startHeartbeat();
     this.initializedURL = response.uri;
   }
+
+  /**
+   * After initializing, the connection should send a heartbeat to the Razer SDK every {@link HEARTBEAT_INTERVAL_MS} milliseconds.
+   * This method starts the interval that sends the heartbeat
+   * Also see {@link performHeartbeat}
+   * @private
+   */
+  private startHeartbeat(): void {
+    clearInterval(this.heartbeatInterval);
+    this.heartbeatInterval = setInterval(() => {
+      // Perform the heartbet and if it fails, try to restart the connection
+      this.performHeartbeat()
+        .catch((e) => {
+          console.warn("Failed to perform heartbeat", e);
+
+          // Attempt to restart the connection when the connection fails
+          this.unInitialize().then(() => this.toggleChromaSupport(true));
+        }).catch(e => {
+        console.warn("Failed to restart connection", e);
+        this.messageService.setMessage({
+          message: "Failed to perform ChromaSDK Heartbeat. Is Razer Synapse still running?",
+          name: "CHROMA_SDK_HEARTBEAT_FAILED"
+        });
+        console.error(e);
+      });
+    }, this.HEARTBEAT_INTERVAL_MS);
+  }
+
+  /**
+   * Returns a value in milliseconds for how often the heartbeat should be sent to the Razer SDK (see  {@link performHeartbeat})
+   * If this value is too high, the connection will be lost
+   * If this value is too low, the Razer SDK will consume more resources than necessary
+   * In case the default value needs overriding, override this method in the child class
+   */
+  protected get HEARTBEAT_INTERVAL_MS(): number {
+    return 5000;
+  }
+
 
   /**
    * @inheritDoc

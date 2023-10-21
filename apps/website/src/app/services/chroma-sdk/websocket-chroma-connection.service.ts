@@ -37,13 +37,6 @@ export class WebsocketChromaConnectionService extends BaseChromaConnection {
     };
   }
 
-  /**
-   * Not required for the websocket implementation
-   */
-  performHeartbeat(): Promise<void> {
-    return Promise.resolve();
-  }
-
   unInitialize(): Promise<void> {
     console.log("Closing connection to Chroma SDK at " + this.connection.url);
     this.connection.close(1000, "Closing connection");
