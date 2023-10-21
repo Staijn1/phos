@@ -27,10 +27,6 @@ export class WebsocketChromaConnectionService extends BaseChromaConnection {
       this.connection.send(JSON.stringify(this.APPLICATION_DATA));
     };
 
-    this.connection.onmessage = (message) => {
-      console.log("received:", message.data);
-    };
-
     this.connection.onerror = (error) => {
       console.error(`Failed to connect to websocket at ${this.connection.url}`, error);
       return Promise.reject(error);
@@ -74,7 +70,6 @@ export class WebsocketChromaConnectionService extends BaseChromaConnection {
     };
 
     this.connection.send(JSON.stringify(payload));
-    console.log("sent:", payload);
     return Promise.resolve();
   }
 }
