@@ -1,4 +1,4 @@
-import { Component, ElementRef, Input, OnInit, ViewChild } from "@angular/core";
+import { AfterViewInit, Component, ElementRef, Input, ViewChild } from "@angular/core";
 import { CommonModule } from "@angular/common";
 import { gsap } from "gsap";
 
@@ -9,7 +9,7 @@ import { gsap } from "gsap";
   templateUrl: "./radial-progress.component.html",
   styleUrls: ["./radial-progress.component.scss"]
 })
-export class RadialProgressComponent implements OnInit {
+export class RadialProgressComponent implements AfterViewInit {
   @ViewChild("radialContainer") radialContainer!: ElementRef;
   @ViewChild("numberContainer") numberContainer!: ElementRef;
   @Input() size = "8em";
@@ -27,7 +27,7 @@ export class RadialProgressComponent implements OnInit {
   }
 
 
-  ngOnInit(): void {
+  ngAfterViewInit(): void {
     this.animatePercentageChange();
   }
 
