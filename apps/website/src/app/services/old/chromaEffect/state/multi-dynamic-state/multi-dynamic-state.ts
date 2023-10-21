@@ -1,6 +1,10 @@
 import { State } from '../abstract/state';
 import { color_wheel, randomInteger } from '../../../../../shared/functions';
-import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from '../../../chromaSDK/old-chroma-s-d-k.service';
+import {
+  ChromaHeadsetEffectType,
+  ChromaKeyboardEffectType,
+  ChromaMouseEffectType
+} from "../../../../chroma-sdk/RazerChromaSDKTypes";
 
 export class MultiDynamicState extends State {
   private headsetColors = [0, 0, 0, 0, 0];

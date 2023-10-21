@@ -3,9 +3,9 @@ import { BaseChromaConnection } from "./base-chroma-connection.service";
 import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
-  ChromaMouseEffectType
-} from "../old/chromaSDK/old-chroma-s-d-k.service";
-import { RazerChromaSDKTypes } from "./RazerChromaSDKTypes";
+  ChromaMouseEffectType,
+  RazerChromaSDKTypes
+} from "./RazerChromaSDKTypes";
 
 @Injectable({
   providedIn: "root"
@@ -25,10 +25,6 @@ export class WebsocketChromaConnectionService extends BaseChromaConnection {
     this.connection.onopen = () => {
       console.log("Connected to Chroma SDK at " + this.connection.url);
       this.connection.send(JSON.stringify(this.APPLICATION_DATA));
-    };
-
-    this.connection.onmessage = (message) => {
-      console.log("received:", message.data);
     };
 
     this.connection.onerror = (error) => {
@@ -74,7 +70,6 @@ export class WebsocketChromaConnectionService extends BaseChromaConnection {
     };
 
     this.connection.send(JSON.stringify(payload));
-    console.log("sent:", payload);
     return Promise.resolve();
   }
 }

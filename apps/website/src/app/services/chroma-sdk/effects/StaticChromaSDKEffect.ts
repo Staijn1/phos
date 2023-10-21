@@ -1,7 +1,7 @@
 import iro from "@jaames/iro";
 import { BaseChromaSDKEffect } from "./BaseChromaSDKEffect";
 import { calculateBGRInteger } from "../../../shared/functions";
-import { ChromaKeyboardEffectType, ChromaHeadsetEffectType, ChromaMouseEffectType } from "../../old/chromaSDK/old-chroma-s-d-k.service";
+import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from "../RazerChromaSDKTypes";
 
 export class StaticChromaSDKEffect extends BaseChromaSDKEffect {
   onEntry(): void {

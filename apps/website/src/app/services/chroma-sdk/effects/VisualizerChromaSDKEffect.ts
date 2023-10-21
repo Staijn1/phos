@@ -1,16 +1,17 @@
 import iro from "@jaames/iro";
 import { calculateBGRInteger, mapNumber } from "../../../shared/functions";
-import {
-  ChromaHeadsetEffectType,
-  ChromaKeyboardEffectType,
-  ChromaMouseEffectType
-} from "../../old/chromaSDK/old-chroma-s-d-k.service";
 import { BaseReactiveChromaSDKEffect } from "./BaseReactiveChromaSDKEffect";
-import { KEYBOARD_COLUMNS, KEYBOARD_ROWS, MOUSE_COLUMNS, MOUSE_ROWS, MouseLayout } from "../RazerChromaSDKTypes";
+import {
+  ChromaHeadsetEffectType, ChromaKeyboardEffectType,
+  ChromaMouseEffectType,
+  KEYBOARD_COLUMNS,
+  KEYBOARD_ROWS,
+  MOUSE_COLUMNS,
+  MOUSE_ROWS
+} from "../RazerChromaSDKTypes";
 
 export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   protected _BGRIntegerForeground = 0;
-  protected _previousIntensity!: number;
   private _BGIntegerBackground = 0;
 
   updateEffect(): void {
@@ -20,11 +21,6 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   createVisualizer(foregroundColor: iro.Color, backgroundColor: iro.Color): void {
     this._BGRIntegerForeground = calculateBGRInteger(foregroundColor.red, foregroundColor.green, foregroundColor.blue);
     this._BGIntegerBackground = calculateBGRInteger(backgroundColor.red, backgroundColor.green, backgroundColor.blue);
-
-    // Nothing changed so let's not waste resources to set the same effect again.
-    if (this.fftIntensity === this._previousIntensity) return;
-
-    this._previousIntensity = this.fftIntensity;
 
     this.createKeyBoardVisualizer(this._BGIntegerBackground);
     this.createMouseVisualizer(this._BGIntegerBackground);
