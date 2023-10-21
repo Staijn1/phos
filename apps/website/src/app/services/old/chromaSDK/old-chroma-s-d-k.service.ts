@@ -1,28 +1,13 @@
-import { Injectable } from '@angular/core';
-import { MessageService } from '../../message-service/message.service';
-import { Store } from '@ngrx/store';
-import { UserPreferences } from '../../../shared/types/types';
-import { distinctUntilChanged, map } from 'rxjs';
-
-export enum ChromaKeyboardEffectType {
-  CHROMA_CUSTOM_KEY = 'CHROMA_CUSTOM_KEY',
-  CHROMA_STATIC = 'CHROMA_STATIC',
-  CHROMA_CUSTOM = 'CHROMA_CUSTOM',
-  CHROMA_NONE = 'CHROMA_NONE',
-}
-
-export enum ChromaHeadsetEffectType {
-  CHROMA_CUSTOM_KEY = 'CHROMA_CUSTOM_KEY',
-  CHROMA_STATIC = 'CHROMA_STATIC',
-  CHROMA_CUSTOM = 'CHROMA_CUSTOM',
-  CHROMA_NONE = 'CHROMA_NONE',
-}
-
-export enum ChromaMouseEffectType {
-  CHROMA_NONE = 'CHROMA_NONE',
-  CHROMA_CUSTOM2 = 'CHROMA_CUSTOM2',
-  CHROMA_STATIC = 'CHROMA_STATIC',
-}
+import { Injectable } from "@angular/core";
+import { MessageService } from "../../message-service/message.service";
+import { Store } from "@ngrx/store";
+import { UserPreferences } from "../../../shared/types/types";
+import { distinctUntilChanged, map } from "rxjs";
+import {
+  ChromaHeadsetEffectType,
+  ChromaKeyboardEffectType,
+  ChromaMouseEffectType
+} from "../../chroma-sdk/RazerChromaSDKTypes";
 
 /**
  * This class contains the necessary methods to register this application with the Razer SDK and to keep the connection alive (or destroy it)

@@ -60,10 +60,7 @@ export class ModePageComponent implements OnDestroy {
   selectedMode = 0;
 
 
-  constructor(
-    private readonly chromaService: OldChromaEffectService,
-    private readonly store: Store<{ modes: ModeInformation[], ledstripState: LedstripState | undefined }>,
-    public readonly themeService: ThemeService) {
+  constructor(private readonly store: Store<{ modes: ModeInformation[], ledstripState: LedstripState | undefined }>) {
     this.store.select('modes').subscribe(modes => this.modes = modes);
 
     combineLatest([this.store.select('ledstripState'), this.store.select('modes')]).subscribe(([ledstripState, modes]) => {

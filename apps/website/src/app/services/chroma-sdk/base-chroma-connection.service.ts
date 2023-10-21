@@ -6,9 +6,9 @@ import { combineLatest, debounceTime, distinctUntilChanged, map } from "rxjs";
 import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
-  ChromaMouseEffectType
-} from "../old/chromaSDK/old-chroma-s-d-k.service";
-import { RazerChromaSDKTypes } from "./RazerChromaSDKTypes";
+  ChromaMouseEffectType,
+  RazerChromaSDKTypes
+} from "./RazerChromaSDKTypes";
 import { ClientSideLedstripState } from "@angulon/interfaces";
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
 import { ChromaEffectRegistery } from "./chroma-effect-registery.service";

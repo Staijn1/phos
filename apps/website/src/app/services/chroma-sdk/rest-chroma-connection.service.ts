@@ -1,7 +1,11 @@
 import {Injectable} from '@angular/core';
 import {BaseChromaConnection} from "./base-chroma-connection.service";
-import { ChromaKeyboardEffectType, ChromaHeadsetEffectType, ChromaMouseEffectType } from "../old/chromaSDK/old-chroma-s-d-k.service";
-import {RazerChromaSDKTypes} from "./RazerChromaSDKTypes";
+import {
+  ChromaHeadsetEffectType,
+  ChromaKeyboardEffectType,
+  ChromaMouseEffectType,
+  RazerChromaSDKTypes
+} from "./RazerChromaSDKTypes";
 
 @Injectable({
   providedIn: 'root'

@@ -1,7 +1,11 @@
 import { State } from '../abstract/state';
 import { calculateBGRInteger, color_wheel, convertRGBIntegerToArray } from '../../../../../shared/functions';
 import iro from '@jaames/iro';
-import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from '../../../chromaSDK/old-chroma-s-d-k.service';
+import {
+  ChromaHeadsetEffectType,
+  ChromaKeyboardEffectType,
+  ChromaMouseEffectType
+} from "../../../../chroma-sdk/RazerChromaSDKTypes";
 
 export class RainbowState extends State {
   private counter = 0;

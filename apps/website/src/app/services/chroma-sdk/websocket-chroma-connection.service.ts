@@ -3,9 +3,9 @@ import { BaseChromaConnection } from "./base-chroma-connection.service";
 import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
-  ChromaMouseEffectType
-} from "../old/chromaSDK/old-chroma-s-d-k.service";
-import { RazerChromaSDKTypes } from "./RazerChromaSDKTypes";
+  ChromaMouseEffectType,
+  RazerChromaSDKTypes
+} from "./RazerChromaSDKTypes";
 
 @Injectable({
   providedIn: "root"
