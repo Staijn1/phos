@@ -2,14 +2,14 @@
   <div class="toolbar-container">
     <div class="toolbar">
       <!--      Button group-->
-      <div class="tw-btn-group">
-        <button (click)="toggleSettingsWindow()" class="tw-btn tw-btn-primary" type="button">
+      <div class="tw-join">
+        <button class="tw-btn tw-btn-primary tw-join-item" (click)="toggleSettingsWindow()">
           <fa-icon [icon]="settingsIcon"></fa-icon>
         </button>
-        <button (click)="fullscreen()" class="tw-btn tw-btn-primary">
+        <button class="tw-btn tw-btn-primary tw-join-item" (click)="fullscreen()">
           <fa-icon [icon]="fullscreenIcon"></fa-icon>
         </button>
-        <button (click)="updateLedstrip()" class="tw-btn tw-btn-primary">
+        <button class="tw-btn tw-btn-primary tw-join-item" (click)="updateLedstrip()">
           <fa-icon [icon]="modeIcon"></fa-icon>
         </button>
       </div>
@@ -20,8 +20,8 @@
   </div>
 </div>
 <app-offcanvas position="right" width="300px">
-  <div class="p-1 tw-flex tw-justify-between tw-w-full" header>
-    <h3>Settings</h3>
+  <div class="p-1 tw-flex tw-justify-between tw-w-full tw-items-center" header>
+    <h3 class="tw-text-2xl">Settings</h3>
     <button (click)="closeOffcanvas()" class="tw-btn tw-btn-outline tw-btn-primary" type="button">
       <fa-icon [icon]="closeIcon"></fa-icon>
     </button>
@@ -334,7 +334,8 @@
               With the Spotify Integration, the visualizer and ledstrip(s) will automatically adjust to the dominant
               colors in the album-cover of the song you are currently listening.
             </p>
-            <p class="tw-mt-5">To get started, log in first. Then, in the Spotify app select "Phos" under the list of devices. Then let the magic happen!</p>
+            <p class="tw-mt-5">To get started, log in first. Then, in the Spotify app select "Phos" under the list of
+              devices. Then let the magic happen!</p>
           </div>
         </div>
       </div>

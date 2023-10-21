@@ -3,13 +3,15 @@ import { LedstripState } from "@angulon/interfaces";
 import { Store } from "@ngrx/store";
 import { MAXIMUM_BRIGHTNESS, SPEED_MAXIMUM_INTERVAL_MS } from "../../shared/constants";
 import { DecimalPipe } from "@angular/common";
+import { RadialProgressComponent } from "../../shared/components/radialprogress/radial-progress.component";
 
 @Component({
   selector: "app-home",
   templateUrl: "./home-page.component.html",
   styleUrls: ["./home-page.component.scss"],
   imports: [
-    DecimalPipe
+    DecimalPipe,
+    RadialProgressComponent
   ],
   standalone: true
 })

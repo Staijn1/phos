@@ -1,4 +1,4 @@
-export type RazerChromaSDKTypes = unknown;
+export type RazerChromaSDKTypes = Record<string, unknown>;
 
 /**
  * The keyboard layout is a 2D array of numbers where each number represents a key on the keyboard

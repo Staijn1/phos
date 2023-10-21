@@ -1,0 +1,9 @@
+<div
+  #radialContainer
+  class="tw-text-center tw-radial-progress"
+  [style.--size]="size"
+  [style.--thickness]="thickness"
+>
+  {{label}} <br/>
+  {{percentage | number: "1.0-0"}}%
+</div>

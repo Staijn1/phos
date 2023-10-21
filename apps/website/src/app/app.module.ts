@@ -17,6 +17,7 @@ import {gradientsReducer} from '../redux/gradients/gradients.reducer';
 import {userPreferencesReducer} from '../redux/user-preferences/user-preferences.reducer';
 import {BaseChromaConnection} from "./services/chroma-sdk/base-chroma-connection.service";
 import {RestChromaConnectionService} from "./services/chroma-sdk/rest-chroma-connection.service";
+import { WebsocketChromaConnectionService } from "./services/chroma-sdk/websocket-chroma-connection.service";
 
 const StoreDevtools = StoreDevtoolsModule.instrument();
 @NgModule({
@@ -49,7 +50,7 @@ const StoreDevtools = StoreDevtoolsModule.instrument();
   providers: [
     {
       provide: BaseChromaConnection,
-      useClass: RestChromaConnectionService
+      useClass: WebsocketChromaConnectionService
     }
   ]
 })
