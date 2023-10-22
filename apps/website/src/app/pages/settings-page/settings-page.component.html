@@ -1,18 +1,20 @@
-<div class="tw-container">
-  <form #form="ngForm" class="tw-card">
-    <div *ngIf="settings" class="tw-card-body">
-      <div class="tw-card-title tw-divide-y">
-        <h1 class="tw-text-center">Settings</h1>
-      </div>
-
-      <div class="tw-grid tw-grid-cols-12">
-        <div class="tw-col-span-2">
+<div class="tw-container tw-my-10">
+  <form #form="ngForm" class="tw-card tw-min-h-screen">
+    <div *ngIf="settings" class="tw-p-3 md:tw-p-10 tw-card-body">
+      <div class="tw-grid tw-grid-cols-3 md:tw-grid-cols-12 tw-h-full">
+        <div class="tw-col-span-1  md:tw-col-span-2 tw-flex tw-flex-col tw-justify-between tw-h-full">
           <ul class="tw-menu">
+            <li class="tw-menu-title">Settings</li>
             <li (click)="selectMenu(0)"><a [class.tw-active]="activeMenu === 0">General Settings</a></li>
             <li (click)="selectMenu(1)"><a [class.tw-active]="activeMenu === 1">Theme</a></li>
           </ul>
+          <button (click)="clearSettings()" class="tw-btn tw-btn-secondary" type="button">
+            <fa-icon [icon]="clearSettingsIcon"></fa-icon>
+            Reset defaults
+          </button>
         </div>
-        <div class="tw-col-span-10">
+
+        <div class="tw-col-span-2 md:tw-col-span-10">
           <div class="menu-content" [class.active-content]="activeMenu === 0">
             <div class="tw-form-control tw-w-full md:tw-w-1/4">
               <label class="tw-label tw-cursor-pointer" for="chromaSupportEnabled">
@@ -24,7 +26,6 @@
             </div>
           </div>
           <div class="menu-content" [class.active-content]="activeMenu === 1">
-            Theme:
             <div
               class="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-6 tw-gap-3 tw-sm:grid-cols-2 tw-justify-center">
               <app-theme-visualization
@@ -36,13 +37,8 @@
               </app-theme-visualization>
             </div>
           </div>
-          <div class="tw-flex tw-justify-between">
-            <button (click)="clearSettings()" class="tw-btn tw-btn-secondary" type="button">
-              <fa-icon [icon]="clearSettingsIcon"></fa-icon>
-              Reset defaults
-            </button>
-          </div>
         </div>
+
       </div>
     </div>
   </form>
