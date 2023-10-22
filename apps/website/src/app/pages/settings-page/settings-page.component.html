@@ -4,32 +4,45 @@
       <div class="tw-card-title tw-divide-y">
         <h1 class="tw-text-center">Settings</h1>
       </div>
-      <div>
-        <div class="tw-form-control tw-w-full md:tw-w-1/4">
-          <label class="tw-label tw-cursor-pointer" for="chromaSupportEnabled">
-            <span>Enable chroma support</span>
-            <input [(ngModel)]="settings.chromaSupportEnabled"
-                   class="tw-checkbox tw-checkbox-sm tw-checkbox-primary" type="checkbox" id="chromaSupportEnabled" name="chromaSupportEnabled" />
-          </label>
+
+      <div class="tw-grid tw-grid-cols-12">
+        <div class="tw-col-span-2">
+          <ul class="tw-menu">
+            <li (click)="selectMenu(0)"><a [class.tw-active]="activeMenu === 0">General Settings</a></li>
+            <li (click)="selectMenu(1)"><a [class.tw-active]="activeMenu === 1">Theme</a></li>
+          </ul>
         </div>
-      </div>
-      <div>
-        Theme:
-        <div class="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-6 tw-gap-3 tw-sm:grid-cols-2 tw-justify-center">
-          <app-theme-visualization
-            *ngFor="let availableTheme of availableThemes"
-            [themeName]="availableTheme"
-            class="theme-visualization"
-            [class.active]="availableTheme === settings.theme"
-          >
-          </app-theme-visualization>
+        <div class="tw-col-span-10">
+          <div class="menu-content" [class.active-content]="activeMenu === 0">
+            <div class="tw-form-control tw-w-full md:tw-w-1/4">
+              <label class="tw-label tw-cursor-pointer" for="chromaSupportEnabled">
+                <span>Enable chroma support</span>
+                <input [(ngModel)]="settings.chromaSupportEnabled"
+                       class="tw-checkbox tw-checkbox-sm tw-checkbox-primary" type="checkbox" id="chromaSupportEnabled"
+                       name="chromaSupportEnabled"/>
+              </label>
+            </div>
+          </div>
+          <div class="menu-content" [class.active-content]="activeMenu === 1">
+            Theme:
+            <div
+              class="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-6 tw-gap-3 tw-sm:grid-cols-2 tw-justify-center">
+              <app-theme-visualization
+                *ngFor="let availableTheme of availableThemes"
+                [themeName]="availableTheme"
+                class="theme-visualization"
+                [class.active-theme]="availableTheme === settings.theme"
+              >
+              </app-theme-visualization>
+            </div>
+          </div>
+          <div class="tw-flex tw-justify-between">
+            <button (click)="clearSettings()" class="tw-btn tw-btn-secondary" type="button">
+              <fa-icon [icon]="clearSettingsIcon"></fa-icon>
+              Reset defaults
+            </button>
+          </div>
         </div>
-      </div>
-      <div class="tw-flex tw-justify-between">
-        <button (click)="clearSettings()" class="tw-btn tw-btn-secondary" type="button">
-          <fa-icon [icon]="clearSettingsIcon"></fa-icon>
-          Reset defaults
-        </button>
       </div>
     </div>
   </form>

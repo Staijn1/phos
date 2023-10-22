@@ -33,6 +33,7 @@ export class SettingsPageComponent implements OnInit{
   clearSettingsIcon = faBroom;
   private skipFormUpdate = false;
   availableThemes = themes;
+  activeMenu = 0;
 
   constructor(private readonly store: Store<{
     userPreferences: UserPreferences
@@ -59,5 +60,13 @@ export class SettingsPageComponent implements OnInit{
 
   clearSettings(): void {
     this.store.dispatch(new SetDefaultUserPreferences());
+  }
+
+  /**
+   * Changes the selected menu item which causes the content to change too
+   * @param number
+   */
+  selectMenu(number: number) {
+    this.activeMenu = number;
   }
 }
