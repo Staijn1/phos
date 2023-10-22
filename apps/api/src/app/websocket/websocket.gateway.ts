@@ -6,12 +6,11 @@ import {
   WebSocketGateway,
   WebSocketServer
 } from '@nestjs/websockets';
-import { Logger } from '@nestjs/common';
-import { Server, Socket } from 'socket.io';
-import { WebsocketClientsManagerService } from './websocket-clients-manager.service';
-import { ConfigurationService } from '../configuration/configuration.service';
-import { GradientInformation, LedstripState, ModeInformation, WebsocketMessage } from '@angulon/interfaces';
-import { GradientsService } from '../gradients/gradients.service';
+import {Logger} from '@nestjs/common';
+import {Server, Socket} from 'socket.io';
+import {WebsocketClientsManagerService} from './websocket-clients-manager.service';
+import {ConfigurationService} from '../configuration/configuration.service';
+import {GradientInformation, LedstripState, ModeInformation, WebsocketMessage} from '@angulon/interfaces';
 
 @WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -23,8 +22,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   constructor(
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
-    private readonly configurationService: ConfigurationService,
-    private readonly gradientsService: GradientsService) {
+    private readonly configurationService: ConfigurationService) {
   }
 
   @SubscribeMessage(WebsocketMessage.GetState)
@@ -51,7 +49,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   @SubscribeMessage(WebsocketMessage.GetGradients)
   async onGetGradients(): Promise<GradientInformation[]> {
-    return this.gradientsService.getGradients();
+    return this.configurationService.getGradients();
   }
 
   @SubscribeMessage(WebsocketMessage.RegisterAsUser)
