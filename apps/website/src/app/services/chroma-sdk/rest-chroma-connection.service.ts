@@ -4,8 +4,9 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType,
-  RazerChromaSDKTypes
-} from "./RazerChromaSDKTypes";
+  ChromaSDKErrorCodes,
+  RazerChromaSDKResponse
+} from "./RazerChromaSDKResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -13,6 +14,7 @@ import {
 export class RestChromaConnectionService extends BaseChromaConnection {
   private initializedURL: string | undefined;
   private heartbeatInterval: NodeJS.Timer | undefined;
+
   getChromaSDKUrl(): string {
     if (this.isInitialized) return this.initializedURL as string;
     return "http://localhost:54235/razer/chromasdk";
@@ -27,7 +29,7 @@ export class RestChromaConnectionService extends BaseChromaConnection {
     const response = await this.call("", this.APPLICATION_DATA, {
         method: "POST",
       },
-      true) as { uri: string, sessionid: string };
+      true) as unknown as { uri: string, sessionid: string };
 
     this.startHeartbeat();
     this.initializedURL = response.uri;
@@ -100,7 +102,7 @@ export class RestChromaConnectionService extends BaseChromaConnection {
    * @param requestParamsInput Specific for the REST interface. The request options, excluding the body because that is set by the payload
    * @param parseJSONResponse Specific for the REST interface. Whether to parse the response from JSON to an object and return it. Must be disabled if the response is not JSON
    */
-  async call(path: string, payload: unknown, requestParamsInput?: Omit<RequestInit, 'body'>, parseJSONResponse = false): Promise<unknown> {
+  async call(path: string, payload: unknown, requestParamsInput?: Omit<RequestInit, 'body'>, parseJSONResponse = false): Promise<RazerChromaSDKResponse> {
     const requestParams: RequestInit = {
       ...requestParamsInput,
       body: ["GET", "HEAD"].includes(requestParamsInput?.method ?? 'unknown') ? undefined : JSON.stringify(payload)
@@ -124,11 +126,11 @@ export class RestChromaConnectionService extends BaseChromaConnection {
         return await response.json();
       }
 
-      return {};
+      return {result: ChromaSDKErrorCodes.FAILED};
     } catch (e) {
       this.messageService.setMessage(e as Error);
       console.error(e);
-      return {};
+      return {result: ChromaSDKErrorCodes.FAILED};
     }
   }
 
@@ -137,11 +139,9 @@ export class RestChromaConnectionService extends BaseChromaConnection {
    * @param effectType
    * @param keyboardData
    */
-  override async createKeyboardEffect(effectType: ChromaKeyboardEffectType, keyboardData: any): Promise<RazerChromaSDKTypes> {
+  override async createKeyboardEffect(effectType: ChromaKeyboardEffectType, keyboardData: any): Promise<RazerChromaSDKResponse> {
     const effect = await super.createKeyboardEffect(effectType, keyboardData);
-    await this.call("/keyboard", effect, {method: "PUT"});
-
-    return effect;
+    return await this.call("/keyboard", effect, {method: "PUT"});
   }
 
   /**
@@ -149,11 +149,9 @@ export class RestChromaConnectionService extends BaseChromaConnection {
    * @param effectType
    * @param mouseData
    */
-  override async createMouseEffect(effectType: ChromaMouseEffectType, mouseData: any): Promise<RazerChromaSDKTypes> {
+  override async createMouseEffect(effectType: ChromaMouseEffectType, mouseData: any): Promise<RazerChromaSDKResponse> {
     const effect = await super.createMouseEffect(effectType, mouseData);
-    await this.call("/mouse", effect, {method: "PUT"});
-
-    return effect;
+    return this.call("/mouse", effect, {method: "PUT"});
   }
 
   /**
@@ -161,10 +159,8 @@ export class RestChromaConnectionService extends BaseChromaConnection {
    * @param effectType
    * @param headsetData
    */
-  override async createHeadsetEffect(effectType: ChromaHeadsetEffectType, headsetData: any): Promise<RazerChromaSDKTypes> {
+  override async createHeadsetEffect(effectType: ChromaHeadsetEffectType, headsetData: any): Promise<RazerChromaSDKResponse> {
     const effect = await super.createHeadsetEffect(effectType, headsetData);
-    await this.call("/headset", effect, {method: "PUT"});
-
-    return effect;
+    return this.call("/headset", effect, {method: "PUT"});
   }
 }

@@ -4,8 +4,8 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType,
-  RazerChromaSDKTypes
-} from "./RazerChromaSDKTypes";
+  RazerChromaSDKResponse
+} from "./RazerChromaSDKResponse";
 
 @Injectable({
   providedIn: "root"
@@ -39,20 +39,20 @@ export class WebsocketChromaConnectionService extends BaseChromaConnection {
     return Promise.resolve();
   }
 
-  override async createHeadsetEffect(effectType: ChromaHeadsetEffectType, payload: any): Promise<RazerChromaSDKTypes> {
+  override async createHeadsetEffect(effectType: ChromaHeadsetEffectType, payload: any): Promise<Record<string, unknown>> {
     const effect = await super.createHeadsetEffect(effectType, payload);
 
     await this.call("headset", effect);
     return Promise.resolve({});
   }
 
-  override async createKeyboardEffect(effectType: ChromaKeyboardEffectType, payload: any): Promise<RazerChromaSDKTypes> {
+  override async createKeyboardEffect(effectType: ChromaKeyboardEffectType, payload: any): Promise<Record<string, unknown>> {
     const effect = await super.createKeyboardEffect(effectType, payload);
     await this.call("keyboard", effect);
     return Promise.resolve({});
   }
 
-  override async createMouseEffect(effectType: ChromaMouseEffectType, payload: any): Promise<RazerChromaSDKTypes> {
+  override async createMouseEffect(effectType: ChromaMouseEffectType, payload: any): Promise<Record<string, unknown>> {
     const effect = await super.createMouseEffect(effectType, payload);
     await this.call("mouse", effect);
     return Promise.resolve({});

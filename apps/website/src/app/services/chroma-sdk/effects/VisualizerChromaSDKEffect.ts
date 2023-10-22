@@ -8,7 +8,7 @@ import {
   KEYBOARD_ROWS,
   MOUSE_COLUMNS,
   MOUSE_ROWS
-} from "../RazerChromaSDKTypes";
+} from "../RazerChromaSDKResponse";
 
 export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   protected _BGRIntegerForeground = 0;

@@ -7,8 +7,8 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType,
-  RazerChromaSDKTypes
-} from "./RazerChromaSDKTypes";
+  RazerChromaSDKResponse
+} from "./RazerChromaSDKResponse";
 import { ClientSideLedstripState } from "@angulon/interfaces";
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
 import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
@@ -144,7 +144,7 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param payload Please refer to the Razer Chroma SDK documentation for the payload structure {@link https://assets.razerzone.com/dev_portal/REST/html/md__r_e_s_t_external_03_keyboard.html}
    */
-  async createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): Promise<RazerChromaSDKTypes> {
+  async createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): Promise<Record<string, unknown>> {
     if (effect === ChromaKeyboardEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaKeyboardEffectType.CHROMA_CUSTOM && typeof payload === "object") {
@@ -162,7 +162,7 @@ export abstract class BaseChromaConnection {
   /**
    * Construct the payload for the mouse effect
    */
-  async createMouseEffect(effect: ChromaMouseEffectType, data: any): Promise<RazerChromaSDKTypes> {
+  async createMouseEffect(effect: ChromaMouseEffectType, data: any): Promise<Record<string, unknown>> {
     if (effect === ChromaMouseEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaMouseEffectType.CHROMA_CUSTOM2 && typeof data === "object") {
@@ -180,7 +180,7 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param data
    */
-  async createHeadsetEffect(effect: ChromaHeadsetEffectType, data: any): Promise<RazerChromaSDKTypes> {
+  async createHeadsetEffect(effect: ChromaHeadsetEffectType, data: any): Promise<Record<string, unknown>> {
     if (effect === ChromaHeadsetEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaHeadsetEffectType.CHROMA_CUSTOM && Array.isArray(data)) {
