@@ -100,7 +100,7 @@
   lg:tw-ms-4
   tw-p-4;
 
-  &:hover {
+  &:hover:not(.disabled) {
     @apply tw-bg-primary-focus tw-rounded-full;
   }
 }

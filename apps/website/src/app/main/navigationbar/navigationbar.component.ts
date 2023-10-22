@@ -27,6 +27,12 @@ import {
   IncreaseLedstripSpeed
 } from '../../../redux/ledstrip/ledstrip.action';
 import { OffCanvasComponent } from '../../shared/components/offcanvas/off-canvas.component';
+import {
+  MAXIMUM_BRIGHTNESS,
+  MINIMUM_BRIGHTNESS,
+  SPEED_MAXIMUM_INTERVAL_MS,
+  SPEED_MINIMUM_INTERVAL_MS
+} from "../../shared/constants";
 
 @Component({
   selector: 'app-navigationbar',
@@ -51,12 +57,23 @@ export class NavigationbarComponent implements OnInit {
   readonly timeline = gsap.timeline();
   mobileMenuIcon = OpenMobileMenuIcon;
   private animationMode = 0;
+  minimumBrightnessReached = false;
+  minimumSpeedReached = false;
+  maximumBrightnessReached = false;
+  maximumSpeedReached=false;
+
 
   constructor(
     public connection: WebsocketService,
     private router: Router,
     private store: Store<{ ledstripState: LedstripState }>
   ) {
+    store.select("ledstripState").subscribe(state => {
+      this.minimumBrightnessReached = state.brightness === MINIMUM_BRIGHTNESS;
+      this.minimumSpeedReached  = state.speed === SPEED_MINIMUM_INTERVAL_MS;
+      this.maximumBrightnessReached = state.brightness === MAXIMUM_BRIGHTNESS;
+      this.maximumSpeedReached = state.speed === SPEED_MAXIMUM_INTERVAL_MS;
+    });
   }
 
   ngOnInit(): void {
