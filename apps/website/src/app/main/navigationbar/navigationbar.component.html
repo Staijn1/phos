@@ -1,142 +1,59 @@
-<div #container>
-  <button (click)='this.mobileMenu.toggle()' class='mobile-nav-toggle' type='button'>
-    <fa-icon [icon]='mobileMenuIcon'></fa-icon>
-  </button>
-  <!--  Navigation for big screens-->
-  <header class='tw-flex tw-flex-col tw-justify-center' id="desktopNavigationContainer">
-    <nav class='nav-menu'>
-      <ul>
-        <li>
-          <a routerLink='home' routerLinkActive='active'>
-            <fa-icon [icon]='homeIcon'></fa-icon>
-            <span>Home</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink='/mode' routerLinkActive='active'>
-            <fa-icon [icon]='modeIcon'></fa-icon>
-            <span>Mode</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink='/visualizer' routerLinkActive='active'>
-            <fa-icon [icon]='visualizerIcon'></fa-icon>
-            <span>Visualizer</span>
-          </a>
-        </li>
-        <li>
-          <a routerLink='/settings' routerLinkActive='active'>
-            <fa-icon [icon]='settingsIcon'></fa-icon>
-            <span>Settings</span>
-          </a>
-        </li>
-        <li>
-          <a (click)='$event.preventDefault()' href=''>
-            <fa-icon [icon]='controlsIcon'></fa-icon>
-            <span class='actions'>
-                <fa-icon [class.disabled]="minimumBrightnessReached" (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'></fa-icon>
-                <fa-icon [class.disabled]="maximumBrightnessReached" (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'></fa-icon>
-                <fa-icon [class.disabled]="minimumSpeedReached" (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'></fa-icon>
-                <fa-icon [class.disabled]="maximumSpeedReached" (click)='this.increaseSpeed()' [icon]='speedIncreaseIcon'></fa-icon>
+
+  <nav class="nav-menu">
+    <ul>
+      <li>
+        <a routerLink="home" routerLinkActive="active">
+          <fa-icon [icon]="homeIcon"></fa-icon>
+          <span>Home</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/mode" routerLinkActive="active">
+          <fa-icon [icon]="modeIcon"></fa-icon>
+          <span>Mode</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/visualizer" routerLinkActive="active">
+          <fa-icon [icon]="visualizerIcon"></fa-icon>
+          <span>Visualizer</span>
+        </a>
+      </li>
+      <li>
+        <a routerLink="/settings" routerLinkActive="active">
+          <fa-icon [icon]="settingsIcon"></fa-icon>
+          <span>Settings</span>
+        </a>
+      </li>
+      <li>
+        <a (click)="$event.preventDefault()" href="">
+          <fa-icon [icon]="controlsIcon"></fa-icon>
+          <span class="actions">
+                <fa-icon [class.disabled]="minimumBrightnessReached" (click)="this.decreaseBrightness()"
+                         [icon]="decreaseBrightnessIcon"></fa-icon>
+                <fa-icon [class.disabled]="maximumBrightnessReached" (click)="this.increaseBrightness()"
+                         [icon]="increaseBrightnessIcon"></fa-icon>
+                <fa-icon [class.disabled]="minimumSpeedReached" (click)="this.decreaseSpeed()"
+                         [icon]="speedDecreaseIcon"></fa-icon>
+                <fa-icon [class.disabled]="maximumSpeedReached" (click)="this.increaseSpeed()"
+                         [icon]="speedIncreaseIcon"></fa-icon>
             </span>
-          </a>
-        </li>
-        <li>
-          <a class='colorpicker'>
-            <fa-icon [icon]='colorpickerIcon'></fa-icon>
-            <div class='tw-ms-4 md:tw-ms-8'>
-              <app-colorpicker orientation='horizontal'></app-colorpicker>
-            </div>
-          </a>
-        </li>
-        <li (click)='turnOff()'>
-          <a (click)='$event.preventDefault()' href='' id='powerOff'>
-            <fa-icon [icon]='powerOffIcon'></fa-icon>
-            <span>Power Off</span>
-          </a>
-        </li>
-      </ul>
-    </nav>
-  </header>
-  <!--  Menu for small, mobile devices-->
-  <app-offcanvas (stateChanged)='onMobileMenuChange($event)' #mobileMenu position="left" width='300px'>
-    <div body class='tw-flex tw-justify-center tw-flex-col tw-h-full'>
-      <nav class='nav-menu tw-mx-3'>
-        <ul>
-          <li>
-            <a routerLink='home' routerLinkActive='active'>
-              <fa-icon [icon]='homeIcon'></fa-icon>
-              <span>Home</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink='/mode' routerLinkActive='active'>
-              <fa-icon [icon]='modeIcon'></fa-icon>
-              <span>Mode</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink='/visualizer' routerLinkActive='active'>
-              <fa-icon [icon]='visualizerIcon'></fa-icon>
-              <span>Visualizer</span>
-            </a>
-          </li>
-          <li>
-            <a routerLink='/settings' routerLinkActive='active'>
-              <fa-icon [icon]='settingsIcon'></fa-icon>
-              <span>Settings</span>
-            </a>
-          </li>
-          <li>
-            <a (click)='$event.preventDefault()' href=''>
-              <fa-icon [icon]='controlsIcon'></fa-icon>
-              <span class='actions'>
-                <fa-icon [class.disabled]="minimumBrightnessReached" (click)='this.decreaseBrightness()' [icon]='decreaseBrightnessIcon'></fa-icon>
-                <fa-icon [class.disabled]="maximumBrightnessReached" (click)='this.increaseBrightness()' [icon]='increaseBrightnessIcon'></fa-icon>
-                <fa-icon [class.disabled]="minimumSpeedReached" (click)='this.decreaseSpeed()' [icon]='speedDecreaseIcon'></fa-icon>
-                <fa-icon [class.disabled]="maximumSpeedReached" (click)='this.increaseSpeed()' [icon]='speedIncreaseIcon'></fa-icon>
-              </span>
-            </a>
-          </li>
-          <li>
-            <a class='colorpicker tw-h-full'>
-              <fa-icon [icon]='colorpickerIcon'></fa-icon>
-              <div class='tw-flex tw-justify-center tw-w-full'>
-                <app-colorpicker orientation='vertical'></app-colorpicker>
-              </div>
-            </a>
-          </li>
-          <li (click)='turnOff()'>
-            <a (click)='$event.preventDefault()' href='' id='powerOffMobile'>
-              <fa-icon [icon]='powerOffIcon'></fa-icon>
-              <span>Power Off</span>
-            </a>
-          </li>
-        </ul>
-      </nav>
-    </div>
-  </app-offcanvas>
-</div>
+        </a>
+      </li>
+      <li>
+        <a class="colorpicker" [class.centered]="colorPickerOrientation === 'vertical'">
+          <fa-icon [icon]="colorpickerIcon"></fa-icon>
+          <div class="tw-ms-4 md:tw-ms-8 tw-d-flex tw-justify-center">
+            <app-colorpicker [orientation]="colorPickerOrientation"></app-colorpicker>
+          </div>
+        </a>
+      </li>
+      <li (click)="turnOff()">
+        <a (click)="$event.preventDefault()" href="" id="powerOff">
+          <fa-icon [icon]="powerOffIcon"></fa-icon>
+          <span>Power Off</span>
+        </a>
+      </li>
+    </ul>
+  </nav>
 
-<!-- Required to cover up the content while transitioning-->
-<div id='cover'></div>
-
-<!--Container for transition effect 1, from left-->
-<div class='transition-container from-left'>
-  <span class='tile'></span>
-  <span class='tile'></span>
-  <span class='tile'></span>
-  <span class='tile'></span>
-  <span class='tile'></span>
-  <span class='tile'></span>
-</div>
-
-<!-- Continer for transition effect 2, from the top-->
-<div class='transition-container from-top'>
-  <span class='tile'></span>
-  <span class='tile'></span>
-  <span class='tile'></span>
-  <span class='tile'></span>
-  <span class='tile'></span>
-  <span class='tile'></span>
-</div>

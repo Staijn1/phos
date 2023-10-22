@@ -1,5 +1,8 @@
-<app-navigationbar></app-navigationbar>
+<header class="tw-flex tw-flex-col tw-justify-center" id="desktopNavigationContainer">
+  <app-navigationbar></app-navigationbar>
+</header>
 <router-outlet></router-outlet>
+
 
 
 <div class="tw-toast tw-toast-top tw-toast-end">
@@ -13,5 +16,38 @@
   </div>
 </div>
 
+<!-- Button for mobile nav-->
+<button (click)='this.mobileMenu.toggle()' class='mobile-nav-toggle' type='button'>
+  <fa-icon [icon]='mobileMenuIcon'></fa-icon>
+</button>
 
+<!--  Menu for small, mobile devices-->
+<app-offcanvas (stateChanged)='onMobileMenuChange($event)' #mobileMenu position="left" width='300px'>
+  <div body class='tw-flex tw-justify-center tw-flex-col tw-h-full'>
+    <app-navigationbar colorPickerOrientation="vertical"></app-navigationbar>
+  </div>
+</app-offcanvas>
+
+<!-- Required to cover up the content while transitioning-->
+<div id='cover'></div>
+
+<!--Container for transition effect 1, from left-->
+<div class='transition-container from-left'>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+</div>
+
+<!-- Continer for transition effect 2, from the top-->
+<div class='transition-container from-top'>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+  <span class='tile'></span>
+</div>
 
