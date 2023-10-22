@@ -71,9 +71,6 @@ export const userPreferencesReducer = (state: UserPreferences = initialState, ac
         }
       };
     }
-    case UserPreferencesAction.SET_DEFAULT_USER_PREFERENCES: {
-      return defaultUserPreferences;
-    }
     default:
       return state;
   }

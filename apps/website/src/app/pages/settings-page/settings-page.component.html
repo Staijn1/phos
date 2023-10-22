@@ -7,11 +7,8 @@
             <li class="tw-menu-title">Settings</li>
             <li (click)="selectMenu(0)"><a [class.tw-active]="activeMenu === 0">General Settings</a></li>
             <li (click)="selectMenu(1)"><a [class.tw-active]="activeMenu === 1">Theme</a></li>
+            <li (click)="selectMenu(2)"><a [class.tw-active]="activeMenu === 2">Manage Network</a></li>
           </ul>
-          <button (click)="clearSettings()" class="tw-btn tw-btn-secondary" type="button">
-            <fa-icon [icon]="clearSettingsIcon"></fa-icon>
-            Reset defaults
-          </button>
         </div>
 
         <div class="tw-col-span-2 md:tw-col-span-10">
@@ -36,6 +33,8 @@
               >
               </app-theme-visualization>
             </div>
+          </div>
+          <div class="menu-content" [class.active-content]="activeMenu === 2">
           </div>
         </div>
 

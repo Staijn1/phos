@@ -3,10 +3,7 @@ import { faBroom } from "@fortawesome/free-solid-svg-icons";
 import { GeneralSettings, UserPreferences } from "../../shared/types/types";
 import { themes } from "../../shared/constants";
 import { Store } from "@ngrx/store";
-import {
-  ChangeGeneralSettings,
-  SetDefaultUserPreferences
-} from "../../../redux/user-preferences/user-preferences.action";
+import { ChangeGeneralSettings } from "../../../redux/user-preferences/user-preferences.action";
 import { FormsModule, NgForm } from "@angular/forms";
 import { debounceTime, skip } from "rxjs";
 import { ThemeVisualizationComponent } from "../../shared/components/theme-visualization/theme-visualization.component";
@@ -30,7 +27,6 @@ export class SettingsPageComponent implements OnInit{
   @ViewChild("form", { static: true }) form!: NgForm;
   settings: GeneralSettings | undefined;
   selectedTheme = 0;
-  clearSettingsIcon = faBroom;
   private skipFormUpdate = false;
   availableThemes = themes;
   activeMenu = 0;
@@ -56,10 +52,6 @@ export class SettingsPageComponent implements OnInit{
 
   setTheme(theme: string): void {
     this.store.dispatch(new ChangeGeneralSettings({ theme: theme }));
-  }
-
-  clearSettings(): void {
-    this.store.dispatch(new SetDefaultUserPreferences());
   }
 
   /**
