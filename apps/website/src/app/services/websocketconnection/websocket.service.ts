@@ -65,7 +65,7 @@ export class WebsocketService {
         }
         // Before sending the state to the server, we need to convert the iro.Colors to hex strings
         const payload: LedstripState = { ...state, colors: state.colors.map(color => color.hexString) };
-        this.promisifyEmit<LedstripState>(WebsocketMessage.SetState, payload).then();
+        this.promisifyEmit<LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
       });
   }
 

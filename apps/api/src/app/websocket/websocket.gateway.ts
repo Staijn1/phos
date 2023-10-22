@@ -16,7 +16,7 @@ import {GradientInformation, LedstripState, ModeInformation, WebsocketMessage} f
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
-  private logger: Logger = new Logger('WebsocketGateway');
+  private logger: Logger = new Logger(WebsocketGateway.name);
   // 15 minutes in milliseconds
   private readonly stateIntervalTimeMS = 900000;
 
@@ -25,20 +25,19 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     private readonly configurationService: ConfigurationService) {
   }
 
-  @SubscribeMessage(WebsocketMessage.GetState)
-  onGetState(): LedstripState {
+  @SubscribeMessage(WebsocketMessage.GetNetworkState)
+  getNetworkState(): LedstripState {
+    return this.websocketClientsManagerService.getState();
+  }
+  @SubscribeMessage(WebsocketMessage.SetNetworkState)
+  onSetNetworkState(client: Socket, payload: LedstripState): LedstripState {
+    this.websocketClientsManagerService.setState(payload, client);
     return this.websocketClientsManagerService.getState();
   }
 
   @SubscribeMessage(WebsocketMessage.SetFFTValue)
   onFFTCommand(client: Socket, payload: number): LedstripState {
     this.websocketClientsManagerService.setFFTValue(payload);
-    return this.websocketClientsManagerService.getState();
-  }
-
-  @SubscribeMessage(WebsocketMessage.SetState)
-  onSetState(client: Socket, payload: LedstripState): LedstripState {
-    this.websocketClientsManagerService.setState(payload, client);
     return this.websocketClientsManagerService.getState();
   }
 
@@ -59,26 +58,12 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   /**
-   * This event is emitted by a ledstrip, just after it connected to the server.
-   * The websocket client manager will process this new state.
-   * If no other ledstrip is connected, it will set the state of the new ledstrip as the new state of the server.
-   * If another ledstrip is connected, it will set the state of the new ledstrip to the state of the server.
-   * @param client
-   * @param payload
-   */
-  @SubscribeMessage(WebsocketMessage.SubmitState)
-  async onRegisterState(client: Socket, payload: LedstripState): Promise<void> {
-    this.websocketClientsManagerService.syncState(client, payload);
-  }
-
-  /**
    * When a client connects, log its IP address.
    * Also set the server instance in the websocketClientsManagerService, so we make sure it is always up-to-date with the current server instance.
    * @param {Socket} client
    * @param args
-   * @returns {any}
    */
-  handleConnection(client: Socket, ...args: any[]): any {
+  handleConnection(client: Socket, ...args: any[]): void {
     this.logger.log(`Client connected: ${client.id}. IP: ${client.conn.remoteAddress}`);
     this.websocketClientsManagerService.setServer(this.server);
   }
@@ -87,9 +72,8 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    * When a client disconnects, log its IP address and that it has disconnected.
    * Just like the handleConnection method, we set the server instance again on the websocketClientsManagerService.
    * @param {Socket} client
-   * @returns {any}
    */
-  handleDisconnect(client: Socket): any {
+  handleDisconnect(client: Socket): void {
     this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
     this.websocketClientsManagerService.setServer(this.server);
   }
