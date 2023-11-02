@@ -4,6 +4,8 @@ import {ConfigModule} from '@nestjs/config';
 import {constructEnvironmentConfiguration} from '../environments/EnvironmentConfig';
 
 import {validateEnvironmentConfiguration} from '../environments/EnvironmentValidation';
+import { TypeOrmConfigService } from './typeorm/typeorm.service';
+import { TypeOrmModule } from '@nestjs/typeorm';
 
 @Module({
   imports: [
@@ -14,6 +16,7 @@ import {validateEnvironmentConfiguration} from '../environments/EnvironmentValid
       cache: true,
       validate: validateEnvironmentConfiguration,
     }),
+    // TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService })
   ],
   controllers: [],
   providers: []
