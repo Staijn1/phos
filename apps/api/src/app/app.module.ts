@@ -1,9 +1,20 @@
-import { Module } from '@nestjs/common';
+import {Module} from '@nestjs/common';
+import {WebsocketModule} from './websocket/websocket.module';
+import {ConfigModule} from '@nestjs/config';
+import {constructEnvironmentConfiguration} from '../environments/EnvironmentConfig';
 
-import { WebsocketModule } from './websocket/websocket.module';
+import {validateEnvironmentConfiguration} from '../environments/EnvironmentValidation';
 
 @Module({
-  imports: [WebsocketModule],
+  imports: [
+    WebsocketModule,
+    ConfigModule.forRoot({
+      load: [constructEnvironmentConfiguration],
+      isGlobal: true,
+      cache: true,
+      validate: validateEnvironmentConfiguration,
+    }),
+  ],
   controllers: [],
   providers: []
 })

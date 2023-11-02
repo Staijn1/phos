@@ -1,4 +1,12 @@
-export const environment = {
+import {IEnvironmentConfiguration} from './IEnvironmentConfiguration';
+
+export const environment: Partial<IEnvironmentConfiguration> = {
   production: false,
-  statistics: true
+  // database: {
+  //   host: 'localhost',
+  //   port: 5432,
+  //   database: 'postgres',
+  //   username: 'postgres',
+  //   password: 'password',
+  // },
 };
