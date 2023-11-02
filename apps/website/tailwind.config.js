@@ -9,6 +9,9 @@ module.exports = {
     ...createGlobPatternsForDependencies(__dirname),
   ],
   theme: {
+    fontFamily: {
+      sans: ['Comfortaa', 'sans-serif'],
+    },
     extend: {
       colors: {
         spotify: {
