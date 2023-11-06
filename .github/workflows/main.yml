@@ -29,16 +29,22 @@ jobs:
         uses: actions/checkout@v3
         with:
           fetch-depth: 0
+
+      - name: Git debug
+        run: |
+          git status ; git log -n 1
+          
       - name: Install GitVersion
         uses: gittools/actions/gitversion/setup@v0
         with:
           versionSpec: '5.x'
 
+
       - name: Determine Version
         uses: gittools/actions/gitversion/execute@v0
         with:
           useConfigFile: true
-
+          additionalArguments: '/showConfig'
       - name: Display version
         run: |
           echo SemVer: $SEMVER
