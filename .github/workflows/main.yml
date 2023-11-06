@@ -66,6 +66,6 @@ jobs:
 
 
       - name: Build and push base image
-        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon-nx-base:latest -t ${{secrets.USERNAME}}/angulon-nx-base:${SEMVER} --push .
+        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:nx-base -t ${{secrets.USERNAME}}/angulon:nx-base-${SEMVER} --push .
       - name: Build sub-application images
         run: docker buildx bake --push --set *.platform=linux/arm64/v8,linux/amd64
