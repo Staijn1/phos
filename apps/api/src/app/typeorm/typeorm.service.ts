@@ -15,7 +15,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     const db = this.config.get<IEnvironmentConfiguration['database']>('database');
     const productionMode = this.config.get<IEnvironmentConfiguration['production']>('production');
     return {
-      type: 'mariadb',
+      type: 'mongodb',
       host: db.host,
       port: db.port,
       database: db.database,

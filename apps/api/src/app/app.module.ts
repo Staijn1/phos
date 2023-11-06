@@ -16,7 +16,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       cache: true,
       validate: validateEnvironmentConfiguration,
     }),
-    // TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService })
+    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService })
   ],
   controllers: [],
   providers: []
