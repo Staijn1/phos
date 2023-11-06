@@ -1,10 +1,10 @@
 import { Injectable, Logger } from "@nestjs/common";
-import { NetworkState } from "@angulon/interfaces";
+import { INetworkState } from "@angulon/interfaces";
 
 @Injectable()
 export class RoomService {
   private readonly logger = new Logger(RoomService.name);
-  getNetworkState(): NetworkState {
+  getNetworkState(): INetworkState {
     this.logger.warn("getNetworkState not implemented");
     return {
       rooms: []
