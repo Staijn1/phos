@@ -23,7 +23,7 @@ jobs:
         id: gitversion
         uses: gittools/actions/gitversion/execute@v0
         with:
-          useConfigFile: false
+          useConfigFile: true
 
       - name: Display GitVersion outputs (step output)
         run: |
