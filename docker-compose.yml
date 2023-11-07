@@ -43,15 +43,7 @@ services:
     restart: on-failure
 
   angulon_database:
-      container_name: angulon_database
-      image: mariadb
-      ports:
-        - "3306:3306"
-      networks:
-        - corp
-      restart: on-failure
-
-  mongo:
+    container_name: angulon_database
     image: mongo
     restart: always
     networks:
