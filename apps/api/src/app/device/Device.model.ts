@@ -1,5 +1,6 @@
 import {IDevice, LedstripState} from '@angulon/interfaces';
-import {Column, Entity, ObjectId, ObjectIdColumn, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, JoinColumn, ManyToOne, ObjectId, ObjectIdColumn} from 'typeorm';
+import {Room} from '../room/Room.model';
 
 @Entity()
 export class Device implements IDevice{
@@ -14,4 +15,8 @@ export class Device implements IDevice{
 
   @Column('jsonb', { default: () => "'{}'" })
   state: LedstripState;
+
+  @ManyToOne(() => Room, (room) => room.connectedDevices)
+  @JoinColumn({ name: 'room_id' })
+  room: Room;
 }

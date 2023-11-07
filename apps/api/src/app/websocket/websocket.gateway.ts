@@ -11,6 +11,7 @@ import {Server, Socket} from 'socket.io';
 import {ConfigurationService} from '../configuration/configuration.service';
 import {GradientInformation, LedstripState, ModeInformation, WebsocketMessage} from '@angulon/interfaces';
 import {WebsocketService} from './websocket.service';
+import {RoomService} from '../room/room.service';
 
 @WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -22,6 +23,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   constructor(
     private readonly websocketService: WebsocketService,
+    private readonly roomService: RoomService,
     private readonly configurationService: ConfigurationService) {
   }
 

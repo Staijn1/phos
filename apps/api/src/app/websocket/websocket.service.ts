@@ -12,7 +12,7 @@ export class WebsocketService {
   private _state: LedstripState = INITIAL_LEDSTRIP_STATE;
   private logger: Logger = new Logger('WebsocketClientsManagerService');
 
-  constructor(private readonly deviceService: DeviceService,) {
+  constructor(private readonly deviceService: DeviceService) {
   }
 
   /**
@@ -90,7 +90,7 @@ export class WebsocketService {
 
     // If the client is a ledstrip, we are going to check if it is already registered in the database. If not, we will add it.
     if (this.isClientALedstrip(client)) {
-      this.deviceService.addIfNotExists(client.conn.remoteAddress, this._state).then(wasAdded => {
+      this.deviceService.addIfNotExists(client.conn.remoteAddress, {name: "Untitled Device", state: this._state}).then(wasAdded => {
         if (wasAdded) {
           this.logger.log(`Device ${client.conn.remoteAddress} was added to the database`);
         } else {
