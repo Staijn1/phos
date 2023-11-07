@@ -100,5 +100,7 @@ jobs:
 
       - name: Build and push base image
         run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:nx-base -t ${{secrets.USERNAME}}/angulon:nx-base-${{env.GitVersion_SemVer}} --push .
-      - name: Build sub-application images
-        run: docker buildx bake --push --set *.platform=linux/arm64/v8,linux/amd64
+      - name: Build and push API image
+        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:api -t ${{secrets.USERNAME}}/angulon:api-${{env.GitVersion_SemVer}} --push .
+      - name: Build and push Website image
+        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:website -t ${{secrets.USERNAME}}/angulon:website-${{env.GitVersion_SemVer}} --push .
