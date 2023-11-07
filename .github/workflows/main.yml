@@ -35,21 +35,46 @@ jobs:
         with:
           versionSpec: '5.x'
 
-
       - name: Determine Version
+        id: gitversion
         uses: gittools/actions/gitversion/execute@v0
-        id:   gitversion
         with:
           useConfigFile: true
-          additionalArguments: '/showConfig'
 
-      - name: Display GitVersion variables
+      - name: Display GitVersion variables (with prefix)
         run: |
-          echo "All: ${{join(steps.gitversion.outputs.*, '\n')}}"
-
-      - name: Display version
-        run: |
-          echo SemVer: ${{ env.SEMVER }}
+          echo "Major: ${{ env.GitVersion_Major }}"
+          echo "Minor: ${{ env.GitVersion_Minor }}"
+          echo "Patch: ${{ env.GitVersion_Patch }}"
+          echo "PreReleaseTag: ${{ env.GitVersion_PreReleaseTag }}"
+          echo "PreReleaseTagWithDash: ${{ env.GitVersion_PreReleaseTagWithDash }}"
+          echo "PreReleaseLabel: ${{ env.GitVersion_PreReleaseLabel }}"
+          echo "PreReleaseNumber: ${{ env.GitVersion_PreReleaseNumber }}"
+          echo "WeightedPreReleaseNumber: ${{ env.GitVersion_WeightedPreReleaseNumber }}"
+          echo "BuildMetaData: ${{ env.GitVersion_BuildMetaData }}"
+          echo "BuildMetaDataPadded: ${{ env.GitVersion_BuildMetaDataPadded }}"
+          echo "FullBuildMetaData: ${{ env.GitVersion_FullBuildMetaData }}"
+          echo "MajorMinorPatch: ${{ env.GitVersion_MajorMinorPatch }}"
+          echo "SemVer: ${{ env.GitVersion_SemVer }}"
+          echo "LegacySemVer: ${{ env.GitVersion_LegacySemVer }}"
+          echo "LegacySemVerPadded: ${{ env.GitVersion_LegacySemVerPadded }}"
+          echo "AssemblySemVer: ${{ env.GitVersion_AssemblySemVer }}"
+          echo "AssemblySemFileVer: ${{ env.GitVersion_AssemblySemFileVer }}"
+          echo "FullSemVer: ${{ env.GitVersion_FullSemVer }}"
+          echo "InformationalVersion: ${{ env.GitVersion_InformationalVersion }}"
+          echo "BranchName: ${{ env.GitVersion_BranchName }}"
+          echo "EscapedBranchName: ${{ env.GitVersion_EscapedBranchName }}"
+          echo "Sha: ${{ env.GitVersion_Sha }}"
+          echo "ShortSha: ${{ env.GitVersion_ShortSha }}"
+          echo "NuGetVersionV2: ${{ env.GitVersion_NuGetVersionV2 }}"
+          echo "NuGetVersion: ${{ env.GitVersion_NuGetVersion }}"
+          echo "NuGetPreReleaseTagV2: ${{ env.GitVersion_NuGetPreReleaseTagV2 }}"
+          echo "NuGetPreReleaseTag: ${{ env.GitVersion_NuGetPreReleaseTag }}"
+          echo "VersionSourceSha: ${{ env.GitVersion_VersionSourceSha }}"
+          echo "CommitsSinceVersionSource: ${{ env.GitVersion_CommitsSinceVersionSource }}"
+          echo "CommitsSinceVersionSourcePadded: ${{ env.GitVersion_CommitsSinceVersionSourcePadded }}"
+          echo "UncommittedChanges: ${{ env.GitVersion_UncommittedChanges }}"
+          echo "CommitDate: ${{ env.GitVersion_CommitDate }}"
 
       - name: Login to Docker Hub
         uses: docker/login-action@v2
@@ -74,6 +99,6 @@ jobs:
 
 
       - name: Build and push base image
-        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:nx-base -t ${{secrets.USERNAME}}/angulon:nx-base-${SEMVER} --push .
+        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:nx-base -t ${{secrets.USERNAME}}/angulon:nx-base-${{env.GitVersion_SemVer}} --push .
       - name: Build sub-application images
         run: docker buildx bake --push --set *.platform=linux/arm64/v8,linux/amd64
