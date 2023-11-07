@@ -27,8 +27,7 @@ export class DeviceService implements DAOService<Device>{
   }
 
   async update(ipAddress: string, deviceData: Partial<Device>): Promise<Device> {
-    await this.deviceRepository.update(ipAddress, deviceData);
-    return this.deviceRepository.findOne({where: {ipAddress: ipAddress}});
+    return this.deviceRepository.save({ipAddress: ipAddress, ...deviceData});
   }
 
   async remove(id: number): Promise<void> {
