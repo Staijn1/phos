@@ -24,8 +24,9 @@ jobs:
         uses: gittools/actions/gitversion/execute@v0
         with:
           useConfigFile: true
+          targetPath: .
           additionalArguments: '/showConfig'
-          
+
       - name: Display GitVersion outputs (step output)
         run: |
           echo "Major: ${{ steps.gitversion.outputs.major }}"
