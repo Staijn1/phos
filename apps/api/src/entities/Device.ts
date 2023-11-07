@@ -1,10 +1,14 @@
-import { IDevice, LedstripState } from '@angulon/interfaces';
-import { Entity, PrimaryColumn } from 'typeorm';
+import {IDevice, LedstripState} from '@angulon/interfaces';
+import {Column, Entity, PrimaryColumn} from 'typeorm';
 
 @Entity()
 export class Device implements IDevice{
   @PrimaryColumn()
-  ipAdress: string;
+  ipAddress: string;
+
+  @Column()
   name: string;
+
+  @Column('jsonb', { default: () => "'{}'" })
   state: LedstripState;
 }

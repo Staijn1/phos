@@ -11,6 +11,7 @@ import {Server, Socket} from 'socket.io';
 import {WebsocketClientsManagerService} from './websocket-clients-manager.service';
 import {ConfigurationService} from '../configuration/configuration.service';
 import {GradientInformation, LedstripState, ModeInformation, WebsocketMessage} from '@angulon/interfaces';
+import {DeviceService} from '../device/device.service';
 
 @WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -21,6 +22,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   private readonly stateIntervalTimeMS = 900000;
 
   constructor(
+    private readonly deviceService: DeviceService,
     private readonly websocketClientsManagerService: WebsocketClientsManagerService,
     private readonly configurationService: ConfigurationService) {
   }
