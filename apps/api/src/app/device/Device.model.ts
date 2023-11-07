@@ -1,9 +1,12 @@
 import {IDevice, LedstripState} from '@angulon/interfaces';
-import {Column, Entity, PrimaryColumn} from 'typeorm';
+import {Column, Entity, ObjectId, ObjectIdColumn, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity()
 export class Device implements IDevice{
-  @PrimaryColumn()
+  @ObjectIdColumn()
+  id: ObjectId;
+
+  @Column()
   ipAddress: string;
 
   @Column()

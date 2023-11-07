@@ -21,6 +21,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       database: db.database,
       username: db.username,
       password: db.password,
+      authSource: 'admin',
       //   migrations: ['dist/migrations/*.{ts,js}'],
       logger: 'file',
       synchronize: !productionMode, // do not set to TRUE in production mode - possible data loss

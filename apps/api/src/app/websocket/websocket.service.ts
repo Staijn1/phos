@@ -87,11 +87,35 @@ export class WebsocketService {
   onConnect(client: Socket, server: Server) {
     this.logger.log(`Client connected: ${client.id}. IP: ${client.conn.remoteAddress}`);
     this.server = server;
+
+    // If the client is a ledstrip, we are going to check if it is already registered in the database. If not, we will add it.
+    if (this.isClientALedstrip(client)) {
+      this.deviceService.addIfNotExists(client.conn.remoteAddress, this._state).then(wasAdded => {
+        if (wasAdded) {
+          this.logger.log(`Device ${client.conn.remoteAddress} was added to the database`);
+        } else {
+          this.logger.log(`Device ${client.conn.remoteAddress} was already registered in the database`);
+        }
+      });
+    }
   }
 
+  /**
+   * This function is called when a client disconnects from the server
+   * @param client
+   * @param server
+   */
   onDisconnect(client: Socket, server: Server) {
     this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
     this.server = server;
+  }
+
+  isClientAUser(client: Socket): boolean {
+    return client.rooms.has('user');
+  }
+
+  isClientALedstrip(client: Socket): boolean {
+    return !this.isClientAUser(client);
   }
 
   /**

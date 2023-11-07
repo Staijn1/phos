@@ -63,5 +63,5 @@ services:
     ports:
       - "4321:4321"
     environment:
-      - MONGO_URL=mongodb://mongo:27017
+      - MONGO_URL=mongodb://root:example@angulon_database:27017
 
