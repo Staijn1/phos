@@ -8,10 +8,9 @@ import {
 } from '@nestjs/websockets';
 import {Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
-import {WebsocketClientsManagerService} from './websocket-clients-manager.service';
 import {ConfigurationService} from '../configuration/configuration.service';
 import {GradientInformation, LedstripState, ModeInformation, WebsocketMessage} from '@angulon/interfaces';
-import {DeviceService} from '../device/device.service';
+import {WebsocketService} from './websocket.service';
 
 @WebSocketGateway(undefined, { cors: true })
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -22,25 +21,24 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   private readonly stateIntervalTimeMS = 900000;
 
   constructor(
-    private readonly deviceService: DeviceService,
-    private readonly websocketClientsManagerService: WebsocketClientsManagerService,
+    private readonly websocketService: WebsocketService,
     private readonly configurationService: ConfigurationService) {
   }
 
   @SubscribeMessage(WebsocketMessage.GetNetworkState)
   getNetworkState(): LedstripState {
-    return this.websocketClientsManagerService.getState();
+    return this.websocketService.getState();
   }
   @SubscribeMessage(WebsocketMessage.SetNetworkState)
   onSetNetworkState(client: Socket, payload: LedstripState): LedstripState {
-    this.websocketClientsManagerService.setState(payload, client);
-    return this.websocketClientsManagerService.getState();
+    this.websocketService.setState(payload, client);
+    return this.websocketService.getState();
   }
 
   @SubscribeMessage(WebsocketMessage.SetFFTValue)
   onFFTCommand(client: Socket, payload: number): LedstripState {
-    this.websocketClientsManagerService.setFFTValue(payload);
-    return this.websocketClientsManagerService.getState();
+    this.websocketService.setFFTValue(payload);
+    return this.websocketService.getState();
   }
 
   @SubscribeMessage(WebsocketMessage.GetModes)
@@ -55,38 +53,36 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
 
   @SubscribeMessage(WebsocketMessage.RegisterAsUser)
   async onJoinUserRoom(client: Socket): Promise<LedstripState> {
-    this.websocketClientsManagerService.joinUserRoom(client);
-    return this.websocketClientsManagerService.getState();
+    this.websocketService.joinUserRoom(client);
+    return this.websocketService.getState();
   }
 
   /**
    * When a client connects, log its IP address.
-   * Also set the server instance in the websocketClientsManagerService, so we make sure it is always up-to-date with the current server instance.
+   * Also set the server instance in the websocketService, so we make sure it is always up-to-date with the current server instance.
    * @param {Socket} client
    * @param args
    */
   handleConnection(client: Socket, ...args: any[]): void {
-    this.logger.log(`Client connected: ${client.id}. IP: ${client.conn.remoteAddress}`);
-    this.websocketClientsManagerService.setServer(this.server);
+    this.websocketService.onConnect(client, this.server);
   }
 
   /**
    * When a client disconnects, log its IP address and that it has disconnected.
-   * Just like the handleConnection method, we set the server instance again on the websocketClientsManagerService.
+   * Just like the handleConnection method, we set the server instance again on the websocketService.
    * @param {Socket} client
    */
   handleDisconnect(client: Socket): void {
-    this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
-    this.websocketClientsManagerService.setServer(this.server);
+    this.websocketService.onDisconnect(client, this.server);
   }
 
   /**
-   * Start a timer that will send the state of the server to all connected ledstrips every x time.
+   * Start a timer that will send the state of the server to all connected ledstrips every x time to keep them in sync.
    */
   afterInit(): void {
     setInterval(() => {
       this.logger.log('Sending state to all ledstrips - forced');
-      this.websocketClientsManagerService.setStateOnAllLedstrips(true);
+      this.websocketService.setStateOnAllLedstrips(true);
     }, this.stateIntervalTimeMS);
   }
 }
