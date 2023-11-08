@@ -21,7 +21,7 @@ export class WebsocketService {
    */
   private get userClients(): Socket[] {
     const clients = this.server ? [...this.server.sockets.sockets.values()] : [];
-    return clients.filter(client => client.rooms.has('user'));
+    return clients.filter(client => this.isClientAUser(client));
   }
 
   /**
@@ -30,7 +30,7 @@ export class WebsocketService {
    */
   private get ledstripClients(): Socket[] {
     const clients = this.server ? [...this.server.sockets.sockets.values()] : [];
-    return clients.filter(client => !client.rooms.has('user'));
+    return clients.filter(client => !this.isClientALedstrip(client));
   }
 
   /**
@@ -74,9 +74,11 @@ export class WebsocketService {
    * Make the client join a room that is only for users - not ledstrips. This way we can distinguish clients from being a user or a ledstrip
    * @param client
    */
-  joinUserRoom(client: Socket) {
+  async joinUserRoom(client: Socket) {
     client.join('user');
-    this.logger.log(`Client ${client.conn.remoteAddress} joined the user room`);
+    // delete this device from the database because it is now a user
+    await this.deviceService.remove(client.conn.remoteAddress);
+    this.logger.log(`Client ${client.conn.remoteAddress} joined the user room and was removed from the database`);
   }
 
   /**
@@ -88,17 +90,22 @@ export class WebsocketService {
     this.logger.log(`Client connected: ${client.id}. IP: ${client.conn.remoteAddress}`);
     this.server = server;
 
-    // If the client is a ledstrip, we are going to check if it is already registered in the database. If not, we will add it.
-    if (this.isClientALedstrip(client)) {
-      this.deviceService.addIfNotExists(client.conn.remoteAddress, {name: "Untitled Device", state: this._state}).then(wasAdded => {
-        if (wasAdded) {
-          this.logger.log(`Device ${client.conn.remoteAddress} was added to the database`);
-        } else {
-          this.logger.log(`Device ${client.conn.remoteAddress} was already registered in the database`);
-        }
-      });
-    }
+    // Let's check if this client is already registered in the database.
+    // If not, we add it.
+    // We do not know yet if the connected is a user or a ledstrip because by default you connect to the default namespace
+    // When a client connects as a user it will delete itself from the database. @see joinUserRoom
+    this.deviceService.addIfNotExists(client.conn.remoteAddress, {
+      name: 'Untitled Device',
+      state: this._state
+    }).then(wasAdded => {
+      if (wasAdded) {
+        this.logger.log(`Device ${client.conn.remoteAddress} was added to the database`);
+      } else {
+        this.logger.log(`Device ${client.conn.remoteAddress} was already registered in the database`);
+      }
+    });
   }
+
 
   /**
    * This function is called when a client disconnects from the server

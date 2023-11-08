@@ -30,8 +30,8 @@ export class DeviceService implements DAOService<Device>{
     return this.deviceRepository.save({ipAddress: ipAddress, ...deviceData});
   }
 
-  async remove(id: number): Promise<void> {
-    await this.deviceRepository.delete(id);
+  async remove(ipAddress: string): Promise<void> {
+    await this.deviceRepository.delete({ipAddress: ipAddress});
   }
 
   /**
