@@ -35,9 +35,25 @@
             </div>
           </div>
           <div class="menu-content" [class.active-content]="activeMenu === 2">
+            <div class="tw-card bg-base-300 tw-shadow-xl" *ngFor="let room of rooms">
+              <div class="tw-card-body">
+                <h1 class="tw-card-title">{{room.name}}</h1>
+                <h2>Devices:</h2>
+                <ul class="tw-menu tw-rounded-box tw-border">
+                  <li class="tw-border-b " *ngFor="let device of room.connectedDevices">
+                    <a class="tw-flex tw-justify-between">
+                      <span>
+                        {{device.name}}<br/>
+                        <span class="tw-text-xs tw-italic">{{device.ipAddress}}</span>
+                      </span>
+                      <fa-icon class="tw-text-primary" [icon]="draggableIcon" size="xl"></fa-icon>
+                    </a>
+                  </li>
+                </ul>
+              </div>
+            </div>
           </div>
         </div>
-
       </div>
     </div>
   </form>

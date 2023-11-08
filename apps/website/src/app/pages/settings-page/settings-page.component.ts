@@ -1,14 +1,15 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { faBroom } from "@fortawesome/free-solid-svg-icons";
-import { GeneralSettings, UserPreferences } from "../../shared/types/types";
-import { themes } from "../../shared/constants";
-import { Store } from "@ngrx/store";
-import { ChangeGeneralSettings } from "../../../redux/user-preferences/user-preferences.action";
-import { FormsModule, NgForm } from "@angular/forms";
-import { debounceTime, skip } from "rxjs";
-import { ThemeVisualizationComponent } from "../../shared/components/theme-visualization/theme-visualization.component";
-import { NgForOf, NgIf } from "@angular/common";
-import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {faGripLines} from '@fortawesome/free-solid-svg-icons';
+import {GeneralSettings, UserPreferences} from '../../shared/types/types';
+import {themes} from '../../shared/constants';
+import {Store} from '@ngrx/store';
+import {ChangeGeneralSettings} from '../../../redux/user-preferences/user-preferences.action';
+import {FormsModule, NgForm} from '@angular/forms';
+import {debounceTime, skip} from 'rxjs';
+import {ThemeVisualizationComponent} from '../../shared/components/theme-visualization/theme-visualization.component';
+import {NgForOf, NgIf} from '@angular/common';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {IRoom} from '@angulon/interfaces';
 
 @Component({
   selector: "app-settings",
@@ -30,6 +31,25 @@ export class SettingsPageComponent implements OnInit{
   private skipFormUpdate = false;
   availableThemes = themes;
   activeMenu = 0;
+  draggableIcon = faGripLines;
+  rooms: IRoom[] = [
+    {
+      name: 'Room 1',
+      connectedDevices: [
+        {
+          name: 'Device 1',
+          state: {
+            brightness: 0,
+            colors: [],
+            mode: 0,
+            speed: 0,
+            fftValue: 0
+          },
+          ipAddress: '17.1'
+        }
+      ]
+    }
+  ];
 
   constructor(private readonly store: Store<{
     userPreferences: UserPreferences
