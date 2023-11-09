@@ -5,7 +5,7 @@ import {io, Socket} from 'socket.io-client';
 import {
   ClientSideLedstripState,
   GradientInformation,
-  INetworkState,
+  INetworkState, IRoom,
   LedstripState,
   ModeInformation,
   WebsocketMessage
@@ -37,10 +37,10 @@ export class WebsocketService {
     this.socket.on('connect', () => {
       console.log('Opened websocket at', this.websocketUrl);
 
-      this.promisifyEmit<LedstripState>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
+      this.promisifyEmit<LedstripState, null>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
       this.loadModes();
       this.loadGradients();
-      this.loadNetworkState();
+      this.loadNetworkState().then();
     });
 
     this.socket.on('disconnect', () => {
@@ -68,7 +68,7 @@ export class WebsocketService {
         }
         // Before sending the state to the server, we need to convert the iro.Colors to hex strings
         const payload: LedstripState = {...state, colors: state.colors.map(color => color.hexString)};
-        this.promisifyEmit<LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
+        this.promisifyEmit<LedstripState, LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
       });
   }
 
@@ -84,19 +84,19 @@ export class WebsocketService {
   }
 
   private loadGradients(): void {
-    this.promisifyEmit<GradientInformation[]>(WebsocketMessage.GetGradients)
+    this.promisifyEmit<GradientInformation[], null>(WebsocketMessage.GetGradients)
       .then(gradients => this.store.dispatch(new LoadGradientsAction(gradients)));
   }
 
   private loadModes() {
-    this.promisifyEmit<ModeInformation[]>(WebsocketMessage.GetModes)
+    this.promisifyEmit<ModeInformation[], null>(WebsocketMessage.GetModes)
       .then((modes) => this.store.dispatch(new LoadModesAction(modes)));
   }
 
   /**
    * Store the received state in the redux store, whilst setting the updateLedstripState flag.
    * This is required because otherwise this state change would trigger a new request to get the state from the server.
-   * And this in turn, would trigger a new state change, and so on, infinitely.
+   * And this, in turn, would trigger a new state change, and so on, infinitely.
    * @param state
    * @private
    */
@@ -108,31 +108,33 @@ export class WebsocketService {
   /**
    * Changes the .emit API of the websocket to a Promise-based API, so we can await the response
    * @param eventName - The name of the event to emit
-   * @param args The arguments to pass to the event
+   * @param payload
    * @returns A promise that resolves when the server responds
    * @private
    */
-  private promisifyEmit<T>(eventName: WebsocketMessage, ...args: any[]): Promise<T> {
+  private promisifyEmit<T, K>(eventName: WebsocketMessage, payload?: K): Promise<T> {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         const error = new Error('Websocket response timeout exceeded');
-        console.warn(`Timeout exceeded for event: ${eventName} with args: ${args.toString()}`, error);
+        console.warn(`Timeout exceeded for event: ${eventName} with args:`, payload, error);
         this.messageService.setMessage(error);
         reject(error);
       }, 3000);
 
-      if (args.length == 1 && !Array.isArray(args[0])) {
-        args = args[0];
-      }
-      this.socket.emit(eventName, args, (data: T) => {
+      this.socket.emit(eventName, payload, (data: T) => {
         clearTimeout(timeout);
         resolve(data);
       });
     });
   }
 
-  private loadNetworkState() {
-    this.promisifyEmit<INetworkState>(WebsocketMessage.GetNetworkState)
-      .then((networkState) => this.store.dispatch(new LoadNetworkState(networkState)));
+  private async loadNetworkState() {
+   const networkState =  await this.promisifyEmit<INetworkState, null>(WebsocketMessage.GetNetworkState);
+   this.store.dispatch(new LoadNetworkState(networkState));
+  }
+
+  public async createRoom(roomName: string) {
+    await this.promisifyEmit<void, Partial<IRoom>>(WebsocketMessage.CreateRoom, {name: roomName});
+    await this.loadNetworkState();
   }
 }

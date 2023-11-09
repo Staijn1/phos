@@ -11,7 +11,7 @@ import {Server, Socket} from 'socket.io';
 import {ConfigurationService} from '../configuration/configuration.service';
 import {
   GradientInformation,
-  INetworkState,
+  INetworkState, IRoom,
   LedstripState,
   ModeInformation,
   WebsocketMessage
@@ -40,8 +40,8 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.CreateRoom)
-  async createRoom(client: Socket, payload: Partial<Room>): Promise<void> {
-    await this.roomService.create(payload);
+  async createRoom(client: Socket, payload: Partial<Room>): Promise<IRoom> {
+    return this.roomService.create(payload);
   }
 
   @SubscribeMessage(WebsocketMessage.RemoveRoom)

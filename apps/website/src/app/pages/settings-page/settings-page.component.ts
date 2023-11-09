@@ -10,6 +10,7 @@ import {ThemeVisualizationComponent} from '../../shared/components/theme-visuali
 import {NgForOf, NgIf} from '@angular/common';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {INetworkState} from '@angulon/interfaces';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 
 @Component({
   selector: "app-settings",
@@ -34,7 +35,9 @@ export class SettingsPageComponent implements OnInit{
   draggableIcon = faGripLines;
   networkState: INetworkState | undefined;
 
-  constructor(private readonly store: Store<{
+  constructor(
+    private readonly websocketConnectionService: WebsocketService,
+    private readonly store: Store<{
     userPreferences: UserPreferences,
     networkState: INetworkState,
   }>) {
@@ -68,5 +71,9 @@ export class SettingsPageComponent implements OnInit{
    */
   selectMenu(number: number) {
     this.activeMenu = number;
+  }
+
+  createRoom(roomName: string) {
+    this.websocketConnectionService.createRoom(roomName).then();
   }
 }
