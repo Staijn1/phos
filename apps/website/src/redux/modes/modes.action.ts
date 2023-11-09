@@ -2,11 +2,11 @@ import { ModeInformation } from '@angulon/interfaces';
 import { Action } from '@ngrx/store';
 
 export enum ModesAction {
-  LOAD = 'LOAD',
+  LOAD_MODES = 'LOAD_MODES',
 }
 
 export class LoadModesAction implements Action {
-  readonly type = ModesAction.LOAD;
+  readonly type = ModesAction.LOAD_MODES;
 
   constructor(public payload: ModeInformation[]) {
   }

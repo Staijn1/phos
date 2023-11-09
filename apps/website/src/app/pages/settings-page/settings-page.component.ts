@@ -9,7 +9,7 @@ import {debounceTime, skip} from 'rxjs';
 import {ThemeVisualizationComponent} from '../../shared/components/theme-visualization/theme-visualization.component';
 import {NgForOf, NgIf} from '@angular/common';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {IRoom} from '@angulon/interfaces';
+import {INetworkState} from '@angulon/interfaces';
 
 @Component({
   selector: "app-settings",
@@ -32,31 +32,19 @@ export class SettingsPageComponent implements OnInit{
   availableThemes = themes;
   activeMenu = 0;
   draggableIcon = faGripLines;
-  rooms: IRoom[] = [
-    {
-      name: 'Room 1',
-      connectedDevices: [
-        {
-          name: 'Device 1',
-          state: {
-            brightness: 0,
-            colors: [],
-            mode: 0,
-            speed: 0,
-            fftValue: 0
-          },
-          ipAddress: '17.1'
-        }
-      ]
-    }
-  ];
+  networkState: INetworkState | undefined;
 
   constructor(private readonly store: Store<{
-    userPreferences: UserPreferences
+    userPreferences: UserPreferences,
+    networkState: INetworkState,
   }>) {
     this.store.select("userPreferences").subscribe(preferences => {
       this.settings = structuredClone(preferences.settings);
       this.selectedTheme = this.availableThemes.findIndex(theme => theme === preferences.settings.theme);
+    });
+
+    this.store.select("networkState").subscribe(networkState => {
+      this.networkState = networkState;
     });
   }
 

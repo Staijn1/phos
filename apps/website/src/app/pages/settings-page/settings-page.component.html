@@ -34,8 +34,8 @@
               </app-theme-visualization>
             </div>
           </div>
-          <div class="menu-content" [class.active-content]="activeMenu === 2">
-            <div class="tw-card bg-base-300 tw-shadow-xl" *ngFor="let room of rooms">
+          <div class="menu-content" [class.active-content]="activeMenu === 2" *ngIf="networkState">
+            <div class="tw-card bg-base-300 tw-shadow-xl" *ngFor="let room of networkState.rooms">
               <div class="tw-card-body">
                 <h1 class="tw-card-title">{{room.name}}</h1>
                 <h2>Devices:</h2>
