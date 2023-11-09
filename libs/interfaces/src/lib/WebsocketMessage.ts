@@ -11,4 +11,5 @@ export enum WebsocketMessage {
   GetNetworkState = "getNetworkState",
   CreateRoom = "createRoom",
   RemoveRoom = "removeRoom",
+  DeleteRoom = "deleteRoom",
 }
