@@ -1,7 +1,7 @@
-import iro from "@jaames/iro";
-import { calculateBGRInteger, mapNumber } from "../../../shared/functions";
-import { BaseReactiveChromaSDKEffect } from "./BaseReactiveChromaSDKEffect";
-import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from "../RazerChromaSDKTypes";
+import iro from '@jaames/iro';
+import {calculateBGRInteger, mapNumber} from '../../../shared/functions';
+import {BaseReactiveChromaSDKEffect} from './BaseReactiveChromaSDKEffect';
+import {ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType} from '../RazerChromaSDKTypes';
 
 export class VisualizerBrightnessChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   protected _BGRIntegerForeground = 0;
@@ -15,9 +15,15 @@ export class VisualizerBrightnessChromaSDKEffect extends BaseReactiveChromaSDKEf
     color.value = mapNumber(this.fftIntensity, 0, 255, 0, 100, true);
     this._BGRIntegerForeground = calculateBGRInteger(color.red, color.green, color.blue);
 
-    this.createKeyBoardVisualizer(this._BGRIntegerForeground);
-    this.createMouseVisualizer(this._BGRIntegerForeground);
-    this.createHeadsetVisualizer(this._BGRIntegerForeground);
+    const keyboardEffect = this.createKeyBoardVisualizer(this._BGRIntegerForeground);
+    const mouseEffect = this.createMouseVisualizer(this._BGRIntegerForeground);
+    const headsetEffect = this.createHeadsetVisualizer(this._BGRIntegerForeground);
+
+    this.connection.setEffectsForDevices({
+      keyboard: keyboardEffect,
+      mouse: mouseEffect,
+      headset: headsetEffect
+    }).then();
   }
 
   onEntry(): void {
@@ -27,16 +33,16 @@ export class VisualizerBrightnessChromaSDKEffect extends BaseReactiveChromaSDKEf
   }
 
   protected createMouseVisualizer(color: number) {
-    this.connection.createMouseEffect(ChromaMouseEffectType.CHROMA_STATIC, color).then();
+    return this.connection.createMouseEffect(ChromaMouseEffectType.CHROMA_STATIC, color);
   }
 
 
   protected createKeyBoardVisualizer(color: number) {
-    this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_STATIC, color).then();
+    return this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_STATIC, color);
   }
 
 
   protected createHeadsetVisualizer(color: number) {
-    this.connection.createHeadsetEffect(ChromaHeadsetEffectType.CHROMA_STATIC, color).then();
+    return this.connection.createHeadsetEffect(ChromaHeadsetEffectType.CHROMA_STATIC, color);
   }
 }

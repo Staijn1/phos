@@ -144,7 +144,7 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param payload Please refer to the Razer Chroma SDK documentation for the payload structure {@link https://assets.razerzone.com/dev_portal/REST/html/md__r_e_s_t_external_03_keyboard.html}
    */
-  async createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): Promise<RazerChromaSDKTypes> {
+  createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any):RazerChromaSDKTypes {
     if (effect === ChromaKeyboardEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaKeyboardEffectType.CHROMA_CUSTOM && typeof payload === "object") {
@@ -162,7 +162,7 @@ export abstract class BaseChromaConnection {
   /**
    * Construct the payload for the mouse effect
    */
-  async createMouseEffect(effect: ChromaMouseEffectType, data: any): Promise<RazerChromaSDKTypes> {
+  createMouseEffect(effect: ChromaMouseEffectType, data: any): RazerChromaSDKTypes {
     if (effect === ChromaMouseEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaMouseEffectType.CHROMA_CUSTOM2 && typeof data === "object") {
@@ -180,7 +180,7 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param data
    */
-  async createHeadsetEffect(effect: ChromaHeadsetEffectType, data: any): Promise<RazerChromaSDKTypes> {
+  createHeadsetEffect(effect: ChromaHeadsetEffectType, data: any): RazerChromaSDKTypes {
     if (effect === ChromaHeadsetEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaHeadsetEffectType.CHROMA_CUSTOM && Array.isArray(data)) {
@@ -193,5 +193,18 @@ export abstract class BaseChromaConnection {
     } else {
       throw new Error(`The effect ${effect} with the received payload is not supported`);
     }
+  }
+
+  async setEffectsForDevices(effects: {
+    keyboard?: RazerChromaSDKTypes;
+    mouse?: RazerChromaSDKTypes;
+    headset?: RazerChromaSDKTypes
+  }): Promise<void> {
+    const promises = [];
+    if (effects.keyboard) promises.push(this.call("keyboard", effects.keyboard));
+    if (effects.mouse) promises.push(this.call("mouse", effects.mouse));
+    if (effects.headset) promises.push(this.call("headset", effects.headset));
+
+    await Promise.all(promises);
   }
 }
