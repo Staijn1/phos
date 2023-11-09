@@ -1,14 +1,15 @@
-import iro from "@jaames/iro";
-import { calculateBGRInteger, mapNumber } from "../../../shared/functions";
-import { BaseReactiveChromaSDKEffect } from "./BaseReactiveChromaSDKEffect";
+import iro from '@jaames/iro';
+import {calculateBGRInteger, mapNumber} from '../../../shared/functions';
+import {BaseReactiveChromaSDKEffect} from './BaseReactiveChromaSDKEffect';
 import {
-  ChromaHeadsetEffectType, ChromaKeyboardEffectType,
+  ChromaHeadsetEffectType,
+  ChromaKeyboardEffectType,
   ChromaMouseEffectType,
   KEYBOARD_COLUMNS,
   KEYBOARD_ROWS,
   MOUSE_COLUMNS,
   MOUSE_ROWS
-} from "../RazerChromaSDKTypes";
+} from '../RazerChromaSDKTypes';
 
 export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   protected _BGRIntegerForeground = 0;
@@ -22,12 +23,19 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
     this._BGRIntegerForeground = calculateBGRInteger(foregroundColor.red, foregroundColor.green, foregroundColor.blue);
     this._BGIntegerBackground = calculateBGRInteger(backgroundColor.red, backgroundColor.green, backgroundColor.blue);
 
-    this.createKeyBoardVisualizer(this._BGIntegerBackground);
-    this.createMouseVisualizer(this._BGIntegerBackground);
+    const keyboardEffect = this.createKeyBoardVisualizer(this._BGIntegerBackground);
+    const mouseEffect = this.createMouseVisualizer(this._BGIntegerBackground);
+    this.connection.setEffectsForDevices({
+      keyboard: keyboardEffect,
+      mouse: mouseEffect,
+    }).then();
   }
 
   onEntry(): void {
-    this.createHeadsetVisualizer();
+    const headsetEffect = this.createHeadsetVisualizer();
+    this.connection.setEffectsForDevices({
+      headset: headsetEffect,
+    }).then();
   }
 
   onExit(): void {
@@ -55,7 +63,8 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
     // Row 7 Column 3 has logo
     mouseLed[2][3] = this._BGRIntegerForeground;
     mouseLed[7][3] = this._BGRIntegerForeground;
-    this.connection.createMouseEffect(ChromaMouseEffectType.CHROMA_CUSTOM2, mouseLed).then();
+
+    return this.connection.createMouseEffect(ChromaMouseEffectType.CHROMA_CUSTOM2, mouseLed);
   }
 
 
@@ -74,13 +83,13 @@ export class VisualizerChromaSDKEffect extends BaseReactiveChromaSDKEffect {
       }
     }
 
-    this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM, key).then();
+    return this.connection.createKeyboardEffect(ChromaKeyboardEffectType.CHROMA_CUSTOM, key);
   }
 
 
   protected createHeadsetVisualizer() {
     const color = this.colors[0];
     const bgr = calculateBGRInteger(color.red, color.green, color.blue);
-    this.connection.createHeadsetEffect(ChromaHeadsetEffectType.CHROMA_STATIC, bgr).then();
+    return this.connection.createHeadsetEffect(ChromaHeadsetEffectType.CHROMA_STATIC, bgr);
   }
 }
