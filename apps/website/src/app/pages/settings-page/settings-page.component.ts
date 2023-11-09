@@ -11,6 +11,7 @@ import {NgForOf, NgIf} from '@angular/common';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {INetworkState} from '@angulon/interfaces';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
+import {ActivatedRoute, Router} from '@angular/router';
 
 @Component({
   selector: "app-settings",
@@ -36,11 +37,13 @@ export class SettingsPageComponent implements OnInit{
   networkState: INetworkState | undefined;
 
   constructor(
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
     private readonly websocketConnectionService: WebsocketService,
     private readonly store: Store<{
-    userPreferences: UserPreferences,
-    networkState: INetworkState,
-  }>) {
+      userPreferences: UserPreferences,
+      networkState: INetworkState,
+    }>) {
     this.store.select("userPreferences").subscribe(preferences => {
       this.settings = structuredClone(preferences.settings);
       this.selectedTheme = this.availableThemes.findIndex(theme => theme === preferences.settings.theme);
@@ -59,6 +62,12 @@ export class SettingsPageComponent implements OnInit{
         this.skipFormUpdate = true;
         this.store.dispatch(new ChangeGeneralSettings(newValues));
       });
+
+    this.activatedRoute.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.activeMenu = parseInt(fragment);
+      }
+    });
   }
 
   setTheme(theme: string): void {
@@ -66,11 +75,13 @@ export class SettingsPageComponent implements OnInit{
   }
 
   /**
-   * Changes the selected menu item which causes the content to change too
+   * Changes the selected menu item which causes the content to change too.
+   * Also changes the URL to go to the sub-page /settings/:id so the user can refresh the page and still be on the menu item
    * @param number
    */
   selectMenu(number: number) {
     this.activeMenu = number;
+    this.router.navigate([], {relativeTo: this.activatedRoute, fragment: this.activeMenu.toString()});
   }
 
   createRoom(roomName: string) {
