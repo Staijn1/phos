@@ -5,7 +5,8 @@ import {io, Socket} from 'socket.io-client';
 import {
   ClientSideLedstripState,
   GradientInformation,
-  INetworkState, IRoom,
+  INetworkState,
+  IRoom,
   LedstripState,
   ModeInformation,
   WebsocketMessage
@@ -16,6 +17,7 @@ import {LoadModesAction} from '../../../redux/modes/modes.action';
 import {LoadGradientsAction} from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
 import {LoadNetworkState} from '../../../redux/networkstate/networkstate.action';
+import {ObjectId} from 'typeorm';
 
 @Injectable({
   providedIn: 'root'
@@ -129,12 +131,17 @@ export class WebsocketService {
   }
 
   private async loadNetworkState() {
-   const networkState =  await this.promisifyEmit<INetworkState, null>(WebsocketMessage.GetNetworkState);
-   this.store.dispatch(new LoadNetworkState(networkState));
+    const networkState = await this.promisifyEmit<INetworkState, null>(WebsocketMessage.GetNetworkState);
+    this.store.dispatch(new LoadNetworkState(networkState));
   }
 
   public async createRoom(roomName: string) {
     await this.promisifyEmit<void, Partial<IRoom>>(WebsocketMessage.CreateRoom, {name: roomName});
+    await this.loadNetworkState();
+  }
+
+  async removeRoom(id: ObjectId) {
+    await this.promisifyEmit<void, ObjectId>(WebsocketMessage.RemoveRoom, id);
     await this.loadNetworkState();
   }
 }

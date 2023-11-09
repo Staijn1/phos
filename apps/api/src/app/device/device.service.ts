@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Device} from './Device.model';
-import {Repository} from 'typeorm';
+import {DeleteResult, Repository} from 'typeorm';
 import {LedstripState} from '@angulon/interfaces';
 import {DAOService} from '../interfaces/DAOService';
 
@@ -30,8 +30,8 @@ export class DeviceService implements DAOService<Device>{
     return this.deviceRepository.save({ipAddress: ipAddress, ...deviceData});
   }
 
-  async remove(ipAddress: string): Promise<void> {
-    await this.deviceRepository.delete({ipAddress: ipAddress});
+  async remove(ipAddress: string): Promise<DeleteResult> {
+    return this.deviceRepository.delete({ipAddress: ipAddress});
   }
 
   /**

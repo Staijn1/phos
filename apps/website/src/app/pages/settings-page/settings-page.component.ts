@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {faGripLines} from '@fortawesome/free-solid-svg-icons';
+import {faGripLines, faTrash} from '@fortawesome/free-solid-svg-icons';
 import {GeneralSettings, UserPreferences} from '../../shared/types/types';
 import {themes} from '../../shared/constants';
 import {Store} from '@ngrx/store';
@@ -12,6 +12,7 @@ import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {INetworkState} from '@angulon/interfaces';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 import {ActivatedRoute, Router} from '@angular/router';
+import {ObjectId} from 'typeorm';
 
 @Component({
   selector: "app-settings",
@@ -35,6 +36,7 @@ export class SettingsPageComponent implements OnInit{
   activeMenu = 0;
   draggableIcon = faGripLines;
   networkState: INetworkState | undefined;
+  trashIcon = faTrash;
 
   constructor(
     private readonly router: Router,
@@ -86,5 +88,9 @@ export class SettingsPageComponent implements OnInit{
 
   createRoom(roomName: string) {
     this.websocketConnectionService.createRoom(roomName).then();
+  }
+
+  deleteRoom(id: ObjectId) {
+    this.websocketConnectionService.removeRoom(id).then();
   }
 }

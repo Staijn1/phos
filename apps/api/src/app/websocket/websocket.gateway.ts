@@ -19,6 +19,7 @@ import {
 import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
 import {Room} from '../room/Room.model';
+import {DeleteResult, ObjectId} from 'typeorm';
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -45,14 +46,10 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.RemoveRoom)
-  async removeRoom(client: Socket, payload: string): Promise<void> {
+  async removeRoom(client: Socket, payload: ObjectId): Promise<void> {
     await this.roomService.remove(payload);
   }
 
-  @SubscribeMessage(WebsocketMessage.DeleteRoom)
-  async deleteRoom(client: Socket, payload: string): Promise<void> {
-    return this.roomService.remove(payload);
-  }
   @SubscribeMessage(WebsocketMessage.GetLedstripState)
   getLedstripState(): LedstripState {
     return this.websocketService.getState();

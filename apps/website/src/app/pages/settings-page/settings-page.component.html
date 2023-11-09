@@ -37,14 +37,21 @@
           <div class="menu-content" [class.active-content]="activeMenu === 2">
             <div class="tw-flex tw-justify-end">
               <div class="tw-join">
-                <input class="tw-input tw-input-bordered tw-join-item" placeholder="New Room Name" name="roomName" #roomName>
+                <input class="tw-input tw-input-bordered tw-join-item" placeholder="New Room Name" name="roomName"
+                       #roomName>
                 <button class="tw-btn tw-join-item" (click)="createRoom(roomName.value)">Create New Room</button>
               </div>
             </div>
             <ng-container *ngIf="networkState">
               <div class="tw-card bg-base-300 tw-shadow-xl" *ngFor="let room of networkState.rooms">
                 <div class="tw-card-body">
-                  <h1 class="tw-card-title">{{room.name}}</h1>
+                  <div class="tw-flex tw-justify-between">
+                    <h1 class="tw-card-title">{{room.name}}</h1>
+                    <button class="tw-btn tw-btn-square tw-btn-ghost tw-text-primary"
+                            (click)="deleteRoom(room.id)">
+                      <fa-icon [icon]="trashIcon"></fa-icon>
+                    </button>
+                  </div>
                   <h2>Devices:</h2>
                   <ul class="tw-menu tw-rounded-box tw-border">
                     <li class="tw-border-b " *ngFor="let device of room.connectedDevices">

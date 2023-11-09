@@ -1,13 +1,14 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import {Repository} from 'typeorm';
+import {DeleteResult, ObjectId, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ObjectId as MongoObjectId} from 'mongodb';
 
 
 @Injectable()
 export class RoomService implements DAOService<Room> {
+  private readonly logger = new Logger(RoomService.name);
   constructor(@InjectRepository(Room)
               private readonly roomRepository: Repository<Room>) {
   }
@@ -26,10 +27,12 @@ export class RoomService implements DAOService<Room> {
   }
 
   async update(id: string, roomData: Partial<Room>): Promise<Room> {
-    return this.roomRepository.save({id: new MongoObjectId(id), ...roomData});
+    return this.roomRepository.save({id: id, ...roomData});
   }
 
-  async remove(id: string): Promise<void> {
-    await this.roomRepository.delete(id);
+  async remove(id: ObjectId): Promise<DeleteResult> {
+    const deleteResult = await this.roomRepository.delete(id);
+    this.logger.log(`Room with id ${id} was deleted`);
+    return deleteResult;
   }
 }

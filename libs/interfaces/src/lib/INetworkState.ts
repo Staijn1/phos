@@ -1,10 +1,12 @@
 import {LedstripState} from './LedstripState';
+import {ObjectId} from 'typeorm';
 
 export interface INetworkState {
   rooms: IRoom[]
 }
 
 export interface IRoom {
+  id: ObjectId;
   name: string;
   connectedDevices: IDevice[]
 }
