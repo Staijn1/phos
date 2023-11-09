@@ -1,4 +1,4 @@
-import { Component, HostListener, OnInit, ViewChild } from "@angular/core";
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {SwUpdate} from '@angular/service-worker';
 import {MessageService} from '../../services/message-service/message.service';
 import {ThemeService} from '../../services/theme/theme.service';
@@ -8,15 +8,11 @@ import * as AOS from 'aos';
 import {debounceTime} from 'rxjs';
 import {UserPreferences} from '../../shared/types/types';
 import {Store} from '@ngrx/store';
-import {BaseChromaConnection} from "../../services/chroma-sdk/base-chroma-connection.service";
-import { NavigationEnd, NavigationStart, Router } from "@angular/router";
-import { gsap } from "gsap";
-import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas.component";
-import {
-  faBars as OpenMobileMenuIcon, faChartBar, faCog, faEyeDropper, faHome, faList, faMinus,
-  faPlus, faPowerOff, faRunning, faSlidersH,
-  faTimes as CloseMobileMenuIcon, faWalking
-} from "@fortawesome/free-solid-svg-icons";
+import {BaseChromaConnection} from '../../services/chroma-sdk/base-chroma-connection.service';
+import {NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {gsap} from 'gsap';
+import {OffCanvasComponent} from '../../shared/components/offcanvas/off-canvas.component';
+import {faBars as OpenMobileMenuIcon, faTimes as CloseMobileMenuIcon} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -155,16 +151,4 @@ export class AppComponent implements OnInit {
     });
     gsap.set('.from-top .tile', { top: '0', height: '0' });
   }
-
-  protected readonly faPlus = faPlus;
-  protected readonly faCog = faCog;
-  protected readonly faEyeDropper = faEyeDropper;
-  protected readonly faList = faList;
-  protected readonly faSlidersH = faSlidersH;
-  protected readonly faPowerOff = faPowerOff;
-  protected readonly faMinus = faMinus;
-  protected readonly faRunning = faRunning;
-  protected readonly faWalking = faWalking;
-  protected readonly faHome = faHome;
-  protected readonly faChartBar = faChartBar;
 }
