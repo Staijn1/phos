@@ -9,11 +9,18 @@ import {
 import {Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {ConfigurationService} from '../configuration/configuration.service';
-import {GradientInformation, LedstripState, ModeInformation, WebsocketMessage} from '@angulon/interfaces';
+import {
+  GradientInformation,
+  INetworkState,
+  LedstripState,
+  ModeInformation,
+  WebsocketMessage
+} from '@angulon/interfaces';
 import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
+import {Room} from '../room/Room.model';
 
-@WebSocketGateway(undefined, { cors: true })
+@WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
@@ -28,9 +35,25 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.GetNetworkState)
-  getNetworkState(): LedstripState {
+  async getNetworkState(): Promise<INetworkState> {
+    return this.websocketService.getNetworkState();
+  }
+
+  @SubscribeMessage(WebsocketMessage.CreateRoom)
+  async createRoom(client: Socket, payload: Partial<Room>): Promise<void> {
+    await this.roomService.create(payload);
+  }
+
+  @SubscribeMessage(WebsocketMessage.RemoveRoom)
+  async removeRoom(client: Socket, payload: string): Promise<void> {
+    await this.roomService.remove(payload);
+  }
+
+  @SubscribeMessage(WebsocketMessage.GetLedstripState)
+  getLedstripState(): LedstripState {
     return this.websocketService.getState();
   }
+
   @SubscribeMessage(WebsocketMessage.SetNetworkState)
   onSetNetworkState(client: Socket, payload: LedstripState): LedstripState {
     this.websocketService.setState(payload, client);

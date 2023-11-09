@@ -1,19 +1,21 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { MessageService } from '../message-service/message.service';
-import { io, Socket } from 'socket.io-client';
+import {Injectable} from '@angular/core';
+import {environment} from '../../../environments/environment';
+import {MessageService} from '../message-service/message.service';
+import {io, Socket} from 'socket.io-client';
 import {
   ClientSideLedstripState,
   GradientInformation,
+  INetworkState,
   LedstripState,
   ModeInformation,
   WebsocketMessage
-} from "@angulon/interfaces";
-import { Store } from '@ngrx/store';
-import { ChangeMultipleLedstripProperties, ReceiveServerLedstripState } from '../../../redux/ledstrip/ledstrip.action';
-import { LoadModesAction } from '../../../redux/modes/modes.action';
-import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
-import iro from "@jaames/iro";
+} from '@angulon/interfaces';
+import {Store} from '@ngrx/store';
+import {ChangeMultipleLedstripProperties, ReceiveServerLedstripState} from '../../../redux/ledstrip/ledstrip.action';
+import {LoadModesAction} from '../../../redux/modes/modes.action';
+import {LoadGradientsAction} from '../../../redux/gradients/gradients.action';
+import iro from '@jaames/iro';
+import {LoadNetworkState} from '../../../redux/networkstate/networkstate.action';
 
 @Injectable({
   providedIn: 'root'
@@ -38,6 +40,7 @@ export class WebsocketService {
       this.promisifyEmit<LedstripState>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
       this.loadModes();
       this.loadGradients();
+      this.loadNetworkState();
     });
 
     this.socket.on('disconnect', () => {
@@ -64,7 +67,7 @@ export class WebsocketService {
           return;
         }
         // Before sending the state to the server, we need to convert the iro.Colors to hex strings
-        const payload: LedstripState = { ...state, colors: state.colors.map(color => color.hexString) };
+        const payload: LedstripState = {...state, colors: state.colors.map(color => color.hexString)};
         this.promisifyEmit<LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
       });
   }
@@ -74,7 +77,10 @@ export class WebsocketService {
   }
 
   turnOff() {
-    this.store.dispatch(new ChangeMultipleLedstripProperties({ colors: [new iro.Color('#000000'),new iro.Color('#000000')], mode: 0 }));
+    this.store.dispatch(new ChangeMultipleLedstripProperties({
+      colors: [new iro.Color('#000000'), new iro.Color('#000000')],
+      mode: 0
+    }));
   }
 
   private loadGradients(): void {
@@ -123,5 +129,10 @@ export class WebsocketService {
         resolve(data);
       });
     });
+  }
+
+  private loadNetworkState() {
+    this.promisifyEmit<INetworkState>(WebsocketMessage.GetNetworkState)
+      .then((networkState) => this.store.dispatch(new LoadNetworkState(networkState)));
   }
 }

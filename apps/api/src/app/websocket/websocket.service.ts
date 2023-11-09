@@ -1,7 +1,8 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
-import {INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage} from '@angulon/interfaces';
+import {INetworkState, INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage} from '@angulon/interfaces';
 import {DeviceService} from '../device/device.service';
+import {RoomService} from '../room/room.service';
 
 @Injectable()
 export class WebsocketService {
@@ -12,7 +13,7 @@ export class WebsocketService {
   private _state: LedstripState = INITIAL_LEDSTRIP_STATE;
   private logger: Logger = new Logger('WebsocketClientsManagerService');
 
-  constructor(private readonly deviceService: DeviceService) {
+  constructor(private readonly deviceService: DeviceService, private readonly roomService: RoomService) {
   }
 
   /**
@@ -49,6 +50,16 @@ export class WebsocketService {
     this._state = newState;
     this.setStateOnAllLedstrips();
     this.setStateOnAllUsers(WebsocketMessage.StateChange, newState, originClient);
+  }
+
+  /**
+   * Get the state of the network containing all rooms and devices
+   */
+  async getNetworkState(): Promise<INetworkState>{
+    const rooms = await this.roomService.findAll();
+    return {
+      rooms: rooms,
+    }
   }
 
   /**

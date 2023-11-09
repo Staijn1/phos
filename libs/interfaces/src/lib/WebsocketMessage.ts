@@ -1,5 +1,5 @@
 export enum WebsocketMessage {
-  GetNetworkState = "getState",
+  GetLedstripState = "getState",
   SetNetworkState = "setState",
   GetModes = "getModes",
   GetGradients = "getGradients",
@@ -7,5 +7,8 @@ export enum WebsocketMessage {
   SetFFTValue = "FFT",
   StateChange = "stateChange",
   LedstripFFT = ".",
-  LedstripSetState = "!"
+  LedstripSetState = "!",
+  GetNetworkState = "getNetworkState",
+  CreateRoom = "createRoom",
+  RemoveRoom = "removeRoom",
 }
