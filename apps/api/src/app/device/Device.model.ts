@@ -16,6 +16,9 @@ export class Device implements IDevice{
   @Column('jsonb', { default: () => "'{}'" })
   state: LedstripState;
 
+  @Column({ default: true })
+  isLedstrip: boolean
+
   @ManyToOne(() => Room, (room) => room.connectedDevices)
   @JoinColumn({ name: 'room_id' })
   room: Room;

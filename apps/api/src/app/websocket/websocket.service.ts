@@ -88,8 +88,8 @@ export class WebsocketService {
   async joinUserRoom(client: Socket) {
     client.join('user');
     // delete this device from the database because it is now a user
-    await this.deviceService.remove(client.conn.remoteAddress);
-    this.logger.log(`Client ${client.conn.remoteAddress} joined the user room and was removed from the database`);
+    await this.deviceService.update(client.conn.remoteAddress, {isLedstrip: false});
+    this.logger.log(`The client ${client.conn.remoteAddress} registered as a user`);
   }
 
   /**

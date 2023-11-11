@@ -1,9 +1,9 @@
-import {DeleteResult, ObjectId} from 'typeorm';
+import {DeleteResult, ObjectId, UpdateResult} from 'typeorm';
 
 export interface DAOService<Entity> {
   findAll(): Promise<Entity[]>;
   findOne(id: string | number): Promise<Entity>;
   create(entityData: Partial<Entity>): Promise<Entity>;
-  update(id: string | number, entityData: Partial<Entity>): Promise<Entity>;
+  update(id: string | number, entityData: Partial<Entity>): Promise<UpdateResult>;
   remove(id: string | number | ObjectId): Promise<DeleteResult>;
 }
