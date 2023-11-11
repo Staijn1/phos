@@ -143,7 +143,7 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param payload Please refer to the Razer Chroma SDK documentation for the payload structure {@link https://assets.razerzone.com/dev_portal/REST/html/md__r_e_s_t_external_03_keyboard.html}
    */
-  createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any):RazerChromaSDKTypes {
+  createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): Record<string, unknown> {
     if (effect === ChromaKeyboardEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaKeyboardEffectType.CHROMA_CUSTOM && typeof payload === "object") {
