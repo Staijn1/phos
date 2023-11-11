@@ -46,8 +46,8 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.RemoveRoom)
-  async removeRoom(client: Socket, payload: ObjectId): Promise<void> {
-    await this.roomService.remove(payload);
+  async removeRoom(client: Socket, payload: ObjectId): Promise<DeleteResult> {
+    return this.roomService.remove(payload);
   }
 
   @SubscribeMessage(WebsocketMessage.GetLedstripState)
