@@ -4,9 +4,9 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType,
-  ChromaSDKErrorCodes,
-  RazerChromaSDKResponse
-} from "./RazerChromaSDKResponse";
+  RazerChromaSDKTypes
+} from "./RazerChromaSDKTypes";
+import {ChromaSDKErrorCodes} from "./RazerChromaSDKResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -102,7 +102,7 @@ export class RestChromaConnectionService extends BaseChromaConnection {
    * @param requestParamsInput Specific for the REST interface. The request options, excluding the body because that is set by the payload
    * @param parseJSONResponse Specific for the REST interface. Whether to parse the response from JSON to an object and return it. Must be disabled if the response is not JSON
    */
-  async call(path: string, payload: unknown, requestParamsInput?: Omit<RequestInit, 'body'>, parseJSONResponse = false): Promise<RazerChromaSDKResponse> {
+  async call(path: string, payload: unknown, requestParamsInput?: Omit<RequestInit, 'body'>, parseJSONResponse = false): Promise<Record<string, unknown>> {
     const requestParams: RequestInit = {
       ...requestParamsInput,
       body: ["GET", "HEAD"].includes(requestParamsInput?.method ?? 'unknown') ? undefined : JSON.stringify(payload)
@@ -132,35 +132,5 @@ export class RestChromaConnectionService extends BaseChromaConnection {
       console.error(e);
       return {result: ChromaSDKErrorCodes.FAILED};
     }
-  }
-
-  /**
-   * Overrides the default implementation to create the effect and then send it to the Razer Chroma SDK
-   * @param effectType
-   * @param keyboardData
-   */
-  override async createKeyboardEffect(effectType: ChromaKeyboardEffectType, keyboardData: any): Promise<RazerChromaSDKResponse> {
-    const effect = await super.createKeyboardEffect(effectType, keyboardData);
-    return await this.call("/keyboard", effect, {method: "PUT"});
-  }
-
-  /**
-   * Overrides the default implementation to create the effect and then send it to the Razer Chroma SDK
-   * @param effectType
-   * @param mouseData
-   */
-  override async createMouseEffect(effectType: ChromaMouseEffectType, mouseData: any): Promise<RazerChromaSDKResponse> {
-    const effect = await super.createMouseEffect(effectType, mouseData);
-    return this.call("/mouse", effect, {method: "PUT"});
-  }
-
-  /**
-   * Overrides the default implementation to create the effect and then send it to the Razer Chroma SDK
-   * @param effectType
-   * @param headsetData
-   */
-  override async createHeadsetEffect(effectType: ChromaHeadsetEffectType, headsetData: any): Promise<RazerChromaSDKResponse> {
-    const effect = await super.createHeadsetEffect(effectType, headsetData);
-    return this.call("/headset", effect, {method: "PUT"});
   }
 }
