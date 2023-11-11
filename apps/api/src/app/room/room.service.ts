@@ -4,6 +4,7 @@ import {Room} from './Room.model';
 import {DeleteResult, ObjectId, Repository, UpdateResult} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ObjectId as MongoObjectId} from 'mongodb';
+import {validate} from "class-validator";
 
 
 @Injectable()
@@ -23,11 +24,13 @@ export class RoomService implements DAOService<Room> {
   }
 
   async create(roomData: Partial<Room>): Promise<Room> {
+    await this.validate(roomData);
     const room = this.roomRepository.create(roomData);
     return this.roomRepository.save(room);
   }
 
   async update(id: string, roomData: Partial<Room>): Promise<UpdateResult> {
+    await this.validate(roomData);
     return this.roomRepository.update(id, roomData);
   }
 
@@ -35,5 +38,12 @@ export class RoomService implements DAOService<Room> {
     const deleteResult = await this.roomRepository.delete(id);
     this.logger.log(`Room with id ${id} was deleted`);
     return deleteResult;
+  }
+
+  async validate(entityData: Partial<Room>): Promise<void> {
+    const errors = await validate(entityData);
+    if (errors.length > 0) {
+      throw new Error(`Validation failed! ${errors.map(error => error.toString())}`);
+    }
   }
 }
