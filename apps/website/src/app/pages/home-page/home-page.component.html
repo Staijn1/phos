@@ -42,7 +42,7 @@
             <hr>
 
             <p class="tw-mt-2">
-              IP Address: {{device.ipAddress.replace('::ffff:', '')}}<br>
+              IP Address: {{device.ipAddress | IPv6ToIPv4}}<br>
               Is Connected: {{device.isConnected  | yesNo}}<br>
               Is Ledstrip: {{device.isLedstrip  | yesNo}}<br>
             </p>

@@ -10,6 +10,7 @@ import { SpotifyPlayerComponent } from './components/spotify-player/spotify-play
 import { FormsModule } from '@angular/forms';
 import { MsToTimePipe } from './pipe/MsToTime';
 import { YesNoPipe } from './pipe/yes-no.pipe';
+import { MappedIPv6ToIPv4Pipe } from './pipe/mapped-ipv6-to-ipv4/mapped-ipv6-to-ipv4.pipe';
 
 @NgModule({
   declarations: [
@@ -20,6 +21,7 @@ import { YesNoPipe } from './pipe/yes-no.pipe';
     SpotifyPlayerComponent,
     MsToTimePipe,
     YesNoPipe,
+    MappedIPv6ToIPv4Pipe,
   ],
   imports: [
     RouterModule,
@@ -36,6 +38,7 @@ import { YesNoPipe } from './pipe/yes-no.pipe';
     ColorpickerComponent,
     SpotifyPlayerComponent,
     YesNoPipe,
+    MappedIPv6ToIPv4Pipe,
   ],
 })
 export class SharedModule {}
