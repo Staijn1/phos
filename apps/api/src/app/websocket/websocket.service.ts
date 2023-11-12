@@ -107,7 +107,8 @@ export class WebsocketService {
     // When a client connects as a user it will delete itself from the database. @see joinUserRoom
     this.deviceService.addIfNotExists(client.conn.remoteAddress, {
       name: 'Untitled Device',
-      state: this._state
+      state: this._state,
+      isConnected: true
     }).then(wasAdded => {
       if (wasAdded) {
         this.logger.log(`Device ${client.conn.remoteAddress} was added to the database`);
@@ -125,6 +126,7 @@ export class WebsocketService {
    */
   onDisconnect(client: Socket, server: Server) {
     this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
+    this.deviceService.update(client.conn.remoteAddress, {isConnected: false}).then();
     this.server = server;
   }
 

@@ -19,6 +19,9 @@ export class Device implements IDevice{
   @Column({ default: true })
   isLedstrip: boolean
 
+  @Column()
+  isConnected: boolean;
+
   @ManyToOne(() => Room, (room) => room.connectedDevices)
   @JoinColumn({ name: 'room_id' })
   room: Room;
