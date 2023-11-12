@@ -2,7 +2,8 @@ import {INetworkState} from '@angulon/interfaces';
 import {NetworkstateAction} from './networkstate.action';
 
 const initialState: INetworkState = {
-  rooms: []
+  rooms: [],
+  devices: [],
 };
 
 export const networkStateReducer = (state: INetworkState = initialState, action: any): INetworkState => {

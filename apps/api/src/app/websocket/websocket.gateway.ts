@@ -38,11 +38,6 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     private readonly configurationService: ConfigurationService) {
   }
 
-  @SubscribeMessage(WebsocketMessage.GetAllDevices)
-  async getAllDevices(): Promise<Device[]> {
-    return this.deviceService.findAll();
-  }
-
   @SubscribeMessage(WebsocketMessage.GetNetworkState)
   async getNetworkState(): Promise<INetworkState> {
     return this.websocketService.getNetworkState();

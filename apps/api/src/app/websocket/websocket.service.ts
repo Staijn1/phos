@@ -59,6 +59,7 @@ export class WebsocketService {
     const rooms = await this.roomService.findAll();
     return {
       rooms: rooms,
+      devices: await this.deviceService.findAll({where: {room: null}})
     }
   }
 
