@@ -89,7 +89,7 @@ export class WebsocketService {
   async joinUserRoom(client: Socket) {
     client.join('user');
     // delete this device from the database because it is now a user
-    await this.deviceService.update(client.conn.remoteAddress, {isLedstrip: false});
+    await this.deviceService.update(client.conn.remoteAddress, {isLedstrip: false, isConnected: true});
     this.logger.log(`The client ${client.conn.remoteAddress} registered as a user`);
   }
 
@@ -108,8 +108,7 @@ export class WebsocketService {
     // When a client connects as a user it will delete itself from the database. @see joinUserRoom
     this.deviceService.addIfNotExists(client.conn.remoteAddress, {
       name: 'Untitled Device',
-      state: this._state,
-      isConnected: true
+      state: this._state
     }).then(wasAdded => {
       if (wasAdded) {
         this.logger.log(`Device ${client.conn.remoteAddress} was added to the database`);
