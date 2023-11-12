@@ -41,9 +41,10 @@
             <h3 class="tw-text-center">{{device.name}}</h3>
             <hr>
 
-            <p>
+            <p class="tw-mt-2">
               IP Address: {{device.ipAddress.replace('::ffff:', '')}}<br>
-              Is Connected: {{device.isConnected ? 'Yes' : 'No'}}
+              Is Connected: {{device.isConnected  | yesNo}}<br>
+              Is Ledstrip: {{device.isLedstrip  | yesNo}}<br>
             </p>
           </div>
         </div>

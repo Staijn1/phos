@@ -4,6 +4,7 @@ import {Store} from "@ngrx/store";
 import {MAXIMUM_BRIGHTNESS, SPEED_MAXIMUM_INTERVAL_MS} from "../../shared/constants";
 import {DecimalPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {RadialProgressComponent} from "../../shared/components/radialprogress/radial-progress.component";
+import {SharedModule} from "../../shared/shared.module";
 
 @Component({
   selector: "app-home",
@@ -14,7 +15,8 @@ import {RadialProgressComponent} from "../../shared/components/radialprogress/ra
     RadialProgressComponent,
     NgForOf,
     NgIf,
-    NgClass
+    NgClass,
+    SharedModule
   ],
   standalone: true
 })

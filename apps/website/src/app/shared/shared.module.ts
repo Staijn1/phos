@@ -35,6 +35,7 @@ import { YesNoPipe } from './pipe/yes-no.pipe';
     OffCanvasComponent,
     ColorpickerComponent,
     SpotifyPlayerComponent,
+    YesNoPipe,
   ],
 })
 export class SharedModule {}
