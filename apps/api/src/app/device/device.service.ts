@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Device} from './Device.model';
-import {DeleteResult, Repository, UpdateResult} from 'typeorm';
+import {DeleteResult, FindManyOptions, Repository, UpdateResult} from 'typeorm';
 import {DAOService} from '../interfaces/DAOService';
 import {validate} from "class-validator";
 import {Room} from "../room/Room.model";
@@ -14,8 +14,8 @@ export class DeviceService implements DAOService<Device> {
   ) {
   }
 
-  async findAll(): Promise<Device[]> {
-    return this.deviceRepository.find();
+  async findAll(criteria?: FindManyOptions<Device>): Promise<Device[]> {
+    return this.deviceRepository.find(criteria);
   }
 
   async findOne(ipAddress: string): Promise<Device> {

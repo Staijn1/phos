@@ -1,7 +1,8 @@
-import {DeleteResult, ObjectId, UpdateResult} from 'typeorm';
+import {DeleteResult, FindManyOptions, ObjectId, UpdateResult} from 'typeorm';
+import {Device} from "../device/Device.model";
 
 export interface DAOService<Entity> {
-  findAll(): Promise<Entity[]>;
+  findAll(criteria?: FindManyOptions<Device>): Promise<Entity[]>;
   findOne(id: string | number): Promise<Entity>;
   create(entityData: Partial<Entity>): Promise<Entity>;
   update(id: string | number, entityData: Partial<Entity>): Promise<UpdateResult>;

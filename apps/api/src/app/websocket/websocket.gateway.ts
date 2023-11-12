@@ -20,6 +20,8 @@ import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
 import {Room} from '../room/Room.model';
 import {DeleteResult, ObjectId} from 'typeorm';
+import {Device} from "../device/Device.model";
+import {DeviceService} from "../device/device.service";
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -32,7 +34,13 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   constructor(
     private readonly websocketService: WebsocketService,
     private readonly roomService: RoomService,
+    private readonly deviceService: DeviceService,
     private readonly configurationService: ConfigurationService) {
+  }
+
+  @SubscribeMessage(WebsocketMessage.GetAllDevices)
+  async getAllDevices(): Promise<Device[]> {
+    return this.deviceService.findAll();
   }
 
   @SubscribeMessage(WebsocketMessage.GetNetworkState)
