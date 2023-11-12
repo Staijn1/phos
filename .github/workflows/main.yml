@@ -98,11 +98,17 @@ jobs:
         run: docker buildx inspect --bootstrap
 
       - name: print current directory
-        run: pwd
-        
+        run: ls
+      - name: print apps directory
+        run: ls apps
+      - name: print api directory
+        run: ls apps/api
+      - name: print website directory
+        run: ls apps/website
+
       - name: Build and push base image
         run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:nx-base -t ${{secrets.USERNAME}}/angulon:nx-base-${{env.GitVersion_SemVer}} --push .
       - name: Build and push API image
-        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:api -t ${{secrets.USERNAME}}/angulon:api-${{env.GitVersion_SemVer}} --push /apps/api/Dockerfile
+        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:api -t ${{secrets.USERNAME}}/angulon:api-${{env.GitVersion_SemVer}} --push apps/api/Dockerfile
       - name: Build and push Website image
-        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:website -t ${{secrets.USERNAME}}/angulon:website-${{env.GitVersion_SemVer}} --push /apps/website/Dockerfile
+        run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:website -t ${{secrets.USERNAME}}/angulon:website-${{env.GitVersion_SemVer}} --push apps/website/Dockerfile
