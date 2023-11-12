@@ -11,18 +11,46 @@
             <app-radial-progress label="Brightness" [percentage]="brightnessPercentage"></app-radial-progress>
           </div>
         </div>
-
-        </div>
+      </div>
     </div>
 
     <div class='tw-card tw-bg-base-100 tw-shadow-xl'>
       <div class='tw-card-body'>
         <h2 class='tw-card-title'>Something Else</h2>
         <div class='tw-flex'>
-          <div class='tw-text-center tw-radial-progress' style='--value:70; --size:8em; --thickness:5px'>Speed<br/>70%</div>
-          <div class='tw-text-center tw-radial-progress' style='--value:50; --size:8em; --thickness:5px'>Brightness<br/>50%</div>
+          <div class='tw-text-center tw-radial-progress' style='--value:70; --size:8em; --thickness:5px'>Speed<br/>70%
+          </div>
+          <div class='tw-text-center tw-radial-progress' style='--value:50; --size:8em; --thickness:5px'>Brightness<br/>50%
+          </div>
         </div>
       </div>
+    </div>
+  </div>
+
+  <div class='tw-card tw-bg-base-100 tw-mt-3'>
+    <div class='tw-card-body'>
+      <h2 class='tw-card-title'>Connected Devices</h2>
+
+      <ng-container *ngIf="networkState && networkState.devices;else noConnectedDevices">
+        <div class="tw-grid tw-grid-cols-4">
+          <div class="tw-bg-base-200 tw-p-4 tw-rounded device" *ngFor="let device of networkState.devices">
+            <span
+              [ngClass]="device.isConnected ? 'tw-bg-success' : 'tw-bg-error'"
+              class="network-indicator">
+            </span>
+            <h3 class="tw-text-center">{{device.name}}</h3>
+            <hr>
+
+            <p>
+              IP Address: {{device.ipAddress.replace('::ffff:', '')}}<br>
+              Is Connected: {{device.isConnected ? 'Yes' : 'No'}}
+            </p>
+          </div>
+        </div>
+      </ng-container>
+      <ng-template #noConnectedDevices>
+        <p>No devices connected</p>
+      </ng-template>
     </div>
   </div>
 </div>
