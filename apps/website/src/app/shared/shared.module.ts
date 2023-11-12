@@ -11,6 +11,7 @@ import { FormsModule } from '@angular/forms';
 import { MsToTimePipe } from './pipe/ms-to-time/MsToTime';
 import { YesNoPipe } from './pipe/yes-no/yes-no.pipe';
 import { MappedIPv6ToIPv4Pipe } from './pipe/mapped-ipv6-to-ipv4/mapped-ipv6-to-ipv4.pipe';
+import { DeviceComponent } from './components/device/device.component';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { MappedIPv6ToIPv4Pipe } from './pipe/mapped-ipv6-to-ipv4/mapped-ipv6-to-
     MsToTimePipe,
     YesNoPipe,
     MappedIPv6ToIPv4Pipe,
+    DeviceComponent,
   ],
   imports: [
     RouterModule,
@@ -39,6 +41,7 @@ import { MappedIPv6ToIPv4Pipe } from './pipe/mapped-ipv6-to-ipv4/mapped-ipv6-to-
     SpotifyPlayerComponent,
     YesNoPipe,
     MappedIPv6ToIPv4Pipe,
+    DeviceComponent,
   ],
 })
 export class SharedModule {}

@@ -1,0 +1,12 @@
+.device {
+  position: relative;
+
+  .network-indicator {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+}
