@@ -97,15 +97,6 @@ jobs:
       - name: Bootstrap builder
         run: docker buildx inspect --bootstrap
 
-      - name: print current directory
-        run: ls
-      - name: print apps directory
-        run: ls apps
-      - name: print api directory
-        run: ls apps/api
-      - name: print website directory
-        run: ls apps/website
-
       - name: Build and push base image
         run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:nx-base -t ${{secrets.USERNAME}}/angulon:nx-base-${{env.GitVersion_SemVer}} --push .
       - name: Build and push API image
