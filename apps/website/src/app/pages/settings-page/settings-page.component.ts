@@ -13,6 +13,7 @@ import {INetworkState} from '@angulon/interfaces';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 import {ActivatedRoute, Router} from '@angular/router';
 import {ObjectId} from 'typeorm';
+import {SharedModule} from "../../shared/shared.module";
 
 @Component({
   selector: "app-settings",
@@ -23,7 +24,8 @@ import {ObjectId} from 'typeorm';
     NgForOf,
     FontAwesomeModule,
     FormsModule,
-    NgIf
+    NgIf,
+    SharedModule
   ],
   standalone: true
 })
