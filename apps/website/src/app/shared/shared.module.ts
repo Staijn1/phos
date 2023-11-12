@@ -8,7 +8,8 @@ import { OffCanvasComponent } from './components/offcanvas/off-canvas.component'
 import { ColorpickerComponent } from './components/colorpicker/colorpicker.component';
 import { SpotifyPlayerComponent } from './components/spotify-player/spotify-player.component';
 import { FormsModule } from '@angular/forms';
-import { MsToTimePipe } from "./pipe/MsToTime";
+import { MsToTimePipe } from './pipe/MsToTime';
+import { YesNoPipe } from './pipe/yes-no.pipe';
 
 @NgModule({
   declarations: [
@@ -17,17 +18,23 @@ import { MsToTimePipe } from "./pipe/MsToTime";
     CastPipe,
     OffCanvasComponent,
     SpotifyPlayerComponent,
-    MsToTimePipe
+    MsToTimePipe,
+    YesNoPipe,
   ],
-  imports: [RouterModule, CommonModule, FontAwesomeModule, NgOptimizedImage, FormsModule],
+  imports: [
+    RouterModule,
+    CommonModule,
+    FontAwesomeModule,
+    NgOptimizedImage,
+    FormsModule,
+  ],
   exports: [
     RouterModule,
     VisualizerComponent,
     CastPipe,
     OffCanvasComponent,
     ColorpickerComponent,
-    SpotifyPlayerComponent
-  ]
+    SpotifyPlayerComponent,
+  ],
 })
-export class SharedModule {
-}
+export class SharedModule {}
