@@ -8,4 +8,5 @@ import {IDevice} from "@angulon/interfaces";
 })
 export class DeviceComponent {
   @Input() device!: IDevice;
+  @Input() compact = false;
 }

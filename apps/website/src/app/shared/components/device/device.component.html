@@ -6,7 +6,7 @@
   <h3 class="tw-text-center">{{device.name}}</h3>
   <hr>
 
-  <div class="tw-grid tw-grid-cols-2 tw-mt-2">
+  <div class="tw-grid tw-grid-cols-2 tw-mt-2" *ngIf="!compact">
     <div class="tw-text-end">IP Address:</div>
     <div class="tw-pl-2">{{device.ipAddress | IPv6ToIPv4}}</div>
 
