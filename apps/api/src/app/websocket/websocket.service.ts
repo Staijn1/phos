@@ -99,7 +99,8 @@ export class WebsocketService {
    * @param server
    */
   onConnect(client: Socket, server: Server) {
-    this.logger.log(`Client connected: ${client.id}. IP: ${client.conn.remoteAddress}`);
+    console.dir(client.handshake)
+    this.logger.log(`Client connected. IP: ${client.handshake.address}`);
     this.server = server;
 
     // Let's check if this client is already registered in the database.
