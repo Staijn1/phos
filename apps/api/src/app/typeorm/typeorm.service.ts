@@ -1,10 +1,11 @@
-import { Injectable } from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IEnvironmentConfiguration } from '../../environments/IEnvironmentConfiguration';
 import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
+  private readonly logger = new Logger(TypeOrmConfigService.name);
   constructor(private config: ConfigService) {}
 
 
@@ -12,15 +13,18 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
    * Builds the options to use for TypeORM
    */
   public createTypeOrmOptions(): TypeOrmModuleOptions {
-    const db = this.config.get<IEnvironmentConfiguration['database']>('database');
+    const dbConfig = this.config.get<IEnvironmentConfiguration['database']>('database');
     const productionMode = this.config.get<IEnvironmentConfiguration['production']>('production');
+
+    const configSafeToLog = {...dbConfig, password: 'REDACTED'};
+    this.logger.log(`Connecting to database user the following configuration: ${JSON.stringify(configSafeToLog, null, 2)}`);
     return {
       type: 'mongodb',
-      host: db.host,
-      port: db.port,
-      database: db.database,
-      username: db.username,
-      password: db.password,
+      host: dbConfig.host,
+      port: dbConfig.port,
+      database: dbConfig.database,
+      username: dbConfig.username,
+      password: dbConfig.password,
       authSource: 'admin',
       //   migrations: ['dist/migrations/*.{ts,js}'],
       logger: 'file',
