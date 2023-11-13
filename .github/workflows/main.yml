@@ -105,5 +105,5 @@ jobs:
 #          docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:api -t ${{secrets.USERNAME}}/angulon:api-${{env.GitVersion_SemVer}} --push .
       - name: Build and push Website image
         run: |
-          cd ../../apps/website &&
+          cd ../website &&
           docker buildx build --platform=linux/arm64/v8,linux/amd64 -t ${{ secrets.USERNAME }}/angulon:website -t ${{secrets.USERNAME}}/angulon:website-${{env.GitVersion_SemVer}} --push .
