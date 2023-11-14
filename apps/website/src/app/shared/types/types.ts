@@ -9,6 +9,7 @@ export interface AngulonVisualizerOptions extends Omit<Options, "gradient"> {
 export type GeneralSettings = {
   chromaSupportEnabled: boolean;
   theme: string;
+  deviceName: string;
 };
 
 export type RGBObject = {

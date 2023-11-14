@@ -18,43 +18,50 @@ import {LoadGradientsAction} from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
 import {LoadNetworkState} from '../../../redux/networkstate/networkstate.action';
 import {ObjectId} from 'typeorm';
+import {UserPreferences} from '../../shared/types/types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
-  private websocketUrl = environment.url;
-  private readonly socket: Socket;
+  private readonly websocketUrl = environment.url;
+  private socket!: Socket;
   private updateLedstripState = true;
 
   constructor(
     private messageService: MessageService,
-    private readonly store: Store<{ modes: ModeInformation[], ledstripState: ClientSideLedstripState }>
+    private readonly store: Store<{ userPreferences: UserPreferences, modes: ModeInformation[], ledstripState: ClientSideLedstripState }>
   ) {
-    this.socket = io(this.websocketUrl, {
-      transports: ['websocket'],
-      reconnectionAttempts: 5
+    this.store.select('userPreferences').subscribe((userPreferences) => {
+      this.socket = io(this.websocketUrl, {
+        transports: ['websocket'],
+        reconnectionAttempts: 5,
+        query: {
+          deviceName: userPreferences.settings.deviceName
+        }
+      });
+      this.socket.on('connect', () => {
+        console.log('Opened websocket at', this.websocketUrl);
+
+        this.promisifyEmit<LedstripState, null>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
+        this.loadModes();
+        this.loadGradients();
+        this.loadNetworkState().then();
+      });
+
+      this.socket.on('disconnect', () => {
+        console.log(`Disconnected from websocket at ${this.websocketUrl}`);
+      });
+
+      this.socket.on('connect_error', (error: Error) => {
+        console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
+        messageService.setMessage(error);
+      });
+
+      this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
     });
 
-    this.socket.on('connect', () => {
-      console.log('Opened websocket at', this.websocketUrl);
 
-      this.promisifyEmit<LedstripState, null>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
-      this.loadModes();
-      this.loadGradients();
-      this.loadNetworkState().then();
-    });
-
-    this.socket.on('disconnect', () => {
-      console.log(`Disconnected from websocket at ${this.websocketUrl}`);
-    });
-
-    this.socket.on('connect_error', (error: Error) => {
-      console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
-      messageService.setMessage(error);
-    });
-
-    this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
 
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
     this.store
