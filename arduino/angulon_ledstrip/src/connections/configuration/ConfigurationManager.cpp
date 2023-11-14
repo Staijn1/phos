@@ -45,6 +45,10 @@ char angulon_index_html[]
             <label for='serverport'>Server API Port</label>
             <input type='number' class='form-control' id='serverport' name='serverport' placeholder='Port of the API server to connect to' value='{{serverport}}'>
         </div>
+        <div class='form-group'>
+            <label for='devicename'>Device Name</label>
+            <input type='text' class='form-control' id='devicename' name='devicename' placeholder='Name of this device' value='{{devicename}}'>
+        </div>
         <button type='submit' class='btn btn-primary mt-3'>Submit</button>
     </form>
 </div>
@@ -75,7 +79,6 @@ void ConfigurationManager::startConfigurationMode() {
     IPAddress IP = WiFi.softAPIP();
 
     Logger::log("ConfigurationManager", "Access point started");
-// Log the hotspot name + hotspotPassword where you should connect to
     Logger::log("ConfigurationManager", "Connect to the hotspot with the following credentials:");
     Logger::log("ConfigurationManager", hotspotName);
     Logger::log("ConfigurationManager", hotspotPassword);
@@ -89,6 +92,7 @@ void ConfigurationManager::setupWebserver() {
         SystemConfiguration configuration = ConfigurationManager::getConfig();
         String ssid = configuration.ssid;
         String password = configuration.password;
+        String deviceName = configuration.devicename;
         String ledpin = configuration.ledpin == (uint8_t) -1 ? "" : String(configuration.ledpin);
         String ledcount = configuration.ledcount == (uint8_t) -1 ? "" : String(configuration.ledcount);
         String serverip = configuration.serverip;
@@ -101,6 +105,7 @@ void ConfigurationManager::setupWebserver() {
         html.replace("{{ledcount}}", ledcount);
         html.replace("{{serverip}}", serverip);
         html.replace("{{serverport}}", serverport);
+        html.replace("{{devicename}}", deviceName);
         server->send(200, "text/html", html);
     });
     server->on("/configure", [this]() {
@@ -125,12 +130,13 @@ void ConfigurationManager::configureDevice() {
     const String ssid = server->arg("ssid");
     const String password = server->arg("password");
     const String serverip = server->arg("serverip");
+    const String deviceName = server->arg("devicename");
     const int ledpin = server->arg("ledpin").toInt();
     const int ledcount = server->arg("ledcount").toInt();
     const int serverPort = server->arg("serverport").toInt();
 
     // Check if all the right values are set
-    if (ssid == "" || password == "" || ledpin <= 0 || ledcount <= 0 || serverip == "" || serverPort <= 0) {
+    if (ssid == "" || password == "" || deviceName == "" || ledpin <= 0 || ledcount <= 0 || serverip == "" || serverPort <= 0) {
         server->send(400, "text/plain", "Invalid parameters");
         return;
     }
@@ -138,6 +144,7 @@ void ConfigurationManager::configureDevice() {
     preferences.putString("ssid", ssid);
     preferences.putString("password", password);
     preferences.putString("serverip", serverip);
+    preferences.putString("devicename", deviceName);
     preferences.putInt("ledpin", ledpin);
     preferences.putInt("ledcount", ledcount);
     preferences.putInt("serverport", serverPort);
@@ -178,7 +185,7 @@ void ConfigurationManager::setupWiFi() {
 void ConfigurationManager::run() {
     server->handleClient();
 
-    // We only need to perform the Wifi connection check if the system is configured
+    // We only need to perform the Wi-Fi connection check if the system is configured
     if (!isConfigured) return;
 
     if (WiFiClass::status() != WL_CONNECTED) {
@@ -204,11 +211,14 @@ SystemConfiguration ConfigurationManager::getConfig() {
 
 void ConfigurationManager::loadConfiguration() {
     SystemConfiguration config{};
-    config.ssid = preferences.getString("ssid", "").c_str();
+    // Generate a default device name based on the MAC address
+    String defaultDeviceName = "ESP32 - " + WiFi.macAddress();
+    config.ssid = preferences.getString("ssid", "");
     config.password = preferences.getString("password", "");
     config.serverip = preferences.getString("serverip", "");
     config.ledpin = preferences.getInt("ledpin", -1);
     config.ledcount = preferences.getInt("ledcount", -1);
     config.serverport = preferences.getInt("serverport", -1);
+    config.devicename = preferences.getString("devicename", defaultDeviceName);
     systemConfiguration = config;
 }

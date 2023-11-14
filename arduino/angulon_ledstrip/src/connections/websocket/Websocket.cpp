@@ -7,14 +7,15 @@
 #include "utils/state/State.h"
 #include "utils/logger/Logger.h"
 #include "Angulon.h"
+#include <UrlEncode.h>
 
 void Websocket::setup() {
     SystemConfiguration configuration = configurationManager->getConfig();
-    Logger::log("Websocket",
-                "Setting up websocket connection to " + configuration.serverip + ":" + configuration.serverport);
+    const String url = "/socket.io/?EIO=4&deviceName=" + urlEncode(configuration.devicename);
+    Logger::log("Websocket", "Setting up websocket connection to " + configuration.serverip + ":" + configuration.serverport + url);
     Angulon::led->turnOff();
 
-    socketIO.begin(configuration.serverip, configuration.serverport, "/socket.io/?EIO=4");
+    socketIO.begin(configuration.serverip, configuration.serverport, url);
     socketIO.onEvent([&](socketIOmessageType_t type, uint8_t *payload, size_t length) {
         this->webSocketClientEvent(type, payload, length);
     });
