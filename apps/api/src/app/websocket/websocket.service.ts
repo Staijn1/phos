@@ -31,7 +31,7 @@ export class WebsocketService {
    */
   private get ledstripClients(): Socket[] {
     const clients = this.server ? [...this.server.sockets.sockets.values()] : [];
-    return clients.filter(client => !this.isClientALedstrip(client));
+    return clients.filter(client => this.isClientALedstrip(client));
   }
 
   /**
