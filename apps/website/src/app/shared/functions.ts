@@ -1,6 +1,7 @@
 import { constrain } from "@angulon/interfaces";
 import { GlobalVars } from "./constants";
 import { RGBObject } from "./types/types";
+import {merge} from 'lodash';
 
 /**
  * Map a number from one scale to another. This function is the same as the map() function from arduino.
@@ -240,13 +241,17 @@ export const getDeviceType = (): string | void => {
 };
 
 /**
- * Loads and parses an object from the localstorage, if it exists. If it does not it returns the supplied default value;
+ * Loads an object from the localstorage, merges it with the default value so any new keys are added with their default values.
+ * If the key does not exist in the local storage, the entire default object is returned.
  * @param key
  * @param defaultValue
  */
-export const loadObjectFromLocalStorage = (key: string, defaultValue: unknown) => {
-  const localstorageItem = localStorage.getItem(key);
-  if (localstorageItem) return JSON.parse(localstorageItem);
+export const loadObjectFromLocalStorage = (key: string, defaultValue: Record<string, unknown>) => {
+  const localStorageItem = localStorage.getItem(key);
+  if (localStorageItem) {
+    const parsedItem = JSON.parse(localStorageItem);
+    return merge(defaultValue, parsedItem);
+  }
   return defaultValue;
 };
 
