@@ -7,9 +7,6 @@
   <hr>
 
   <div class="tw-grid tw-grid-cols-2 tw-mt-2" *ngIf="!compact">
-    <div class="tw-text-end">IP Address:</div>
-    <div class="tw-pl-2">{{device.ipAddress | IPv6ToIPv4}}</div>
-
     <div class="tw-text-end">Is Connected:</div>
     <div class="tw-pl-2">{{device.isConnected | yesNo}}</div>
 

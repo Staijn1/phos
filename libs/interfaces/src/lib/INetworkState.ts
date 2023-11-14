@@ -14,7 +14,6 @@ export interface IRoom {
 
 export interface IDevice {
   name: string;
-  ipAddress: string;
   state: LedstripState;
   isLedstrip: boolean;
   isConnected:boolean;

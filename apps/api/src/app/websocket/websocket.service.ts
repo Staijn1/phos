@@ -89,7 +89,7 @@ export class WebsocketService {
   async joinUserRoom(client: Socket) {
     client.join('user');
     // delete this device from the database because it is now a user
-    await this.deviceService.update(client.conn.remoteAddress, {isLedstrip: false, isConnected: true});
+    await this.deviceService.update(client.conn.remoteAddress, {isLedstrip: false});
     this.logger.log(`The client ${client.conn.remoteAddress} registered as a user`);
   }
 
@@ -103,13 +103,21 @@ export class WebsocketService {
     this.logger.log(`Client connected. IP: ${client.handshake.address}`);
     this.server = server;
 
+    const deviceName = client.handshake.query.deviceName;
+    // If no device name was provided, disconnect the client
+    if(!deviceName || typeof deviceName !== 'string' || Array.isArray(deviceName)) {
+      this.logger.warn(`Client ${client.conn.remoteAddress} provided an invalid device name. Received: ${deviceName}. Disconnecting...`)
+      client.disconnect(true);
+      return;
+    }
+
     // Let's check if this client is already registered in the database.
     // If not, we add it.
     // We do not know yet if the connected is a user or a ledstrip because by default you connect to the default namespace
     // When a client connects as a user it will delete itself from the database. @see joinUserRoom
-    this.deviceService.addIfNotExists(client.conn.remoteAddress, {
-      name: 'Untitled Device',
-      state: this._state
+    this.deviceService.addIfNotExists(deviceName, {
+      state: this._state,
+      isConnected: true,
     }).then(wasAdded => {
       if (wasAdded) {
         this.logger.log(`Device ${client.conn.remoteAddress} was added to the database`);

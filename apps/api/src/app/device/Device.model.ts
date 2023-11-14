@@ -8,9 +8,6 @@ export class Device implements IDevice{
   id: ObjectId;
 
   @Column()
-  ipAddress: string;
-
-  @Column()
   name: string;
 
   @Column('jsonb', { default: () => "'{}'" })

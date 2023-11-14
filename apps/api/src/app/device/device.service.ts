@@ -18,8 +18,8 @@ export class DeviceService implements DAOService<Device> {
     return this.deviceRepository.find(criteria);
   }
 
-  async findOne(ipAddress: string): Promise<Device> {
-    return this.deviceRepository.findOne({where: {ipAddress: ipAddress}});
+  async findOne(deviceName: string): Promise<Device> {
+    return this.deviceRepository.findOne({where: {name: deviceName}});
   }
 
   async create(deviceData: Partial<Device>): Promise<Device> {
@@ -28,13 +28,13 @@ export class DeviceService implements DAOService<Device> {
     return this.deviceRepository.save(device);
   }
 
-  async update(ipAddress: string, deviceData: Partial<Device>): Promise<UpdateResult> {
+  async update(deviceName: string, deviceData: Partial<Device>): Promise<UpdateResult> {
     await this.validate(deviceData);
-    return this.deviceRepository.update({ipAddress: ipAddress}, deviceData);
+    return this.deviceRepository.update({name: deviceName}, deviceData);
   }
 
-  async remove(ipAddress: string): Promise<DeleteResult> {
-    return this.deviceRepository.delete({ipAddress: ipAddress});
+  async remove(deviceName: string): Promise<DeleteResult> {
+    return this.deviceRepository.delete({name: deviceName});
   }
 
   async validate(entityData: Partial<Room>): Promise<void> {
@@ -46,17 +46,17 @@ export class DeviceService implements DAOService<Device> {
 
   /**
    * Add a device if it does not exist yet
-   * @param remoteAddress
+   * @param deviceName
    * @param entity
    * @returns True if the device was added, false if it already existed
    */
-  async addIfNotExists(remoteAddress: string, entity: Partial<Device>): Promise<boolean> {
-    const existingDevice = await this.findOne(remoteAddress);
+  async addIfNotExists(deviceName: string, entity: Partial<Device>): Promise<boolean> {
+    const existingDevice = await this.findOne(deviceName);
     if (existingDevice) return false;
 
     const deviceInfo = {
       ...entity,
-      ipAddress: remoteAddress,
+      name: deviceName
     }
     await this.create(deviceInfo);
     return true;
