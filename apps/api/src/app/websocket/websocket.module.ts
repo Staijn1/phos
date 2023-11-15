@@ -1,12 +1,13 @@
 import { Module } from '@nestjs/common';
 import { WebsocketGateway } from './websocket.gateway';
-import { WebsocketClientsManagerService } from './websocket-clients-manager.service';
+import { WebsocketService } from './websocket.service';
 import { ConfigurationModule } from '../configuration/configuration.module';
-import { GradientsModule } from '../gradients/gradients.module';
+import {DeviceModule} from '../device/device.module';
+import {RoomModule} from '../room/room.module';
 
 @Module({
-  imports: [ConfigurationModule, GradientsModule],
-  providers: [WebsocketGateway, WebsocketClientsManagerService],
+  imports: [ConfigurationModule, DeviceModule, RoomModule],
+  providers: [WebsocketGateway, WebsocketService],
   exports: [WebsocketGateway]
 })
 export class WebsocketModule {

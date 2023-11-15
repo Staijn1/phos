@@ -1,0 +1,16 @@
+<div class="tw-bg-base-200 tw-p-4 tw-rounded device">
+            <span
+              [ngClass]="device.isConnected ? 'tw-bg-success' : 'tw-bg-error'"
+              class="network-indicator">
+            </span>
+  <h3 class="tw-text-center">{{device.name}}</h3>
+  <hr>
+
+  <div class="tw-grid tw-grid-cols-2 tw-mt-2" *ngIf="!compact">
+    <div class="tw-text-end">Is Connected:</div>
+    <div class="tw-pl-2">{{device.isConnected | yesNo}}</div>
+
+    <div class="tw-text-end">Is Ledstrip:</div>
+    <div class="tw-pl-2">{{device.isLedstrip | yesNo}}</div>
+  </div>
+</div>

@@ -7,7 +7,7 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType
-} from "../../chroma-sdk/RazerChromaSDKTypes";
+} from "../../chroma-sdk/RazerChromaSDKResponse";
 
 /**
  * This class contains the necessary methods to register this application with the Razer SDK and to keep the connection alive (or destroy it)

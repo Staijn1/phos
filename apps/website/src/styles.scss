@@ -2,6 +2,13 @@
 @tailwind components;
 @tailwind utilities;
 
+@layer base {
+  @font-face {
+    font-family: "Comfortaa";
+    src: url("./assets/fonts/comfortaa/Comfortaa-VariableFont_wght.ttf");
+  }
+}
+
 .tw-container {
   @apply tw-mx-auto tw-p-5 md:tw-p-0;
 }

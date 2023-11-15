@@ -5,7 +5,7 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType
-} from "../../../../chroma-sdk/RazerChromaSDKTypes";
+} from "../../../../chroma-sdk/RazerChromaSDKResponse";
 
 export class BlinkState extends State {
   blinkEffect: string | number | NodeJS.Timeout | undefined;

@@ -5,7 +5,7 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType
-} from "../../../../chroma-sdk/RazerChromaSDKTypes";
+} from "../../../../chroma-sdk/RazerChromaSDKResponse";
 
 export class Fire2012State extends State {
   readonly COOLING = 55;

@@ -1,17 +1,19 @@
-import { Component, OnInit, ViewChild } from "@angular/core";
-import { faBroom } from "@fortawesome/free-solid-svg-icons";
-import { GeneralSettings, UserPreferences } from "../../shared/types/types";
-import { themes } from "../../shared/constants";
-import { Store } from "@ngrx/store";
-import {
-  ChangeGeneralSettings,
-  SetDefaultUserPreferences
-} from "../../../redux/user-preferences/user-preferences.action";
-import { FormsModule, NgForm } from "@angular/forms";
-import { debounceTime, skip } from "rxjs";
-import { ThemeVisualizationComponent } from "../../shared/components/theme-visualization/theme-visualization.component";
-import { NgForOf, NgIf } from "@angular/common";
-import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {faGripLines, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {GeneralSettings, UserPreferences} from '../../shared/types/types';
+import {themes} from '../../shared/constants';
+import {Store} from '@ngrx/store';
+import {ChangeGeneralSettings} from '../../../redux/user-preferences/user-preferences.action';
+import {FormsModule, NgForm} from '@angular/forms';
+import {debounceTime, skip} from 'rxjs';
+import {ThemeVisualizationComponent} from '../../shared/components/theme-visualization/theme-visualization.component';
+import {NgForOf, NgIf} from '@angular/common';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {INetworkState} from '@angulon/interfaces';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {ObjectId} from 'typeorm';
+import {SharedModule} from "../../shared/shared.module";
 
 @Component({
   selector: "app-settings",
@@ -22,7 +24,8 @@ import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
     NgForOf,
     FontAwesomeModule,
     FormsModule,
-    NgIf
+    NgIf,
+    SharedModule
   ],
   standalone: true
 })
@@ -30,16 +33,28 @@ export class SettingsPageComponent implements OnInit{
   @ViewChild("form", { static: true }) form!: NgForm;
   settings: GeneralSettings | undefined;
   selectedTheme = 0;
-  clearSettingsIcon = faBroom;
   private skipFormUpdate = false;
   availableThemes = themes;
+  activeMenu = 0;
+  draggableIcon = faGripLines;
+  networkState: INetworkState | undefined;
+  trashIcon = faTrash;
 
-  constructor(private readonly store: Store<{
-    userPreferences: UserPreferences
-  }>) {
+  constructor(
+    private readonly router: Router,
+    private readonly activatedRoute: ActivatedRoute,
+    private readonly websocketConnectionService: WebsocketService,
+    private readonly store: Store<{
+      userPreferences: UserPreferences,
+      networkState: INetworkState,
+    }>) {
     this.store.select("userPreferences").subscribe(preferences => {
       this.settings = structuredClone(preferences.settings);
       this.selectedTheme = this.availableThemes.findIndex(theme => theme === preferences.settings.theme);
+    });
+
+    this.store.select("networkState").subscribe(networkState => {
+      this.networkState = networkState;
     });
   }
 
@@ -51,13 +66,33 @@ export class SettingsPageComponent implements OnInit{
         this.skipFormUpdate = true;
         this.store.dispatch(new ChangeGeneralSettings(newValues));
       });
+
+    this.activatedRoute.fragment.subscribe(fragment => {
+      if (fragment) {
+        this.activeMenu = parseInt(fragment);
+      }
+    });
   }
 
   setTheme(theme: string): void {
     this.store.dispatch(new ChangeGeneralSettings({ theme: theme }));
   }
 
-  clearSettings(): void {
-    this.store.dispatch(new SetDefaultUserPreferences());
+  /**
+   * Changes the selected menu item which causes the content to change too.
+   * Also changes the URL to go to the sub-page /settings/:id so the user can refresh the page and still be on the menu item
+   * @param number
+   */
+  selectMenu(number: number) {
+    this.activeMenu = number;
+    this.router.navigate([], {relativeTo: this.activatedRoute, fragment: this.activeMenu.toString()});
+  }
+
+  createRoom(roomName: string) {
+    this.websocketConnectionService.createRoom(roomName).then();
+  }
+
+  deleteRoom(id: ObjectId) {
+    this.websocketConnectionService.removeRoom(id).then();
   }
 }

@@ -7,7 +7,7 @@
   }
 }
 
-.active {
+.active-theme {
   @apply tw-relative;
 
   &:before {
@@ -21,5 +21,39 @@
     tw-rounded-full
     tw-bg-accent;
     content: '';
+  }
+}
+
+
+/**
+* This incredibly difficult selector comes from Daisy UI and are used to override the background & text color of tw-active.
+* Somehow using just @apply on tw-active does not work because this is such a specific selector
+*/
+.tw-menu li > :not(ul):not(.tw-menu-title):not(details):active, .tw-menu li > :not(ul):not(.tw-menu-title):not(details).tw-active, .tw-menu li > details > summary:active{
+  @apply tw-bg-primary;
+
+  &:hover {
+    @apply tw-text-primary-content;
+  }
+}
+
+/**
+* This incredibly difficult selector comes from Daisy UI and are used to override the background & text color of menu items on hover.
+*/
+:where(.tw-menu li:not(.tw-menu-title):not(.tw-disabled) > :not(ul):not(details):not(.tw-menu-title)):not(.tw-active):hover, :where(.tw-menu li:not(.tw-menu-title):not(.tw-disabled) > details > summary:not(.tw-menu-title)):not(.tw-active):hover{
+  @apply tw-text-primary;
+}
+
+
+/**
+* Hide the content of the menu items first and then when it is selected, make it visible
+ */
+.menu-content {
+  @apply tw-opacity-0 tw-hidden;
+
+  &.active-content {
+    @apply
+    tw-block
+    tw-opacity-100;
   }
 }

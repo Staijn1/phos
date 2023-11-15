@@ -1,5 +1,6 @@
 import {Injectable} from '@angular/core';
-import {BaseChromaConnection} from './base-chroma-connection.service';
+import {BaseChromaConnection} from "./base-chroma-connection.service";
+import {ChromaSDKErrorCodes,} from "./RazerChromaSDKResponse";
 
 @Injectable({
   providedIn: 'root'
@@ -7,6 +8,7 @@ import {BaseChromaConnection} from './base-chroma-connection.service';
 export class RestChromaConnectionService extends BaseChromaConnection {
   private initializedURL: string | undefined;
   private heartbeatInterval: NodeJS.Timer | undefined;
+
   getChromaSDKUrl(): string {
     if (this.isInitialized) return this.initializedURL as string;
     return "http://localhost:54235/razer/chromasdk";
@@ -21,7 +23,7 @@ export class RestChromaConnectionService extends BaseChromaConnection {
     const response = await this.call("", this.APPLICATION_DATA, {
         method: "POST",
       },
-      true) as { uri: string, sessionid: string };
+      true) as unknown as { uri: string, sessionid: string };
 
     this.startHeartbeat();
     this.initializedURL = response.uri;
@@ -94,7 +96,7 @@ export class RestChromaConnectionService extends BaseChromaConnection {
    * @param requestParamsInput Specific for the REST interface. The request options, excluding the body because that is set by the payload
    * @param parseJSONResponse Specific for the REST interface. Whether to parse the response from JSON to an object and return it. Must be disabled if the response is not JSON
    */
-  async call(path: string, payload: unknown, requestParamsInput?: Omit<RequestInit, 'body'>, parseJSONResponse = false): Promise<unknown> {
+  async call(path: string, payload: unknown, requestParamsInput?: Omit<RequestInit, 'body'>, parseJSONResponse = false): Promise<Record<string, unknown>> {
     const requestParams: RequestInit = {
       ...requestParamsInput,
       body: ["GET", "HEAD"].includes(requestParamsInput?.method ?? 'unknown') ? undefined : JSON.stringify(payload)
@@ -118,11 +120,11 @@ export class RestChromaConnectionService extends BaseChromaConnection {
         return await response.json();
       }
 
-      return {};
+      return {result: ChromaSDKErrorCodes.FAILED};
     } catch (e) {
       this.messageService.setMessage(e as Error);
       console.error(e);
-      return {};
+      return {result: ChromaSDKErrorCodes.FAILED};
     }
   }
 }

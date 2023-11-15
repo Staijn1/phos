@@ -1,55 +1,67 @@
-import { Injectable } from '@angular/core';
-import { environment } from '../../../environments/environment';
-import { MessageService } from '../message-service/message.service';
-import { io, Socket } from 'socket.io-client';
+import {Injectable} from '@angular/core';
+import {environment} from '../../../environments/environment';
+import {MessageService} from '../message-service/message.service';
+import {io, Socket} from 'socket.io-client';
 import {
   ClientSideLedstripState,
   GradientInformation,
+  INetworkState,
+  IRoom,
   LedstripState,
   ModeInformation,
   WebsocketMessage
-} from "@angulon/interfaces";
-import { Store } from '@ngrx/store';
-import { ChangeMultipleLedstripProperties, ReceiveServerLedstripState } from '../../../redux/ledstrip/ledstrip.action';
-import { LoadModesAction } from '../../../redux/modes/modes.action';
-import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
-import iro from "@jaames/iro";
+} from '@angulon/interfaces';
+import {Store} from '@ngrx/store';
+import {ChangeMultipleLedstripProperties, ReceiveServerLedstripState} from '../../../redux/ledstrip/ledstrip.action';
+import {LoadModesAction} from '../../../redux/modes/modes.action';
+import {LoadGradientsAction} from '../../../redux/gradients/gradients.action';
+import iro from '@jaames/iro';
+import {LoadNetworkState} from '../../../redux/networkstate/networkstate.action';
+import {ObjectId} from 'typeorm';
+import {UserPreferences} from '../../shared/types/types';
 
 @Injectable({
   providedIn: 'root'
 })
 export class WebsocketService {
-  private websocketUrl = environment.url;
-  private readonly socket: Socket;
+  private readonly websocketUrl = environment.url;
+  private socket!: Socket;
   private updateLedstripState = true;
 
   constructor(
     private messageService: MessageService,
-    private readonly store: Store<{ modes: ModeInformation[], ledstripState: ClientSideLedstripState }>
+    private readonly store: Store<{ userPreferences: UserPreferences, modes: ModeInformation[], ledstripState: ClientSideLedstripState }>
   ) {
-    this.socket = io(this.websocketUrl, {
-      transports: ['websocket'],
-      reconnectionAttempts: 5
+    this.store.select('userPreferences').subscribe((userPreferences) => {
+      this.socket = io(this.websocketUrl, {
+        transports: ['websocket'],
+        reconnectionAttempts: 5,
+        query: {
+          deviceName: userPreferences.settings.deviceName
+        }
+      });
+      this.socket.on('connect', () => {
+        console.log('Opened websocket at', this.websocketUrl);
+
+        this.promisifyEmit<LedstripState, null>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
+        this.loadModes();
+        this.loadGradients();
+        this.loadNetworkState().then();
+      });
+
+      this.socket.on('disconnect', () => {
+        console.log(`Disconnected from websocket at ${this.websocketUrl}`);
+      });
+
+      this.socket.on('connect_error', (error: Error) => {
+        console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
+        messageService.setMessage(error);
+      });
+
+      this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
     });
 
-    this.socket.on('connect', () => {
-      console.log('Opened websocket at', this.websocketUrl);
 
-      this.promisifyEmit<LedstripState>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
-      this.loadModes();
-      this.loadGradients();
-    });
-
-    this.socket.on('disconnect', () => {
-      console.log(`Disconnected from websocket at ${this.websocketUrl}`);
-    });
-
-    this.socket.on('connect_error', (error: Error) => {
-      console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
-      messageService.setMessage(error);
-    });
-
-    this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
 
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
     this.store
@@ -64,8 +76,8 @@ export class WebsocketService {
           return;
         }
         // Before sending the state to the server, we need to convert the iro.Colors to hex strings
-        const payload: LedstripState = { ...state, colors: state.colors.map(color => color.hexString) };
-        this.promisifyEmit<LedstripState>(WebsocketMessage.SetState, payload).then();
+        const payload: LedstripState = {...state, colors: state.colors.map(color => color.hexString)};
+        this.promisifyEmit<LedstripState, LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
       });
   }
 
@@ -74,23 +86,26 @@ export class WebsocketService {
   }
 
   turnOff() {
-    this.store.dispatch(new ChangeMultipleLedstripProperties({ colors: [new iro.Color('#000000'),new iro.Color('#000000')], mode: 0 }));
+    this.store.dispatch(new ChangeMultipleLedstripProperties({
+      colors: [new iro.Color('#000000'), new iro.Color('#000000')],
+      mode: 0
+    }));
   }
 
   private loadGradients(): void {
-    this.promisifyEmit<GradientInformation[]>(WebsocketMessage.GetGradients)
+    this.promisifyEmit<GradientInformation[], null>(WebsocketMessage.GetGradients)
       .then(gradients => this.store.dispatch(new LoadGradientsAction(gradients)));
   }
 
   private loadModes() {
-    this.promisifyEmit<ModeInformation[]>(WebsocketMessage.GetModes)
+    this.promisifyEmit<ModeInformation[], null>(WebsocketMessage.GetModes)
       .then((modes) => this.store.dispatch(new LoadModesAction(modes)));
   }
 
   /**
    * Store the received state in the redux store, whilst setting the updateLedstripState flag.
    * This is required because otherwise this state change would trigger a new request to get the state from the server.
-   * And this in turn, would trigger a new state change, and so on, infinitely.
+   * And this, in turn, would trigger a new state change, and so on, infinitely.
    * @param state
    * @private
    */
@@ -102,26 +117,38 @@ export class WebsocketService {
   /**
    * Changes the .emit API of the websocket to a Promise-based API, so we can await the response
    * @param eventName - The name of the event to emit
-   * @param args The arguments to pass to the event
+   * @param payload
    * @returns A promise that resolves when the server responds
    * @private
    */
-  private promisifyEmit<T>(eventName: WebsocketMessage, ...args: any[]): Promise<T> {
+  private promisifyEmit<T, K>(eventName: WebsocketMessage, payload?: K): Promise<T> {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         const error = new Error('Websocket response timeout exceeded');
-        console.warn(`Timeout exceeded for event: ${eventName} with args: ${args.toString()}`, error);
+        console.warn(`Timeout exceeded for event: ${eventName} with args:`, payload, error);
         this.messageService.setMessage(error);
         reject(error);
       }, 3000);
 
-      if (args.length == 1 && !Array.isArray(args[0])) {
-        args = args[0];
-      }
-      this.socket.emit(eventName, args, (data: T) => {
+      this.socket.emit(eventName, payload, (data: T) => {
         clearTimeout(timeout);
         resolve(data);
       });
     });
+  }
+
+  private async loadNetworkState() {
+    const networkState = await this.promisifyEmit<INetworkState, null>(WebsocketMessage.GetNetworkState);
+    this.store.dispatch(new LoadNetworkState(networkState));
+  }
+
+  public async createRoom(roomName: string) {
+    await this.promisifyEmit<void, Partial<IRoom>>(WebsocketMessage.CreateRoom, {name: roomName});
+    await this.loadNetworkState();
+  }
+
+  async removeRoom(id: ObjectId) {
+    await this.promisifyEmit<void, ObjectId>(WebsocketMessage.RemoveRoom, id);
+    await this.loadNetworkState();
   }
 }

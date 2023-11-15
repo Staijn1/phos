@@ -1,12 +1,14 @@
 export enum WebsocketMessage {
-  GetState = "getState",
-  SetState = "setState",
+  GetLedstripState = "getState",
+  SetNetworkState = "setState",
   GetModes = "getModes",
   GetGradients = "getGradients",
   RegisterAsUser = "joinUserRoom",
   SetFFTValue = "FFT",
   StateChange = "stateChange",
-  SubmitState = "submitState",
   LedstripFFT = ".",
-  LedstripSetState = "!"
+  LedstripSetState = "!",
+  GetNetworkState = "getNetworkState",
+  CreateRoom = "createRoom",
+  RemoveRoom = "removeRoom",
 }

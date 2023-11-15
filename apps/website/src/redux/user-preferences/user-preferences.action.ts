@@ -4,7 +4,6 @@ import { AngulonVisualizerOptions, GeneralSettings } from '../../app/shared/type
 export enum UserPreferencesAction {
   CHANGE_GENERAL_SETTINGS = 'CHANGE_GENERAL_SETTINGS',
   CHANGE_VISUALIZER_OPTIONS = 'CHANGE_VISUALIZER_OPTIONS',
-  SET_DEFAULT_USER_PREFERENCES = 'SET_DEFAULT_USER_PREFERENCES'
 }
 
 export class ChangeGeneralSettings implements Action {
@@ -19,8 +18,4 @@ export class ChangeVisualizerOptions implements Action {
 
   constructor(public payload: Partial<AngulonVisualizerOptions>) {
   }
-}
-
-export class SetDefaultUserPreferences implements Action {
-  readonly type: UserPreferencesAction = UserPreferencesAction.SET_DEFAULT_USER_PREFERENCES;
 }

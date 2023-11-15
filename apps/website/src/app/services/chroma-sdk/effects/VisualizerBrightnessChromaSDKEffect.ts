@@ -1,7 +1,7 @@
-import iro from '@jaames/iro';
-import {calculateBGRInteger, mapNumber} from '../../../shared/functions';
-import {BaseReactiveChromaSDKEffect} from './BaseReactiveChromaSDKEffect';
-import {ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType} from '../RazerChromaSDKTypes';
+import iro from "@jaames/iro";
+import { calculateBGRInteger, mapNumber } from "../../../shared/functions";
+import { BaseReactiveChromaSDKEffect } from "./BaseReactiveChromaSDKEffect";
+import { ChromaHeadsetEffectType, ChromaKeyboardEffectType, ChromaMouseEffectType } from "../RazerChromaSDKResponse";
 
 export class VisualizerBrightnessChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   protected _BGRIntegerForeground = 0;

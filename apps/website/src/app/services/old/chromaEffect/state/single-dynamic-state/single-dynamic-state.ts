@@ -4,7 +4,7 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType
-} from "../../../../chroma-sdk/RazerChromaSDKTypes";
+} from "../../../../chroma-sdk/RazerChromaSDKResponse";
 
 export class SingleDynamicState extends State {
   private interval: string | number | NodeJS.Timeout | undefined;

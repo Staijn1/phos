@@ -7,8 +7,7 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType,
-  RazerChromaSDKTypes
-} from "./RazerChromaSDKTypes";
+} from "./RazerChromaSDKResponse";
 import { ClientSideLedstripState } from "@angulon/interfaces";
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
 import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
@@ -144,7 +143,7 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param payload Please refer to the Razer Chroma SDK documentation for the payload structure {@link https://assets.razerzone.com/dev_portal/REST/html/md__r_e_s_t_external_03_keyboard.html}
    */
-  createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any):RazerChromaSDKTypes {
+  createKeyboardEffect(effect: ChromaKeyboardEffectType, payload: any): Record<string, unknown> {
     if (effect === ChromaKeyboardEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaKeyboardEffectType.CHROMA_CUSTOM && typeof payload === "object") {
@@ -162,7 +161,7 @@ export abstract class BaseChromaConnection {
   /**
    * Construct the payload for the mouse effect
    */
-  createMouseEffect(effect: ChromaMouseEffectType, data: any): RazerChromaSDKTypes {
+  createMouseEffect(effect: ChromaMouseEffectType, data: any): Record<string, unknown> {
     if (effect === ChromaMouseEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaMouseEffectType.CHROMA_CUSTOM2 && typeof data === "object") {
@@ -180,7 +179,7 @@ export abstract class BaseChromaConnection {
    * @param effect
    * @param data
    */
-  createHeadsetEffect(effect: ChromaHeadsetEffectType, data: any): RazerChromaSDKTypes {
+  createHeadsetEffect(effect: ChromaHeadsetEffectType, data: any): Record<string, unknown> {
     if (effect === ChromaHeadsetEffectType.CHROMA_NONE) {
       return { effect };
     } else if (effect === ChromaHeadsetEffectType.CHROMA_CUSTOM && Array.isArray(data)) {
@@ -196,9 +195,9 @@ export abstract class BaseChromaConnection {
   }
 
   async setEffectsForDevices(effects: {
-    keyboard?: RazerChromaSDKTypes;
-    mouse?: RazerChromaSDKTypes;
-    headset?: RazerChromaSDKTypes
+    keyboard?: Record<string, unknown>;
+    mouse?: Record<string, unknown>;
+    headset?: Record<string, unknown>
   }): Promise<void> {
     const promises = [];
     if (effects.keyboard) promises.push(this.call("keyboard", effects.keyboard));

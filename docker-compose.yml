@@ -41,3 +41,27 @@ services:
     networks:
       - corp
     restart: on-failure
+
+  angulon_database:
+    container_name: angulon_database
+    image: mongo
+    restart: always
+    networks:
+      - corp
+    ports:
+      - "27017:27017"
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: root
+      MONGO_INITDB_ROOT_PASSWORD: example
+
+  mongo-gui:
+    image: ugleiton/mongo-gui
+    container_name: mongo-gui
+    restart: always
+    networks:
+      - corp
+    ports:
+      - "4321:4321"
+    environment:
+      - MONGO_URL=mongodb://root:example@angulon_database:27017
+

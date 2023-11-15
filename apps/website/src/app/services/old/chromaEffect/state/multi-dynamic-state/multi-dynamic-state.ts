@@ -4,7 +4,7 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType
-} from "../../../../chroma-sdk/RazerChromaSDKTypes";
+} from "../../../../chroma-sdk/RazerChromaSDKResponse";
 
 export class MultiDynamicState extends State {
   private headsetColors = [0, 0, 0, 0, 0];

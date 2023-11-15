@@ -1,4 +1,5 @@
-export const environment = {
+import {IEnvironmentConfiguration} from './IEnvironmentConfiguration';
+
+export const environment: Partial<IEnvironmentConfiguration> = {
   production: true,
-  statistics: false
 };

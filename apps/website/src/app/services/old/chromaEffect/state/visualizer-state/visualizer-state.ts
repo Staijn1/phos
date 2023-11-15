@@ -5,7 +5,7 @@ import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
   ChromaMouseEffectType
-} from "../../../../chroma-sdk/RazerChromaSDKTypes";
+} from "../../../../chroma-sdk/RazerChromaSDKResponse";
 
 export class VisualizerState extends State {
   protected _BGRIntegerForeground = 0;

@@ -12,6 +12,7 @@ struct SystemConfiguration {
     String ssid;
     String password;
     String serverip;
+    String devicename;
     int serverport;
     uint16_t ledcount;
     uint8_t ledpin;

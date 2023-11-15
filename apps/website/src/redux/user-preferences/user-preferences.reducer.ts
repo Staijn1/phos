@@ -5,7 +5,9 @@ import { loadObjectFromLocalStorage } from "../../app/shared/functions";
 const defaultUserPreferences: UserPreferences = {
   settings: {
     chromaSupportEnabled: false,
-    theme: "synthwave"
+    theme: "dark",
+    // A random device name
+    deviceName: Math.random().toString(36).substring(7)
   },
   visualizerOptions: {
     barSpace: 0.1,
@@ -70,9 +72,6 @@ export const userPreferencesReducer = (state: UserPreferences = initialState, ac
           ...action.payload
         }
       };
-    }
-    case UserPreferencesAction.SET_DEFAULT_USER_PREFERENCES: {
-      return defaultUserPreferences;
     }
     default:
       return state;

@@ -1,5 +1,5 @@
-import {Injectable} from '@angular/core';
-import {BaseChromaConnection} from './base-chroma-connection.service';
+import {Injectable} from "@angular/core";
+import {BaseChromaConnection} from "./base-chroma-connection.service";
 
 @Injectable({
   providedIn: "root"
