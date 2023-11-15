@@ -29,8 +29,14 @@ export class DeviceService implements DAOService<Device> {
   }
 
   async update(criteria: FindOptionsWhere<Device>, deviceData: Partial<Device>): Promise<UpdateResult> {
-    await this.validate(deviceData);
-    return this.deviceRepository.update(criteria, deviceData);
+    const existingDevice = await this.deviceRepository.findOne({where: criteria});
+    if (existingDevice) {
+      const updatedDevice = this.deviceRepository.merge(existingDevice, deviceData);
+      await this.validate(updatedDevice);
+      return await this.deviceRepository.save(updatedDevice) as unknown as UpdateResult;
+    } else {
+      throw new Error('Device not found');
+    }
   }
 
   async remove(deviceName: string): Promise<DeleteResult> {
