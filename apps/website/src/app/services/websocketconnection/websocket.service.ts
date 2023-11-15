@@ -59,6 +59,7 @@ export class WebsocketService {
       });
 
       this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
+      this.socket.on(WebsocketMessage.DatabaseChange, () => this.loadNetworkState().then());
     });
 
 
