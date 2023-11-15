@@ -40,15 +40,15 @@ export class Device implements IDevice{
 
   @AfterInsert()
   onDeviceChange() {
-   this.logger.error(`Device ${this.id} inserted`);
+   this.logger.debug(`Device ${this.id} inserted`);
   }
   @AfterUpdate()
   onDeviceUpdate(){
-    this.logger.error(`Device ${this.id} updated`);
+    this.logger.debug(`Device ${this.id} updated`);
   }
 
   @AfterRemove()
   onDeviceRemove(){
-    this.logger.error(`Device ${this.id} removed`);
+    this.logger.debug(`Device ${this.id} removed`);
   }
 }

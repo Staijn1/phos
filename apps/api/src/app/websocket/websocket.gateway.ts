@@ -11,7 +11,8 @@ import {Server, Socket} from 'socket.io';
 import {ConfigurationService} from '../configuration/configuration.service';
 import {
   GradientInformation,
-  INetworkState, IRoom,
+  INetworkState,
+  IRoom,
   LedstripState,
   ModeInformation,
   WebsocketMessage
@@ -19,9 +20,8 @@ import {
 import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
 import {Room} from '../room/Room.model';
-import {DeleteResult, ObjectId} from 'typeorm';
-import {Device} from "../device/Device.model";
-import {DeviceService} from "../device/device.service";
+import {ObjectId} from 'typeorm';
+import {DeviceService} from '../device/device.service';
 
 @WebSocketGateway(undefined, {cors: true})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {

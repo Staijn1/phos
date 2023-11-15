@@ -30,8 +30,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
       logger: 'advanced-console',
       synchronize: !productionMode, // do not set to TRUE in production mode - possible data loss
       autoLoadEntities: true,
-      logging: true,
-      subscribers: ["./subscribers/*.subscriber.ts"]
+      logging: true
     };
   }
 }
