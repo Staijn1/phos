@@ -1,10 +1,10 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Device} from './Device.model';
-import {DeleteResult, FindManyOptions, FindOneOptions, FindOptionsWhere, Repository, UpdateResult} from 'typeorm';
+import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
 import {DAOService} from '../interfaces/DAOService';
-import {validate} from "class-validator";
-import {Room} from "../room/Room.model";
+import {validate} from 'class-validator';
+import {Room} from '../room/Room.model';
 
 @Injectable()
 export class DeviceService implements DAOService<Device> {
@@ -28,19 +28,19 @@ export class DeviceService implements DAOService<Device> {
     return this.deviceRepository.save(device);
   }
 
-  async update(criteria: FindOptionsWhere<Device>, deviceData: Partial<Device>): Promise<UpdateResult> {
+  async update(criteria: FindOptionsWhere<Device>, deviceData: Partial<Device>): Promise<Device> {
     const existingDevice = await this.deviceRepository.findOne({where: criteria});
-    if (existingDevice) {
-      const updatedDevice = this.deviceRepository.merge(existingDevice, deviceData);
-      await this.validate(updatedDevice);
-      return await this.deviceRepository.save(updatedDevice) as unknown as UpdateResult;
-    } else {
-      throw new Error('Device not found');
-    }
+    if (!existingDevice) return null;
+
+
+    const updatedDevice = this.deviceRepository.merge(existingDevice, deviceData);
+    await this.validate(updatedDevice);
+    return this.deviceRepository.save(updatedDevice);
   }
 
-  async remove(deviceName: string): Promise<DeleteResult> {
-    return this.deviceRepository.delete({name: deviceName});
+  async remove(criteria: FindManyOptions<Device>): Promise<void> {
+    const toRemove = await this.findAll(criteria);
+    await this.deviceRepository.remove(toRemove);
   }
 
   async validate(entityData: Partial<Room>): Promise<void> {

@@ -1,10 +1,9 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import {DeleteResult, FindOneOptions, FindOptionsWhere, ObjectId, Repository, UpdateResult} from 'typeorm';
+import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
-import {ObjectId as MongoObjectId} from 'mongodb';
-import {validate} from "class-validator";
+import {validate} from 'class-validator';
 
 
 @Injectable()
@@ -15,29 +14,33 @@ export class RoomService implements DAOService<Room> {
               private readonly roomRepository: Repository<Room>) {
   }
 
-  async findAll(): Promise<Room[]> {
-    return this.roomRepository.find({relations: ['connectedDevices']});
+  async findAll(criteria?: FindManyOptions<Room>): Promise<Room[]> {
+    return this.roomRepository.find(criteria);
   }
 
   async findOne(criteria: FindOneOptions<Room>): Promise<Room> {
-    return this.roomRepository.findOne({...criteria, relations: ['connectedDevices']});
+    return this.roomRepository.findOne(criteria);
   }
 
-  async create(roomData: Partial<Room>): Promise<Room> {
-    await this.validate(roomData);
-    const room = this.roomRepository.create(roomData);
-    return this.roomRepository.save(room);
+  async create(RoomData: Partial<Room>): Promise<Room> {
+    await this.validate(RoomData);
+    const Room = this.roomRepository.create(RoomData);
+    return this.roomRepository.save(Room);
   }
 
-  async update(id: FindOptionsWhere<Room>, roomData: Partial<Room>): Promise<UpdateResult> {
-    await this.validate(roomData);
-    return this.roomRepository.update(id, roomData);
+  async update(criteria: FindOptionsWhere<Room>, RoomData: Partial<Room>): Promise<Room> {
+    const existingRoom = await this.roomRepository.findOne({where: criteria});
+    if (!existingRoom) return null;
+
+
+    const updatedRoom = this.roomRepository.merge(existingRoom, RoomData);
+    await this.validate(updatedRoom);
+    return this.roomRepository.save(updatedRoom);
   }
 
-  async remove(id: ObjectId): Promise<DeleteResult> {
-    const deleteResult = await this.roomRepository.delete(id);
-    this.logger.log(`Room with id ${id} was deleted`);
-    return deleteResult;
+  async remove(criteria: FindManyOptions<Room>): Promise<void> {
+    const toRemove = await this.findAll(criteria);
+    await this.roomRepository.remove(toRemove);
   }
 
   async validate(entityData: Partial<Room>): Promise<void> {
@@ -45,5 +48,15 @@ export class RoomService implements DAOService<Room> {
     if (errors.length > 0) {
       throw new Error(`Validation failed! ${errors.map(error => error.toString())}`);
     }
+  }
+
+  async createOrUpdate(criteria: FindOneOptions<Room>, entity: Partial<Room>): Promise<Room> {
+    const existingRoom = await this.findOne(criteria);
+    if (existingRoom) {
+      await this.update(criteria.where as FindOptionsWhere<Room>, entity);
+      return existingRoom;
+    }
+
+    return this.create(entity);
   }
 }

@@ -1,11 +1,11 @@
-import {DeleteResult, FindManyOptions, FindOneOptions, FindOptionsWhere, ObjectId, UpdateResult} from 'typeorm';
-import {Device} from "../device/Device.model";
+import {FindManyOptions, FindOneOptions, FindOptionsWhere} from 'typeorm';
 
 export interface DAOService<Entity> {
-  findAll(criteria?: FindManyOptions<Device>): Promise<Entity[]>;
-  findOne(id: FindOneOptions<Entity>): Promise<Entity>;
+  findAll(criteria?: FindManyOptions<Entity>): Promise<Entity[]>;
+  findOne(criteria: FindOneOptions<Entity>): Promise<Entity>;
   create(entityData: Partial<Entity>): Promise<Entity>;
-  update(id: FindOptionsWhere<Entity>, entityData: Partial<Entity>): Promise<UpdateResult>;
-  remove(id: string | number | ObjectId): Promise<DeleteResult>;
+  update(criteria: FindOptionsWhere<Entity>, entityData: Partial<Entity>): Promise<Entity>;
+  remove(criteria: FindManyOptions<Entity>): Promise<void>;
   validate(entityData: Partial<Entity>): Promise<void>;
+  createOrUpdate(criteria: FindOneOptions<Entity>, entity: Partial<Entity>): Promise<Entity>
 }
