@@ -3,6 +3,8 @@ import {Server, Socket} from 'socket.io';
 import {INetworkState, INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage} from '@angulon/interfaces';
 import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
+import {OnEvent} from '@nestjs/event-emitter';
+
 @Injectable()
 export class WebsocketService {
   private server: Server | undefined;
@@ -33,6 +35,14 @@ export class WebsocketService {
     return clients.filter(client => this.isClientALedstrip(client));
   }
 
+
+  @OnEvent('database-change')
+  handleOrderCreatedEvent() {
+    this.logger.log('Database changed. Updating all user clients')
+    this.emitEventToAllUsers(WebsocketMessage.DatabaseChange, null)
+  }
+
+
   /**
    * Get the state of this server
    */
@@ -48,13 +58,13 @@ export class WebsocketService {
   setState(newState: LedstripState, originClient: Socket) {
     this._state = newState;
     this.setStateOnAllLedstrips();
-    this.setStateOnAllUsers(WebsocketMessage.StateChange, newState, originClient);
+    this.emitEventToAllUsers(WebsocketMessage.StateChange, newState, originClient);
   }
 
   /**
    * Get the state of the network containing all rooms and devices
    */
-  async getNetworkState(): Promise<INetworkState>{
+  async getNetworkState(): Promise<INetworkState> {
     const rooms = await this.roomService.findAll();
     return {
       rooms: rooms,
@@ -103,7 +113,7 @@ export class WebsocketService {
 
     const deviceName = client.handshake.query.deviceName;
     // If no device name was provided, disconnect the client
-    if(!deviceName || typeof deviceName !== 'string' || Array.isArray(deviceName)) {
+    if (!deviceName || typeof deviceName !== 'string' || Array.isArray(deviceName)) {
       this.logger.warn(`Client ${client.conn.remoteAddress} provided an invalid device name. Received: ${deviceName}. Disconnecting...`)
       client.disconnect(true);
       return;
@@ -144,10 +154,10 @@ export class WebsocketService {
    * @param {Socket} originClient
    * @private
    */
-  private setStateOnAllUsers(event: WebsocketMessage, payload: LedstripState, originClient: Socket) {
+  private emitEventToAllUsers(event: WebsocketMessage, payload: LedstripState, originClient?: Socket) {
     const clients = this.userClients;
     for (const client of clients) {
-      if (client.id !== originClient.id) {
+      if (client.id !== originClient?.id) {
         client.emit(event, payload);
       }
     }
