@@ -1,11 +1,26 @@
 import {IDevice, LedstripState} from '@angulon/interfaces';
-import {Column, Entity, JoinColumn, ManyToOne, ObjectId, ObjectIdColumn} from 'typeorm';
+import {
+  AfterInsert,
+  AfterRemove,
+  AfterUpdate,
+  Column,
+  Entity,
+  JoinColumn,
+  ManyToOne,
+  ObjectId,
+  ObjectIdColumn
+} from 'typeorm';
 import {Room} from '../room/Room.model';
+import {Logger} from '@nestjs/common';
 
 @Entity()
 export class Device implements IDevice{
+  private logger: Logger = new Logger(Device.name);
   @ObjectIdColumn()
   id: ObjectId;
+
+  @Column()
+  socketSessionId: string;
 
   @Column()
   name: string;
@@ -22,4 +37,18 @@ export class Device implements IDevice{
   @ManyToOne(() => Room, (room) => room.connectedDevices)
   @JoinColumn({ name: 'room_id' })
   room: Room;
+
+  @AfterInsert()
+  onDeviceChange() {
+   this.logger.error(`Device ${this.id} inserted`);
+  }
+  @AfterUpdate()
+  onDeviceUpdate(){
+    this.logger.error(`Device ${this.id} updated`);
+  }
+
+  @AfterRemove()
+  onDeviceRemove(){
+    this.logger.error(`Device ${this.id} removed`);
+  }
 }

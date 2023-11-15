@@ -1,7 +1,7 @@
 import {Injectable} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Device} from './Device.model';
-import {DeleteResult, FindManyOptions, Repository, UpdateResult} from 'typeorm';
+import {DeleteResult, FindManyOptions, FindOneOptions, FindOptionsWhere, Repository, UpdateResult} from 'typeorm';
 import {DAOService} from '../interfaces/DAOService';
 import {validate} from "class-validator";
 import {Room} from "../room/Room.model";
@@ -18,8 +18,8 @@ export class DeviceService implements DAOService<Device> {
     return this.deviceRepository.find(criteria);
   }
 
-  async findOne(deviceName: string): Promise<Device> {
-    return this.deviceRepository.findOne({where: {name: deviceName}});
+  async findOne(criteria: FindOneOptions<Device>): Promise<Device> {
+    return this.deviceRepository.findOne(criteria);
   }
 
   async create(deviceData: Partial<Device>): Promise<Device> {
@@ -28,9 +28,9 @@ export class DeviceService implements DAOService<Device> {
     return this.deviceRepository.save(device);
   }
 
-  async update(deviceName: string, deviceData: Partial<Device>): Promise<UpdateResult> {
+  async update(criteria: FindOptionsWhere<Device>, deviceData: Partial<Device>): Promise<UpdateResult> {
     await this.validate(deviceData);
-    return this.deviceRepository.update({name: deviceName}, deviceData);
+    return this.deviceRepository.update(criteria, deviceData);
   }
 
   async remove(deviceName: string): Promise<DeleteResult> {
@@ -44,22 +44,14 @@ export class DeviceService implements DAOService<Device> {
     }
   }
 
-  /**
-   * Add a device if it does not exist yet
-   * @param deviceName
-   * @param entity
-   * @returns True if the device was added, false if it already existed
-   */
-  async addIfNotExists(deviceName: string, entity: Partial<Device>): Promise<boolean> {
-    const existingDevice = await this.findOne(deviceName);
-    if (existingDevice) return false;
-
-    const deviceInfo = {
-      ...entity,
-      name: deviceName
+  async createOrUpdate(criteria: FindOneOptions<Device>, entity: Partial<Device>): Promise<Device> {
+    const existingDevice = await this.findOne(criteria);
+    if (existingDevice) {
+      await this.update(criteria.where as FindOptionsWhere<Device>, entity);
+      return existingDevice;
     }
-    await this.create(deviceInfo);
-    return true;
+
+    return this.create(entity);
   }
 }
 

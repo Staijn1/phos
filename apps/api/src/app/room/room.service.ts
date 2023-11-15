@@ -1,7 +1,7 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import {DeleteResult, ObjectId, Repository, UpdateResult} from 'typeorm';
+import {DeleteResult, FindOneOptions, FindOptionsWhere, ObjectId, Repository, UpdateResult} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {ObjectId as MongoObjectId} from 'mongodb';
 import {validate} from "class-validator";
@@ -19,8 +19,8 @@ export class RoomService implements DAOService<Room> {
     return this.roomRepository.find({relations: ['connectedDevices']});
   }
 
-  async findOne(id: string): Promise<Room> {
-    return this.roomRepository.findOne({where: {id: new MongoObjectId(id)}, relations: ['connectedDevices']});
+  async findOne(criteria: FindOneOptions<Room>): Promise<Room> {
+    return this.roomRepository.findOne({...criteria, relations: ['connectedDevices']});
   }
 
   async create(roomData: Partial<Room>): Promise<Room> {
@@ -29,7 +29,7 @@ export class RoomService implements DAOService<Room> {
     return this.roomRepository.save(room);
   }
 
-  async update(id: string, roomData: Partial<Room>): Promise<UpdateResult> {
+  async update(id: FindOptionsWhere<Room>, roomData: Partial<Room>): Promise<UpdateResult> {
     await this.validate(roomData);
     return this.roomRepository.update(id, roomData);
   }

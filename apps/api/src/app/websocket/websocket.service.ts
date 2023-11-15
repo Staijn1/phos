@@ -3,7 +3,6 @@ import {Server, Socket} from 'socket.io';
 import {INetworkState, INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage} from '@angulon/interfaces';
 import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
-
 @Injectable()
 export class WebsocketService {
   private server: Server | undefined;
@@ -89,8 +88,8 @@ export class WebsocketService {
   async joinUserRoom(client: Socket) {
     client.join('user');
     // delete this device from the database because it is now a user
-    await this.deviceService.update(client.conn.remoteAddress, {isLedstrip: false});
-    this.logger.log(`The client ${client.conn.remoteAddress} registered as a user`);
+    await this.deviceService.update({socketSessionId: client.id}, {isLedstrip: false});
+    this.logger.log(`The client ${client.id} registered as a user`);
   }
 
   /**
@@ -99,7 +98,6 @@ export class WebsocketService {
    * @param server
    */
   onConnect(client: Socket, server: Server) {
-    console.dir(client.handshake)
     this.logger.log(`Client connected. IP: ${client.handshake.address}`);
     this.server = server;
 
@@ -111,19 +109,11 @@ export class WebsocketService {
       return;
     }
 
-    // Let's check if this client is already registered in the database.
-    // If not, we add it.
-    // We do not know yet if the connected is a user or a ledstrip because by default you connect to the default namespace
-    // When a client connects as a user it will delete itself from the database. @see joinUserRoom
-    this.deviceService.addIfNotExists(deviceName, {
-      state: this._state,
+    this.deviceService.createOrUpdate({where: {name: deviceName}}, {
+      name: deviceName,
+      socketSessionId: client.id,
       isConnected: true,
-    }).then(wasAdded => {
-      if (wasAdded) {
-        this.logger.log(`Device ${client.conn.remoteAddress} was added to the database`);
-      } else {
-        this.logger.log(`Device ${client.conn.remoteAddress} was already registered in the database`);
-      }
+      isLedstrip: true
     });
   }
 
@@ -135,7 +125,7 @@ export class WebsocketService {
    */
   onDisconnect(client: Socket, server: Server) {
     this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
-    this.deviceService.update(client.conn.remoteAddress, {isConnected: false}).then();
+    this.deviceService.update({socketSessionId: client.id}, {isConnected: false}).then();
     this.server = server;
   }
 
