@@ -6,7 +6,8 @@ import {constructEnvironmentConfiguration} from '../environments/EnvironmentConf
 import {validateEnvironmentConfiguration} from '../environments/EnvironmentValidation';
 import { TypeOrmConfigService } from './typeorm/typeorm.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
-
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import {AllSubscriber} from './typeorm/subscribers/AllSubscriber';
 @Module({
   imports: [
     WebsocketModule,
@@ -16,10 +17,11 @@ import { TypeOrmModule } from '@nestjs/typeorm';
       cache: true,
       validate: validateEnvironmentConfiguration,
     }),
-    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService })
+    TypeOrmModule.forRootAsync({ useClass: TypeOrmConfigService }),
+    EventEmitterModule.forRoot()
   ],
   controllers: [],
-  providers: []
+  providers: [AllSubscriber]
 })
 export class AppModule {
 }

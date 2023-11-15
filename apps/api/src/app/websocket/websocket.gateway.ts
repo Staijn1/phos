@@ -23,7 +23,7 @@ import {Room} from '../room/Room.model';
 import {ObjectId} from 'typeorm';
 import {DeviceService} from '../device/device.service';
 
-@WebSocketGateway(undefined, {cors: true})
+@WebSocketGateway(undefined, {cors: true, pingInterval: 5000})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
   @WebSocketServer()
   private server: Server;
