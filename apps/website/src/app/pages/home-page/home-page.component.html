@@ -32,7 +32,7 @@
       <h2 class='tw-card-title'>Connected Devices</h2>
 
       <ng-container *ngIf="networkState && networkState.devices;else noConnectedDevices">
-        <div class="tw-grid tw-grid-cols-4">
+        <div class="tw-grid tw-gap-4 tw-grid-cols-1 lg:tw-grid-cols-4">
           <app-device [device]="device" *ngFor="let device of networkState.devices"></app-device>
         </div>
       </ng-container>
