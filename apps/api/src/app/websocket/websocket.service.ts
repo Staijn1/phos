@@ -108,13 +108,13 @@ export class WebsocketService {
    * @param server
    */
   onConnect(client: Socket, server: Server) {
-    this.logger.log(`Client connected. IP: ${client.handshake.address}`);
+    this.logger.log(`Client is connecting. Session: ${client.id}`);
     this.server = server;
 
     const deviceName = client.handshake.query.deviceName;
     // If no device name was provided, disconnect the client
     if (!deviceName || typeof deviceName !== 'string' || Array.isArray(deviceName)) {
-      this.logger.warn(`Client ${client.conn.remoteAddress} provided an invalid device name. Received: ${deviceName}. Disconnecting...`)
+      this.logger.warn(`Client with session ${client.id} provided an invalid device name. Received: ${deviceName}. Disconnecting...`)
       client.disconnect(true);
       return;
     }
@@ -124,7 +124,7 @@ export class WebsocketService {
       socketSessionId: client.id,
       isConnected: true,
       isLedstrip: true
-    });
+    }).then(() => this.logger.log(`Client ${client.id} connected successfully with name ${deviceName}`));
   }
 
 
@@ -134,7 +134,7 @@ export class WebsocketService {
    * @param server
    */
   onDisconnect(client: Socket, server: Server) {
-    this.logger.log(`Client disconnected: ${client.id}. IP: ${client.conn.remoteAddress}`);
+    this.logger.log(`Client ${client.id} went offline`);
     this.deviceService.update({socketSessionId: client.id}, {isConnected: false}).then();
     this.server = server;
   }

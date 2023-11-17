@@ -32,70 +32,70 @@
                      id="deviceName" name="deviceName"
                      placeholder="Type new device name here" type="text"/>
             </div>
-            <div class="menu-content" [class.active-content]="activeMenu === 1">
-              <div
-                class="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-6 tw-gap-3 tw-sm:grid-cols-2 tw-justify-center">
-                <app-theme-visualization
-                  *ngFor="let availableTheme of availableThemes"
-                  [themeName]="availableTheme"
-                  class="theme-visualization"
-                  [class.active-theme]="availableTheme === settings.theme"
-                >
-                </app-theme-visualization>
+          </div>
+          <div class="menu-content" [class.active-content]="activeMenu === 1">
+            <div
+              class="tw-grid tw-grid-cols-2 md:tw-grid-cols-3 lg:tw-grid-cols-6 tw-gap-3 tw-sm:grid-cols-2 tw-justify-center">
+              <app-theme-visualization
+                *ngFor="let availableTheme of availableThemes"
+                [themeName]="availableTheme"
+                class="theme-visualization"
+                [class.active-theme]="availableTheme === settings.theme"
+              >
+              </app-theme-visualization>
+            </div>
+          </div>
+          <div class="menu-content" [class.active-content]="activeMenu === 2">
+            <div class="tw-grid tw-grid-cols-2">
+              <div class="tw-flex tw-justify-end tw-items-center tw-mb-3">
+                <div class="tw-join tw-w-3/4">
+                  <input
+                    #roomName
+                    (keyup)="submitRoomButton.disabled = roomName.value.length === 0"
+                    class="tw-input tw-input-bordered tw-join-item tw-w-1/2"
+                    placeholder="New Room Name"
+                    name="roomName"
+                  >
+                  <button
+                    #submitRoomButton
+                    (click)="createRoom(roomName.value)"
+                    disabled
+                    class="tw-btn tw-join-item tw-w-1/2">
+                    <span *ngIf="roomName.value.length === 0; else roomNameAvailable">Enter a room name</span>
+                    <ng-template #roomNameAvailable>Create New Room</ng-template>
+                  </button>
+                </div>
+              </div>
+              <div class="tw-flex tw-flex-col tw-p-4">
+                <ng-container *ngIf="networkState && networkState.devices">
+                  <h1 class="tw-text-xl">Devices Unassigned to a Room</h1>
+                  <app-device [device]="unassignedDevice"
+                              *ngFor="let unassignedDevice of networkState.devices"></app-device>
+                </ng-container>
               </div>
             </div>
-            <div class="menu-content" [class.active-content]="activeMenu === 2">
-              <div class="tw-grid tw-grid-cols-2">
-                <div class="tw-flex tw-justify-end tw-items-center tw-mb-3">
-                  <div class="tw-join tw-w-3/4">
-                    <input
-                      #roomName
-                      (keyup)="submitRoomButton.disabled = roomName.value.length === 0"
-                      class="tw-input tw-input-bordered tw-join-item tw-w-1/2"
-                      placeholder="New Room Name"
-                      name="roomName"
-                    >
-                    <button
-                      #submitRoomButton
-                      (click)="createRoom(roomName.value)"
-                      disabled
-                      class="tw-btn tw-join-item tw-w-1/2">
-                      <span *ngIf="roomName.value.length === 0; else roomNameAvailable">Enter a room name</span>
-                      <ng-template #roomNameAvailable>Create New Room</ng-template>
-                    </button>
-                  </div>
-                </div>
-                <div class="tw-flex tw-flex-col tw-p-4">
-                  <ng-container *ngIf="networkState && networkState.devices">
-                    <h1 class="tw-text-xl">Devices Unassigned to a Room</h1>
-                    <app-device [device]="unassignedDevice"
-                                *ngFor="let unassignedDevice of networkState.devices"></app-device>
-                  </ng-container>
-                </div>
-              </div>
-              <div class="tw-grid tw-grid-cols-2">
-                <ng-container *ngIf="networkState">
-                  <div *ngFor="let room of networkState.rooms" class="tw-card tw-bg-base-300 tw-shadow-xl">
-                    <div class="tw-card-body">
-                      <div class="tw-flex tw-justify-between">
-                        <h2 class="tw-card-title">{{room.name}}</h2>
-                        <button (click)="deleteRoom(room.id)" class="tw-btn tw-btn-square tw-btn-ghost tw-text-primary">
-                          <fa-icon [icon]="trashIcon"></fa-icon>
-                        </button>
-                      </div>
-                      <h2>Devices:</h2>
-                      <app-device *ngFor="let device of room.connectedDevices" [compact]="true" [device]="device">
-                        <a class="tw-flex tw-justify-between">
+            <div class="tw-grid tw-grid-cols-2">
+              <ng-container *ngIf="networkState">
+                <div *ngFor="let room of networkState.rooms" class="tw-card tw-bg-base-300 tw-shadow-xl">
+                  <div class="tw-card-body">
+                    <div class="tw-flex tw-justify-between">
+                      <h2 class="tw-card-title">{{room.name}}</h2>
+                      <button (click)="deleteRoom(room.id)" class="tw-btn tw-btn-square tw-btn-ghost tw-text-primary">
+                        <fa-icon [icon]="trashIcon"></fa-icon>
+                      </button>
+                    </div>
+                    <h2>Devices:</h2>
+                    <app-device *ngFor="let device of room.connectedDevices" [compact]="true" [device]="device">
+                      <a class="tw-flex tw-justify-between">
                           <span>
                             {{device.name}}<br/>
                           </span>
-                          <fa-icon class="tw-text-primary" [icon]="draggableIcon" size="xl"></fa-icon>
-                        </a>
-                      </app-device>
-                    </div>
+                        <fa-icon class="tw-text-primary" [icon]="draggableIcon" size="xl"></fa-icon>
+                      </a>
+                    </app-device>
                   </div>
-                </ng-container>
-              </div>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
