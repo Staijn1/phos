@@ -49,6 +49,8 @@ export class SettingsPageComponent implements OnInit{
       networkState: INetworkState,
     }>) {
     this.store.select("userPreferences").subscribe(preferences => {
+      if (this.skipFormUpdate) return;
+
       this.settings = structuredClone(preferences.settings);
       this.selectedTheme = this.availableThemes.findIndex(theme => theme === preferences.settings.theme);
     });
@@ -94,5 +96,10 @@ export class SettingsPageComponent implements OnInit{
 
   deleteRoom(id: ObjectId) {
     this.websocketConnectionService.removeRoom(id).then();
+  }
+
+  renameDevice() {
+    if (!this.settings?.deviceName) return;
+    this.websocketConnectionService.renameDevice(this.settings.deviceName);
   }
 }
