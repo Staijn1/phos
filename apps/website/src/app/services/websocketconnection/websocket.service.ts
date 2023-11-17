@@ -19,6 +19,7 @@ import iro from '@jaames/iro';
 import {LoadNetworkState} from '../../../redux/networkstate/networkstate.action';
 import {ObjectId} from 'typeorm';
 import {UserPreferences} from '../../shared/types/types';
+import {first} from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -32,7 +33,9 @@ export class WebsocketService {
     private messageService: MessageService,
     private readonly store: Store<{ userPreferences: UserPreferences, modes: ModeInformation[], ledstripState: ClientSideLedstripState }>
   ) {
-    this.store.select('userPreferences').subscribe((userPreferences) => {
+    this.store.select('userPreferences')
+      .pipe(first())
+      .subscribe((userPreferences) => {
       this.socket = io(this.websocketUrl, {
         transports: ['websocket'],
         reconnectionAttempts: 5,
@@ -151,5 +154,9 @@ export class WebsocketService {
   async removeRoom(id: ObjectId) {
     await this.promisifyEmit<void, ObjectId>(WebsocketMessage.RemoveRoom, id);
     await this.loadNetworkState();
+  }
+
+  renameDevice(deviceName: string) {
+    this.socket.emit(WebsocketMessage.RenameDevice, deviceName);
   }
 }

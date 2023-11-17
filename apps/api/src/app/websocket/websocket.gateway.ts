@@ -58,6 +58,11 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return this.websocketService.getState();
   }
 
+  @SubscribeMessage(WebsocketMessage.RenameDevice)
+  async renameDevice(client: Socket, payload: string): Promise<void> {
+    return this.deviceService.renameDevice(client.id, payload);
+  }
+
   @SubscribeMessage(WebsocketMessage.SetNetworkState)
   onSetNetworkState(client: Socket, payload: LedstripState): LedstripState {
     this.websocketService.setState(payload, client);
