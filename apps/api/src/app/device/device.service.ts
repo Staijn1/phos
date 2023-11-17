@@ -1,4 +1,4 @@
-import {Injectable} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import {InjectRepository} from '@nestjs/typeorm';
 import {Device} from './Device.model';
 import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
@@ -8,6 +8,7 @@ import {Room} from '../room/Room.model';
 
 @Injectable()
 export class DeviceService implements DAOService<Device> {
+  private logger = new Logger(DeviceService.name);
   constructor(
     @InjectRepository(Device)
     private readonly deviceRepository: Repository<Device>,
@@ -58,6 +59,16 @@ export class DeviceService implements DAOService<Device> {
     }
 
     return this.create(entity);
+  }
+
+  /**
+   * Rename a device in the database, based on the session id of the device requesting the rename
+   * @param sessionId
+   * @param payload
+   */
+  async renameDevice(sessionId: string, payload: string) {
+    this.logger.log(`Renaming device with session id ${sessionId} to ${payload}`)
+    await this.update({socketSessionId: sessionId}, {name: payload});
   }
 }
 
