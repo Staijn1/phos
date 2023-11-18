@@ -10,7 +10,6 @@
 #include "hardware/button/Button.h"
 #include "SystemConfiguration.h"
 
-#define NETWORK_TIMEOUT 10000
 
 /**
  * This class manages the configuration of this ledstrip.
@@ -52,7 +51,7 @@ public:
 
     void resetConfig();
 
-    SystemConfiguration getConfig();
+    static SystemConfiguration getConfig();
 
     static SystemConfiguration systemConfiguration;
 };
