@@ -16,12 +16,11 @@
 class Websocket {
 private:
     SocketIOclient socketIO;
-    ConfigurationManager *configurationManager;
     void webSocketClientEvent(socketIOmessageType_t type, uint8_t *payload, size_t length);
 
 public:
 
-    void setup();
+    void setup(SystemConfiguration configuration);
 
     void run();
 
