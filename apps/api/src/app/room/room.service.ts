@@ -1,18 +1,19 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
+import {FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {validate} from 'class-validator';
-import { ObjectId } from 'mongodb';
+import {DeviceService} from "../device/device.service";
 
 
 @Injectable()
 export class RoomService implements DAOService<Room> {
   private readonly logger = new Logger(RoomService.name);
 
-  constructor(@InjectRepository(Room)
-              private readonly roomRepository: Repository<Room>) {
+  constructor(
+    @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
+    private readonly deviceService: DeviceService) {
   }
 
   async findAll(criteria?: FindManyOptions<Room>): Promise<Room[]> {
@@ -59,5 +60,21 @@ export class RoomService implements DAOService<Room> {
     }
 
     return this.create(entity);
+  }
+
+  /**
+   * Assign a list of devices (by name) to a room
+   * @param roomName
+   * @param deviceNames
+   */
+  async assignDevicesToRoom(roomName: string, deviceNames: string[]): Promise<Room> {
+    const room = await this.roomRepository.findOne({where: {name: roomName}});
+    if (!room) return null;
+
+    const devices = await this.deviceService.findAll({where: {name: In(deviceNames)}});
+    if (!devices) return null;
+
+    room.connectedDevices = devices;
+    return this.roomRepository.save(room);
   }
 }

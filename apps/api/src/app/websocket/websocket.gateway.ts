@@ -21,7 +21,7 @@ import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
 import {Room} from '../room/Room.model';
 import {DeviceService} from '../device/device.service';
-import {ObjectId } from 'mongodb';
+import {ObjectId} from 'mongodb';
 
 @WebSocketGateway(undefined, {cors: true, pingInterval: 5000})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -53,6 +53,13 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     await this.roomService.remove({where: {name: payload}});
     return {status: 200, message: 'Room removed'};
   }
+
+  @SubscribeMessage(WebsocketMessage.AssignDevicesToRoom)
+  async assignDevicesToRoom(client: Socket, payload: { roomName: string, devices: string[] }): Promise<StandardResponse> {
+    await this.roomService.assignDevicesToRoom(payload.roomName, payload.devices)
+    return {status: 200, message: 'Devices assigned to room'};
+  }
+
 
   @SubscribeMessage(WebsocketMessage.GetLedstripState)
   getLedstripState(): LedstripState {
