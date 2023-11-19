@@ -1,27 +1,12 @@
-import {
-  OnGatewayConnection,
-  OnGatewayDisconnect,
-  OnGatewayInit,
-  SubscribeMessage,
-  WebSocketGateway,
-  WebSocketServer
-} from '@nestjs/websockets';
+import {OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessage, WebSocketGateway, WebSocketServer} from '@nestjs/websockets';
 import {Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {ConfigurationService} from '../configuration/configuration.service';
-import {
-  GradientInformation,
-  INetworkState,
-  IRoom,
-  LedstripState,
-  ModeInformation, StandardResponse,
-  WebsocketMessage
-} from '@angulon/interfaces';
+import {GradientInformation, INetworkState, IRoom, LedstripState, ModeInformation, StandardResponse, WebsocketMessage} from '@angulon/interfaces';
 import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
 import {Room} from '../room/Room.model';
 import {DeviceService} from '../device/device.service';
-import {ObjectId} from 'mongodb';
 
 @WebSocketGateway(undefined, {cors: true, pingInterval: 5000})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
