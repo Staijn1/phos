@@ -7,12 +7,11 @@ import {ChangeGeneralSettings} from '../../../redux/user-preferences/user-prefer
 import {FormsModule, NgForm} from '@angular/forms';
 import {debounceTime, skip} from 'rxjs';
 import {ThemeVisualizationComponent} from '../../shared/components/theme-visualization/theme-visualization.component';
-import {JsonPipe, NgForOf, NgIf} from '@angular/common';
+import {NgForOf, NgIf} from '@angular/common';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {INetworkState} from '@angulon/interfaces';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ObjectId} from 'typeorm';
 import {SharedModule} from "../../shared/shared.module";
 
 @Component({
@@ -26,7 +25,6 @@ import {SharedModule} from "../../shared/shared.module";
     FormsModule,
     NgIf,
     SharedModule,
-    JsonPipe
   ],
   standalone: true
 })

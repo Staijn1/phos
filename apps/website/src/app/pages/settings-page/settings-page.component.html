@@ -72,7 +72,6 @@
                     <div class="tw-card-body">
                       <div class="tw-flex tw-justify-between">
                         <h2 class="tw-card-title">{{room.name}}</h2>
-                        <pre>{{room | json}}</pre>
                         <button (click)="deleteRoom(room.name)" class="tw-btn tw-btn-square tw-btn-ghost tw-text-primary">
                           <fa-icon [icon]="trashIcon"></fa-icon>
                         </button>
