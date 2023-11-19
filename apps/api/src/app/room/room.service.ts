@@ -4,6 +4,7 @@ import {Room} from './Room.model';
 import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {validate} from 'class-validator';
+import { ObjectId } from 'mongodb';
 
 
 @Injectable()

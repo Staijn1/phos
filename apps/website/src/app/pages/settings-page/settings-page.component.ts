@@ -7,7 +7,7 @@ import {ChangeGeneralSettings} from '../../../redux/user-preferences/user-prefer
 import {FormsModule, NgForm} from '@angular/forms';
 import {debounceTime, skip} from 'rxjs';
 import {ThemeVisualizationComponent} from '../../shared/components/theme-visualization/theme-visualization.component';
-import {NgForOf, NgIf} from '@angular/common';
+import {JsonPipe, NgForOf, NgIf} from '@angular/common';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {INetworkState} from '@angulon/interfaces';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
@@ -25,7 +25,8 @@ import {SharedModule} from "../../shared/shared.module";
     FontAwesomeModule,
     FormsModule,
     NgIf,
-    SharedModule
+    SharedModule,
+    JsonPipe
   ],
   standalone: true
 })
@@ -94,8 +95,8 @@ export class SettingsPageComponent implements OnInit{
     this.websocketConnectionService.createRoom(roomName).then();
   }
 
-  deleteRoom(id: ObjectId) {
-    this.websocketConnectionService.removeRoom(id).then();
+  deleteRoom(name: string) {
+    this.websocketConnectionService.removeRoom(name).then();
   }
 
   renameDevice() {

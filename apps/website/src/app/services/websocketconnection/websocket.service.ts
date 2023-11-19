@@ -46,7 +46,7 @@ export class WebsocketService {
       this.socket.on('connect', () => {
         console.log('Opened websocket at', this.websocketUrl);
 
-        this.promisifyEmit<LedstripState, null>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
+        this.promisifyEmit<void, null>(WebsocketMessage.RegisterAsUser).then();
         this.loadModes();
         this.loadGradients();
         this.loadNetworkState().then();
@@ -151,8 +151,8 @@ export class WebsocketService {
     await this.loadNetworkState();
   }
 
-  async removeRoom(id: ObjectId) {
-    await this.promisifyEmit<void, ObjectId>(WebsocketMessage.RemoveRoom, id);
+  async removeRoom(name: string) {
+    await this.promisifyEmit<void, string>(WebsocketMessage.RemoveRoom, name);
     await this.loadNetworkState();
   }
 

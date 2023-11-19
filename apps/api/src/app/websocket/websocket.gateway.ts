@@ -14,14 +14,14 @@ import {
   INetworkState,
   IRoom,
   LedstripState,
-  ModeInformation,
+  ModeInformation, StandardResponse,
   WebsocketMessage
 } from '@angulon/interfaces';
 import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
 import {Room} from '../room/Room.model';
-import {ObjectId} from 'typeorm';
 import {DeviceService} from '../device/device.service';
+import {ObjectId } from 'mongodb';
 
 @WebSocketGateway(undefined, {cors: true, pingInterval: 5000})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -49,8 +49,9 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.RemoveRoom)
-  async removeRoom(client: Socket, payload: ObjectId): Promise<void> {
-    return this.roomService.remove({where: {id: payload}});
+  async removeRoom(client: Socket, payload: string): Promise<StandardResponse> {
+    await this.roomService.remove({where: {name: payload}});
+    return {status: 200, message: 'Room removed'};
   }
 
   @SubscribeMessage(WebsocketMessage.GetLedstripState)
@@ -86,9 +87,9 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.RegisterAsUser)
-  async onJoinUserRoom(client: Socket): Promise<LedstripState> {
-    this.websocketService.joinUserRoom(client);
-    return this.websocketService.getState();
+  async onJoinUserRoom(client: Socket): Promise<StandardResponse> {
+    await this.websocketService.joinUserRoom(client);
+    return {status: 200, message: 'Joined user room'};
   }
 
   /**
