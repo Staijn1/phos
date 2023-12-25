@@ -106,7 +106,8 @@ export class SettingsPageComponent implements OnInit {
     this.websocketConnectionService.renameDevice(this.settings.deviceName);
   }
 
-  onDropListDropped(event: CdkDragDrop<any>) {
+  onDropListDropped(event: CdkDragDrop<any, any>) {
+    console.log(event)  ;
     // Check if the previous container is the same as the new container
     if (event.previousContainer === event.container) {
       // If so, rearrange the items within the same list
