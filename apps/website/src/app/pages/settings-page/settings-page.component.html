@@ -1,7 +1,7 @@
 <div class="tw-container tw-my-10">
   <form #form="ngForm" class="tw-card tw-min-h-screen">
     <div *ngIf="settings" class="tw-p-3 md:tw-p-10 tw-card-body">
-      <div class="tw-grid tw-grid-cols-3 md:tw-grid-cols-12 tw-h-full">
+      <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-12 tw-h-full">
         <div class="tw-col-span-1  md:tw-col-span-2 tw-flex tw-flex-col tw-justify-between tw-h-full">
           <ul class="tw-menu">
             <li class="tw-menu-title">Settings</li>
@@ -46,7 +46,7 @@
             </div>
           </div>
           <div class="menu-content" [class.active-content]="activeMenu === 2">
-            <div class="tw-grid tw-grid-cols-2">
+            <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2">
               <div>
                 <div class="tw-flex tw-justify-end tw-items-center tw-mb-3">
                   <div class="tw-join tw-w-3/4">
