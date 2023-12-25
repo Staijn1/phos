@@ -1,10 +1,9 @@
-import {Component, OnDestroy, ViewChild} from '@angular/core';
-import {LedstripState, ModeInformation} from '@angulon/interfaces';
-import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
-import {ChangeLedstripMode} from '../../../redux/ledstrip/ledstrip.action';
-import {Store} from '@ngrx/store';
-import {combineLatest} from 'rxjs';
-import {NgClass, NgForOf, NgIf} from '@angular/common';
+import { Component, OnDestroy } from '@angular/core';
+import { LedstripState, ModeInformation } from '@angulon/interfaces';
+import { ChangeLedstripMode } from '../../../redux/ledstrip/ledstrip.action';
+import { Store } from '@ngrx/store';
+import { combineLatest } from 'rxjs';
+import { NgClass, NgForOf, NgIf } from '@angular/common';
 
 
 @Component({
@@ -19,8 +18,6 @@ import {NgClass, NgForOf, NgIf} from '@angular/common';
   standalone: true
 })
 export class ModePageComponent implements OnDestroy {
-  @ViewChild(ColorpickerComponent) colorpicker: ColorpickerComponent | undefined;
-
   modes: ModeInformation[] = [];
   iconBoxColors = [
     'primary',
