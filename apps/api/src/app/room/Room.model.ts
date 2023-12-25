@@ -16,5 +16,6 @@ export class Room implements IRoom{
 
   @OneToMany(() => Device, (device) => device.room)
   @JoinColumn()
+  @Column({ type: 'array', default: [] })
   connectedDevices: Device[];
 }

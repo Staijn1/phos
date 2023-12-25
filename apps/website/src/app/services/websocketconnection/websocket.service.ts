@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
-import {MessageService} from '../message-service/message.service';
-import {io, Socket} from 'socket.io-client';
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { MessageService } from '../message-service/message.service';
+import { io, Socket } from 'socket.io-client';
 import {
   ClientSideLedstripState,
   GradientInformation,
@@ -11,15 +11,14 @@ import {
   ModeInformation,
   WebsocketMessage
 } from '@angulon/interfaces';
-import {Store} from '@ngrx/store';
-import {ChangeMultipleLedstripProperties, ReceiveServerLedstripState} from '../../../redux/ledstrip/ledstrip.action';
-import {LoadModesAction} from '../../../redux/modes/modes.action';
-import {LoadGradientsAction} from '../../../redux/gradients/gradients.action';
+import { Store } from '@ngrx/store';
+import { ChangeMultipleLedstripProperties, ReceiveServerLedstripState } from '../../../redux/ledstrip/ledstrip.action';
+import { LoadModesAction } from '../../../redux/modes/modes.action';
+import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
-import {LoadNetworkState} from '../../../redux/networkstate/networkstate.action';
-import {ObjectId} from 'typeorm';
-import {UserPreferences} from '../../shared/types/types';
-import {first} from 'rxjs';
+import { LoadNetworkState } from '../../../redux/networkstate/networkstate.action';
+import { UserPreferences } from '../../shared/types/types';
+import { first } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -158,5 +157,10 @@ export class WebsocketService {
 
   renameDevice(deviceName: string) {
     this.socket.emit(WebsocketMessage.RenameDevice, deviceName);
+  }
+
+  async assignDeviceToRoom(deviceId: string, roomId: string) {
+    const payload = { deviceId, roomId };
+    this.socket.emit(WebsocketMessage.AssignDeviceToRoom, payload);
   }
 }

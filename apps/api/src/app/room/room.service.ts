@@ -5,6 +5,8 @@ import {FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository} from 
 import {InjectRepository} from '@nestjs/typeorm';
 import {validate} from 'class-validator';
 import {DeviceService} from "../device/device.service";
+import { ObjectId } from 'mongodb';
+import { IRoom } from '@angulon/interfaces';
 
 
 @Injectable()
@@ -24,10 +26,11 @@ export class RoomService implements DAOService<Room> {
     return this.roomRepository.findOne(criteria);
   }
 
-  async create(RoomData: Partial<Room>): Promise<Room> {
-    await this.validate(RoomData);
-    const Room = this.roomRepository.create(RoomData);
-    return this.roomRepository.save(Room);
+  async create(roomData: Partial<Room>): Promise<Room> {
+    await this.validate(roomData);
+    const roomDefaults: IRoom = { connectedDevices: [], id: undefined, name: '' };
+    const room = this.roomRepository.create({ ...roomDefaults, ...roomData });
+    return this.roomRepository.save(room);
   }
 
   async update(criteria: FindOptionsWhere<Room>, RoomData: Partial<Room>): Promise<Room> {
@@ -62,19 +65,20 @@ export class RoomService implements DAOService<Room> {
     return this.create(entity);
   }
 
-  /**
-   * Assign a list of devices (by name) to a room
-   * @param roomName
-   * @param deviceNames
-   */
-  async assignDevicesToRoom(roomName: string, deviceNames: string[]): Promise<Room> {
-    const room = await this.roomRepository.findOne({where: {name: roomName}});
-    if (!room) return null;
+  async assignDeviceToRoom(deviceId: string, roomId: string): Promise<Room> {
+    const deviceObjectId = new ObjectId(deviceId);
+    const roomObjectId = new ObjectId(roomId);
+    // Find the device and the room in the database
+    const device = await this.deviceService.findOne({where: {id: deviceObjectId}});
+    const room = await this.findOne({where: {id: roomObjectId}});
 
-    const devices = await this.deviceService.findAll({where: {name: In(deviceNames)}});
-    if (!devices) return null;
+    if (!device) throw new Error("Device not found");
+    if(!room) throw new Error("Room not found");
 
-    room.connectedDevices = devices;
+    // Add the device to the room's connectedDevices array
+    room.connectedDevices.push(device);
+
+    // Save the updated room
     return this.roomRepository.save(room);
   }
 }
