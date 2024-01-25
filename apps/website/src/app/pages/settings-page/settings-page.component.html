@@ -19,7 +19,7 @@
                 <input [(ngModel)]="settings.chromaSupportEnabled"
                        class="tw-checkbox tw-checkbox-sm tw-checkbox-primary" id="chromaSupportEnabled"
                        name="chromaSupportEnabled"
-                       type="checkbox" />
+                       type="checkbox"/>
               </label>
             </div>
             <div class="tw-form-control tw-w-full md:tw-w-1/4">
@@ -30,7 +30,7 @@
                      (change)="renameDevice()"
                      class="tw-input tw-input-bordered tw-w-full"
                      id="deviceName" name="deviceName"
-                     placeholder="Type new device name here" type="text" />
+                     placeholder="Type new device name here" type="text"/>
             </div>
           </div>
           <div class="menu-content" [class.active-content]="activeMenu === 1">
@@ -46,7 +46,7 @@
             </div>
           </div>
           <div class="menu-content" [class.active-content]="activeMenu === 2">
-            <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2">
+            <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2" cdkDropListGroup>
               <div>
                 <div class="tw-flex tw-justify-end tw-items-center tw-mb-3">
                   <div class="tw-join tw-w-3/4">
@@ -68,7 +68,6 @@
                   </div>
                 </div>
                 <ng-container *ngIf="networkState">
-                  <pre>{{ networkState | json }}</pre>
                   <div *ngFor="let room of networkState.rooms" class="tw-card tw-bg-base-300 tw-shadow-xl">
                     <div class="tw-card-body">
                       <div class="tw-flex tw-justify-between">
@@ -80,24 +79,25 @@
                       </div>
                       <h2>Devices:</h2>
                       <div
-                        *ngFor="let room of networkState.rooms"
-                        (cdkDropListDropped)="onDropListDropped($event)"
+                        (cdkDropListDropped)="onDeviceDroppedInRoom($event)"
                         [id]="'devicesInsideRoomList|' + room.name + '|' + room.id"
-                        [cdkDropListData]="room.id"
-                        cdkDropListConnectedTo="unassignedDevicesList"
+                        [cdkDropListData]="room"
                         cdkDropList
-                        class="tw-card tw-bg-base-300 tw-shadow-xl">
+                        class="tw-card tw-bg-base-300 tw-shadow-xl tw-min-h-16">
                         <div *ngIf="room.connectedDevices.length === 0" class="tw-text-center tw-text-gray-500">
                           No devices in room
                         </div>
                         <div>
                           <app-device
                             *ngFor="let device of room.connectedDevices"
+                            [cdkDragData]="device"
                             [compact]="true"
-                            [device]="device">
+                            [device]="device"
+                            cdkDrag
+                          >
                             <a class="tw-flex tw-justify-between">
                             <span>
-                              {{ device.name }}<br />
+                              {{ device.name }}<br/>
                             </span>
                               <fa-icon class="tw-text-primary" [icon]="draggableIcon" size="xl"></fa-icon>
                             </a>
@@ -108,19 +108,26 @@
                   </div>
                 </ng-container>
               </div>
-              <div
-                (cdkDropListDropped)="onDropListDropped($event)"
-                cdkDropList
-                id="unassignedDevicesList"
-                class="tw-flex tw-flex-col tw-p-4"
-              >
-                <ng-container *ngIf="networkState && networkState.devices">
+              <ng-container *ngIf="networkState">
+                <div
+                  #unassignedDevicesList="cdkDropList"
+                  id="unassignedDevicesList"
+                  [cdkDropListData]="networkState.devices"
+                  (cdkDropListDropped)="onDeviceDroppedInUnassignedDevicesList($event)"
+                  cdkDropList
+                  class="tw-flex tw-flex-col tw-p-4"
+                >
                   <h1 class="tw-text-xl">Ledstrips Unassigned to a Room</h1>
                   <ng-container *ngFor="let unassignedDevice of networkState.devices">
-                    <app-device [device]="unassignedDevice" *ngIf="unassignedDevice.isLedstrip" cdkDrag></app-device>
+                    <app-device
+                      *ngIf="unassignedDevice.isLedstrip"
+                      [device]="unassignedDevice"
+                      [cdkDragData]="unassignedDevice"
+                      cdkDrag
+                    ></app-device>
                   </ng-container>
-                </ng-container>
-              </div>
+                </div>
+              </ng-container>
             </div>
           </div>
         </div>
@@ -128,3 +135,4 @@
     </div>
   </form>
 </div>
+

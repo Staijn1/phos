@@ -1,19 +1,19 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
-import { faGripLines, faTrash } from '@fortawesome/free-solid-svg-icons';
-import { GeneralSettings, UserPreferences } from '../../shared/types/types';
-import { themes } from '../../shared/constants';
-import { Store } from '@ngrx/store';
-import { ChangeGeneralSettings } from '../../../redux/user-preferences/user-preferences.action';
-import { FormsModule, NgForm } from '@angular/forms';
-import { debounceTime, skip } from 'rxjs';
-import { ThemeVisualizationComponent } from '../../shared/components/theme-visualization/theme-visualization.component';
-import { JsonPipe, NgForOf, NgIf } from '@angular/common';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { INetworkState } from '@angulon/interfaces';
-import { WebsocketService } from '../../services/websocketconnection/websocket.service';
-import { ActivatedRoute, Router } from '@angular/router';
-import { SharedModule } from '../../shared/shared.module';
-import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk/drag-drop';
+import {Component, OnInit, ViewChild} from '@angular/core';
+import {faGripLines, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {GeneralSettings, UserPreferences} from '../../shared/types/types';
+import {themes} from '../../shared/constants';
+import {Store} from '@ngrx/store';
+import {ChangeGeneralSettings} from '../../../redux/user-preferences/user-preferences.action';
+import {FormsModule, NgForm} from '@angular/forms';
+import {debounceTime, skip} from 'rxjs';
+import {ThemeVisualizationComponent} from '../../shared/components/theme-visualization/theme-visualization.component';
+import {JsonPipe, NgForOf, NgIf} from '@angular/common';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {IDevice, INetworkState, IRoom} from '@angulon/interfaces';
+import {WebsocketService} from '../../services/websocketconnection/websocket.service';
+import {ActivatedRoute, Router} from '@angular/router';
+import {SharedModule} from '../../shared/shared.module';
+import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-settings',
@@ -28,12 +28,13 @@ import { CdkDrag, CdkDragDrop, CdkDropList, moveItemInArray } from '@angular/cdk
     SharedModule,
     CdkDropList,
     CdkDrag,
-    JsonPipe
+    JsonPipe,
+    CdkDropListGroup
   ],
   standalone: true
 })
 export class SettingsPageComponent implements OnInit {
-  @ViewChild('form', { static: true }) form!: NgForm;
+  @ViewChild('form', {static: true}) form!: NgForm;
   settings: GeneralSettings | undefined;
   selectedTheme = 0;
   private skipFormUpdate = false;
@@ -80,7 +81,7 @@ export class SettingsPageComponent implements OnInit {
   }
 
   setTheme(theme: string): void {
-    this.store.dispatch(new ChangeGeneralSettings({ theme: theme }));
+    this.store.dispatch(new ChangeGeneralSettings({theme: theme}));
   }
 
   /**
@@ -90,7 +91,7 @@ export class SettingsPageComponent implements OnInit {
    */
   selectMenu(number: number) {
     this.activeMenu = number;
-    this.router.navigate([], { relativeTo: this.activatedRoute, fragment: this.activeMenu.toString() });
+    this.router.navigate([], {relativeTo: this.activatedRoute, fragment: this.activeMenu.toString()});
   }
 
   createRoom(roomName: string) {
@@ -106,18 +107,21 @@ export class SettingsPageComponent implements OnInit {
     this.websocketConnectionService.renameDevice(this.settings.deviceName);
   }
 
-  onDropListDropped(event: CdkDragDrop<any, any>) {
-    console.log(event)  ;
-    // Check if the previous container is the same as the new container
-    if (event.previousContainer === event.container) {
-      // If so, rearrange the items within the same list
-      moveItemInArray(event.container.data, event.previousIndex, event.currentIndex);
-    } else {
-      // If not, transfer the item from one list to the other
-      const deviceId = event.item.data;
-      const roomId = event.container.data;
+  onDeviceDroppedInUnassignedDevicesList(event: CdkDragDrop<IDevice[], IRoom, IDevice>) {
+    if (event.previousContainer.id === event.container.id) return;
+    console.log('different container', event.item);
+    const deviceId = event.item.data;
+    const roomId = event.container.data;
+    this.websocketConnectionService.unassignDeviceFromRoom(deviceId, roomId).then();
+  }
 
-      this.websocketConnectionService.assignDeviceToRoom(deviceId, roomId).then();
-    }
+  onDeviceDroppedInRoom(event: CdkDragDrop<IRoom, IDevice[], IDevice>) {
+    if (event.previousContainer.id === event.container.id) return;
+
+    const deviceId = event.item.data.id;
+    const roomId = event.container.data.id;
+    console.log('device', deviceId, 'dropped in room', roomId);
+
+    this.websocketConnectionService.assignDeviceToRoom(deviceId, roomId).then();
   }
 }

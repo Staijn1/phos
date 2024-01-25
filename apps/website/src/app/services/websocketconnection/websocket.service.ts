@@ -19,6 +19,7 @@ import iro from '@jaames/iro';
 import { LoadNetworkState } from '../../../redux/networkstate/networkstate.action';
 import { UserPreferences } from '../../shared/types/types';
 import { first } from 'rxjs';
+import {ObjectId} from 'typeorm';
 
 @Injectable({
   providedIn: 'root'
@@ -159,8 +160,14 @@ export class WebsocketService {
     this.socket.emit(WebsocketMessage.RenameDevice, deviceName);
   }
 
-  async assignDeviceToRoom(deviceId: string, roomId: string) {
+  async assignDeviceToRoom(deviceId: ObjectId, roomId: ObjectId) {
     const payload = { deviceId, roomId };
     this.socket.emit(WebsocketMessage.AssignDeviceToRoom, payload);
+  }
+
+  unassignDeviceFromRoom(deviceId: any, roomId: any) {
+    // todo
+    console.warn('unassignDeviceFromRoom is not implemented yet');
+    return Promise.resolve();
   }
 }

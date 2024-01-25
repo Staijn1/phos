@@ -13,6 +13,7 @@ export interface IRoom {
 }
 
 export interface IDevice {
+  id: ObjectId;
   name: string;
   state: LedstripState;
   isLedstrip: boolean;
