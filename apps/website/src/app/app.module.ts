@@ -19,7 +19,7 @@ import {networkStateReducer} from '../redux/networkstate/networkstate.reducer';
 import {BaseChromaConnection} from './services/chroma-sdk/base-chroma-connection.service';
 import {WebsocketChromaConnectionService} from './services/chroma-sdk/websocket-chroma-connection.service';
 
-const StoreDevtools = StoreDevtoolsModule.instrument();
+const StoreDevtools = StoreDevtoolsModule.instrument({connectInZone: true});
 @NgModule({
   imports: [
     CommonModule,
