@@ -195,11 +195,10 @@ export class SpotifyPlayerComponent implements OnInit, OnDestroy {
   private onSpotifyWebPlaybackSDKReady() {
     if (!this.spotifyAuth.isLoggedIn()) return;
 
-    const token = this.spotifyAuth.getToken();
     const device = getDeviceType();
     this.player = new Spotify.Player({
       name: `Phos - ${device}`,
-      getOAuthToken: cb => cb(token),
+      getOAuthToken: cb => cb(this.spotifyAuth.getToken()),
       volume: 1
       // enableMediaSession: true
     });
