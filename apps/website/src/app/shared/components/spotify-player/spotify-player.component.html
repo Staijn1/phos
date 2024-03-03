@@ -21,7 +21,7 @@
                     [max]="currentTrack.duration_ms"></progress>
         </div>
         <div class="tw-flex tw-justify-between tw-font-semibold tw-text-base-content tw-px-4 tw-pb-2">
-          <div class="tw-text-xs">
+          <div class="tw-text-xs time-formatting">
             {{currentTrackProgress | msToTime}}
           </div>
           <div class="playback-controls-container">
@@ -35,7 +35,7 @@
               <fa-icon [icon]="skipSongIcon"></fa-icon>
             </button>
           </div>
-          <div class="tw-text-xs">
+          <div class="tw-text-xs time-formatting">
             {{currentTrack.duration_ms | msToTime}}
           </div>
         </div>
