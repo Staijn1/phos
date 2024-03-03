@@ -1,12 +1,13 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import {FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository} from 'typeorm';
+import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {validate} from 'class-validator';
-import {DeviceService} from "../device/device.service";
-import { ObjectId } from 'mongodb';
-import { IRoom } from '@angulon/interfaces';
+import {DeviceService} from '../device/device.service';
+import {ObjectId} from 'mongodb';
+import {IRoom} from '@angulon/interfaces';
+import {Device} from '../device/Device.model';
 
 
 @Injectable()
@@ -65,20 +66,42 @@ export class RoomService implements DAOService<Room> {
     return this.create(entity);
   }
 
-  async assignDeviceToRoom(deviceId: string, roomId: string): Promise<Room> {
-    const deviceObjectId = new ObjectId(deviceId);
-    const roomObjectId = new ObjectId(roomId);
-    // Find the device and the room in the database
-    const device = await this.deviceService.findOne({where: {id: deviceObjectId}});
-    const room = await this.findOne({where: {id: roomObjectId}});
+  /**
+   * Assigns a device to a room. If the device is already assigned to a room, it will be moved to the new room, so it's not assigned to multiple rooms at the same time.
+   * @param deviceName
+   * @param roomName
+   * @throws Error Room with name ${roomName} not found
+   * @throws Error Device with name ${deviceName} not found
+   * @returns The updated room
+   */
+  async moveDeviceToRoom(deviceName: string, roomName: string): Promise<Room> {
+    const device = await this.deviceService.findOne({where: {name: deviceName}});
+    if (!device) {
+      throw new Error(`Device with name ${deviceName} not found`);
+    }
 
-    if (!device) throw new Error("Device not found");
-    if(!room) throw new Error("Room not found");
+    const room = await this.findOne({where: {name: roomName}});
+    if (!room) {
+      throw new Error(`Room with name ${roomName} not found`);
+    }
 
-    // Add the device to the room's connectedDevices array
+    if (device.room) {
+      await this.removeDeviceFromRoom(device, device.room);
+    }
+
+    device.room = room;
+    await this.deviceService.update({name: device.name}, device);
     room.connectedDevices.push(device);
+    return this.update({name: room.name}, room);
+  }
 
-    // Save the updated room
-    return this.roomRepository.save(room);
+  private async removeDeviceFromRoom(device: Device, room: Room) {
+    const roomIndex = room.connectedDevices.findIndex(connectedDevice => connectedDevice.id === device.id);
+    if (roomIndex === -1) {
+      throw new Error(`Device ${device.name} is not connected to room ${room.name}`);
+    }
+
+    room.connectedDevices.splice(roomIndex, 1);
+    await this.update({id: room.id}, room);
   }
 }

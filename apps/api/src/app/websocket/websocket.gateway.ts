@@ -40,9 +40,9 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.AssignDeviceToRoom)
-  async assignDeviceToRoom(client: Socket, payload: { deviceId: string, roomId: string }): Promise<StandardResponse> {
+  async assignDeviceToRoom(client: Socket, payload: { deviceName: string, roomName: string }): Promise<StandardResponse> {
     try {
-      await this.roomService.assignDeviceToRoom(payload.deviceId, payload.roomId);
+      await this.roomService.moveDeviceToRoom(payload.deviceName, payload.roomName);
       return {status: 200, message: 'Device assigned to room'};
     } catch (error) {
       this.logger.error(`Failed to assign device to room: ${error.message}`);

@@ -160,8 +160,8 @@ export class WebsocketService {
     this.socket.emit(WebsocketMessage.RenameDevice, deviceName);
   }
 
-  async assignDeviceToRoom(deviceId: ObjectId, roomId: ObjectId) {
-    const payload = { deviceId, roomId };
+  async assignDeviceToRoom(deviceName: string, roomName: string) {
+    const payload = { deviceName: deviceName, roomName: roomName };
     this.socket.emit(WebsocketMessage.AssignDeviceToRoom, payload);
   }
 

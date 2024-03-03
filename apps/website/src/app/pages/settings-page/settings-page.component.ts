@@ -118,10 +118,10 @@ export class SettingsPageComponent implements OnInit {
   onDeviceDroppedInRoom(event: CdkDragDrop<IRoom, IDevice[], IDevice>) {
     if (event.previousContainer.id === event.container.id) return;
 
-    const deviceId = event.item.data.id;
-    const roomId = event.container.data.id;
-    console.log('device', deviceId, 'dropped in room', roomId);
+    const deviceName = event.item.data.name;
+    const roomName = event.container.data.name;
+    console.log('device', deviceName, 'dropped in room', roomName);
 
-    this.websocketConnectionService.assignDeviceToRoom(deviceId, roomId).then();
+    this.websocketConnectionService.assignDeviceToRoom(deviceName, roomName).then();
   }
 }
