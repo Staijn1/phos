@@ -88,20 +88,18 @@
                           No devices in room
                         </div>
                         <div>
-                          <app-device
+                          <div
                             *ngFor="let device of room.connectedDevices"
                             [cdkDragData]="device"
-                            [compact]="true"
-                            [device]="device"
                             cdkDrag
                           >
                             <a class="tw-flex tw-justify-between">
                             <span>
-                              {{ device.name }}<br/>
+                              {{ device.id }}<br/>
                             </span>
-                              <fa-icon class="tw-text-primary" [icon]="draggableIcon" size="xl"></fa-icon>
+<!--                              <fa-icon class="tw-text-primary" [icon]="draggableIcon" size="xl"></fa-icon>-->
                             </a>
-                          </app-device>
+                          </div>
                         </div>
                       </div>
                     </div>

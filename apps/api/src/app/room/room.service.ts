@@ -5,9 +5,7 @@ import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typ
 import {InjectRepository} from '@nestjs/typeorm';
 import {validate} from 'class-validator';
 import {DeviceService} from '../device/device.service';
-import {ObjectId} from 'mongodb';
 import {IRoom} from '@angulon/interfaces';
-import {Device} from '../device/Device.model';
 
 
 @Injectable()
@@ -29,8 +27,8 @@ export class RoomService implements DAOService<Room> {
 
   async create(roomData: Partial<Room>): Promise<Room> {
     await this.validate(roomData);
-    const roomDefaults: IRoom = { connectedDevices: [], id: undefined, name: '' };
-    const room = this.roomRepository.create({ ...roomDefaults, ...roomData });
+    const roomDefaults: IRoom = {connectedDevices: [], id: undefined, name: ''};
+    const room = this.roomRepository.create({...roomDefaults, ...roomData});
     return this.roomRepository.save(room);
   }
 
@@ -80,28 +78,21 @@ export class RoomService implements DAOService<Room> {
       throw new Error(`Device with name ${deviceName} not found`);
     }
 
+    const allRooms = await this.findAll();
     const room = await this.findOne({where: {name: roomName}});
     if (!room) {
       throw new Error(`Room with name ${roomName} not found`);
     }
 
-    if (device.room) {
-      await this.removeDeviceFromRoom(device, device.room);
+    // If the device is already assigned to any other room, remove it from that room
+    if (allRooms.some(r => r.connectedDevices.some(d => d.id === device.id))) {
+      const oldRoom = allRooms.find(r => r.connectedDevices.some(d => d.id === device.id));
+      oldRoom.connectedDevices = oldRoom.connectedDevices.filter(d => d.id !== device.id);
+      await this.roomRepository.save(oldRoom);
     }
 
-    device.room = room;
-    await this.deviceService.update({name: device.name}, device);
+    // Add the device to the new room connectedDevices
     room.connectedDevices.push(device);
-    return this.update({name: room.name}, room);
-  }
-
-  private async removeDeviceFromRoom(device: Device, room: Room) {
-    const roomIndex = room.connectedDevices.findIndex(connectedDevice => connectedDevice.id === device.id);
-    if (roomIndex === -1) {
-      throw new Error(`Device ${device.name} is not connected to room ${room.name}`);
-    }
-
-    room.connectedDevices.splice(roomIndex, 1);
-    await this.update({id: room.id}, room);
+    return await this.roomRepository.save(room);
   }
 }

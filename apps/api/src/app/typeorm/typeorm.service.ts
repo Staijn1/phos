@@ -19,13 +19,12 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     const configSafeToLog = {...dbConfig, password: 'REDACTED'};
     this.logger.log(`Connecting to database user the following configuration: ${JSON.stringify(configSafeToLog, null, 2)}`);
     return {
-      type: 'mongodb',
+      type: 'mariadb',
       host: dbConfig.host,
       port: dbConfig.port,
       database: dbConfig.database,
       username: dbConfig.username,
       password: dbConfig.password,
-      authSource: 'admin',
       //   migrations: ['dist/migrations/*.{ts,js}'],
       logger: 'advanced-console',
       synchronize: !productionMode, // do not set to TRUE in production mode - possible data loss
