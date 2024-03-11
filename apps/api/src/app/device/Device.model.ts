@@ -22,6 +22,6 @@ export class Device implements IDevice{
   @Column()
   isConnected: boolean;
 
-  @ManyToOne(() => Room, (room) => room.connectedDevices)
+  @ManyToOne(() => Room, (room) => room.connectedDevices, {onDelete: 'SET NULL'})
   room: Room;
 }
