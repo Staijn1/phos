@@ -1,6 +1,7 @@
 <div class="tw-bg-base-200 tw-p-4 tw-rounded device">
             <span
               [ngClass]="device.isConnected ? 'tw-bg-success' : 'tw-bg-error'"
+              [title]="device.isConnected ? 'Connected' : 'Not Connected'"
               class="network-indicator">
             </span>
   <h3 class="tw-text-center">{{device.name}}</h3>
