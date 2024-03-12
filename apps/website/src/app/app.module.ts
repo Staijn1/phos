@@ -18,6 +18,7 @@ import {userPreferencesReducer} from '../redux/user-preferences/user-preferences
 import {networkStateReducer} from '../redux/networkstate/networkstate.reducer';
 import {BaseChromaConnection} from './services/chroma-sdk/base-chroma-connection.service';
 import {WebsocketChromaConnectionService} from './services/chroma-sdk/websocket-chroma-connection.service';
+import {RoomSelectComponent} from './shared/components/room-select/room-select.component';
 
 const StoreDevtools = StoreDevtoolsModule.instrument();
 @NgModule({
@@ -36,6 +37,7 @@ const StoreDevtools = StoreDevtoolsModule.instrument();
     }),
     StoreDevtools,
     FontAwesomeModule,
+    RoomSelectComponent,
     ServiceWorkerModule.register('ngsw-worker.js', {
       enabled: environment.production,
       // Register the ServiceWorker as soon as the application is stable

@@ -5,13 +5,13 @@ import {
   faEyeDropper,
   faHome,
   faList,
-  faMinus,
+  faMinus, faObjectGroup,
   faPlus,
   faPowerOff,
   faRunning,
   faSlidersH,
   faWalking
-} from "@fortawesome/free-solid-svg-icons";
+} from '@fortawesome/free-solid-svg-icons';
 import { Store } from "@ngrx/store";
 import { ColorpickerComponent } from "../../shared/components/colorpicker/colorpicker.component";
 import { LedstripState } from "@angulon/interfaces";
@@ -49,6 +49,7 @@ export class NavigationbarComponent {
   readonly increaseBrightnessIcon = faPlus;
   readonly speedIncreaseIcon = faRunning;
   readonly speedDecreaseIcon = faWalking;
+  readonly roomsSelectIcon = faObjectGroup;
 
   minimumBrightnessReached = false;
   minimumSpeedReached = false;

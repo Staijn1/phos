@@ -41,6 +41,14 @@
         </a>
       </li>
       <li>
+          <a class="roomselector">
+            <fa-icon [icon]="roomsSelectIcon"></fa-icon>
+            <span>
+              <app-room-select></app-room-select>
+            </span>
+         </a>
+      </li>
+      <li>
         <a class="colorpicker" [class.centered]="colorPickerOrientation === 'vertical'">
           <fa-icon [icon]="colorpickerIcon"></fa-icon>
           <div class="tw-ms-4 md:tw-ms-8 tw-d-flex tw-justify-center">
