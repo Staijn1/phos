@@ -1,5 +1,5 @@
 import {IDevice, LedstripState} from '@angulon/interfaces';
-import {Column, Entity, JoinColumn, ManyToOne, ObjectId, ObjectIdColumn, PrimaryGeneratedColumn} from 'typeorm';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {Room} from '../room/Room.model';
 
 @Entity()

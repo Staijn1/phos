@@ -4,6 +4,7 @@ import {INetworkState, INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage} 
 import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
 import {OnEvent} from '@nestjs/event-emitter';
+import {Room} from '../room/Room.model';
 
 @Injectable()
 export class WebsocketService {
@@ -68,7 +69,7 @@ export class WebsocketService {
     const rooms = await this.roomService.findAll();
     return {
       rooms: rooms,
-      devices: await this.deviceService.findAll({where: {room: null}})
+      devices: await this.deviceService.findAll({where: {room: null}, relations: ['room']})
     }
   }
 
