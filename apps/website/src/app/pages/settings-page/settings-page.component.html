@@ -92,13 +92,9 @@
                             *ngFor="let device of room.connectedDevices"
                             [cdkDragData]="device"
                             cdkDrag
+                            class="tw-my-1"
                           >
-                            <a class="tw-flex tw-justify-between">
-                            <span>
-                              {{ device.id }}<br/>
-                            </span>
-<!--                              <fa-icon class="tw-text-primary" [icon]="draggableIcon" size="xl"></fa-icon>-->
-                            </a>
+                            <app-device [device]="device" [compact]="true"></app-device>
                           </div>
                         </div>
                       </div>
