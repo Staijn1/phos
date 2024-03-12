@@ -1,5 +1,5 @@
-<div>
-  <div *ngFor="let room of rooms" class="tw-my-1">
+<div *ngIf="networkState">
+  <div *ngFor="let room of networkState.rooms" class="tw-my-1">
     <div
       class="room"
       [class.selected]="isRoomSelected(room)"
@@ -14,7 +14,7 @@
           </p>
         </div>
         <div class="tw-flex tw-justify-center">
-          <input type="checkbox" checked="checked" class="checkbox"/>
+          <input type="checkbox" [checked]="isRoomSelected(room)" (change)="onRoomSelectionChanged($event, room)" class="checkbox"/>
         </div>
       </div>
     </div>
