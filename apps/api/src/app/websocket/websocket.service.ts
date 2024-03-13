@@ -4,7 +4,7 @@ import {INetworkState, INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage} 
 import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
 import {OnEvent} from '@nestjs/event-emitter';
-import {Room} from '../room/Room.model';
+
 
 @Injectable()
 export class WebsocketService {
@@ -18,31 +18,11 @@ export class WebsocketService {
   constructor(private readonly deviceService: DeviceService, private readonly roomService: RoomService) {
   }
 
-  /**
-   * All the users are put in the user room. This function returns all connected clients that are a user client
-   * @private
-   */
-  private get userClients(): Socket[] {
-    const clients = this.server ? [...this.server.sockets.sockets.values()] : [];
-    return clients.filter(client => this.isClientAUser(client));
-  }
-
-  /**
-   * Get a list of clients that are NOT in the user room, these are the ledstrips
-   * @private
-   */
-  private get ledstripClients(): Socket[] {
-    const clients = this.server ? [...this.server.sockets.sockets.values()] : [];
-    return clients.filter(client => this.isClientALedstrip(client));
-  }
-
-
   @OnEvent('database-change')
-  handleOrderCreatedEvent() {
+  onDatabaseChange() {
     this.logger.log('Database changed. Updating all user clients')
     this.emitEventToAllUsers(WebsocketMessage.DatabaseChange, null)
   }
-
 
   /**
    * Get the state of this server
@@ -53,12 +33,13 @@ export class WebsocketService {
 
   /**
    * Set the received state on the server and send it to all ledstrips
-   * @param newState
-   * @param originClient
+   * @param rooms The rooms to send the state to
+   * @param newState The new state to set
+   * @param originClient The client that sent the new state
    */
-  setState(newState: LedstripState, originClient: Socket) {
+  setState(rooms: string[], newState: LedstripState, originClient: Socket) {
     this._state = newState;
-    this.setStateOnAllLedstrips();
+    this.sendStateToRooms(rooms);
     this.emitEventToAllUsers(WebsocketMessage.StateChange, newState, originClient);
   }
 
@@ -77,19 +58,20 @@ export class WebsocketService {
    * Set the FFTValue on the ledstrips
    * @param {string}payload
    */
-  setFFTValue(payload: number): void {
+  setFFTValue(rooms: string[], payload: number): void {
     if (!this._state) return;
     this._state.fftValue = payload;
-    this.sendEventToAllLedstrips(WebsocketMessage.LedstripFFT, payload.toString());
+    this.sendEventToAllLedstripsInRooms(rooms, WebsocketMessage.LedstripFFT, payload.toString());
   }
 
   /**
-   * Send a command to all ledstrips. These are all clients that are not in the user room
+   * Send the set ledstrip state to specified rooms (and all clients connected to those rooms)
+   * @param rooms Rooms to send the state to
    * @param force If true the ledstrips will update their state even if it's the same as the current state. Default is false
    */
-  setStateOnAllLedstrips(force = false): void {
+  sendStateToRooms(rooms: string[], force = false): void {
     this.logger.log(`Sending state to all ledstrips. Force: ${force}. State: ${JSON.stringify(this._state)}`);
-    this.sendEventToAllLedstrips(WebsocketMessage.LedstripSetState, {...this._state, force: force});
+    this.sendEventToAllLedstripsInRooms(rooms, WebsocketMessage.LedstripSetState, {...this._state, force: force});
   }
 
   /**
@@ -120,6 +102,7 @@ export class WebsocketService {
       return;
     }
 
+    // todo look if the device is in a room and make it join that roo namespace
     this.deviceService.createOrUpdate({where: {name: deviceName}}, {
       name: deviceName,
       socketSessionId: client.id,
@@ -140,14 +123,6 @@ export class WebsocketService {
     this.server = server;
   }
 
-  isClientAUser(client: Socket): boolean {
-    return client.rooms.has('user');
-  }
-
-  isClientALedstrip(client: Socket): boolean {
-    return !this.isClientAUser(client);
-  }
-
   /**
    * Send a message to all users except the one that sent the message
    * @param {string} event
@@ -156,24 +131,26 @@ export class WebsocketService {
    * @private
    */
   private emitEventToAllUsers(event: WebsocketMessage, payload: LedstripState, originClient?: Socket) {
-    const clients = this.userClients;
-    for (const client of clients) {
-      if (client.id !== originClient?.id) {
-        client.emit(event, payload);
-      }
+    // If the originClient exists, send the event to all users except the originClient
+    if (originClient) {
+      originClient.broadcast.to('user').emit(event, payload);
+      return;
     }
+
+    // If the originClient does not exist, send the event to all users
+    this.server.to('user').emit(event, payload);
   }
 
   /**
    * Send an event to all ledstrips with a given payload
-   * @param event
-   * @param payload
+   * @param rooms Rooms to send the event to
+   * @param event Event to emit on the ledstrip
+   * @param payload Payload to send with the event
    * @private
    */
-  private sendEventToAllLedstrips(event: WebsocketMessage, payload: unknown) {
-    const clients = this.ledstripClients;
-    for (const client of clients) {
-      client.emit(event, payload);
+  private sendEventToAllLedstripsInRooms(rooms: string[], event: WebsocketMessage, payload: unknown) {
+    for (const room of rooms) {
+      this.server.to(room).emit(event, payload);
     }
   }
 }

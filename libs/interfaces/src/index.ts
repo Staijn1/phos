@@ -11,3 +11,4 @@ export * from './lib/WebsocketMessage';
 export * from './lib/Constants';
 export * from './lib/INetworkState';
 export * from './lib/StandardResponse';
+export * from './lib/WebsocketRequest';

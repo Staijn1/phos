@@ -2,7 +2,16 @@ import {OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit, SubscribeMessag
 import {Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
 import {ConfigurationService} from '../configuration/configuration.service';
-import {GradientInformation, INetworkState, IRoom, LedstripState, ModeInformation, StandardResponse, WebsocketMessage} from '@angulon/interfaces';
+import {
+  GradientInformation,
+  INetworkState,
+  IRoom,
+  LedstripState,
+  ModeInformation,
+  StandardResponse,
+  WebsocketMessage,
+  WebsocketRequest
+} from '@angulon/interfaces';
 import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
 import {Room} from '../room/Room.model';
@@ -34,15 +43,15 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.RemoveRoom)
-  async removeRoom(client: Socket, payload: string): Promise<StandardResponse> {
-    await this.roomService.remove({where: {name: payload}});
+  async removeRoom(client: Socket, body: WebsocketRequest<string>): Promise<StandardResponse> {
+    await this.roomService.remove({where: {name: body.payload}});
     return {status: 200, message: 'Room removed'};
   }
 
   @SubscribeMessage(WebsocketMessage.AssignDeviceToRoom)
-  async assignDeviceToRoom(client: Socket, payload: { deviceName: string, roomName: string }): Promise<StandardResponse> {
+  async assignDeviceToRoom(client: Socket, body: WebsocketRequest<{ deviceName: string, roomName: string }>): Promise<StandardResponse> {
     try {
-      await this.roomService.moveDeviceToRoom(payload.deviceName, payload.roomName);
+      await this.roomService.moveDeviceToRoom(body.payload.deviceName, body.payload.roomName);
       return {status: 200, message: 'Device assigned to room'};
     } catch (error) {
       this.logger.error(`Failed to assign device to room: ${error.message}`);
@@ -50,26 +59,25 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     }
   }
 
-
   @SubscribeMessage(WebsocketMessage.GetLedstripState)
   getLedstripState(): LedstripState {
     return this.websocketService.getState();
   }
 
   @SubscribeMessage(WebsocketMessage.RenameDevice)
-  async renameDevice(client: Socket, payload: string): Promise<void> {
-    return this.deviceService.renameDevice(client.id, payload);
+  async renameDevice(client: Socket, body: WebsocketRequest<string>): Promise<void> {
+    return this.deviceService.renameDevice(client.id, body.payload);
   }
 
   @SubscribeMessage(WebsocketMessage.SetNetworkState)
-  onSetNetworkState(client: Socket, payload: LedstripState): LedstripState {
-    this.websocketService.setState(payload, client);
+  onSetNetworkState(client: Socket, body: WebsocketRequest<LedstripState>): LedstripState {
+    this.websocketService.setState(body.rooms, body.payload, client);
     return this.websocketService.getState();
   }
 
   @SubscribeMessage(WebsocketMessage.SetFFTValue)
-  onFFTCommand(client: Socket, payload: number): LedstripState {
-    this.websocketService.setFFTValue(payload);
+  onFFTCommand(client: Socket, body: WebsocketRequest<number>): LedstripState {
+    this.websocketService.setFFTValue(body.rooms, body.payload);
     return this.websocketService.getState();
   }
 
@@ -84,7 +92,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.RegisterAsUser)
-  async onJoinUserRoom(client: Socket): Promise<StandardResponse> {
+  async onRegisterAsUser(client: Socket): Promise<StandardResponse> {
     await this.websocketService.joinUserRoom(client);
     return {status: 200, message: 'Joined user room'};
   }
@@ -112,9 +120,13 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    * Start a timer that will send the state of the server to all connected ledstrips every x time to keep them in sync.
    */
   afterInit(): void {
-    setInterval(() => {
-      this.logger.log('Sending state to all ledstrips - forced');
-      this.websocketService.setStateOnAllLedstrips(true);
+    setInterval(async () => {
+      const allRooms = await this.roomService.findAll();
+
+      this.logger.log(`[SCHEDULED] Sending state to all rooms - forced. Rooms: ${allRooms.map(r => `${r.name} (${r.id})`).join(', ')}`);
+
+      const allRoomIds = allRooms.map(r => r.id);
+      this.websocketService.sendStateToRooms(allRoomIds,true);
     }, this.stateIntervalTimeMS);
   }
 }
