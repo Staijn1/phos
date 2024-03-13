@@ -90,7 +90,7 @@ export class WebsocketService {
    * @param client
    * @param server
    */
-  onConnect(client: Socket, server: Server) {
+  async onConnect(client: Socket, server: Server) {
     this.logger.log(`Client is connecting. Session: ${client.id}`);
     this.server = server;
 
@@ -102,13 +102,30 @@ export class WebsocketService {
       return;
     }
 
-    // todo look if the device is in a room and make it join that roo namespace
-    this.deviceService.createOrUpdate({where: {name: deviceName}}, {
+    const deviceInDb = await this.deviceService.findOne({where: {name: deviceName}, relations: ['room']});
+
+    // If the device is already in the database, update the socketSessionId and isConnected fields. Also join the room if it is in one
+    if (deviceInDb) {
+      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true});
+
+      if (deviceInDb.room) {
+        client.join(deviceInDb.room.name);
+      }
+
+      this.logger.log(`Client ${client.id} reconnected successfully with name ${deviceName}`);
+      return;
+    }
+
+    await this.deviceService.create({
       name: deviceName,
       socketSessionId: client.id,
       isConnected: true,
+      // Initially, we assume that the client is a ledstrip. If it is not, it will be updated later because the user-interface will emit the RegisterAsUser event
+      // The ledstrips do not.
       isLedstrip: true
-    }).then(() => this.logger.log(`Client ${client.id} connected successfully with name ${deviceName}`));
+    });
+
+    this.logger.log(`Client ${client.id} connected successfully with name ${deviceName}`);
   }
 
 

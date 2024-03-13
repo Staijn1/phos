@@ -104,7 +104,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
    * @param args
    */
   handleConnection(client: Socket, ...args: any[]): void {
-    this.websocketService.onConnect(client, this.server);
+    this.websocketService.onConnect(client, this.server).then();
   }
 
   /**
