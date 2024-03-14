@@ -246,7 +246,7 @@ export const getDeviceType = (): string | void => {
  * @param key
  * @param defaultValue
  */
-export const loadObjectFromLocalStorage = (key: string, defaultValue: Record<string, unknown>) => {
+export const loadObjectFromLocalStorage = (key: string, defaultValue: Record<string, unknown> | Array<unknown>) => {
   const localStorageItem = localStorage.getItem(key);
   if (localStorageItem) {
     const parsedItem = JSON.parse(localStorageItem);

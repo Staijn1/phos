@@ -36,11 +36,6 @@ export class AppComponent implements OnInit {
     private readonly store: Store<{
       userPreferences: UserPreferences
     }>) {
-    // Subscribe to all changes in the user preferences so we can write the current state to local storage
-    store.select('userPreferences')
-      .pipe(debounceTime(500))
-      .subscribe(preferences => localStorage.setItem('userPreferences', JSON.stringify(preferences)));
-
     this.theme.initialize();
 
     // Service worker update, but only in production. During development, the service worker is disabled which results in an error.
