@@ -95,7 +95,7 @@ export class WebsocketService {
   }
 
   sendFFTValue(value: number) {
-    this.socket.emit(WebsocketMessage.SetFFTValue, value);
+    this.promisifyEmit(WebsocketMessage.SetFFTValue, value).then();
   }
 
   turnOff() {
