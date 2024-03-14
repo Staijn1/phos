@@ -109,10 +109,12 @@ export class WebsocketService {
       await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true});
 
       if (deviceInDb.room) {
-        client.join(deviceInDb.room.name);
+        client.join(deviceInDb.room.id);
+        this.logger.log(`Device ${deviceName}(${client.id}) was in room ${deviceInDb.room.name}(${deviceInDb.room.id}) and has now joined the room.`);
+
       }
 
-      this.logger.log(`Client ${client.id} reconnected successfully with name ${deviceName}`);
+      this.logger.log(`Client ${client.id} finished reconnecting successfully with name ${deviceName}`);
       return;
     }
 
@@ -125,7 +127,7 @@ export class WebsocketService {
       isLedstrip: true
     });
 
-    this.logger.log(`Client ${client.id} connected successfully with name ${deviceName}`);
+    this.logger.log(`Client ${client.id} finished connecting successfully with name ${deviceName}`);
   }
 
 
@@ -168,6 +170,28 @@ export class WebsocketService {
   private sendEventToAllLedstripsInRooms(rooms: string[], event: WebsocketMessage, payload: unknown) {
     for (const room of rooms) {
       this.server.to(room).emit(event, payload);
+    }
+  }
+
+  /**
+   * Moves a client with a given deviceName to a new websocket room (with the given room Id)
+   * First, we query the database to find the device with the given name.
+   * Then we check if the device is assigned to a room. If so, we look up the websocket client by session id.
+   * If the client is found we make the websocket client join the new room so messages can be sent to it.
+   * @param deviceName
+   * @param roomId
+   */
+  async moveDeviceToRoom(deviceName: string, roomId: string) {
+    const deviceInDb = await this.deviceService.findOne({where: {name: deviceName}, relations: ['room']});
+
+    if (deviceInDb.room) {
+      const client = this.server?.sockets.sockets.get(deviceInDb.socketSessionId);
+      if (client) {
+        client.leave(deviceInDb.room.id);
+        client.join(roomId);
+
+        this.logger.log(`Client ${deviceInDb.name}(${deviceInDb.socketSessionId}) moved to room ${deviceInDb.room.name}(${roomId})`);
+      }
     }
   }
 }
