@@ -1,6 +1,11 @@
 
   <nav class="nav-menu">
-    <ul>
+    <ul
+      [class.websocket-disconnected]="isDisconnected"
+      [class.websocket-connection-error]="isConnectionError"
+      [class.websocket-connected]="isConnected"
+      [class.websocket-connecting]="isConnecting"
+    >
       <li>
         <a routerLink="home" routerLinkActive="active">
           <fa-icon [icon]="homeIcon"></fa-icon>
@@ -29,14 +34,26 @@
         <a (click)="$event.preventDefault()" href="">
           <fa-icon [icon]="controlsIcon"></fa-icon>
           <span class="actions">
-                <fa-icon [class.disabled]="minimumBrightnessReached" (click)="this.decreaseBrightness()"
-                         [icon]="decreaseBrightnessIcon"></fa-icon>
-                <fa-icon [class.disabled]="maximumBrightnessReached" (click)="this.increaseBrightness()"
-                         [icon]="increaseBrightnessIcon"></fa-icon>
-                <fa-icon [class.disabled]="minimumSpeedReached" (click)="this.decreaseSpeed()"
-                         [icon]="speedDecreaseIcon"></fa-icon>
-                <fa-icon [class.disabled]="maximumSpeedReached" (click)="this.increaseSpeed()"
-                         [icon]="speedIncreaseIcon"></fa-icon>
+                <fa-icon
+                  [class.disabled]="minimumBrightnessReached"
+                  (click)="this.decreaseBrightness()"
+                  [icon]="decreaseBrightnessIcon">
+                </fa-icon>
+                <fa-icon
+                  [class.disabled]="maximumBrightnessReached"
+                  (click)="this.increaseBrightness()"
+                  [icon]="increaseBrightnessIcon">
+                </fa-icon>
+                <fa-icon
+                  [class.disabled]="minimumSpeedReached"
+                  (click)="this.decreaseSpeed()"
+                  [icon]="speedDecreaseIcon">
+                </fa-icon>
+                <fa-icon
+                  [class.disabled]="maximumSpeedReached"
+                  (click)="this.increaseSpeed()"
+                  [icon]="speedIncreaseIcon">
+                </fa-icon>
             </span>
         </a>
       </li>

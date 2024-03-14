@@ -1,5 +1,5 @@
 import {NetworkstateAction} from './networkstate.action';
-import {ClientNetworkState} from './ClientNetworkState';
+import {ClientNetworkState, WebsocketConnectionStatus} from './ClientNetworkState';
 import {loadObjectFromLocalStorage} from '../../app/shared/functions';
 import {IRoom} from '@angulon/interfaces';
 
@@ -11,7 +11,8 @@ const selectedRoomsFromLocalStorage = loadObjectFromLocalStorage('selectedRooms'
 const initialState: ClientNetworkState = {
   rooms: [],
   devices: [],
-  selectedRooms: selectedRoomsFromLocalStorage
+  selectedRooms: selectedRoomsFromLocalStorage,
+  connectionStatus: WebsocketConnectionStatus.DISCONNECTED
 };
 
 export const networkStateReducer = (state: ClientNetworkState = initialState, action: any): ClientNetworkState => {
@@ -42,6 +43,12 @@ export const networkStateReducer = (state: ClientNetworkState = initialState, ac
       return {
         ...state,
         selectedRooms: newSelectedRooms
+      };
+    }
+    case NetworkstateAction.NETWORKCONNECTIONSTATUSCHANGE: {
+      return {
+        ...state,
+        connectionStatus: action.payload
       };
     }
     default:

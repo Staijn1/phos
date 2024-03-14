@@ -16,10 +16,10 @@ import { ChangeMultipleLedstripProperties, ReceiveServerLedstripState } from '..
 import { LoadModesAction } from '../../../redux/modes/modes.action';
 import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
-import { LoadNetworkState } from '../../../redux/networkstate/networkstate.action';
+import {LoadNetworkState, NetworkConnectionStatusChange} from '../../../redux/networkstate/networkstate.action';
 import { UserPreferences } from '../../shared/types/types';
 import { first } from 'rxjs';
-import { ClientNetworkState } from '../../../redux/networkstate/ClientNetworkState';
+import { ClientNetworkState, WebsocketConnectionStatus } from '../../../redux/networkstate/ClientNetworkState';
 
 @Injectable({
   providedIn: 'root'
@@ -56,15 +56,18 @@ export class WebsocketService {
         this.loadModes();
         this.loadGradients();
         this.loadNetworkState().then();
+        this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTED));
       });
 
       this.socket.on('disconnect', () => {
         console.log(`Disconnected from websocket at ${this.websocketUrl}`);
+        this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.DISCONNECTED));
       });
 
       this.socket.on('connect_error', (error: Error) => {
         console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
         messageService.setMessage(error);
+        this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTERROR));
       });
 
       this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
