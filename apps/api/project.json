@@ -29,6 +29,30 @@
         }
       }
     },
+    "typeorm": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "ts-node --project tsconfig.app.json ../../node_modules/typeorm/cli",
+        "cwd": "apps/api"
+      }
+    },
+    "migration-generate": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "nx run api:typeorm migration:generate ./migrations/{args.name} -d ./typeorm.config.ts",
+        "cwd": "apps/api"
+      }
+    },
+    "migration-revert": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "nx run api:typeorm migration:revert -d ./typeorm.config.ts",
+        "cwd": "apps/api"
+      }
+    },
     "serve": {
       "executor": "@nrwl/js:node",
       "options": {
