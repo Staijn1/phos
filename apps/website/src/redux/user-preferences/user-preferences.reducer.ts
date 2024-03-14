@@ -56,22 +56,28 @@ if (initialState.visualizerOptions.gradientRight === "spotify") {
 export const userPreferencesReducer = (state: UserPreferences = initialState, action: any): UserPreferences => {
   switch (action.type) {
     case UserPreferencesAction.CHANGE_VISUALIZER_OPTIONS: {
-      return {
+      const newState = {
         ...state,
         visualizerOptions: {
           ...state.visualizerOptions,
           ...action.payload
         }
       };
+
+      localStorage.setItem("userPreferences", JSON.stringify(newState));
+      return newState;
     }
     case UserPreferencesAction.CHANGE_GENERAL_SETTINGS : {
-      return {
+      const newState = {
         ...state,
         settings: {
           ...state.settings,
           ...action.payload
         }
       };
+
+      localStorage.setItem("userPreferences", JSON.stringify(newState));
+      return newState;
     }
     default:
       return state;

@@ -58,6 +58,7 @@ char angulon_index_html[]
 
 SystemConfiguration ConfigurationManager::systemConfiguration;
 
+#define NETWORK_TIMEOUT 10000
 void ConfigurationManager::setup() {
     Logger::log("ConfigurationManager", "Checking configuration...");
     preferences.begin("configuration", false);

@@ -7,36 +7,39 @@ import {ChangeGeneralSettings} from '../../../redux/user-preferences/user-prefer
 import {FormsModule, NgForm} from '@angular/forms';
 import {debounceTime, skip} from 'rxjs';
 import {ThemeVisualizationComponent} from '../../shared/components/theme-visualization/theme-visualization.component';
-import {NgForOf, NgIf} from '@angular/common';
+import {JsonPipe, NgForOf, NgIf} from '@angular/common';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {INetworkState} from '@angulon/interfaces';
+import {IDevice, INetworkState, IRoom} from '@angulon/interfaces';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 import {ActivatedRoute, Router} from '@angular/router';
-import {ObjectId} from 'typeorm';
-import {SharedModule} from "../../shared/shared.module";
+import {SharedModule} from '../../shared/shared.module';
+import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from '@angular/cdk/drag-drop';
 
 @Component({
-  selector: "app-settings",
-  templateUrl: "./settings-page.component.html",
-  styleUrls: ["./settings-page.component.scss"],
+  selector: 'app-settings',
+  templateUrl: './settings-page.component.html',
+  styleUrls: ['./settings-page.component.scss'],
   imports: [
     ThemeVisualizationComponent,
     NgForOf,
     FontAwesomeModule,
     FormsModule,
     NgIf,
-    SharedModule
+    SharedModule,
+    CdkDropList,
+    CdkDrag,
+    JsonPipe,
+    CdkDropListGroup
   ],
   standalone: true
 })
-export class SettingsPageComponent implements OnInit{
-  @ViewChild("form", { static: true }) form!: NgForm;
+export class SettingsPageComponent implements OnInit {
+  @ViewChild('form', {static: true}) form!: NgForm;
   settings: GeneralSettings | undefined;
   selectedTheme = 0;
   private skipFormUpdate = false;
   availableThemes = themes;
   activeMenu = 0;
-  draggableIcon = faGripLines;
   networkState: INetworkState | undefined;
   trashIcon = faTrash;
 
@@ -48,14 +51,14 @@ export class SettingsPageComponent implements OnInit{
       userPreferences: UserPreferences,
       networkState: INetworkState,
     }>) {
-    this.store.select("userPreferences").subscribe(preferences => {
+    this.store.select('userPreferences').subscribe(preferences => {
       if (this.skipFormUpdate) return;
 
       this.settings = structuredClone(preferences.settings);
       this.selectedTheme = this.availableThemes.findIndex(theme => theme === preferences.settings.theme);
     });
 
-    this.store.select("networkState").subscribe(networkState => {
+    this.store.select('networkState').subscribe(networkState => {
       this.networkState = networkState;
     });
   }
@@ -77,7 +80,7 @@ export class SettingsPageComponent implements OnInit{
   }
 
   setTheme(theme: string): void {
-    this.store.dispatch(new ChangeGeneralSettings({ theme: theme }));
+    this.store.dispatch(new ChangeGeneralSettings({theme: theme}));
   }
 
   /**
@@ -94,12 +97,30 @@ export class SettingsPageComponent implements OnInit{
     this.websocketConnectionService.createRoom(roomName).then();
   }
 
-  deleteRoom(id: ObjectId) {
-    this.websocketConnectionService.removeRoom(id).then();
+  deleteRoom(name: string) {
+    this.websocketConnectionService.removeRoom(name).then();
   }
 
   renameDevice() {
     if (!this.settings?.deviceName) return;
     this.websocketConnectionService.renameDevice(this.settings.deviceName);
+  }
+
+  onDeviceDroppedInUnassignedDevicesList(event: CdkDragDrop<IDevice[], IRoom, IDevice>) {
+    if (event.previousContainer.id === event.container.id) return;
+    console.log('different container', event.item);
+    const deviceId = event.item.data;
+    const roomId = event.container.data;
+    this.websocketConnectionService.unassignDeviceFromRoom(deviceId, roomId).then();
+  }
+
+  onDeviceDroppedInRoom(event: CdkDragDrop<IRoom, IDevice[], IDevice>) {
+    if (event.previousContainer.id === event.container.id) return;
+
+    const deviceName = event.item.data.name;
+    const roomName = event.container.data.name;
+    console.log('device', deviceName, 'dropped in room', roomName);
+
+    this.websocketConnectionService.assignDeviceToRoom(deviceName, roomName).then();
   }
 }

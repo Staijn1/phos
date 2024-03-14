@@ -1,7 +1,7 @@
-import {Injectable} from '@angular/core';
-import {environment} from '../../../environments/environment';
-import {MessageService} from '../message-service/message.service';
-import {io, Socket} from 'socket.io-client';
+import { Injectable } from '@angular/core';
+import { environment } from '../../../environments/environment';
+import { MessageService } from '../message-service/message.service';
+import { io, Socket } from 'socket.io-client';
 import {
   ClientSideLedstripState,
   GradientInformation,
@@ -11,15 +11,15 @@ import {
   ModeInformation,
   WebsocketMessage
 } from '@angulon/interfaces';
-import {Store} from '@ngrx/store';
-import {ChangeMultipleLedstripProperties, ReceiveServerLedstripState} from '../../../redux/ledstrip/ledstrip.action';
-import {LoadModesAction} from '../../../redux/modes/modes.action';
-import {LoadGradientsAction} from '../../../redux/gradients/gradients.action';
+import { Store } from '@ngrx/store';
+import { ChangeMultipleLedstripProperties, ReceiveServerLedstripState } from '../../../redux/ledstrip/ledstrip.action';
+import { LoadModesAction } from '../../../redux/modes/modes.action';
+import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
-import {LoadNetworkState} from '../../../redux/networkstate/networkstate.action';
-import {ObjectId} from 'typeorm';
-import {UserPreferences} from '../../shared/types/types';
-import {first} from 'rxjs';
+import { LoadNetworkState } from '../../../redux/networkstate/networkstate.action';
+import { UserPreferences } from '../../shared/types/types';
+import { first } from 'rxjs';
+import { ClientNetworkState } from '../../../redux/networkstate/ClientNetworkState';
 
 @Injectable({
   providedIn: 'root'
@@ -28,10 +28,16 @@ export class WebsocketService {
   private readonly websocketUrl = environment.url;
   private socket!: Socket;
   private updateLedstripState = true;
+  private selectedRooms: IRoom[] = [];
 
   constructor(
     private messageService: MessageService,
-    private readonly store: Store<{ userPreferences: UserPreferences, modes: ModeInformation[], ledstripState: ClientSideLedstripState }>
+    private readonly store: Store<{
+      userPreferences: UserPreferences,
+      modes: ModeInformation[],
+      ledstripState: ClientSideLedstripState,
+      networkState: ClientNetworkState
+    }>
   ) {
     this.store.select('userPreferences')
       .pipe(first())
@@ -46,7 +52,7 @@ export class WebsocketService {
       this.socket.on('connect', () => {
         console.log('Opened websocket at', this.websocketUrl);
 
-        this.promisifyEmit<LedstripState, null>(WebsocketMessage.RegisterAsUser).then((state) => this.updateAppState(state));
+        this.promisifyEmit<void, null>(WebsocketMessage.RegisterAsUser).then();
         this.loadModes();
         this.loadGradients();
         this.loadNetworkState().then();
@@ -65,7 +71,10 @@ export class WebsocketService {
       this.socket.on(WebsocketMessage.DatabaseChange, () => this.loadNetworkState().then());
     });
 
-
+    this.store.select('networkState').subscribe(networkState => {
+      if (!networkState) return;
+      this.selectedRooms = networkState.selectedRooms;
+    });
 
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
     this.store
@@ -86,7 +95,7 @@ export class WebsocketService {
   }
 
   sendFFTValue(value: number) {
-    this.socket.emit(WebsocketMessage.SetFFTValue, value);
+    this.promisifyEmit(WebsocketMessage.SetFFTValue, value).then();
   }
 
   turnOff() {
@@ -134,7 +143,13 @@ export class WebsocketService {
         reject(error);
       }, 3000);
 
-      this.socket.emit(eventName, payload, (data: T) => {
+      // Emits the event, waits for a response and resolves the promise when the server responds
+      // Clears the timeout when the server responds because we received a response
+      // Wraps the payload in additional metadata to send the command to the selected rooms
+      this.socket.emit(eventName, {
+        rooms: this.selectedRooms.map(room => room.id),
+        payload: payload
+      }, (data: T) => {
         clearTimeout(timeout);
         resolve(data);
       });
@@ -151,12 +166,23 @@ export class WebsocketService {
     await this.loadNetworkState();
   }
 
-  async removeRoom(id: ObjectId) {
-    await this.promisifyEmit<void, ObjectId>(WebsocketMessage.RemoveRoom, id);
+  async removeRoom(name: string) {
+    await this.promisifyEmit<void, string>(WebsocketMessage.RemoveRoom, name);
     await this.loadNetworkState();
   }
 
-  renameDevice(deviceName: string) {
-    this.socket.emit(WebsocketMessage.RenameDevice, deviceName);
+  async renameDevice(deviceName: string) {
+    await this.promisifyEmit(WebsocketMessage.RenameDevice, deviceName);
+  }
+
+  async assignDeviceToRoom(deviceName: string, roomName: string) {
+    const payload = {deviceName: deviceName, roomName: roomName};
+    await this.promisifyEmit(WebsocketMessage.AssignDeviceToRoom, payload);
+  }
+
+  unassignDeviceFromRoom(deviceId: any, roomId: any) {
+    // todo
+    console.warn('unassignDeviceFromRoom is not implemented yet');
+    return Promise.resolve();
   }
 }

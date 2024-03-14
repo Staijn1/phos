@@ -9,8 +9,7 @@
 #include "Angulon.h"
 #include <UrlEncode.h>
 
-void Websocket::setup() {
-    SystemConfiguration configuration = configurationManager->getConfig();
+void Websocket::setup(SystemConfiguration configuration) {
     const String url = "/socket.io/?EIO=4&deviceName=" + urlEncode(configuration.devicename);
     Logger::log("Websocket", "Setting up websocket connection to " + configuration.serverip + ":" + configuration.serverport + url);
     Angulon::led->turnOff();

@@ -1,36 +1,52 @@
 import {Injectable, Logger} from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { IEnvironmentConfiguration } from '../../environments/IEnvironmentConfiguration';
-import { TypeOrmModuleOptions, TypeOrmOptionsFactory } from '@nestjs/typeorm';
+import {ConfigService} from '@nestjs/config';
+import {IDatabaseConfiguration, IEnvironmentConfiguration} from '../../environments/IEnvironmentConfiguration';
+import {TypeOrmModuleOptions, TypeOrmOptionsFactory} from '@nestjs/typeorm';
+import {join} from 'path';
+import {DataSourceOptions} from 'typeorm';
 
 @Injectable()
 export class TypeOrmConfigService implements TypeOrmOptionsFactory {
-  private readonly logger = new Logger(TypeOrmConfigService.name);
-  constructor(private config: ConfigService) {}
+  private static readonly logger = new Logger(TypeOrmConfigService.name);
+
+  constructor(private config: ConfigService) {
+  }
 
 
   /**
    * Builds the options to use for TypeORM
    */
   public createTypeOrmOptions(): TypeOrmModuleOptions {
-    const dbConfig = this.config.get<IEnvironmentConfiguration['database']>('database');
     const productionMode = this.config.get<IEnvironmentConfiguration['production']>('production');
+    const dbConfig = this.config.get<IEnvironmentConfiguration['database']>('database');
+
+    return {
+      ...TypeOrmConfigService.GetBaseDatasourceOptions(dbConfig),
+      migrationsRun: true,
+      synchronize: !productionMode, // do not set to TRUE in production mode - possible data loss
+      autoLoadEntities: true,
+    };
+  }
+
+  /**
+   * Get the base datasource options used for the application but also in the orm.config.ts file to be able to use the same configuration for generating migrations
+   */
+  public static GetBaseDatasourceOptions(dbConfig: IDatabaseConfiguration): DataSourceOptions {
 
     const configSafeToLog = {...dbConfig, password: 'REDACTED'};
     this.logger.log(`Connecting to database user the following configuration: ${JSON.stringify(configSafeToLog, null, 2)}`);
+
     return {
-      type: 'mongodb',
+      type: 'mariadb',
       host: dbConfig.host,
       port: dbConfig.port,
       database: dbConfig.database,
       username: dbConfig.username,
       password: dbConfig.password,
-      authSource: 'admin',
-      //   migrations: ['dist/migrations/*.{ts,js}'],
+      migrations: [join(__dirname, '../../../migrations/*.{ts,js}')],
+      entities: [join(__dirname, '../../**/*.model.{ts,js}')],
       logger: 'advanced-console',
-      synchronize: !productionMode, // do not set to TRUE in production mode - possible data loss
-      autoLoadEntities: true,
       logging: true
-    };
+    }
   }
 }

@@ -132,3 +132,5 @@ Front-End/release-builds
 /**/*/.pio
 /**/*/CMakeListsPrivate.txt
 /**/*/cmake-build-*/
+
+.nx

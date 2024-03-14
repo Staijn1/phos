@@ -14,7 +14,7 @@ void Angulon::setup() {
     Angulon::ledstrip->setup();
 
     if (configuration.isConfigured) {
-        websocket.setup();
+        websocket.setup(configuration.getConfig());
         ota.setup();
     }
 

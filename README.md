@@ -32,3 +32,11 @@ Connect the ledstrip on pin 12 on the ESP.
 Download
 the [Arduino IDE](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/) and
 follow this [tutorial](https://randomnerdtutorials.com/installing-the-esp32-board-in-arduino-ide-windows-instructions/)
+
+
+
+# Generating migrations
+To generate a migration, run `npx nx run api:migration-generate --name=your-migration-name`.  
+However keep in mind, TypeORM compares the current state of the database against the state of the detected entities.  
+If your database is already up-to-date (because `synchronize` was perhaps set to `true`), you will have to make sure the database is in the state of the last migration to successfully generate a new migration.  
+To do this, easiest is to drop the database and start the API (migrations are run automatically)

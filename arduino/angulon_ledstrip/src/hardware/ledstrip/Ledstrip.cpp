@@ -132,10 +132,7 @@ uint16_t Ledstrip::vuMeter() {
 
 uint16_t Ledstrip::vuMeterBrightness() {
     WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
-    const int ledcount = ConfigurationManager::systemConfiguration.ledcount;
-    for (int index = 0; index < ledcount; index++) {
-        Ledstrip::strip->setPixelColor(index, seg->colors[0]);
-    }
+    Ledstrip::strip->fill(seg->colors[0]);
     Ledstrip::strip->setBrightness(Ledstrip::getFFTValue());
     return seg->speed;
 }

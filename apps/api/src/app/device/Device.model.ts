@@ -1,11 +1,11 @@
 import {IDevice, LedstripState} from '@angulon/interfaces';
-import {Column, Entity, JoinColumn, ManyToOne, ObjectId, ObjectIdColumn} from 'typeorm';
+import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {Room} from '../room/Room.model';
 
 @Entity()
 export class Device implements IDevice{
-  @ObjectIdColumn()
-  id: ObjectId;
+  @PrimaryGeneratedColumn("uuid")
+  id: string;
 
   @Column()
   socketSessionId: string;
@@ -13,7 +13,7 @@ export class Device implements IDevice{
   @Column()
   name: string;
 
-  @Column('jsonb', { default: () => "'{}'" })
+  @Column('simple-json', { default: () => "'{}'" })
   state: LedstripState;
 
   @Column({ default: true })
@@ -22,7 +22,6 @@ export class Device implements IDevice{
   @Column()
   isConnected: boolean;
 
-  @ManyToOne(() => Room, (room) => room.connectedDevices)
-  @JoinColumn({ name: 'room_id' })
+  @ManyToOne(() => Room, (room) => room.connectedDevices, {onDelete: 'SET NULL'})
   room: Room;
 }

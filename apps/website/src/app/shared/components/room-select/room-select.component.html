@@ -1,0 +1,22 @@
+<div *ngIf="networkState">
+  <div *ngFor="let room of networkState.rooms" class="tw-my-1">
+    <div
+      class="room"
+      [class.selected]="isRoomSelected(room)"
+    >
+      <div class="tw-flex tw-justify-between tw-w-full">
+        <div>
+          <h2>{{ room.name }}</h2>
+          <p>Assigned: {{ room.connectedDevices.length }}</p>
+          <p *ngIf="getOfflineDevicesCount(room) > 0">
+            <fa-icon class="tw-text-warning" [icon]="offlineWarningIcon"></fa-icon>
+            Offline: {{ getOfflineDevicesCount(room) }}
+          </p>
+        </div>
+        <div class="tw-flex tw-justify-center">
+          <input type="checkbox" [checked]="isRoomSelected(room)" (change)="onRoomSelectionChanged($event, room)" class="checkbox"/>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

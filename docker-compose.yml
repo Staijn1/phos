@@ -8,8 +8,8 @@ networks:
     driver: bridge
 
 services:
-  angulon_api:
-    container_name: angulon_api
+  phos_api:
+    container_name: phos_api
     build:
       context: ./
       cache_from:
@@ -24,10 +24,10 @@ services:
       - corp
     restart: on-failure
     volumes:
-      - /data/angulon:/app/dist/apps/api/assets/config
+      - /data/phos/api:/app/dist/apps/api/assets/config
 
-  angulon_website:
-    container_name: angulon_website
+  phos_website:
+    container_name: phos_website
     build:
       context: ./
       cache_from:
@@ -42,26 +42,18 @@ services:
       - corp
     restart: on-failure
 
-  angulon_database:
-    container_name: angulon_database
-    image: mongo
+  phos_database:
+    container_name: phos_database
+    image: mariadb
     restart: always
+    volumes:
+      - /data/phos/database:/var/lib/mysql
     networks:
       - corp
     ports:
-      - "27017:27017"
+      - "3306:3306"
     environment:
-      MONGO_INITDB_ROOT_USERNAME: root
-      MONGO_INITDB_ROOT_PASSWORD: example
-
-  mongo-gui:
-    image: ugleiton/mongo-gui
-    container_name: mongo-gui
-    restart: always
-    networks:
-      - corp
-    ports:
-      - "4321:4321"
-    environment:
-      - MONGO_URL=mongodb://root:example@angulon_database:27017
-
+      MYSQL_USER: root
+      MYSQL_DATABASE: phos
+      MYSQL_PASSWORD: example
+      MYSQL_ROOT_PASSWORD: example

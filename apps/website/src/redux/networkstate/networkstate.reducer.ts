@@ -1,15 +1,49 @@
-import {INetworkState} from '@angulon/interfaces';
 import {NetworkstateAction} from './networkstate.action';
+import {ClientNetworkState} from './ClientNetworkState';
+import {loadObjectFromLocalStorage} from '../../app/shared/functions';
+import {IRoom} from '@angulon/interfaces';
 
-const initialState: INetworkState = {
+// Our initial state is mostly empty, but the selectedRooms are stored in the local storage, so we can keep the state when the user refreshes the page.
+// However, when we receive the network state from the server, we should check if the selected rooms still exist and if not, automatically unselect them.
+
+const selectedRoomsFromLocalStorage = loadObjectFromLocalStorage('selectedRooms', []);
+
+const initialState: ClientNetworkState = {
   rooms: [],
   devices: [],
+  selectedRooms: selectedRoomsFromLocalStorage
 };
 
-export const networkStateReducer = (state: INetworkState = initialState, action: any): INetworkState => {
+export const networkStateReducer = (state: ClientNetworkState = initialState, action: any): ClientNetworkState => {
   switch (action.type) {
-    case NetworkstateAction.LOAD_NETWORK_STATE:
-      return action.payload;
+    // Merge the incoming network state from the server with the current state, so we do not lose our client-side state.
+    // Also, we should check if the selected rooms still exist and if not, automatically unselect them.
+    case NetworkstateAction.LOAD_NETWORK_STATE: {
+      const newSelectedRooms = state.selectedRooms.filter(selectedRoom => action.payload.rooms.some((room: IRoom) => room.id === selectedRoom.id));
+      localStorage.setItem('selectedRooms', JSON.stringify(newSelectedRooms));
+
+      return {
+        ...state,
+        ...action.payload,
+        selectedRooms: newSelectedRooms
+      };
+    }
+    case NetworkstateAction.SELECT_ROOM: {
+      const newSelectedRooms = [...state.selectedRooms, action.payload];
+      localStorage.setItem('selectedRooms', JSON.stringify(newSelectedRooms));
+      return {
+        ...state,
+        selectedRooms: newSelectedRooms
+      };
+    }
+    case NetworkstateAction.UNSELECT_ROOM: {
+      const newSelectedRooms = state.selectedRooms.filter(room => room.id !== action.payload.id);
+      localStorage.setItem('selectedRooms', JSON.stringify(newSelectedRooms));
+      return {
+        ...state,
+        selectedRooms: newSelectedRooms
+      };
+    }
     default:
       return state;
   }

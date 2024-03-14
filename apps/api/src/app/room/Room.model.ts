@@ -1,18 +1,18 @@
 import {IRoom} from '@angulon/interfaces';
-import {Column, Entity, JoinColumn, ObjectId, ObjectIdColumn, OneToMany} from 'typeorm';
+import {Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique} from 'typeorm';
 import {Device} from '../device/Device.model';
-import {MinLength} from "class-validator";
+import {MinLength} from 'class-validator';
 
 @Entity()
 export class Room implements IRoom{
-  @ObjectIdColumn()
-  id: ObjectId;
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
 
   @Column()
   @MinLength(0)
+  @Unique("UniqueRoomName", ["name"])
   name: string;
 
-  @OneToMany(() => Device, (device) => device.room)
-  @JoinColumn()
+  @OneToMany(() => Device, (device) => device.room, {eager: true})
   connectedDevices: Device[];
 }

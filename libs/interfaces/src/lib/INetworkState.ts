@@ -1,5 +1,4 @@
 import {LedstripState} from './LedstripState';
-import {ObjectId} from 'typeorm';
 
 export interface INetworkState {
   rooms: IRoom[],
@@ -7,15 +6,15 @@ export interface INetworkState {
 }
 
 export interface IRoom {
-  id: ObjectId;
+  id: string;
   name: string;
   connectedDevices: IDevice[]
 }
 
 export interface IDevice {
+  id: string;
   name: string;
   state: LedstripState;
   isLedstrip: boolean;
   isConnected:boolean;
-  room: IRoom;
 }

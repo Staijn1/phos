@@ -1,0 +1,15 @@
+.room {
+  @apply
+  tw-w-72
+  tw-bg-neutral
+  tw-rounded-full
+  tw-p-3
+  tw-px-8
+  tw-text-sm
+  tw-transition-colors;
+
+  &:hover, &.selected {
+    @apply tw-bg-neutral-focus;
+  }
+}
+
