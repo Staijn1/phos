@@ -54,6 +54,6 @@ services:
       - "3306:3306"
     environment:
       MYSQL_USER: root
-      MYSQL_DATABASE: mydatabase
+      MYSQL_DATABASE: phos
       MYSQL_PASSWORD: example
       MYSQL_ROOT_PASSWORD: example

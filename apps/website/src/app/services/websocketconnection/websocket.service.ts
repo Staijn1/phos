@@ -171,13 +171,13 @@ export class WebsocketService {
     await this.loadNetworkState();
   }
 
-  renameDevice(deviceName: string) {
-    this.socket.emit(WebsocketMessage.RenameDevice, deviceName);
+  async renameDevice(deviceName: string) {
+    await this.promisifyEmit(WebsocketMessage.RenameDevice, deviceName);
   }
 
   async assignDeviceToRoom(deviceName: string, roomName: string) {
-    const payload = { deviceName: deviceName, roomName: roomName };
-    this.socket.emit(WebsocketMessage.AssignDeviceToRoom, payload);
+    const payload = {deviceName: deviceName, roomName: roomName};
+    await this.promisifyEmit(WebsocketMessage.AssignDeviceToRoom, payload);
   }
 
   unassignDeviceFromRoom(deviceId: any, roomId: any) {

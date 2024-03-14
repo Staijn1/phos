@@ -38,8 +38,8 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.CreateRoom)
-  async createRoom(client: Socket, payload: Partial<Room>): Promise<IRoom> {
-    return this.roomService.create(payload);
+  async createRoom(client: Socket, body: WebsocketRequest<Partial<Room>>): Promise<IRoom> {
+    return this.roomService.create(body.payload);
   }
 
   @SubscribeMessage(WebsocketMessage.RemoveRoom)

@@ -40,7 +40,6 @@ export class SettingsPageComponent implements OnInit {
   private skipFormUpdate = false;
   availableThemes = themes;
   activeMenu = 0;
-  draggableIcon = faGripLines;
   networkState: INetworkState | undefined;
   trashIcon = faTrash;
 
