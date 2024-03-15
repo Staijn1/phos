@@ -1,19 +1,35 @@
 #powerOff, #powerOffMobile {
   &:hover {
-    @apply tw-bg-error tw-text-error-content;
+    @apply tw-bg-error tw-border-error tw-text-error-content;
   }
 }
 
 /* Desktop Navigation */
 .nav-menu {
-  ul li {
-    position: relative;
-    white-space: nowrap;
+  ul {
+    li {
+      position: relative;
+      white-space: nowrap;
+    }
+
+    &.websocket-disconnected li a, &.websocket-connection-error li a{
+      @apply tw-border-error;
+    }
+
+    &.websocket-connected li a{
+      @apply tw-border-success;
+    }
+
+    &.websocket-connecting li a{
+      @apply tw-border-blue-600;
+    }
   }
 
   a {
     @apply
     tw-bg-base-300
+    tw-border-base-300
+    tw-border-2
     tw-text-base-content
     tw-flex
     tw-items-center
@@ -33,6 +49,7 @@
     &:hover {
       @apply
       tw-bg-primary
+      tw-border-primary
       tw-text-primary-content;
     }
 

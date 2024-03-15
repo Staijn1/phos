@@ -1,5 +1,5 @@
 import {Component, OnInit, ViewChild} from '@angular/core';
-import {faGripLines, faTrash} from '@fortawesome/free-solid-svg-icons';
+import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {GeneralSettings, UserPreferences} from '../../shared/types/types';
 import {themes} from '../../shared/constants';
 import {Store} from '@ngrx/store';

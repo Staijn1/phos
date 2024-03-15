@@ -1,5 +1,5 @@
-const { createGlobPatternsForDependencies } = require('@nx/angular/tailwind');
-const { join } = require('path');
+const {createGlobPatternsForDependencies} = require('@nx/angular/tailwind');
+const {join} = require('path');
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -21,7 +21,10 @@ module.exports = {
       },
       borderRadius: {
         '2xl': '50px'
-      }
+      },
+      minWidth: {
+        '32': '8rem',
+      },
     }
   },
   daisyui: {

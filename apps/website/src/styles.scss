@@ -34,4 +34,12 @@
     background: hsl(var(--a)) !important;
   }
 }
+
+
+// The default style of disabled DaisyUI button component is very difficult to read due to low contrast
+.tw-btn:disabled {
+  @apply tw-text-neutral-100;
+  filter: brightness(0.6);
+}
+
 @import 'aos/dist/aos.css';

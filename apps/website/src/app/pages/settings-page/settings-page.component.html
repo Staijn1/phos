@@ -61,7 +61,7 @@
                       #submitRoomButton
                       (click)="createRoom(roomName.value)"
                       disabled
-                      class="tw-btn tw-join-item tw-w-1/2">
+                      class="tw-btn tw-btn-primary tw-join-item tw-w-1/2">
                       <span *ngIf="roomName.value.length === 0; else roomNameAvailable">Enter a room name</span>
                       <ng-template #roomNameAvailable>Create New Room</ng-template>
                     </button>
