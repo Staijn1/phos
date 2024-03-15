@@ -1,4 +1,4 @@
-<div *ngIf="networkState">
+<ng-container *ngIf="networkState && networkState.rooms.length > 0; else noRooms">
   <div *ngFor="let room of networkState.rooms" class="tw-my-1">
     <div
       class="room"
@@ -14,9 +14,16 @@
           </p>
         </div>
         <div class="tw-flex tw-justify-center">
-          <input type="checkbox" [checked]="isRoomSelected(room)" (change)="onRoomSelectionChanged($event, room)" class="checkbox"/>
+          <input type="checkbox"
+                 [checked]="isRoomSelected(room)"
+                 (change)="onRoomSelectionChanged($event, room)"
+                 class="checkbox"/>
         </div>
       </div>
     </div>
   </div>
-</div>
+</ng-container>
+
+<ng-template #noRooms>
+  <p>No rooms available</p>
+</ng-template>
