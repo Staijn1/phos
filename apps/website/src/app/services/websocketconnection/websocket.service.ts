@@ -44,7 +44,6 @@ export class WebsocketService {
       .subscribe((userPreferences) => {
       this.socket = io(this.websocketUrl, {
         transports: ['websocket'],
-        reconnectionAttempts: 5,
         query: {
           deviceName: userPreferences.settings.deviceName
         }

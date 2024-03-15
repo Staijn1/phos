@@ -12,7 +12,7 @@
       white-space: nowrap;
     }
 
-    &.websocket-disconnected li a, .websocket-connection-error li a{
+    &.websocket-disconnected li a, &.websocket-connection-error li a{
       @apply tw-border-error;
     }
 

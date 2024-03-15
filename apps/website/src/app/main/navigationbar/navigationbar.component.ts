@@ -61,6 +61,7 @@ export class NavigationbarComponent {
 
   websocketConnectionStatus: WebsocketConnectionStatus | undefined;
   clearConnectionStatusTimeout: NodeJS.Timeout | undefined;
+
   get isDisconnected(): boolean {
     return this.websocketConnectionStatus === WebsocketConnectionStatus.DISCONNECTED;
   };
@@ -76,7 +77,6 @@ export class NavigationbarComponent {
   get isConnectionError(): boolean {
     return this.websocketConnectionStatus === WebsocketConnectionStatus.CONNECTERROR;
   }
-
 
 
   constructor(
@@ -106,9 +106,10 @@ export class NavigationbarComponent {
         if (this.clearConnectionStatusTimeout) {
           clearTimeout(this.clearConnectionStatusTimeout);
         }
-        this.clearConnectionStatusTimeout = setTimeout(() => {
-          this.websocketConnectionStatus = undefined;
-        }, 5000);
+
+        if (this.websocketConnectionStatus === WebsocketConnectionStatus.CONNECTED) {
+          this.clearConnectionStatusTimeout = setTimeout(() => this.websocketConnectionStatus = undefined, 5000);
+        }
       });
   }
 
