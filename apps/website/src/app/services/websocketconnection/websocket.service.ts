@@ -87,17 +87,19 @@ export class WebsocketService {
           return;
         }
 
+        // If we are not connected, do not send the state
         if (!this.socket || this.socket.disconnected) {
           return;
         }
+
         // Before sending the state to the server, we need to convert the iro.Colors to hex strings
         const payload: LedstripState = {...state, colors: state.colors.map(color => color.hexString)};
-        this.promisifyEmit<LedstripState, LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
+        this.promisifyEmit<INetworkState, LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
       });
   }
 
   sendFFTValue(value: number) {
-    this.promisifyEmit(WebsocketMessage.SetFFTValue, value).then();
+    this.promisifyEmit<void, number>(WebsocketMessage.SetFFTValue, value).then();
   }
 
   turnOff() {
@@ -136,7 +138,7 @@ export class WebsocketService {
    * @returns A promise that resolves when the server responds
    * @private
    */
-  private promisifyEmit<T, K>(eventName: WebsocketMessage, payload?: K): Promise<T> {
+  private promisifyEmit<ReturnValue, RequestPayload>(eventName: WebsocketMessage, payload?: RequestPayload): Promise<ReturnValue> {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         const error = new Error('Websocket response timeout exceeded');
@@ -151,7 +153,7 @@ export class WebsocketService {
       this.socket.emit(eventName, {
         rooms: this.selectedRooms.map(room => room.id),
         payload: payload
-      }, (data: T) => {
+      }, (data: ReturnValue) => {
         clearTimeout(timeout);
         resolve(data);
       });

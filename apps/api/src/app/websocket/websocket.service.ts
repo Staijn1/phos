@@ -1,6 +1,6 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
-import {INetworkState, INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage} from '@angulon/interfaces';
+import { INetworkState, LedstripState, RoomState, WebsocketMessage } from '@angulon/interfaces';
 import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
 import {OnEvent} from '@nestjs/event-emitter';
@@ -12,8 +12,7 @@ export class WebsocketService {
   /**
    * This variable is the primary state, which will be sent to all ledstrips and users
    */
-  private _state: LedstripState = INITIAL_LEDSTRIP_STATE;
-  private logger: Logger = new Logger('WebsocketClientsManagerService');
+  private logger: Logger = new Logger(WebsocketService.name);
 
   constructor(private readonly deviceService: DeviceService, private readonly roomService: RoomService) {
   }
@@ -25,21 +24,14 @@ export class WebsocketService {
   }
 
   /**
-   * Get the state of this server
-   */
-  getState(): LedstripState {
-    return this._state;
-  }
-
-  /**
    * Set the received state on the server and send it to all ledstrips
    * @param rooms The rooms to send the state to
    * @param newState The new state to set
    * @param originClient The client that sent the new state
    */
-  setState(rooms: string[], newState: LedstripState, originClient: Socket) {
-    this._state = newState;
-    this.sendStateToRooms(rooms);
+  async setState(rooms: string[], newState: LedstripState, originClient: Socket) {
+    this.deviceService.updateLedstripStateForRoomsSubject.next({ rooms: rooms, newState: newState });
+    await this.sendStateToRooms(rooms);
     this.emitEventToAllUsers(WebsocketMessage.StateChange, newState, originClient);
   }
 
@@ -56,11 +48,9 @@ export class WebsocketService {
 
   /**
    * Set the FFTValue on the ledstrips
-   * @param {string}payload
+   * @param payload
    */
   setFFTValue(rooms: string[], payload: number): void {
-    if (!this._state) return;
-    this._state.fftValue = payload;
     this.sendEventToAllLedstripsInRooms(rooms, WebsocketMessage.LedstripFFT, payload.toString());
   }
 
@@ -69,9 +59,11 @@ export class WebsocketService {
    * @param rooms Rooms to send the state to
    * @param force If true the ledstrips will update their state even if it's the same as the current state. Default is false
    */
-  sendStateToRooms(rooms: string[], force = false): void {
-    this.logger.log(`Sending state to all ledstrips. Force: ${force}. State: ${JSON.stringify(this._state)}`);
-    this.sendEventToAllLedstripsInRooms(rooms, WebsocketMessage.LedstripSetState, {...this._state, force: force});
+  async sendStateToRooms(rooms: string[], force = false): Promise<void> {
+    const state = await this.deviceService.getLedstripStateForRooms(rooms);
+    this.logger.log(`Sending state to all ledstrips. Force: ${force}. State: ${JSON.stringify(state)}`);
+
+    this.sendEventToAllLedstripsInRooms(rooms, WebsocketMessage.LedstripSetState, {...state, force: force});
   }
 
   /**

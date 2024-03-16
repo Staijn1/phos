@@ -1,4 +1,5 @@
 import iro from "@jaames/iro";
+import { IDevice } from "./INetworkState";
 
 export type LedstripState = {
   mode: number;
@@ -7,6 +8,14 @@ export type LedstripState = {
   speed: number;
   fftValue: number;
 }
+
+/**
+ * Room state is kept in the API and is used to keep track of the state of each room and each device in that room
+ * It is a Map where:
+ * - the key of the map is the room ID
+ * - The value is the ledstrip state that is applied to all devices in that room
+ */
+export type RoomState = Map<string, LedstripState>
 
 /**
  * To be able to do some more advanced stuff with colors we require the colors to be iro.Colors instead of hex strings

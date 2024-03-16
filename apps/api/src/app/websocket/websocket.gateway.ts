@@ -61,26 +61,20 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     }
   }
 
-  @SubscribeMessage(WebsocketMessage.GetLedstripState)
-  getLedstripState(): LedstripState {
-    return this.websocketService.getState();
-  }
-
   @SubscribeMessage(WebsocketMessage.RenameDevice)
   async renameDevice(client: Socket, body: WebsocketRequest<string>): Promise<void> {
     return this.deviceService.renameDevice(client.id, body.payload);
   }
 
   @SubscribeMessage(WebsocketMessage.SetNetworkState)
-  onSetNetworkState(client: Socket, body: WebsocketRequest<LedstripState>): LedstripState {
-    this.websocketService.setState(body.rooms, body.payload, client);
-    return this.websocketService.getState();
+  async onSetNetworkState(client: Socket, body: WebsocketRequest<LedstripState>): Promise<INetworkState> {
+    await this.websocketService.setState(body.rooms, body.payload, client);
+    return this.websocketService.getNetworkState();
   }
 
   @SubscribeMessage(WebsocketMessage.SetFFTValue)
-  onFFTCommand(client: Socket, body: WebsocketRequest<number>): LedstripState {
+  onFFTCommand(client: Socket, body: WebsocketRequest<number>): void {
     this.websocketService.setFFTValue(body.rooms, body.payload);
-    return this.websocketService.getState();
   }
 
   @SubscribeMessage(WebsocketMessage.GetModes)
@@ -128,7 +122,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
       this.logger.log(`[SCHEDULED] Sending state to all rooms - forced. Rooms: ${allRooms.map(r => `${r.name} (${r.id})`).join(', ')}`);
 
       const allRoomIds = allRooms.map(r => r.id);
-      this.websocketService.sendStateToRooms(allRoomIds,true);
+      this.websocketService.sendStateToRooms(allRoomIds,true).then();
     }, this.stateIntervalTimeMS);
   }
 }

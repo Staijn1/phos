@@ -31,8 +31,8 @@ export class ShortcutPageComponent {
               private messageService: MessageService,
               private connection: WebsocketService,
               private router: Router,
-              private store: Store<{ ledstripState: LedstripState | undefined }>) {
-    combineLatest([this.activatedRoute.queryParams, this.store.select('ledstripState')])
+              private store: Store<{ networkState: LedstripState | undefined }>) {
+    combineLatest([this.activatedRoute.queryParams, this.store.select('networkState')])
       .subscribe(([params, state]) => {
         if (!state) return;
 
