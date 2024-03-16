@@ -4,28 +4,15 @@ import {Device} from './Device.model';
 import {FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository} from 'typeorm';
 import {DAOService} from '../interfaces/DAOService';
 import {validate} from 'class-validator';
-import { LedstripState, RoomState } from '@angulon/interfaces';
-import { debounce, debounceTime, Subject } from 'rxjs';
 
 @Injectable()
 export class DeviceService implements DAOService<Device> {
   private logger = new Logger(DeviceService.name);
-  /**
-   * Call this subject to update the ledstrip state for the specified rooms, but debounced (for performance)
-   * @example
-   * deviceService.updateLedstripStateForRoomsSubject.next({rooms: ['room1', 'room2'], newState: {brightness: 255, colors: ['#ff0000', '#00ff00', '#0000ff'], fftValue: 0, mode: 0, speed: 1000}});
-   */
-  public updateLedstripStateForRoomsSubject = new Subject<{rooms: string[], newState: LedstripState}>();
 
   constructor(
     @InjectRepository(Device)
     private readonly deviceRepository: Repository<Device>,
   ) {
-    this.updateLedstripStateForRoomsSubject.pipe(
-      debounceTime(300)
-    ).subscribe(({rooms, newState}) => {
-      this.updateLedstripStateForRooms(rooms, newState).then();
-    });
   }
 
   async findAll(criteria?: FindManyOptions<Device>): Promise<Device[]> {
@@ -82,33 +69,6 @@ export class DeviceService implements DAOService<Device> {
   async renameDevice(sessionId: string, payload: string) {
     this.logger.log(`Renaming device with session id ${sessionId} to ${payload}`)
     await this.update({socketSessionId: sessionId}, {name: payload});
-  }
-
-  /**
-   * Get the ledstrip states for the specified rooms
-   * @param rooms
-   */
-  async getLedstripStateForRooms(rooms: string[]): Promise<RoomState> {
-    const devices = await this.findAll({where: {room: {id: In(rooms)}}, relations: ['room']});
-    const state: RoomState = new Map<string, LedstripState>();
-
-    for (const device of devices) {
-      state.set(device.room.id, device.state);
-    }
-
-    return state;
-  }
-
-  /**
-   * Stores a new ledstrip state in the database for all devices that are in one of the specified rooms
-   * Private because this method is called through the updateLedstripStateForRoomsSubject, debounced.
-   * @param rooms
-   * @param newState
-   */
-  private async updateLedstripStateForRooms(rooms: string[], newState: LedstripState) {
-    for (const roomId of rooms) {
-      await this.update({room: {id: roomId}}, {state: newState});
-    }
   }
 }
 

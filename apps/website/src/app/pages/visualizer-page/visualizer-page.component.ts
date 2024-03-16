@@ -10,7 +10,7 @@ import {
   faWrench
 } from "@fortawesome/free-solid-svg-icons";
 import { VisualizerComponent } from "../../shared/components/visualizer/visualizer.component";
-import { GradientInformation, LedstripState, ModeInformation } from "@angulon/interfaces";
+import { GradientInformation, RoomState, ModeInformation } from "@angulon/interfaces";
 import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas.component";
 import * as slider from "ngx-slider-v2";
 import { NgxSliderModule } from "ngx-slider-v2";
@@ -115,7 +115,7 @@ export class VisualizerPageComponent implements OnDestroy {
     private chromaEffect: BaseChromaConnection,
     public spotifyAuth: SpotifyAuthenticationService,
     private store: Store<{
-      ledstripState: LedstripState | undefined,
+      ledstripState: RoomState | undefined,
       gradients: GradientInformation[],
       userPreferences: UserPreferences,
       modes: ModeInformation[],
@@ -173,7 +173,7 @@ export class VisualizerPageComponent implements OnDestroy {
       .then()
       .catch((error: Error) => console.error("Failed to release wake lock", error));
   }
-  
+
   drawCallback(instance: AudioMotionAnalyzer): void {
     // Send the fft value to the ledstrip and update the chroma effect
     const mappedFFTValue = Math.floor(mapNumber(instance.getEnergy(this.visualizerOptions.energyPreset), 0, 1, 0, 255));

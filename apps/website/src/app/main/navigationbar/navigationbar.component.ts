@@ -15,7 +15,7 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {Store} from '@ngrx/store';
 import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
-import {LedstripState} from '@angulon/interfaces';
+import {RoomState} from '@angulon/interfaces';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 import {
   DecreaseLedstripBrightness,
@@ -82,7 +82,7 @@ export class NavigationbarComponent {
   constructor(
     public connection: WebsocketService,
     private store: Store<{
-      ledstripState: LedstripState,
+      ledstripState: RoomState,
       networkState: ClientNetworkState
     }>
   ) {

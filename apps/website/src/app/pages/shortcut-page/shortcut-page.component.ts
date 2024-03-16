@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { MessageService } from '../../services/message-service/message.service';
 import { Store } from '@ngrx/store';
-import { LedstripState } from '@angulon/interfaces';
+import { RoomState } from '@angulon/interfaces';
 import { combineLatest } from 'rxjs';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 import {
@@ -31,7 +31,7 @@ export class ShortcutPageComponent {
               private messageService: MessageService,
               private connection: WebsocketService,
               private router: Router,
-              private store: Store<{ networkState: LedstripState | undefined }>) {
+              private store: Store<{ networkState: RoomState | undefined }>) {
     combineLatest([this.activatedRoute.queryParams, this.store.select('networkState')])
       .subscribe(([params, state]) => {
         if (!state) return;

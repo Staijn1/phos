@@ -17,13 +17,12 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
    * Builds the options to use for TypeORM
    */
   public createTypeOrmOptions(): TypeOrmModuleOptions {
-    const productionMode = this.config.get<IEnvironmentConfiguration['production']>('production');
     const dbConfig = this.config.get<IEnvironmentConfiguration['database']>('database');
 
     return {
       ...TypeOrmConfigService.GetBaseDatasourceOptions(dbConfig),
       migrationsRun: true,
-      synchronize: !productionMode, // do not set to TRUE in production mode - possible data loss
+      synchronize: false, // Please create migrations to update the database schema (automatically applied on API startup)
       autoLoadEntities: true,
     };
   }

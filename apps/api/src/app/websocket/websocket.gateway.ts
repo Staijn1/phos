@@ -6,7 +6,7 @@ import {
   GradientInformation,
   INetworkState,
   IRoom,
-  LedstripState,
+  RoomState,
   ModeInformation,
   StandardResponse,
   WebsocketMessage,
@@ -67,7 +67,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.SetNetworkState)
-  async onSetNetworkState(client: Socket, body: WebsocketRequest<LedstripState>): Promise<INetworkState> {
+  async onSetNetworkState(client: Socket, body: WebsocketRequest<RoomState>): Promise<INetworkState> {
     await this.websocketService.setState(body.rooms, body.payload, client);
     return this.websocketService.getNetworkState();
   }

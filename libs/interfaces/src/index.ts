@@ -6,7 +6,7 @@ export * from './lib/ModeInformation';
 export * from './lib/SpeedInformation';
 export * from './lib/Responses';
 export * from './lib/functions';
-export * from './lib/LedstripState';
+export * from './lib/RoomState';
 export * from './lib/WebsocketMessage';
 export * from './lib/Constants';
 export * from './lib/INetworkState';

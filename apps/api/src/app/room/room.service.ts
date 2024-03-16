@@ -1,20 +1,33 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {validate} from 'class-validator';
 import {DeviceService} from '../device/device.service';
-import {IRoom} from '@angulon/interfaces';
+import { INITIAL_ROOM_STATE, IRoom, RoomsState, RoomState } from '@angulon/interfaces';
+import { debounceTime, Subject } from 'rxjs';
 
 
 @Injectable()
 export class RoomService implements DAOService<Room> {
   private readonly logger = new Logger(RoomService.name);
 
+  /**
+   * Call this subject to update the ledstrip state for the specified rooms, but debounced (for performance)
+   * @example
+   * roomService.updateRoomStateForRoomsSubject.next({rooms: ['idroom1', 'idroom2'], newState: {brightness: 255, colors: ['#ff0000', '#00ff00', '#0000ff'], fftValue: 0, mode: 0, speed: 1000}});
+   */
+  public updateRoomStateForRoomsSubject = new Subject<{rooms: string[], newState: RoomState}>();
+
   constructor(
     @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
     private readonly deviceService: DeviceService) {
+    this.updateRoomStateForRoomsSubject.pipe(
+      debounceTime(300)
+    ).subscribe(({rooms, newState}) => {
+      this.updateRoomStateForRooms(rooms, newState).then();
+    });
   }
 
   async findAll(criteria?: FindManyOptions<Room>): Promise<Room[]> {
@@ -27,7 +40,7 @@ export class RoomService implements DAOService<Room> {
 
   async create(roomData: Partial<Room>): Promise<Room> {
     await this.validate(roomData);
-    const roomDefaults: IRoom = {connectedDevices: [], id: undefined, name: ''};
+    const roomDefaults: IRoom = {connectedDevices: [], id: undefined, name: '', state: INITIAL_ROOM_STATE};
     const room = this.roomRepository.create({...roomDefaults, ...roomData});
     return this.roomRepository.save(room);
   }
@@ -94,5 +107,30 @@ export class RoomService implements DAOService<Room> {
     // Add the device to the new room connectedDevices
     room.connectedDevices.push(device);
     return await this.roomRepository.save(room);
+  }
+
+  /**
+   * Get the ledstrip states for the specified rooms
+   * @param rooms
+   */
+  async getRoomsState(roomIds: string[]): Promise<RoomsState> {
+    const rooms = await this.findAll({where: {id: In(roomIds)}});
+    const state: RoomsState = new Map<string, RoomState>();
+
+    for (const room of rooms) {
+      state.set(room.id, room.state);
+    }
+
+    return state;
+  }
+
+  /**
+   * Stores a new ledstrip state in the database for all devices that are in one of the specified rooms
+   * Private because this method is called through the updateLedstripStateForRoomsSubject, debounced.
+   * @param rooms
+   * @param newState
+   */
+  private async updateRoomStateForRooms(rooms: string[], newState: RoomState) {
+    await this.update({id: In(rooms)}, {state: newState});
   }
 }

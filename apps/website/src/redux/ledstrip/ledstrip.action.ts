@@ -1,4 +1,4 @@
-import { ClientSideLedstripState, LedstripState } from "@angulon/interfaces";
+import { ClientSideLedstripState, RoomState } from "@angulon/interfaces";
 import { Action } from '@ngrx/store';
 import iro from "@jaames/iro";
 
@@ -16,7 +16,7 @@ export enum LedstripAction {
 export class ReceiveServerLedstripState implements Action {
   readonly type = LedstripAction.RECEIVE_SERVER_STATE;
 
-  constructor(public payload: LedstripState) {
+  constructor(public payload: RoomState) {
   }
 }
 

@@ -1,5 +1,5 @@
 import { Component, OnDestroy } from '@angular/core';
-import { LedstripState, ModeInformation } from '@angulon/interfaces';
+import { RoomState, ModeInformation } from '@angulon/interfaces';
 import { ChangeLedstripMode } from '../../../redux/ledstrip/ledstrip.action';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
@@ -30,7 +30,7 @@ export class ModePageComponent implements OnDestroy {
   selectedMode = 0;
 
 
-  constructor(private readonly store: Store<{ modes: ModeInformation[], ledstripState: LedstripState | undefined }>) {
+  constructor(private readonly store: Store<{ modes: ModeInformation[], ledstripState: RoomState | undefined }>) {
     this.store.select('modes').subscribe(modes => this.modes = modes);
 
     combineLatest([this.store.select('ledstripState'), this.store.select('modes')]).subscribe(([ledstripState, modes]) => {

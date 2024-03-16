@@ -1,5 +1,5 @@
 import {Component} from "@angular/core";
-import {INetworkState, LedstripState} from "@angulon/interfaces";
+import {INetworkState, RoomState} from "@angulon/interfaces";
 import {Store} from "@ngrx/store";
 import {MAXIMUM_BRIGHTNESS, SPEED_MAXIMUM_INTERVAL_MS} from "../../shared/constants";
 import {DecimalPipe, NgClass, NgForOf, NgIf} from "@angular/common";
@@ -21,7 +21,7 @@ import {SharedModule} from "../../shared/shared.module";
   standalone: true
 })
 export class HomePageComponent {
-  private ledstripState: LedstripState | undefined;
+  private ledstripState: RoomState | undefined;
   networkState: INetworkState | undefined;
 
   get speedPercentage() {
@@ -32,7 +32,7 @@ export class HomePageComponent {
     return this.ledstripState ? this.ledstripState?.brightness / MAXIMUM_BRIGHTNESS * 100 : 0;
   }
 
-  constructor(private readonly store: Store<{ ledstripState: LedstripState, networkState: INetworkState }>) {
+  constructor(private readonly store: Store<{ ledstripState: RoomState, networkState: INetworkState }>) {
     this.store.select("ledstripState").subscribe((state) => this.ledstripState = state);
 
     this.store.select("networkState").subscribe((state) => this.networkState = state);

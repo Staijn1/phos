@@ -7,7 +7,7 @@ import {
   GradientInformation,
   INetworkState,
   IRoom,
-  LedstripState,
+  RoomState,
   ModeInformation,
   WebsocketMessage
 } from '@angulon/interfaces';
@@ -69,7 +69,7 @@ export class WebsocketService {
         this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTERROR));
       });
 
-      this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
+      this.socket.on(WebsocketMessage.StateChange, (state: RoomState) => this.updateAppState(state));
       this.socket.on(WebsocketMessage.DatabaseChange, () => this.loadNetworkState().then());
     });
 
@@ -93,8 +93,8 @@ export class WebsocketService {
         }
 
         // Before sending the state to the server, we need to convert the iro.Colors to hex strings
-        const payload: LedstripState = {...state, colors: state.colors.map(color => color.hexString)};
-        this.promisifyEmit<INetworkState, LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
+        const payload: RoomState = {...state, colors: state.colors.map(color => color.hexString)};
+        this.promisifyEmit<INetworkState, RoomState>(WebsocketMessage.SetNetworkState, payload).then();
       });
   }
 
@@ -126,7 +126,7 @@ export class WebsocketService {
    * @param state
    * @private
    */
-  private updateAppState(state: LedstripState) {
+  private updateAppState(state: RoomState) {
     this.updateLedstripState = false;
     this.store.dispatch(new ReceiveServerLedstripState(state));
   }
