@@ -39,10 +39,10 @@ export class WebsocketService {
    * Get the state of the network containing all rooms and devices
    */
   async getNetworkState(): Promise<INetworkState> {
-    const rooms = await this.roomService.findAll();
+    const rooms = await this.roomService.findAll({order: {name: 'ASC'}});
     return {
       rooms: rooms,
-      devices: await this.deviceService.findAll({where: {room: null}, relations: ['room']})
+      devices: await this.deviceService.findAll({where: {room: null}, relations: ['room'], order: {name: 'ASC'}})
     }
   }
 
@@ -183,8 +183,10 @@ export class WebsocketService {
       if (client) {
         client.leave(deviceInDb.room.id);
         client.join(roomId);
-
         this.logger.log(`Client ${deviceInDb.name}(${deviceInDb.socketSessionId}) moved to room ${deviceInDb.room.name}(${roomId})`);
+
+        await this.setState([roomId], deviceInDb.room.state, client);
+        this.logger.log(`Sent state to room ${roomId} after moving client ${deviceInDb.name}(${deviceInDb.socketSessionId})`);
       }
     }
   }
