@@ -1,5 +1,4 @@
 export enum WebsocketMessage {
-  GetLedstripState = "getState",
   SetNetworkState = "setState",
   GetModes = "getModes",
   GetGradients = "getGradients",

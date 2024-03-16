@@ -1,6 +1,6 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
-import { INetworkState, LedstripState, RoomState, WebsocketMessage } from '@angulon/interfaces';
+import { INetworkState, LedstripState, WebsocketMessage } from '@angulon/interfaces';
 import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
 import {OnEvent} from '@nestjs/event-emitter';
