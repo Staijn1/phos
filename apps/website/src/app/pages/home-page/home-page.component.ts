@@ -21,20 +21,17 @@ import {SharedModule} from "../../shared/shared.module";
   standalone: true
 })
 export class HomePageComponent {
-  private ledstripState: RoomState | undefined;
   networkState: INetworkState | undefined;
 
-  get speedPercentage() {
-    return this.ledstripState ? this.ledstripState?.speed / SPEED_MAXIMUM_INTERVAL_MS * 100 : 0;
+  convertSpeedToPercentage(speed: number) {
+    return speed / SPEED_MAXIMUM_INTERVAL_MS * 100;
   }
 
-  get brightnessPercentage() {
-    return this.ledstripState ? this.ledstripState?.brightness / MAXIMUM_BRIGHTNESS * 100 : 0;
+  convertBrightnessToPercentage(brightness: number) {
+    return brightness / MAXIMUM_BRIGHTNESS * 100;
   }
 
   constructor(private readonly store: Store<{ ledstripState: RoomState, networkState: INetworkState }>) {
-    this.store.select("ledstripState").subscribe((state) => this.ledstripState = state);
-
     this.store.select("networkState").subscribe((state) => this.networkState = state);
   }
 }

@@ -2,13 +2,12 @@
   <div class='tw-grid tw-grid-cols-1 md:tw-grid-cols-2 tw-gap-4'>
     <div class='tw-card tw-bg-base-100'>
       <div class='tw-card-body'>
-        <h2 class='tw-card-title'>Device Status</h2>
-
-        <div>
-          <p>Ledstrip 1</p>
-          <div class='tw-flex'>
-            <app-radial-progress label="Speed" [percentage]="speedPercentage"></app-radial-progress>
-            <app-radial-progress label="Brightness" [percentage]="brightnessPercentage"></app-radial-progress>
+        <h2 class='tw-card-title'>Room Status</h2>
+        <div *ngFor='let room of networkState?.rooms' class='tw-bg-base-300 tw-p-3 tw-rounded'>
+          <p>{{ room.name }}</p>
+          <div class='tw-flex tw-justify-center'>
+            <app-radial-progress label="Speed" [percentage]="convertSpeedToPercentage(room.state.speed)"></app-radial-progress>
+            <app-radial-progress label="Brightness" [percentage]="convertBrightnessToPercentage(room.state.brightness)"></app-radial-progress>
           </div>
         </div>
       </div>
