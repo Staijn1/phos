@@ -9,6 +9,8 @@ networks:
 
 services:
   phos_api:
+    depends_on:
+      - phos_database
     container_name: phos_api
     build:
       context: ./
@@ -20,6 +22,10 @@ services:
       - 7001:3333
     environment:
       PORT: 3333
+      DATABASE_HOST: phos_database
+      DATABASE_DATABASE: phos
+      DATABASE_USERNAME: root
+      DATABASE_PASSWORD: example
     networks:
       - corp
     restart: on-failure
@@ -46,8 +52,8 @@ services:
     container_name: phos_database
     image: mariadb
     restart: always
-    volumes:
-      - /data/phos/database:/var/lib/mysql
+#    volumes:
+#      - /data/phos/database:/var/lib/mysql
     networks:
       - corp
     ports:

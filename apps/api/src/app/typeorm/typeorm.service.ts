@@ -22,7 +22,7 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
     return {
       ...TypeOrmConfigService.GetBaseDatasourceOptions(dbConfig),
       migrationsRun: true,
-      synchronize: false, // Please create migrations to update the database schema (automatically applied on API startup)
+      synchronize: false, // Please create migrations to update the database schema (automatically applied on API startup, or see readme.md for CLI)
       autoLoadEntities: true,
     };
   }
