@@ -21,8 +21,8 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
 
     return {
       ...TypeOrmConfigService.GetBaseDatasourceOptions(dbConfig),
-      migrationsRun: true,
-      synchronize: false, // Please create migrations to update the database schema (automatically applied on API startup, or see readme.md for CLI)
+      migrationsRun: false, // Do not run migrations on startup, see readme
+      synchronize: false, // Please create migrations to update the database schema and run appropriate command to apply them (see readme)
       autoLoadEntities: true,
     };
   }
@@ -31,7 +31,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
    * Get the base datasource options used for the application but also in the orm.config.ts file to be able to use the same configuration for generating migrations
    */
   public static GetBaseDatasourceOptions(dbConfig: IDatabaseConfiguration): DataSourceOptions {
-
     const configSafeToLog = {...dbConfig, password: 'REDACTED'};
     this.logger.log(`Connecting to database user the following configuration: ${JSON.stringify(configSafeToLog, null, 2)}`);
 
