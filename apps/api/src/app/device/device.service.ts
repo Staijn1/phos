@@ -72,7 +72,7 @@ export class DeviceService implements DAOService<Device> {
     await this.update({ socketSessionId: sessionId }, { name: payload });
   }
 
-  async estimatePowerDraw(): Promise<Map<string, number>> {
+  async estimatePowerDrawForAllOnlineLedstrips(): Promise<Map<string, number>> {
     // The maximum current per color channel in milliamps
     const maxCurrentPerColor = 20;
 

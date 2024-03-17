@@ -93,6 +93,11 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return {status: 200, message: 'Joined user room'};
   }
 
+  @SubscribeMessage(WebsocketMessage.GetPowerDrawEstimate)
+  async onGetPowerDrawEstimate(): Promise<Map<string, number>> {
+    return this.deviceService.estimatePowerDrawForAllOnlineLedstrips();
+  }
+
   /**
    * When a client connects, log its IP address.
    * Also set the server instance in the websocketService, so we make sure it is always up-to-date with the current server instance.

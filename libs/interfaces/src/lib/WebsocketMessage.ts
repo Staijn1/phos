@@ -12,5 +12,6 @@ export enum WebsocketMessage {
   RemoveRoom = "removeRoom",
   DatabaseChange = "databaseChange",
   RenameDevice = "renameDevice",
-  AssignDeviceToRoom = "assignDeviceToRoom"
+  AssignDeviceToRoom = "assignDeviceToRoom",
+  GetPowerDrawEstimate = "getPowerDrawEstimate",
 }
