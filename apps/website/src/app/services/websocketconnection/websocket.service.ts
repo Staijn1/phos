@@ -191,6 +191,6 @@ export class WebsocketService {
   }
 
   async getPowerDrawEstimateData() {
-    return await this.promisifyEmit<Map<string, number>, null>(WebsocketMessage.GetPowerDrawEstimate);
+    return await this.promisifyEmit<Record<string, number>, null>(WebsocketMessage.GetPowerDrawEstimate);
   }
 }

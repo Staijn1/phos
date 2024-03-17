@@ -1,1 +1,14 @@
-<pre>{{estimatedPowerDataHistory | json}}</pre>
+<!-- Fill the parent container width/height by setting view to null null -->
+<ngx-charts-line-chart
+  [view]="[700, 300]"
+  [scheme]="colorscheme"
+  [legend]="true"
+  [showXAxisLabel]="true"
+  [showYAxisLabel]="true"
+  [xAxis]="true"
+  [yAxis]="true"
+  [xAxisLabel]="'Estimated Power Draw'"
+  [yAxisLabel]="'Time'"
+  [timeline]="true"
+  [results]="chartData">
+</ngx-charts-line-chart>

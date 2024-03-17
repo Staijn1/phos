@@ -72,7 +72,7 @@ export class DeviceService implements DAOService<Device> {
     await this.update({ socketSessionId: sessionId }, { name: payload });
   }
 
-  async estimatePowerDrawForAllOnlineLedstrips(): Promise<Map<string, number>> {
+  async estimatePowerDrawForAllOnlineLedstrips(): Promise<Record<string, number>> {
     // The maximum current per color channel in milliamps
     const maxCurrentPerColor = 20;
 
@@ -80,8 +80,7 @@ export class DeviceService implements DAOService<Device> {
     const voltage = 5;
     const ledstrips = await this.findAll({ where: { isConnected: true, isLedstrip: true }, relations: ['room'] });
 
-    const powerDrawMap = new Map<string, number>();
-
+    const powerDrawMap: Record<string, number> = {};
     for (const device of ledstrips) {
       // Extract the brightness and colors from the device state
       const { brightness, colors } = device.room.state;

@@ -94,7 +94,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.GetPowerDrawEstimate)
-  async onGetPowerDrawEstimate(): Promise<Map<string, number>> {
+  async onGetPowerDrawEstimate(): Promise<Record<string, number>> {
     return this.deviceService.estimatePowerDrawForAllOnlineLedstrips();
   }
 
