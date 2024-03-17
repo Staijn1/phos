@@ -4,10 +4,23 @@
       <div class='tw-card-body'>
         <h2 class='tw-card-title'>Room Status</h2>
         <div *ngFor='let room of networkState?.rooms' class='tw-bg-base-300 tw-p-3 tw-rounded'>
-          <p>{{ room.name }}</p>
-          <div class='tw-flex tw-justify-center'>
-            <app-radial-progress label="Speed" [percentage]="convertSpeedToPercentage(room.state.speed)"></app-radial-progress>
-            <app-radial-progress label="Brightness" [percentage]="convertBrightnessToPercentage(room.state.brightness)"></app-radial-progress>
+          <div class='tw-divide-y tw-divide-accent'>
+            <p class='tw-text-center tw-font-bold'>{{ room.name }}</p>
+            <div class='tw-flex tw-justify-between tw-pt-2 tw-px-5'>
+              <div>
+                <p>Assigned Devices: {{room.connectedDevices.length}}</p>
+                <p *ngIf="getOfflineDevicesCount(room) > 0">
+                  <fa-icon class="tw-text-warning" [icon]="offlineWarningIcon"></fa-icon>
+                  Offline devices: {{ getOfflineDevicesCount(room) }}
+                </p>
+              </div>
+              <div>
+                <app-radial-progress label='Speed'
+                                     [percentage]='convertSpeedToPercentage(room.state.speed)'></app-radial-progress>
+                <app-radial-progress label='Brightness'
+                                     [percentage]='convertBrightnessToPercentage(room.state.brightness)'></app-radial-progress>
+              </div>
+            </div>
           </div>
         </div>
       </div>
@@ -17,9 +30,10 @@
       <div class='tw-card-body'>
         <h2 class='tw-card-title'>Something Else</h2>
         <div class='tw-flex'>
-          <div class='tw-text-center tw-radial-progress' style='--value:70; --size:8em; --thickness:5px'>Speed<br/>70%
+          <div class='tw-text-center tw-radial-progress' style='--value:70; --size:8em; --thickness:5px'>Speed<br />70%
           </div>
-          <div class='tw-text-center tw-radial-progress' style='--value:50; --size:8em; --thickness:5px'>Brightness<br/>50%
+          <div class='tw-text-center tw-radial-progress' style='--value:50; --size:8em; --thickness:5px'>
+            Brightness<br />50%
           </div>
         </div>
       </div>
@@ -30,9 +44,9 @@
     <div class='tw-card-body'>
       <h2 class='tw-card-title'>Connected Devices</h2>
 
-      <ng-container *ngIf="networkState && networkState.devices;else noConnectedDevices">
-        <div class="tw-grid tw-gap-4 tw-grid-cols-1 lg:tw-grid-cols-4">
-          <app-device [device]="device" *ngFor="let device of networkState.devices"></app-device>
+      <ng-container *ngIf='networkState && networkState.devices;else noConnectedDevices'>
+        <div class='tw-grid tw-gap-4 tw-grid-cols-1 lg:tw-grid-cols-4'>
+          <app-device [device]='device' *ngFor='let device of networkState.devices'></app-device>
         </div>
       </ng-container>
       <ng-template #noConnectedDevices>

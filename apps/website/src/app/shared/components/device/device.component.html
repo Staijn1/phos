@@ -6,7 +6,7 @@
   </span>
 
   <div class="tw-divide-y tw-divide-accent">
-    <h3 class="tw-text-center">{{ device.name }}</h3>
+    <h3 class="tw-text-center tw-font-bold">{{ device.name }}</h3>
     <div class="tw-grid tw-grid-cols-2 tw-pt-2" *ngIf="!compact">
       <div class="tw-text-end">Is Connected:</div>
       <div class="tw-pl-2">{{ device.isConnected | yesNo }}</div>
