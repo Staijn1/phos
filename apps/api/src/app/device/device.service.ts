@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Device } from './Device.model';
-import { FindManyOptions, FindOneOptions, FindOptionsWhere, Repository } from 'typeorm';
+import {FindManyOptions, FindOneOptions, FindOptionsWhere, IsNull, Not, Repository} from 'typeorm';
 import { DAOService } from '../interfaces/DAOService';
 import { validate } from 'class-validator';
 import { hexToRgb } from '../utils/ColorUtils';
@@ -78,7 +78,7 @@ export class DeviceService implements DAOService<Device> {
 
     // The voltage supply to the LED strip in volts
     const voltage = 5;
-    const ledstrips = await this.findAll({ where: { isConnected: true, isLedstrip: true }, relations: ['room'] });
+    const ledstrips = await this.findAll({ where: { isConnected: true, isLedstrip: true, room: Not(IsNull())}, relations: ['room'] });
 
     const powerDrawMap: Record<string, number> = {};
     for (const device of ledstrips) {
