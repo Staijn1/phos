@@ -91,9 +91,17 @@ export class WebsocketService {
     this.server = server;
 
     const deviceName = client.handshake.query.deviceName;
+    const ledCount = client.handshake.query.ledCount as string | undefined;
     // If no device name was provided, disconnect the client
     if (!deviceName || typeof deviceName !== 'string' || Array.isArray(deviceName)) {
       this.logger.warn(`Client with session ${client.id} provided an invalid device name. Received: ${deviceName}. Disconnecting...`)
+      client.disconnect(true);
+      return;
+    }
+
+    // If the received ledcount is not a number, disconnect the client
+    if (ledCount && typeof ledCount != 'number' || isNaN(parseInt(ledCount))) {
+      this.logger.warn(`Client with session ${client.id} provided an invalid ledCount. Received: ${ledCount}. Disconnecting...`)
       client.disconnect(true);
       return;
     }
@@ -102,7 +110,7 @@ export class WebsocketService {
 
     // If the device is already in the database, update the socketSessionId and isConnected fields. Also join the room if it is in one
     if (deviceInDb) {
-      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true});
+      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: ledCount});
 
       if (deviceInDb.room) {
         client.join(deviceInDb.room.id);

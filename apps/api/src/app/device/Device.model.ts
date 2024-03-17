@@ -19,6 +19,9 @@ export class Device implements IDevice{
   @Column()
   isConnected: boolean;
 
+  @Column({ default: 0 })
+  ledCount: number;
+
   @ManyToOne(() => Room, (room) => room.connectedDevices, {onDelete: 'SET NULL'})
   room: Room;
 }
