@@ -100,7 +100,7 @@ export class WebsocketService {
     }
 
     // If the received ledcount is not a number, disconnect the client
-    if (ledCount && typeof ledCount != 'number' || isNaN(parseInt(ledCount))) {
+    if (ledCount && (typeof ledCount != 'number' || isNaN(parseInt(ledCount)))) {
       this.logger.warn(`Client with session ${client.id} provided an invalid ledCount. Received: ${ledCount}. Disconnecting...`)
       client.disconnect(true);
       return;
@@ -110,7 +110,7 @@ export class WebsocketService {
 
     // If the device is already in the database, update the socketSessionId and isConnected fields. Also join the room if it is in one
     if (deviceInDb) {
-      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: parseInt(ledCount)});
+      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: ledCount ? parseInt(ledCount) : 0});
 
       if (deviceInDb.room) {
         client.join(deviceInDb.room.id);
