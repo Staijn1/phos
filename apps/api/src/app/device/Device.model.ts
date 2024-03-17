@@ -23,5 +23,5 @@ export class Device implements IDevice{
   ledCount: number;
 
   @ManyToOne(() => Room, (room) => room.connectedDevices, {onDelete: 'SET NULL'})
-  room: Room;
+  room: Room | null;
 }
