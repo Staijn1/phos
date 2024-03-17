@@ -17,4 +17,5 @@ export interface IDevice {
   name: string;
   isLedstrip: boolean;
   isConnected:boolean;
+  room: IRoom | null;
 }
