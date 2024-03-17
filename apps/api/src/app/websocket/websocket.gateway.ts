@@ -73,8 +73,10 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.SetFFTValue)
-  onFFTCommand(client: Socket, body: WebsocketRequest<number>): void {
+  onFFTCommand(client: Socket, body: WebsocketRequest<number>): string {
     this.websocketService.setFFTValue(body.rooms, body.payload);
+    // Return value does not matter but front-end expects a reply otherwise it thinks it's not connected.
+    return "OK";
   }
 
   @SubscribeMessage(WebsocketMessage.GetModes)
