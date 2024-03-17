@@ -7,6 +7,7 @@ import {RadialProgressComponent} from "../../shared/components/radialprogress/ra
 import {SharedModule} from "../../shared/shared.module";
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
 import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PowerDrawComponent } from '../../shared/components/power-draw/power-draw.component';
 
 @Component({
   selector: "app-home",
@@ -19,7 +20,8 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
     NgIf,
     NgClass,
     SharedModule,
-    FontAwesomeModule
+    FontAwesomeModule,
+    PowerDrawComponent
   ],
   standalone: true
 })

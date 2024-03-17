@@ -189,4 +189,8 @@ export class WebsocketService {
     console.warn('unassignDeviceFromRoom is not implemented yet');
     return Promise.resolve();
   }
+
+  async getPowerDrawEstimateData() {
+    return await this.promisifyEmit<Map<string, number>, null>(WebsocketMessage.GetPowerDrawEstimate);
+  }
 }
