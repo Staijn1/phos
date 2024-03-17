@@ -24,7 +24,7 @@ export class RoomService implements DAOService<Room> {
     @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
     private readonly deviceService: DeviceService) {
     this.updateRoomStateForRoomsSubject.pipe(
-      debounceTime(300)
+      debounceTime(150)
     ).subscribe(({rooms, newState}) => {
       this.updateRoomStateForRooms(rooms, newState).then();
     });
