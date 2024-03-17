@@ -98,6 +98,7 @@ export class DeviceService implements DAOService<Device> {
       // Calculate the power draw for this device
       const powerDraw = numLeds * totalCurrentPerLed * voltage * (brightness / 255) / 1000; // in Watts
 
+      // Do not add value with .set() because it results in {} when serializing to JSON
       powerDrawMap[device.name]= powerDraw;
     }
 
