@@ -110,7 +110,7 @@ export class WebsocketService {
 
     // If the device is already in the database, update the socketSessionId and isConnected fields. Also join the room if it is in one
     if (deviceInDb) {
-      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: ledCount});
+      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: parseInt(ledCount)});
 
       if (deviceInDb.room) {
         client.join(deviceInDb.room.id);
