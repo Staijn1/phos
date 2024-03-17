@@ -11,14 +11,19 @@ import { gsap } from "gsap";
 })
 export class RadialProgressComponent implements AfterViewInit {
   @ViewChild("radialContainer") radialContainer!: ElementRef;
-  @ViewChild("numberContainer") numberContainer!: ElementRef;
   @Input() size = "8em";
   @Input() thickness = "5px";
   @Input() label = "Label";
 
+
+  private _oldPercentage = 0;
   private _percentage = 0;
+
   @Input() set percentage(value: number) {
+    this._oldPercentage = this._percentage;
     this._percentage = value;
+
+    if (this._oldPercentage === this._percentage) return;
     this.animatePercentageChange();
   }
 
@@ -35,10 +40,12 @@ export class RadialProgressComponent implements AfterViewInit {
   private animatePercentageChange() {
     if (!this.radialContainer) return;
     gsap
-      .to(this.radialContainer.nativeElement, {
-        "--value": this._percentage,
-        ease: "power2.inOut"
-      })
-      .duration(0.5);
+      .fromTo(this.radialContainer.nativeElement, {
+        '--value': this._oldPercentage
+      }, {
+        '--value': this._percentage,
+        ease: 'power2.inOut',
+        duration: 0.5
+      });
   }
 }
