@@ -100,7 +100,7 @@ export class WebsocketService {
     }
 
     // If the received ledcount is not a number, disconnect the client
-    if (ledCount && (typeof ledCount != 'number' || isNaN(parseInt(ledCount)))) {
+    if (ledCount && isNaN(parseInt(ledCount))) {
       this.logger.warn(`Client with session ${client.id} provided an invalid ledCount. Received: ${ledCount}. Disconnecting...`)
       client.disconnect(true);
       return;
