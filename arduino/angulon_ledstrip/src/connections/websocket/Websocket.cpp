@@ -10,7 +10,7 @@
 #include <UrlEncode.h>
 
 void Websocket::setup(SystemConfiguration configuration) {
-    const String url = "/socket.io/?EIO=4&deviceName=" + urlEncode(configuration.devicename);
+    const String url = "/socket.io/?EIO=4&deviceName=" + urlEncode(configuration.devicename) + "&ledCount=" + urlEncode(String(configuration.ledcount));
     Logger::log("Websocket", "Setting up websocket connection to " + configuration.serverip + ":" + configuration.serverport + url);
     Angulon::led->turnOff();
 
