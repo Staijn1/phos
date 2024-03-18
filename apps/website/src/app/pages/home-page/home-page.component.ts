@@ -1,18 +1,19 @@
-import {Component} from "@angular/core";
-import { INetworkState, IRoom, RoomState } from '@angulon/interfaces';
-import {Store} from "@ngrx/store";
-import {MAXIMUM_BRIGHTNESS, SPEED_MAXIMUM_INTERVAL_MS} from "../../shared/constants";
-import {DecimalPipe, NgClass, NgForOf, NgIf} from "@angular/common";
-import {RadialProgressComponent} from "../../shared/components/radialprogress/radial-progress.component";
-import {SharedModule} from "../../shared/shared.module";
-import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
-import { PowerDrawComponent } from '../../shared/components/power-draw/power-draw.component';
+import {Component, ViewChild} from '@angular/core';
+import {IRoom, RoomState} from '@angulon/interfaces';
+import {Store} from '@ngrx/store';
+import {MAXIMUM_BRIGHTNESS, SPEED_MAXIMUM_INTERVAL_MS} from '../../shared/constants';
+import {DecimalPipe, NgClass, NgForOf, NgIf} from '@angular/common';
+import {RadialProgressComponent} from '../../shared/components/radialprogress/radial-progress.component';
+import {SharedModule} from '../../shared/shared.module';
+import {faTriangleExclamation} from '@fortawesome/free-solid-svg-icons';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {PowerDrawComponent} from '../../shared/components/power-draw/power-draw.component';
+import {ClientNetworkState, WebsocketConnectionStatus} from '../../../redux/networkstate/ClientNetworkState';
 
 @Component({
-  selector: "app-home",
-  templateUrl: "./home-page.component.html",
-  styleUrls: ["./home-page.component.scss"],
+  selector: 'app-home',
+  templateUrl: './home-page.component.html',
+  styleUrls: ['./home-page.component.scss'],
   imports: [
     DecimalPipe,
     RadialProgressComponent,
@@ -26,7 +27,8 @@ import { PowerDrawComponent } from '../../shared/components/power-draw/power-dra
   standalone: true
 })
 export class HomePageComponent {
-  networkState: INetworkState | undefined;
+  @ViewChild(PowerDrawComponent) powerDrawComponent!: PowerDrawComponent;
+  networkState: ClientNetworkState | undefined;
 
   convertSpeedToPercentage(speed: number) {
     return speed / SPEED_MAXIMUM_INTERVAL_MS * 100;
@@ -36,8 +38,16 @@ export class HomePageComponent {
     return brightness / MAXIMUM_BRIGHTNESS * 100;
   }
 
-  constructor(private readonly store: Store<{ roomState: RoomState, networkState: INetworkState }>) {
-    this.store.select("networkState").subscribe((state) => this.networkState = state);
+  constructor(private readonly store: Store<{ roomState: RoomState, networkState: ClientNetworkState }>) {
+    this.store.select('networkState').subscribe((state) => {
+      this.networkState = state;
+
+      if (state.connectionStatus === WebsocketConnectionStatus.CONNECTED) {
+        this.powerDrawComponent.startPollingData();
+      } else if (state.connectionStatus === WebsocketConnectionStatus.DISCONNECTED) {
+        this.powerDrawComponent.stopPollingData();
+      }
+    });
   }
 
   protected readonly offlineWarningIcon = faTriangleExclamation;

@@ -1,4 +1,4 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxEchartsDirective, provideEcharts} from 'ngx-echarts';
 import {EChartsOption, LineSeriesOption} from 'echarts';
@@ -15,7 +15,7 @@ import {extractThemeColorsFromDOM} from '../../functions';
     provideEcharts()
   ]
 })
-export class PowerDrawComponent implements OnInit, OnDestroy {
+export class PowerDrawComponent implements OnDestroy {
   chartOption: EChartsOption = {
     title: {
       text: 'Power Draw Estimate per Device (Watts)',
@@ -58,11 +58,6 @@ export class PowerDrawComponent implements OnInit, OnDestroy {
   private POLLING_INTERVAL_MS = 1000;
 
   constructor(private readonly websocketService: WebsocketService) {
-  }
-
-
-  ngOnInit() {
-    this.startPollingData();
   }
 
   public startPollingData() {
@@ -138,6 +133,10 @@ export class PowerDrawComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.stopPollingData();
+  }
+
+  stopPollingData() {
     clearInterval(this.getDataInterval);
   }
 }
