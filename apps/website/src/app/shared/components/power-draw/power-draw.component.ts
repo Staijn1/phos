@@ -1,9 +1,10 @@
 import {Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxEchartsDirective, provideEcharts} from 'ngx-echarts';
-import {EChartsOption, LineSeriesOption} from 'echarts';
+import {ECElementEvent, EChartsOption, LineSeriesOption} from 'echarts';
 import {WebsocketService} from '../../../services/websocketconnection/websocket.service';
 import {extractThemeColorsFromDOM} from '../../functions';
+import {OptionDataValue} from 'echarts/types/src/util/types';
 
 @Component({
   selector: 'app-power-draw',
@@ -26,6 +27,13 @@ export class PowerDrawComponent implements OnDestroy {
     },
     tooltip: {
       trigger: 'axis',
+      valueFormatter: (value: OptionDataValue | OptionDataValue[]) => {
+        if (Array.isArray(value) || typeof value !== 'number') {
+         return 'Value in tooltip value formatter is not of correct type. This should not happen, expecting a number';
+        }
+
+        return `${Math.round(value)}W`;
+      },
       axisPointer: {
         type: 'cross'
       }

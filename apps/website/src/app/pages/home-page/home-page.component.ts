@@ -27,7 +27,7 @@ import {ClientNetworkState, WebsocketConnectionStatus} from '../../../redux/netw
   standalone: true
 })
 export class HomePageComponent {
-  @ViewChild(PowerDrawComponent) powerDrawComponent!: PowerDrawComponent;
+  @ViewChild(PowerDrawComponent) powerDrawComponent: PowerDrawComponent | undefined;
   networkState: ClientNetworkState | undefined;
 
   convertSpeedToPercentage(speed: number) {
@@ -43,9 +43,9 @@ export class HomePageComponent {
       this.networkState = state;
 
       if (state.connectionStatus === WebsocketConnectionStatus.CONNECTED) {
-        this.powerDrawComponent.startPollingData();
+        this.powerDrawComponent?.startPollingData();
       } else if (state.connectionStatus === WebsocketConnectionStatus.DISCONNECTED) {
-        this.powerDrawComponent.stopPollingData();
+        this.powerDrawComponent?.stopPollingData();
       }
     });
   }
