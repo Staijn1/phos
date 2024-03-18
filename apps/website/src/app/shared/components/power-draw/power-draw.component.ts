@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxEchartsDirective, provideEcharts} from 'ngx-echarts';
-import {ECElementEvent, EChartsOption, LineSeriesOption} from 'echarts';
+import {EChartsOption, LineSeriesOption} from 'echarts';
 import {WebsocketService} from '../../../services/websocketconnection/websocket.service';
 import {extractThemeColorsFromDOM} from '../../functions';
 import {OptionDataValue} from 'echarts/types/src/util/types';
