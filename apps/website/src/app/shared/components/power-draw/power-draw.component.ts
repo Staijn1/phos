@@ -33,9 +33,6 @@ export class PowerDrawComponent implements OnDestroy {
         }
 
         return `${Math.round(value)}W`;
-      },
-      axisPointer: {
-        type: 'cross'
       }
     },
     xAxis: {
@@ -122,7 +119,6 @@ export class PowerDrawComponent implements OnDestroy {
           name: deviceName,
           type: 'line',
           smooth: true,
-          symbol: 'none',
           data: [datapoint]
         });
 
