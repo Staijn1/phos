@@ -139,7 +139,7 @@ export class WebsocketService {
    * @private
    */
   private promisifyEmit<ReturnValue, RequestPayload>(eventName: WebsocketMessage, payload?: RequestPayload): Promise<ReturnValue> {
-    console.log("promisifyEmit", eventName, payload);
+    console.log("promisifyEmit", eventName, payload, this.selectedRooms.map(room => room.name));
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         const error = new Error('Websocket response timeout exceeded');

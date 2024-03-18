@@ -14,7 +14,7 @@ export type RoomState = {
  * - the key of the map is the room ID
  * - The value is the ledstrip state that is applied to all devices in that room
  */
-export type RoomsState = Map<string, RoomState>
+export type RoomsState = Record<string, RoomState>
 
 /**
  * To be able to do some more advanced stuff with colors we require the colors to be iro.Colors instead of hex strings

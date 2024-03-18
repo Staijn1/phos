@@ -1,9 +1,10 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
-import { INetworkState, RoomState, WebsocketMessage } from '@angulon/interfaces';
+import {INetworkState, RoomsState, RoomState, WebsocketMessage} from '@angulon/interfaces';
 import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
 import {OnEvent} from '@nestjs/event-emitter';
+import {first} from 'rxjs';
 
 
 @Injectable()
@@ -31,7 +32,11 @@ export class WebsocketService {
    */
   async setState(rooms: string[], newState: RoomState, originClient: Socket) {
     this.roomService.updateRoomStateForRoomsSubject.next({ rooms: rooms, newState: newState });
-    await this.sendStateToRooms(rooms);
+
+    const roomsState: RoomsState = {};
+    rooms.forEach(room => roomsState[room] = newState);
+
+    await this.sendStateToRooms(rooms, false, roomsState);
     this.emitEventToAllUsers(WebsocketMessage.StateChange, newState, originClient);
   }
 
@@ -60,13 +65,16 @@ export class WebsocketService {
    * Send the set ledstrip state to specified rooms (and all clients connected to those rooms)
    * @param rooms Rooms to send the state to
    * @param force If true the ledstrips will update their state even if it's the same as the current state. Default is false
+   * @param state The state to send. If not provided, the state will be fetched from the database
    */
-  async sendStateToRooms(rooms: string[], force = false): Promise<void> {
-    const state = await this.roomService.getRoomsState(rooms);
+  async sendStateToRooms(rooms: string[], force = false, state?: RoomsState): Promise<void> {
+    if (!state) {
+      state = await this.roomService.getRoomsState(rooms);
+    }
 
     for (const room of rooms) {
-      this.logger.log(`Sending state to all ledstrips in room ${room}. Force: ${force}. State: ${JSON.stringify(state.get(room))}`);
-      this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.LedstripSetState, {...state.get(room), force: force});
+      this.logger.log(`Sending state to all ledstrips in room ${room}. Force: ${force}. State: ${JSON.stringify(state[room])}`);
+      this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.LedstripSetState, {...state[room], force: force});
     }
   }
 

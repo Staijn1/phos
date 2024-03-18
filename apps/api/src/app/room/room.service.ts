@@ -15,6 +15,8 @@ export class RoomService implements DAOService<Room> {
 
   /**
    * Call this subject to update the ledstrip state for the specified rooms, but debounced (for performance)
+   * You cannot await this function, so use this when you do not need to have the database updated immediately
+   * For immediate updates, use the updateRoomStateForRooms function
    * @example
    * roomService.updateRoomStateForRoomsSubject.next({rooms: ['idroom1', 'idroom2'], newState: {brightness: 255, colors: ['#ff0000', '#00ff00', '#0000ff'], fftValue: 0, mode: 0, speed: 1000}});
    */
@@ -111,14 +113,14 @@ export class RoomService implements DAOService<Room> {
 
   /**
    * Get the ledstrip states for the specified rooms
-   * @param rooms
+   * @param roomIds
    */
   async getRoomsState(roomIds: string[]): Promise<RoomsState> {
     const rooms = await this.findAll({where: {id: In(roomIds)}});
-    const state: RoomsState = new Map<string, RoomState>();
+    const state: RoomsState = {};
 
     for (const room of rooms) {
-      state.set(room.id, room.state);
+      state[room.id] = room.state;
     }
 
     return state;
@@ -126,11 +128,12 @@ export class RoomService implements DAOService<Room> {
 
   /**
    * Stores a new ledstrip state in the database for all devices that are in one of the specified rooms
-   * Private because this method is called through the updateRoomStateForRoomsSubject, debounced.
+   * You can also use the updateRoomStateForRoomsSubject to update the state but debounced.
+   * Use the debounced version when a lot of state changes are expected in a short time, and you do not need to have the database updated immediately (you cannot await)
    * @param rooms
    * @param newState
    */
-  private async updateRoomStateForRooms(rooms: string[], newState: RoomState) {
+  async updateRoomStateForRooms(rooms: string[], newState: RoomState) {
     await this.update({id: In(rooms)}, {state: newState});
   }
 }
