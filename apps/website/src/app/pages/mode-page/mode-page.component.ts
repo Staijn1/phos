@@ -33,12 +33,12 @@ export class ModePageComponent implements OnDestroy {
   constructor(private readonly store: Store<{ modes: ModeInformation[], roomState: RoomState | undefined }>) {
     this.store.select('modes').subscribe(modes => this.modes = modes);
 
-    combineLatest([this.store.select('roomState'), this.store.select('modes')]).subscribe(([ledstripState, modes]) => {
+    combineLatest([this.store.select('roomState'), this.store.select('modes')]).subscribe(([roomState, modes]) => {
       this.modes = modes;
-      if (!ledstripState) return;
+      if (!roomState) return;
 
       // Find the mode with the same id that is currently active on the ledstrip
-      const mode = modes.find(mode => mode.mode === ledstripState.mode);
+      const mode = modes.find(mode => mode.mode === roomState.mode);
       if (!mode) return;
 
       this.selectedMode = modes.indexOf(mode);

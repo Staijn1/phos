@@ -126,7 +126,7 @@ export class RoomService implements DAOService<Room> {
 
   /**
    * Stores a new ledstrip state in the database for all devices that are in one of the specified rooms
-   * Private because this method is called through the updateLedstripStateForRoomsSubject, debounced.
+   * Private because this method is called through the updateRoomStateForRoomsSubject, debounced.
    * @param rooms
    * @param newState
    */

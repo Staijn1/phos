@@ -27,7 +27,7 @@ import { ClientNetworkState, WebsocketConnectionStatus } from '../../../redux/ne
 export class WebsocketService {
   private readonly websocketUrl = environment.url;
   private socket!: Socket;
-  private updateLedstripState = true;
+  private updateRoomState = true;
   private selectedRooms: IRoom[] = [];
 
   constructor(
@@ -82,8 +82,8 @@ export class WebsocketService {
     this.store
       .select('roomState' )
       .subscribe((state) => {
-        if (!this.updateLedstripState) {
-          this.updateLedstripState = true;
+        if (!this.updateRoomState) {
+          this.updateRoomState = true;
           return;
         }
 
@@ -120,14 +120,14 @@ export class WebsocketService {
   }
 
   /**
-   * Store the received state in the redux store, whilst setting the updateLedstripState flag.
+   * Store the received state in the redux store, whilst setting the updateRoomState flag.
    * This is required because otherwise this state change would trigger a new request to get the state from the server.
    * And this, in turn, would trigger a new state change, and so on, infinitely.
    * @param state
    * @private
    */
   private updateAppState(state: RoomState) {
-    this.updateLedstripState = false;
+    this.updateRoomState = false;
     this.store.dispatch(new ReceiveServerRoomState(state));
   }
 
