@@ -52,8 +52,8 @@ services:
     container_name: phos_database
     image: mariadb
     restart: always
-    volumes:
-      - /data/phos/database:/var/lib/mysql
+#    volumes:
+#      - /data/phos/database:/var/lib/mysql
     networks:
       - corp
     ports:

@@ -36,7 +36,7 @@ export class HomePageComponent {
     return brightness / MAXIMUM_BRIGHTNESS * 100;
   }
 
-  constructor(private readonly store: Store<{ ledstripState: RoomState, networkState: INetworkState }>) {
+  constructor(private readonly store: Store<{ roomState: RoomState, networkState: INetworkState }>) {
     this.store.select("networkState").subscribe((state) => this.networkState = state);
   }
 

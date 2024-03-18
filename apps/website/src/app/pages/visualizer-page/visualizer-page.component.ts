@@ -18,7 +18,7 @@ import { InformationService } from "../../services/information-service/informati
 import { visualizerModeId } from "../../shared/constants";
 import { faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { Store } from "@ngrx/store";
-import { ChangeLedstripColors, ChangeLedstripMode } from "../../../redux/ledstrip/ledstrip.action";
+import { ChangeRoomColors, ChangeRoomMode } from "../../../redux/roomstate/roomstate.action";
 import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import { mapNumber } from "../../shared/functions";
 import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
@@ -115,7 +115,7 @@ export class VisualizerPageComponent implements OnDestroy {
     private chromaEffect: BaseChromaConnection,
     public spotifyAuth: SpotifyAuthenticationService,
     private store: Store<{
-      ledstripState: RoomState | undefined,
+      roomState: RoomState | undefined,
       gradients: GradientInformation[],
       userPreferences: UserPreferences,
       modes: ModeInformation[],
@@ -282,7 +282,7 @@ export class VisualizerPageComponent implements OnDestroy {
             colorStops: colorsStops
           };
 
-          this.store.dispatch(new ChangeLedstripColors([new iro.Color(primaryColor), new iro.Color(secondaryColor)]));
+          this.store.dispatch(new ChangeRoomColors([new iro.Color(primaryColor), new iro.Color(secondaryColor)]));
           this.store.dispatch(new RegisterGradientAction({ ...gradient, name: "spotify", id: 999 }));
 
           this.visualizerOptions.gradientLeft = "spotify";
@@ -302,6 +302,6 @@ export class VisualizerPageComponent implements OnDestroy {
   }
 
   setMode(mode: number) {
-    this.store.dispatch(new ChangeLedstripMode(mode));
+    this.store.dispatch(new ChangeRoomMode(mode));
   }
 }

@@ -3,7 +3,7 @@ import { environment } from '../../../environments/environment';
 import { MessageService } from '../message-service/message.service';
 import { io, Socket } from 'socket.io-client';
 import {
-  ClientSideLedstripState,
+  ClientSideRoomState,
   GradientInformation,
   INetworkState,
   IRoom,
@@ -12,7 +12,7 @@ import {
   WebsocketMessage
 } from '@angulon/interfaces';
 import { Store } from '@ngrx/store';
-import { ChangeMultipleLedstripProperties, ReceiveServerLedstripState } from '../../../redux/ledstrip/ledstrip.action';
+import { ChangeMultipleRoomProperties, ReceiveServerRoomState } from '../../../redux/roomstate/roomstate.action';
 import { LoadModesAction } from '../../../redux/modes/modes.action';
 import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
@@ -35,7 +35,7 @@ export class WebsocketService {
     private readonly store: Store<{
       userPreferences: UserPreferences,
       modes: ModeInformation[],
-      ledstripState: ClientSideLedstripState,
+      roomState: ClientSideRoomState,
       networkState: ClientNetworkState
     }>
   ) {
@@ -69,7 +69,7 @@ export class WebsocketService {
         this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTERROR));
       });
 
-      this.socket.on(WebsocketMessage.StateChange, (state: RoomState) => this.updateAppState(state));
+      this.socket.on(WebsocketMessage.StateChange, (state: RoomState) => console.log('Received state change', state));
       this.socket.on(WebsocketMessage.DatabaseChange, () => this.loadNetworkState().then());
     });
 
@@ -80,7 +80,7 @@ export class WebsocketService {
 
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
     this.store
-      .select('ledstripState')
+      .select('roomState' )
       .subscribe((state) => {
         if (!this.updateLedstripState) {
           this.updateLedstripState = true;
@@ -103,7 +103,7 @@ export class WebsocketService {
   }
 
   turnOff() {
-    this.store.dispatch(new ChangeMultipleLedstripProperties({
+    this.store.dispatch(new ChangeMultipleRoomProperties({
       colors: [new iro.Color('#000000'), new iro.Color('#000000')],
       mode: 0
     }));
@@ -128,7 +128,7 @@ export class WebsocketService {
    */
   private updateAppState(state: RoomState) {
     this.updateLedstripState = false;
-    this.store.dispatch(new ReceiveServerLedstripState(state));
+    this.store.dispatch(new ReceiveServerRoomState(state));
   }
 
   /**
@@ -139,6 +139,7 @@ export class WebsocketService {
    * @private
    */
   private promisifyEmit<ReturnValue, RequestPayload>(eventName: WebsocketMessage, payload?: RequestPayload): Promise<ReturnValue> {
+    console.log("promisifyEmit", eventName, payload);
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         const error = new Error('Websocket response timeout exceeded');

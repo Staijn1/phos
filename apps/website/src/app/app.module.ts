@@ -11,7 +11,7 @@ import {environment} from '../environments/environment';
 import {BrowserAnimationsModule} from '@angular/platform-browser/animations';
 import {StoreModule} from '@ngrx/store';
 import {StoreDevtoolsModule} from '@ngrx/store-devtools';
-import {ledstripStateReducer} from '../redux/ledstrip/ledstrip.reducer';
+import {roomStateReducer} from '../redux/roomstate/roomstate.reducer';
 import {modesReducer} from '../redux/modes/modes.reducer';
 import {gradientsReducer} from '../redux/gradients/gradients.reducer';
 import {userPreferencesReducer} from '../redux/user-preferences/user-preferences.reducer';
@@ -29,7 +29,7 @@ const StoreDevtools = StoreDevtoolsModule.instrument();
     AppRoutingModule,
     SharedModule,
     StoreModule.forRoot({
-      ledstripState: ledstripStateReducer,
+      roomState: roomStateReducer,
       modes: modesReducer,
       gradients: gradientsReducer,
       userPreferences: userPreferencesReducer,

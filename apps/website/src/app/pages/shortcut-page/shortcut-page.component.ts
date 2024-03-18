@@ -6,11 +6,11 @@ import { RoomState } from '@angulon/interfaces';
 import { combineLatest } from 'rxjs';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 import {
-  DecreaseLedstripBrightness,
-  DecreaseLedstripSpeed,
-  IncreaseLedstripBrightness,
-  IncreaseLedstripSpeed
-} from '../../../redux/ledstrip/ledstrip.action';
+  DecreaseRoomBrightness,
+  DecreaseRoomSpeed,
+  IncreaseRoomBrightness,
+  IncreaseRoomSpeed
+} from '../../../redux/roomstate/roomstate.action';
 
 @Component({
   selector: "app-shortcut-page",
@@ -49,16 +49,16 @@ export class ShortcutPageComponent {
           this.connection.turnOff();
           break;
         case 'increaseBrightness':
-          this.store.dispatch(new IncreaseLedstripBrightness());
+          this.store.dispatch(new IncreaseRoomBrightness());
           break;
         case 'decreaseBrightness':
-          this.store.dispatch(new DecreaseLedstripBrightness());
+          this.store.dispatch(new DecreaseRoomBrightness());
           break;
         case 'increaseSpeed':
-          this.store.dispatch(new IncreaseLedstripSpeed());
+          this.store.dispatch(new IncreaseRoomSpeed());
           break;
         case 'decreaseSpeed':
-          this.store.dispatch(new DecreaseLedstripSpeed());
+          this.store.dispatch(new DecreaseRoomSpeed());
           break;
         default:
           this.messageService.setMessage(new Error('Shortcut not found'));

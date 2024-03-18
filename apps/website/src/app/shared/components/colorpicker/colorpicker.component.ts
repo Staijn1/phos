@@ -2,8 +2,8 @@ import { AfterViewInit, Component, Input } from "@angular/core";
 import iro from "@jaames/iro";
 import { IroColorPicker } from "@jaames/iro/dist/ColorPicker";
 import { Store } from "@ngrx/store";
-import { ChangeLedstripColors } from "../../../../redux/ledstrip/ledstrip.action";
-import { ClientSideLedstripState } from "@angulon/interfaces";
+import { ChangeRoomColors } from "../../../../redux/roomstate/roomstate.action";
+import { ClientSideRoomState } from "@angulon/interfaces";
 
 @Component({
   selector: 'app-colorpicker',
@@ -50,14 +50,14 @@ export class ColorpickerComponent implements AfterViewInit {
     ]
   };
 
-  constructor(private store: Store<{ ledstripState: ClientSideLedstripState | undefined }>) {
+  constructor(private store: Store<{ roomState: ClientSideRoomState | undefined }>) {
   }
 
   ngAfterViewInit(): void {
     this.colorpickerOptions.layoutDirection = this.orientation;
     this.picker = iro.ColorPicker(`#${this.id}`, this.colorpickerOptions);
 
-    this.store.select('ledstripState').subscribe((state) => {
+    this.store.select('roomState').subscribe((state) => {
       if (!state) return;
 
       if (this.skipSettingColors) {
@@ -76,7 +76,7 @@ export class ColorpickerComponent implements AfterViewInit {
       this.indexOfCurrentActiveColor = color.index;
       const colors = this.picker.colors.map(c => new iro.Color(c));
       this.skipSettingColors = true;
-      this.store.dispatch(new ChangeLedstripColors(colors));
+      this.store.dispatch(new ChangeRoomColors(colors));
     });
   }
 
