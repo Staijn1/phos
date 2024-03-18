@@ -66,6 +66,7 @@ export class PowerDrawComponent implements OnDestroy {
   }
 
   public startPollingData() {
+    console.log('Starting to poll power draw data')
     this.getDataInterval = setInterval(async () => {
       const powerEstimates = await this.websocketService.getPowerDrawEstimateData();
 
@@ -141,6 +142,7 @@ export class PowerDrawComponent implements OnDestroy {
   }
 
   stopPollingData() {
+    console.log('Stopping to poll power draw data');
     clearInterval(this.getDataInterval);
   }
 }

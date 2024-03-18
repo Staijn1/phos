@@ -9,6 +9,7 @@ import {faTriangleExclamation} from '@fortawesome/free-solid-svg-icons';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {PowerDrawComponent} from '../../shared/components/power-draw/power-draw.component';
 import {ClientNetworkState, WebsocketConnectionStatus} from '../../../redux/networkstate/ClientNetworkState';
+import {distinctUntilChanged, map} from 'rxjs';
 
 @Component({
   selector: 'app-home',
@@ -42,9 +43,15 @@ export class HomePageComponent {
     this.store.select('networkState').subscribe((state) => {
       this.networkState = state;
 
-      if (state.connectionStatus === WebsocketConnectionStatus.CONNECTED) {
+    });
+
+    this.store.select('networkState').pipe(
+      map(s => s.connectionStatus),
+      distinctUntilChanged()
+    ).subscribe((connectionStatus) => {
+      if (connectionStatus === WebsocketConnectionStatus.CONNECTED) {
         this.powerDrawComponent?.startPollingData();
-      } else if (state.connectionStatus === WebsocketConnectionStatus.DISCONNECTED) {
+      } else if (connectionStatus === WebsocketConnectionStatus.DISCONNECTED) {
         this.powerDrawComponent?.stopPollingData();
       }
     });
