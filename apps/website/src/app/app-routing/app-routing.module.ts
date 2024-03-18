@@ -1,33 +1,24 @@
 import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
-import { SettingsPageComponent } from '../pages/settings-page/settings-page.component';
-import { ModePageComponent } from '../pages/mode-page/mode-page.component';
-import { VisualizerPageComponent } from '../pages/visualizer-page/visualizer-page.component';
-import { ShortcutPageComponent } from '../pages/shortcut-page/shortcut-page.component';
-import { HomePageComponent } from "../pages/home-page/home-page.component";
-import { NotFoundPageComponent } from "../pages/not-found-page/not-found-page.component";
-import {
-  SpotifyAuthenticationCallbackComponent
-} from "../pages/spotify-callback-page/spotify-authentication-callback.component";
 
 
 const routes: Routes = [
   { path: '', pathMatch: 'full', redirectTo: 'home' },
-  { path: 'home', component: HomePageComponent },
-  { path: 'visualizer', component: VisualizerPageComponent },
-  { path: 'mode', component: ModePageComponent },
+  { path: 'home', loadComponent: () => import('../pages/home-page/home-page.component').then(m => m.HomePageComponent)},
+  { path: 'visualizer', loadComponent: () => import('../pages/visualizer-page/visualizer-page.component').then(m => m.VisualizerPageComponent)},
+  { path: 'mode', loadComponent: () => import('../pages/mode-page/mode-page.component').then(m => m.ModePageComponent)},
   {
     path: 'spotify-callback',
-    component: SpotifyAuthenticationCallbackComponent
+    loadComponent: () => import('../pages/spotify-callback-page/spotify-authentication-callback.component').then(m => m.SpotifyAuthenticationCallbackComponent)
   },
-  { path: 'settings', component: SettingsPageComponent },
+  { path: 'settings', loadComponent: () => import('../pages/settings-page/settings-page.component').then(m => m.SettingsPageComponent)},
   {
     path: 'shortcut',
-    component: ShortcutPageComponent
+    loadComponent: () => import('../pages/shortcut-page/shortcut-page.component').then(m => m.ShortcutPageComponent)
   },
   {
     path: '**',
-    component: NotFoundPageComponent
+    loadComponent: () => import('../pages/not-found-page/not-found-page.component').then(m => m.NotFoundPageComponent)
   }
 ];
 

@@ -1,4 +1,4 @@
-<div class="tw-bg-base-200 tw-text-base-content tw-p-4 tw-rounded device">
+<div class="tw-bg-base-200 tw-text-base-content tw-p-4 tw-rounded device tw-h-full">
   <span
     [ngClass]="device.isConnected ? 'tw-bg-success' : 'tw-bg-error'"
     [title]="device.isConnected ? 'Connected' : 'Not Connected'"
@@ -6,13 +6,18 @@
   </span>
 
   <div class="tw-divide-y tw-divide-accent">
-    <h3 class="tw-text-center">{{ device.name }}</h3>
+    <h3 class="tw-text-center tw-font-bold">{{ device.name }}</h3>
     <div class="tw-grid tw-grid-cols-2 tw-pt-2" *ngIf="!compact">
       <div class="tw-text-end">Is Connected:</div>
       <div class="tw-pl-2">{{ device.isConnected | yesNo }}</div>
 
       <div class="tw-text-end">Is Ledstrip:</div>
       <div class="tw-pl-2">{{ device.isLedstrip | yesNo }}</div>
+
+      <ng-container *ngIf="device.isLedstrip">
+        <div class="tw-text-end">Assigned to Room:</div>
+        <div class="tw-pl-2">{{ device.room?.name ?? '-' }}</div>
+      </ng-container>
     </div>
   </div>
 </div>

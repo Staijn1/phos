@@ -1,5 +1,6 @@
 import {IDatabaseConfiguration, IEnvironmentConfiguration} from './IEnvironmentConfiguration';
 import {environment} from './environment';
+import {Logger} from '@nestjs/common';
 
 /**
  * This method merges environment variables and the object coming from environment.ts.
@@ -7,7 +8,12 @@ import {environment} from './environment';
  * Returns a new object, leaving the original objects untouched.
  */
 export const constructEnvironmentConfiguration = (): IEnvironmentConfiguration => {
+  const logger = new Logger("constructEnvironmentConfiguration");
   const envVariables = process.env;
+
+  logger.log("All env variables", process.env);
+
+
   const environmentConfigurationCopy = JSON.parse(JSON.stringify(environment)) as IEnvironmentConfiguration;
   if (!envVariables) return environmentConfigurationCopy;
 

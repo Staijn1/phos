@@ -1,10 +1,13 @@
 import {Component} from "@angular/core";
-import {INetworkState, LedstripState} from "@angulon/interfaces";
+import { INetworkState, IRoom, RoomState } from '@angulon/interfaces';
 import {Store} from "@ngrx/store";
 import {MAXIMUM_BRIGHTNESS, SPEED_MAXIMUM_INTERVAL_MS} from "../../shared/constants";
 import {DecimalPipe, NgClass, NgForOf, NgIf} from "@angular/common";
 import {RadialProgressComponent} from "../../shared/components/radialprogress/radial-progress.component";
 import {SharedModule} from "../../shared/shared.module";
+import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
+import { PowerDrawComponent } from '../../shared/components/power-draw/power-draw.component';
 
 @Component({
   selector: "app-home",
@@ -16,25 +19,30 @@ import {SharedModule} from "../../shared/shared.module";
     NgForOf,
     NgIf,
     NgClass,
-    SharedModule
+    SharedModule,
+    FontAwesomeModule,
+    PowerDrawComponent
   ],
   standalone: true
 })
 export class HomePageComponent {
-  private ledstripState: LedstripState | undefined;
   networkState: INetworkState | undefined;
 
-  get speedPercentage() {
-    return this.ledstripState ? this.ledstripState?.speed / SPEED_MAXIMUM_INTERVAL_MS * 100 : 0;
+  convertSpeedToPercentage(speed: number) {
+    return speed / SPEED_MAXIMUM_INTERVAL_MS * 100;
   }
 
-  get brightnessPercentage() {
-    return this.ledstripState ? this.ledstripState?.brightness / MAXIMUM_BRIGHTNESS * 100 : 0;
+  convertBrightnessToPercentage(brightness: number) {
+    return brightness / MAXIMUM_BRIGHTNESS * 100;
   }
 
-  constructor(private readonly store: Store<{ ledstripState: LedstripState, networkState: INetworkState }>) {
-    this.store.select("ledstripState").subscribe((state) => this.ledstripState = state);
-
+  constructor(private readonly store: Store<{ roomState: RoomState, networkState: INetworkState }>) {
     this.store.select("networkState").subscribe((state) => this.networkState = state);
+  }
+
+  protected readonly offlineWarningIcon = faTriangleExclamation;
+
+  getOfflineDevicesCount(room: IRoom) {
+    return room.connectedDevices.filter((device) => !device.isConnected).length;
   }
 }

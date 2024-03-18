@@ -2,15 +2,15 @@ import { Component } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { MessageService } from '../../services/message-service/message.service';
 import { Store } from '@ngrx/store';
-import { LedstripState } from '@angulon/interfaces';
+import { RoomState } from '@angulon/interfaces';
 import { combineLatest } from 'rxjs';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 import {
-  DecreaseLedstripBrightness,
-  DecreaseLedstripSpeed,
-  IncreaseLedstripBrightness,
-  IncreaseLedstripSpeed
-} from '../../../redux/ledstrip/ledstrip.action';
+  DecreaseRoomBrightness,
+  DecreaseRoomSpeed,
+  IncreaseRoomBrightness,
+  IncreaseRoomSpeed
+} from '../../../redux/roomstate/roomstate.action';
 
 @Component({
   selector: "app-shortcut-page",
@@ -31,8 +31,8 @@ export class ShortcutPageComponent {
               private messageService: MessageService,
               private connection: WebsocketService,
               private router: Router,
-              private store: Store<{ ledstripState: LedstripState | undefined }>) {
-    combineLatest([this.activatedRoute.queryParams, this.store.select('ledstripState')])
+              private store: Store<{ networkState: RoomState | undefined }>) {
+    combineLatest([this.activatedRoute.queryParams, this.store.select('networkState')])
       .subscribe(([params, state]) => {
         if (!state) return;
 
@@ -49,16 +49,16 @@ export class ShortcutPageComponent {
           this.connection.turnOff();
           break;
         case 'increaseBrightness':
-          this.store.dispatch(new IncreaseLedstripBrightness());
+          this.store.dispatch(new IncreaseRoomBrightness());
           break;
         case 'decreaseBrightness':
-          this.store.dispatch(new DecreaseLedstripBrightness());
+          this.store.dispatch(new DecreaseRoomBrightness());
           break;
         case 'increaseSpeed':
-          this.store.dispatch(new IncreaseLedstripSpeed());
+          this.store.dispatch(new IncreaseRoomSpeed());
           break;
         case 'decreaseSpeed':
-          this.store.dispatch(new DecreaseLedstripSpeed());
+          this.store.dispatch(new DecreaseRoomSpeed());
           break;
         default:
           this.messageService.setMessage(new Error('Shortcut not found'));

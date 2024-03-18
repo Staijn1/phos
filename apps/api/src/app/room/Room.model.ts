@@ -1,4 +1,4 @@
-import {IRoom} from '@angulon/interfaces';
+import { IRoom, RoomState } from '@angulon/interfaces';
 import {Column, Entity, OneToMany, PrimaryGeneratedColumn, Unique} from 'typeorm';
 import {Device} from '../device/Device.model';
 import {MinLength} from 'class-validator';
@@ -15,4 +15,7 @@ export class Room implements IRoom{
 
   @OneToMany(() => Device, (device) => device.room, {eager: true})
   connectedDevices: Device[];
+
+  @Column('simple-json', { default: () => "'{}'" })
+  state: RoomState;
 }

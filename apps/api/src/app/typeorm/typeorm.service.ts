@@ -17,13 +17,12 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
    * Builds the options to use for TypeORM
    */
   public createTypeOrmOptions(): TypeOrmModuleOptions {
-    const productionMode = this.config.get<IEnvironmentConfiguration['production']>('production');
     const dbConfig = this.config.get<IEnvironmentConfiguration['database']>('database');
 
     return {
       ...TypeOrmConfigService.GetBaseDatasourceOptions(dbConfig),
-      migrationsRun: true,
-      synchronize: !productionMode, // do not set to TRUE in production mode - possible data loss
+      migrationsRun: false, // Do not run migrations on startup, see readme
+      synchronize: false, // Please create migrations to update the database schema and run appropriate command to apply them (see readme)
       autoLoadEntities: true,
     };
   }
@@ -32,7 +31,6 @@ export class TypeOrmConfigService implements TypeOrmOptionsFactory {
    * Get the base datasource options used for the application but also in the orm.config.ts file to be able to use the same configuration for generating migrations
    */
   public static GetBaseDatasourceOptions(dbConfig: IDatabaseConfiguration): DataSourceOptions {
-
     const configSafeToLog = {...dbConfig, password: 'REDACTED'};
     this.logger.log(`Connecting to database user the following configuration: ${JSON.stringify(configSafeToLog, null, 2)}`);
 

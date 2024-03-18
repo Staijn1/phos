@@ -6,7 +6,7 @@ import {
   GradientInformation,
   INetworkState,
   IRoom,
-  LedstripState,
+  RoomState,
   ModeInformation,
   StandardResponse,
   WebsocketMessage,
@@ -61,26 +61,22 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     }
   }
 
-  @SubscribeMessage(WebsocketMessage.GetLedstripState)
-  getLedstripState(): LedstripState {
-    return this.websocketService.getState();
-  }
-
   @SubscribeMessage(WebsocketMessage.RenameDevice)
   async renameDevice(client: Socket, body: WebsocketRequest<string>): Promise<void> {
     return this.deviceService.renameDevice(client.id, body.payload);
   }
 
   @SubscribeMessage(WebsocketMessage.SetNetworkState)
-  onSetNetworkState(client: Socket, body: WebsocketRequest<LedstripState>): LedstripState {
-    this.websocketService.setState(body.rooms, body.payload, client);
-    return this.websocketService.getState();
+  async onSetNetworkState(client: Socket, body: WebsocketRequest<RoomState>): Promise<INetworkState> {
+    await this.websocketService.setState(body.rooms, body.payload, client);
+    return this.websocketService.getNetworkState();
   }
 
   @SubscribeMessage(WebsocketMessage.SetFFTValue)
-  onFFTCommand(client: Socket, body: WebsocketRequest<number>): LedstripState {
+  onFFTCommand(client: Socket, body: WebsocketRequest<number>): string {
     this.websocketService.setFFTValue(body.rooms, body.payload);
-    return this.websocketService.getState();
+    // Return value does not matter but front-end expects a reply otherwise it thinks it's not connected.
+    return "OK";
   }
 
   @SubscribeMessage(WebsocketMessage.GetModes)
@@ -97,6 +93,11 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   async onRegisterAsUser(client: Socket): Promise<StandardResponse> {
     await this.websocketService.joinUserRoom(client);
     return {status: 200, message: 'Joined user room'};
+  }
+
+  @SubscribeMessage(WebsocketMessage.GetPowerDrawEstimate)
+  async onGetPowerDrawEstimate(): Promise<Record<string, number>> {
+    return this.deviceService.estimatePowerDrawForAllOnlineLedstrips();
   }
 
   /**
@@ -128,7 +129,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
       this.logger.log(`[SCHEDULED] Sending state to all rooms - forced. Rooms: ${allRooms.map(r => `${r.name} (${r.id})`).join(', ')}`);
 
       const allRoomIds = allRooms.map(r => r.id);
-      this.websocketService.sendStateToRooms(allRoomIds,true);
+      this.websocketService.sendStateToRooms(allRoomIds,true).then();
     }, this.stateIntervalTimeMS);
   }
 }

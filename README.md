@@ -40,3 +40,6 @@ To generate a migration, run `npx nx run api:migration-generate --name=your-migr
 However keep in mind, TypeORM compares the current state of the database against the state of the detected entities.  
 If your database is already up-to-date (because `synchronize` was perhaps set to `true`), you will have to make sure the database is in the state of the last migration to successfully generate a new migration.  
 To do this, easiest is to drop the database and start the API (migrations are run automatically)
+
+# Running migrations
+Run `npx nx run api:migrations-run` to execute all pending migrations. You can provide environment variables to this command to override the database connection properties.

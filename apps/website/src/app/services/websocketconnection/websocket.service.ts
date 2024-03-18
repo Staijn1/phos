@@ -3,16 +3,16 @@ import { environment } from '../../../environments/environment';
 import { MessageService } from '../message-service/message.service';
 import { io, Socket } from 'socket.io-client';
 import {
-  ClientSideLedstripState,
+  ClientSideRoomState,
   GradientInformation,
   INetworkState,
   IRoom,
-  LedstripState,
+  RoomState,
   ModeInformation,
   WebsocketMessage
 } from '@angulon/interfaces';
 import { Store } from '@ngrx/store';
-import { ChangeMultipleLedstripProperties, ReceiveServerLedstripState } from '../../../redux/ledstrip/ledstrip.action';
+import { ChangeMultipleRoomProperties, ReceiveServerRoomState } from '../../../redux/roomstate/roomstate.action';
 import { LoadModesAction } from '../../../redux/modes/modes.action';
 import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
@@ -27,7 +27,7 @@ import { ClientNetworkState, WebsocketConnectionStatus } from '../../../redux/ne
 export class WebsocketService {
   private readonly websocketUrl = environment.url;
   private socket!: Socket;
-  private updateLedstripState = true;
+  private updateRoomState = true;
   private selectedRooms: IRoom[] = [];
 
   constructor(
@@ -35,7 +35,7 @@ export class WebsocketService {
     private readonly store: Store<{
       userPreferences: UserPreferences,
       modes: ModeInformation[],
-      ledstripState: ClientSideLedstripState,
+      roomState: ClientSideRoomState,
       networkState: ClientNetworkState
     }>
   ) {
@@ -69,7 +69,7 @@ export class WebsocketService {
         this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTERROR));
       });
 
-      this.socket.on(WebsocketMessage.StateChange, (state: LedstripState) => this.updateAppState(state));
+      this.socket.on(WebsocketMessage.StateChange, (state: RoomState) => this.updateAppState(state));
       this.socket.on(WebsocketMessage.DatabaseChange, () => this.loadNetworkState().then());
     });
 
@@ -80,28 +80,30 @@ export class WebsocketService {
 
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
     this.store
-      .select('ledstripState')
+      .select('roomState' )
       .subscribe((state) => {
-        if (!this.updateLedstripState) {
-          this.updateLedstripState = true;
+        if (!this.updateRoomState) {
+          this.updateRoomState = true;
           return;
         }
 
+        // If we are not connected, do not send the state
         if (!this.socket || this.socket.disconnected) {
           return;
         }
+
         // Before sending the state to the server, we need to convert the iro.Colors to hex strings
-        const payload: LedstripState = {...state, colors: state.colors.map(color => color.hexString)};
-        this.promisifyEmit<LedstripState, LedstripState>(WebsocketMessage.SetNetworkState, payload).then();
+        const payload: RoomState = {...state, colors: state.colors.map(color => color.hexString)};
+        this.promisifyEmit<INetworkState, RoomState>(WebsocketMessage.SetNetworkState, payload).then();
       });
   }
 
   sendFFTValue(value: number) {
-    this.promisifyEmit(WebsocketMessage.SetFFTValue, value).then();
+    this.promisifyEmit<void, number>(WebsocketMessage.SetFFTValue, value).then();
   }
 
   turnOff() {
-    this.store.dispatch(new ChangeMultipleLedstripProperties({
+    this.store.dispatch(new ChangeMultipleRoomProperties({
       colors: [new iro.Color('#000000'), new iro.Color('#000000')],
       mode: 0
     }));
@@ -118,15 +120,15 @@ export class WebsocketService {
   }
 
   /**
-   * Store the received state in the redux store, whilst setting the updateLedstripState flag.
+   * Store the received state in the redux store, whilst setting the updateRoomState flag.
    * This is required because otherwise this state change would trigger a new request to get the state from the server.
    * And this, in turn, would trigger a new state change, and so on, infinitely.
    * @param state
    * @private
    */
-  private updateAppState(state: LedstripState) {
-    this.updateLedstripState = false;
-    this.store.dispatch(new ReceiveServerLedstripState(state));
+  private updateAppState(state: RoomState) {
+    this.updateRoomState = false;
+    this.store.dispatch(new ReceiveServerRoomState(state));
   }
 
   /**
@@ -136,7 +138,7 @@ export class WebsocketService {
    * @returns A promise that resolves when the server responds
    * @private
    */
-  private promisifyEmit<T, K>(eventName: WebsocketMessage, payload?: K): Promise<T> {
+  private promisifyEmit<ReturnValue, RequestPayload>(eventName: WebsocketMessage, payload?: RequestPayload): Promise<ReturnValue> {
     return new Promise((resolve, reject) => {
       const timeout = setTimeout(() => {
         const error = new Error('Websocket response timeout exceeded');
@@ -151,7 +153,7 @@ export class WebsocketService {
       this.socket.emit(eventName, {
         rooms: this.selectedRooms.map(room => room.id),
         payload: payload
-      }, (data: T) => {
+      }, (data: ReturnValue) => {
         clearTimeout(timeout);
         resolve(data);
       });
@@ -186,5 +188,9 @@ export class WebsocketService {
     // todo
     console.warn('unassignDeviceFromRoom is not implemented yet');
     return Promise.resolve();
+  }
+
+  async getPowerDrawEstimateData() {
+    return await this.promisifyEmit<Record<string, number>, null>(WebsocketMessage.GetPowerDrawEstimate);
   }
 }

@@ -15,14 +15,14 @@ import {
 } from '@fortawesome/free-solid-svg-icons';
 import {Store} from '@ngrx/store';
 import {ColorpickerComponent} from '../../shared/components/colorpicker/colorpicker.component';
-import {LedstripState} from '@angulon/interfaces';
+import {RoomState} from '@angulon/interfaces';
 import {WebsocketService} from '../../services/websocketconnection/websocket.service';
 import {
-  DecreaseLedstripBrightness,
-  DecreaseLedstripSpeed,
-  IncreaseLedstripBrightness,
-  IncreaseLedstripSpeed
-} from '../../../redux/ledstrip/ledstrip.action';
+  DecreaseRoomBrightness,
+  DecreaseRoomSpeed,
+  IncreaseRoomBrightness,
+  IncreaseRoomSpeed
+} from '../../../redux/roomstate/roomstate.action';
 import {
   MAXIMUM_BRIGHTNESS,
   MINIMUM_BRIGHTNESS,
@@ -82,11 +82,11 @@ export class NavigationbarComponent {
   constructor(
     public connection: WebsocketService,
     private store: Store<{
-      ledstripState: LedstripState,
+      roomState: RoomState,
       networkState: ClientNetworkState
     }>
   ) {
-    store.select('ledstripState').subscribe(state => {
+    store.select('roomState' ).subscribe(state => {
       this.minimumBrightnessReached = state.brightness === MINIMUM_BRIGHTNESS;
       this.minimumSpeedReached = state.speed === SPEED_MINIMUM_INTERVAL_MS;
       this.maximumBrightnessReached = state.brightness === MAXIMUM_BRIGHTNESS;
@@ -118,18 +118,18 @@ export class NavigationbarComponent {
   }
 
   decreaseBrightness() {
-    this.store.dispatch(new DecreaseLedstripBrightness());
+    this.store.dispatch(new DecreaseRoomBrightness());
   }
 
   increaseBrightness() {
-    this.store.dispatch(new IncreaseLedstripBrightness());
+    this.store.dispatch(new IncreaseRoomBrightness());
   }
 
   increaseSpeed() {
-    this.store.dispatch(new IncreaseLedstripSpeed());
+    this.store.dispatch(new IncreaseRoomSpeed());
   }
 
   decreaseSpeed() {
-    this.store.dispatch(new DecreaseLedstripSpeed());
+    this.store.dispatch(new DecreaseRoomSpeed());
   }
 }

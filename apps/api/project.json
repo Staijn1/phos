@@ -45,6 +45,14 @@
         "cwd": "apps/api"
       }
     },
+    "migrations-run": {
+      "executor": "nx:run-commands",
+      "outputs": [],
+      "options": {
+        "command": "nx run api:typeorm migration:run -d ./typeorm.config.ts",
+        "cwd": "apps/api"
+      }
+    },
     "migration-revert": {
       "executor": "nx:run-commands",
       "outputs": [],

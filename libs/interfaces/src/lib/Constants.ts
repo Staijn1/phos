@@ -1,6 +1,6 @@
-import { LedstripState } from "./LedstripState";
+import { RoomState } from "./RoomState";
 
-export const INITIAL_LEDSTRIP_STATE: LedstripState = {
+export const INITIAL_ROOM_STATE: RoomState = {
   brightness: 255,
   colors: ['#000000', '#000000', '#000000'],
   fftValue: 0,

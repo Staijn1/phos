@@ -1,5 +1,5 @@
-import { LedstripAction } from "./ledstrip.action";
-import { ClientSideLedstripState, constrain, mergeArrays } from "@angulon/interfaces";
+import { RoomStateAction } from "./roomstate.action";
+import { ClientSideRoomState, constrain, mergeArrays } from "@angulon/interfaces";
 import {
   INITIAL_CLIENT_LEDSTRIP_STATE,
   MAXIMUM_BRIGHTNESS,
@@ -9,9 +9,9 @@ import {
 } from "../../app/shared/constants";
 import iro from "@jaames/iro";
 
-export const ledstripStateReducer = (state: ClientSideLedstripState = INITIAL_CLIENT_LEDSTRIP_STATE, action: any): ClientSideLedstripState | undefined => {
+export const roomStateReducer = (state: ClientSideRoomState = INITIAL_CLIENT_LEDSTRIP_STATE, action: any): ClientSideRoomState | undefined => {
   switch (action.type) {
-    case LedstripAction.RECEIVE_SERVER_STATE: {
+    case RoomStateAction.RECEIVE_SERVER_STATE: {
       // Convert the colors from hex to iro.Color
       const iroColors = action.payload.colors.map((color: string) => new iro.Color(color));
       return {
@@ -19,43 +19,43 @@ export const ledstripStateReducer = (state: ClientSideLedstripState = INITIAL_CL
         colors: iroColors
       };
     }
-    case LedstripAction.INCREASE_BRIGHTNESS: {
+    case RoomStateAction.INCREASE_BRIGHTNESS: {
       return {
         ...state,
         brightness: constrain(state.brightness * 1.1, MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS)
       };
     }
-    case LedstripAction.DECREASE_BRIGHTNESS: {
+    case RoomStateAction.DECREASE_BRIGHTNESS: {
       return {
         ...state,
         brightness: constrain(state.brightness * 0.9, MINIMUM_BRIGHTNESS, MAXIMUM_BRIGHTNESS)
       };
     }
-    case LedstripAction.CHANGE_COLORS: {
+    case RoomStateAction.CHANGE_COLORS: {
       return {
         ...state,
         colors: mergeArrays(state.colors, action.payload)
       };
     }
-    case LedstripAction.CHANGE_MODE: {
+    case RoomStateAction.CHANGE_MODE: {
       return {
         ...state,
         mode: action.payload
       };
     }
-    case LedstripAction.INCREASE_SPEED: {
+    case RoomStateAction.INCREASE_SPEED: {
       return {
         ...state,
         speed: constrain(state.speed * 0.9, SPEED_MINIMUM_INTERVAL_MS, SPEED_MAXIMUM_INTERVAL_MS)
       };
     }
-    case LedstripAction.DECREASE_SPEED: {
+    case RoomStateAction.DECREASE_SPEED: {
       return {
         ...state,
         speed: constrain(state.speed * 1.1, SPEED_MINIMUM_INTERVAL_MS, SPEED_MAXIMUM_INTERVAL_MS)
       };
     }
-    case LedstripAction.MULTIPLE_PROPERTIES: {
+    case RoomStateAction.MULTIPLE_PROPERTIES: {
       return {
         ...state,
         ...action.payload,

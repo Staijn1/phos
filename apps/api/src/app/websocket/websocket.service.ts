@@ -1,9 +1,10 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {Server, Socket} from 'socket.io';
-import {INetworkState, INITIAL_LEDSTRIP_STATE, LedstripState, WebsocketMessage} from '@angulon/interfaces';
+import {INetworkState, RoomsState, RoomState, WebsocketMessage} from '@angulon/interfaces';
 import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
 import {OnEvent} from '@nestjs/event-emitter';
+import {first} from 'rxjs';
 
 
 @Injectable()
@@ -12,8 +13,7 @@ export class WebsocketService {
   /**
    * This variable is the primary state, which will be sent to all ledstrips and users
    */
-  private _state: LedstripState = INITIAL_LEDSTRIP_STATE;
-  private logger: Logger = new Logger('WebsocketClientsManagerService');
+  private logger: Logger = new Logger(WebsocketService.name);
 
   constructor(private readonly deviceService: DeviceService, private readonly roomService: RoomService) {
   }
@@ -25,21 +25,18 @@ export class WebsocketService {
   }
 
   /**
-   * Get the state of this server
-   */
-  getState(): LedstripState {
-    return this._state;
-  }
-
-  /**
    * Set the received state on the server and send it to all ledstrips
    * @param rooms The rooms to send the state to
    * @param newState The new state to set
    * @param originClient The client that sent the new state
    */
-  setState(rooms: string[], newState: LedstripState, originClient: Socket) {
-    this._state = newState;
-    this.sendStateToRooms(rooms);
+  async setState(rooms: string[], newState: RoomState, originClient: Socket) {
+    this.roomService.updateRoomStateForRoomsSubject.next({ rooms: rooms, newState: newState });
+
+    const roomsState: RoomsState = {};
+    rooms.forEach(room => roomsState[room] = newState);
+
+    await this.sendStateToRooms(rooms, false, roomsState);
     this.emitEventToAllUsers(WebsocketMessage.StateChange, newState, originClient);
   }
 
@@ -47,31 +44,38 @@ export class WebsocketService {
    * Get the state of the network containing all rooms and devices
    */
   async getNetworkState(): Promise<INetworkState> {
-    const rooms = await this.roomService.findAll();
+    const rooms = await this.roomService.findAll({order: {name: 'ASC'}});
     return {
       rooms: rooms,
-      devices: await this.deviceService.findAll({where: {room: null}, relations: ['room']})
+      devices: await this.deviceService.findAll({where: {room: null}, relations: ['room'], order: {name: 'ASC'}})
     }
   }
 
   /**
    * Set the FFTValue on the ledstrips
-   * @param {string}payload
+   * @param payload
    */
   setFFTValue(rooms: string[], payload: number): void {
-    if (!this._state) return;
-    this._state.fftValue = payload;
-    this.sendEventToAllLedstripsInRooms(rooms, WebsocketMessage.LedstripFFT, payload.toString());
+    for (const room of rooms) {
+      this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.LedstripFFT, payload.toString());
+    }
   }
 
   /**
    * Send the set ledstrip state to specified rooms (and all clients connected to those rooms)
    * @param rooms Rooms to send the state to
    * @param force If true the ledstrips will update their state even if it's the same as the current state. Default is false
+   * @param state The state to send. If not provided, the state will be fetched from the database
    */
-  sendStateToRooms(rooms: string[], force = false): void {
-    this.logger.log(`Sending state to all ledstrips. Force: ${force}. State: ${JSON.stringify(this._state)}`);
-    this.sendEventToAllLedstripsInRooms(rooms, WebsocketMessage.LedstripSetState, {...this._state, force: force});
+  async sendStateToRooms(rooms: string[], force = false, state?: RoomsState): Promise<void> {
+    if (!state) {
+      state = await this.roomService.getRoomsState(rooms);
+    }
+
+    for (const room of rooms) {
+      this.logger.log(`Sending state to all ledstrips in room ${room}. Force: ${force}. State: ${JSON.stringify(state[room])}`);
+      this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.LedstripSetState, {...state[room], force: force});
+    }
   }
 
   /**
@@ -95,9 +99,17 @@ export class WebsocketService {
     this.server = server;
 
     const deviceName = client.handshake.query.deviceName;
+    const ledCount = client.handshake.query.ledCount as string | undefined;
     // If no device name was provided, disconnect the client
     if (!deviceName || typeof deviceName !== 'string' || Array.isArray(deviceName)) {
       this.logger.warn(`Client with session ${client.id} provided an invalid device name. Received: ${deviceName}. Disconnecting...`)
+      client.disconnect(true);
+      return;
+    }
+
+    // If the received ledcount is not a number, disconnect the client
+    if (ledCount && isNaN(parseInt(ledCount))) {
+      this.logger.warn(`Client with session ${client.id} provided an invalid ledCount. Received: ${ledCount}. Disconnecting...`)
       client.disconnect(true);
       return;
     }
@@ -106,7 +118,7 @@ export class WebsocketService {
 
     // If the device is already in the database, update the socketSessionId and isConnected fields. Also join the room if it is in one
     if (deviceInDb) {
-      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true});
+      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: ledCount ? parseInt(ledCount) : 0});
 
       if (deviceInDb.room) {
         client.join(deviceInDb.room.id);
@@ -149,7 +161,7 @@ export class WebsocketService {
    * @param {Socket} originClient
    * @private
    */
-  private emitEventToAllUsers(event: WebsocketMessage, payload: LedstripState, originClient?: Socket) {
+  private emitEventToAllUsers(event: WebsocketMessage, payload: RoomState, originClient?: Socket) {
     // If the originClient exists, send the event to all users except the originClient
     if (originClient) {
       originClient.broadcast.to('user').emit(event, payload);
@@ -162,15 +174,13 @@ export class WebsocketService {
 
   /**
    * Send an event to all ledstrips with a given payload
-   * @param rooms Rooms to send the event to
+   * @param room Id of the room to send the event to
    * @param event Event to emit on the ledstrip
    * @param payload Payload to send with the event
    * @private
    */
-  private sendEventToAllLedstripsInRooms(rooms: string[], event: WebsocketMessage, payload: unknown) {
-    for (const room of rooms) {
-      this.server.to(room).emit(event, payload);
-    }
+  private sendEventToAllLedstripsInRoom(room: string, event: WebsocketMessage, payload: unknown) {
+    this.server.to(room).emit(event, payload);
   }
 
   /**
@@ -189,8 +199,10 @@ export class WebsocketService {
       if (client) {
         client.leave(deviceInDb.room.id);
         client.join(roomId);
-
         this.logger.log(`Client ${deviceInDb.name}(${deviceInDb.socketSessionId}) moved to room ${deviceInDb.room.name}(${roomId})`);
+
+        await this.setState([roomId], deviceInDb.room.state, client);
+        this.logger.log(`Sent state to room ${roomId} after moving client ${deviceInDb.name}(${deviceInDb.socketSessionId})`);
       }
     }
   }

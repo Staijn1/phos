@@ -1,4 +1,4 @@
-import {LedstripState} from './LedstripState';
+import {RoomState} from './RoomState';
 
 export interface INetworkState {
   rooms: IRoom[],
@@ -9,12 +9,13 @@ export interface IRoom {
   id: string;
   name: string;
   connectedDevices: IDevice[]
+  state: RoomState;
 }
 
 export interface IDevice {
   id: string;
   name: string;
-  state: LedstripState;
   isLedstrip: boolean;
   isConnected:boolean;
+  room: IRoom | null;
 }

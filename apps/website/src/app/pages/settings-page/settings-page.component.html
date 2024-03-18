@@ -9,6 +9,7 @@
             <li (click)="selectMenu(1)"><a [class.tw-active]="activeMenu === 1">Theme</a></li>
             <li (click)="selectMenu(2)"><a [class.tw-active]="activeMenu === 2">Manage Network</a></li>
           </ul>
+          <div class="sm:tw-display md:tw-hidden tw-divider tw-divider-primary"></div>
         </div>
 
         <div class="tw-col-span-2 md:tw-col-span-10">
@@ -49,7 +50,7 @@
             <div class="tw-grid tw-grid-cols-1 md:tw-grid-cols-2" cdkDropListGroup>
               <div>
                 <div class="tw-flex tw-justify-end tw-items-center tw-mb-3">
-                  <div class="tw-join tw-w-3/4">
+                  <div class="tw-join tw-w-full">
                     <input
                       #roomName
                       (keyup)="submitRoomButton.disabled = roomName.value.length === 0"

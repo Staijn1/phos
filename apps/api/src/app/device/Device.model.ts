@@ -1,4 +1,4 @@
-import {IDevice, LedstripState} from '@angulon/interfaces';
+import {IDevice} from '@angulon/interfaces';
 import {Column, Entity, ManyToOne, PrimaryGeneratedColumn} from 'typeorm';
 import {Room} from '../room/Room.model';
 
@@ -13,15 +13,15 @@ export class Device implements IDevice{
   @Column()
   name: string;
 
-  @Column('simple-json', { default: () => "'{}'" })
-  state: LedstripState;
-
   @Column({ default: true })
   isLedstrip: boolean
 
   @Column()
   isConnected: boolean;
 
+  @Column({ default: 0 })
+  ledCount: number;
+
   @ManyToOne(() => Room, (room) => room.connectedDevices, {onDelete: 'SET NULL'})
-  room: Room;
+  room: Room | null;
 }

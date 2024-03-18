@@ -1,16 +1,18 @@
-import {Injectable, Logger} from '@nestjs/common';
-import {InjectRepository} from '@nestjs/typeorm';
-import {Device} from './Device.model';
-import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
-import {DAOService} from '../interfaces/DAOService';
-import {validate} from 'class-validator';
+import { Injectable, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Device } from './Device.model';
+import {FindManyOptions, FindOneOptions, FindOptionsWhere, IsNull, Not, Repository} from 'typeorm';
+import { DAOService } from '../interfaces/DAOService';
+import { validate } from 'class-validator';
+import { hexToRgb } from '../utils/ColorUtils';
 
 @Injectable()
 export class DeviceService implements DAOService<Device> {
   private logger = new Logger(DeviceService.name);
+
   constructor(
     @InjectRepository(Device)
-    private readonly deviceRepository: Repository<Device>,
+    private readonly deviceRepository: Repository<Device>
   ) {
   }
 
@@ -29,7 +31,7 @@ export class DeviceService implements DAOService<Device> {
   }
 
   async update(criteria: FindOptionsWhere<Device>, deviceData: Partial<Device>): Promise<Device> {
-    const existingDevice = await this.deviceRepository.findOne({where: criteria});
+    const existingDevice = await this.deviceRepository.findOne({ where: criteria });
     if (!existingDevice) return null;
 
 
@@ -66,8 +68,40 @@ export class DeviceService implements DAOService<Device> {
    * @param payload
    */
   async renameDevice(sessionId: string, payload: string) {
-    this.logger.log(`Renaming device with session id ${sessionId} to ${payload}`)
-    await this.update({socketSessionId: sessionId}, {name: payload});
+    this.logger.log(`Renaming device with session id ${sessionId} to ${payload}`);
+    await this.update({ socketSessionId: sessionId }, { name: payload });
+  }
+
+  async estimatePowerDrawForAllOnlineLedstrips(): Promise<Record<string, number>> {
+    // The maximum current per color channel in milliamps
+    const maxCurrentPerColor = 20;
+
+    // The voltage supply to the LED strip in volts
+    const voltage = 5;
+    const ledstrips = await this.findAll({ where: { isConnected: true, isLedstrip: true, room: Not(IsNull())}, relations: ['room'] });
+
+    const powerDrawMap: Record<string, number> = {};
+    for (const device of ledstrips) {
+      // Extract the brightness and colors from the device state
+      const { brightness, colors } = device.room.state;
+      const numLeds = device.ledCount;
+
+      // Calculate the current draw for each color channel and sum them up
+      const totalCurrentPerLed = colors.map(color => {
+        const rgb = hexToRgb(color);
+
+        // Calculate the current draw for each color channel based on its intensity (0-255), and then sum them up to get the total current draw per LED
+        return rgb.map(c => c / 255 * maxCurrentPerColor).reduce((a, b) => a + b, 0);
+      }).reduce((a, b) => a + b, 0);
+
+      // Calculate the power draw for this device
+      const powerDraw = numLeds * totalCurrentPerLed * voltage * (brightness / 255) / 1000; // in Watts
+
+      // Do not add value with .set() because it results in {} when serializing to JSON
+      powerDrawMap[device.name]= powerDraw;
+    }
+
+    return powerDrawMap;
   }
 }
 

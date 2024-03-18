@@ -1,20 +1,35 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import {FindManyOptions, FindOneOptions, FindOptionsWhere, Repository} from 'typeorm';
+import { FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository } from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {validate} from 'class-validator';
 import {DeviceService} from '../device/device.service';
-import {IRoom} from '@angulon/interfaces';
+import { INITIAL_ROOM_STATE, IRoom, RoomsState, RoomState } from '@angulon/interfaces';
+import { debounceTime, Subject } from 'rxjs';
 
 
 @Injectable()
 export class RoomService implements DAOService<Room> {
   private readonly logger = new Logger(RoomService.name);
 
+  /**
+   * Call this subject to update the ledstrip state for the specified rooms, but debounced (for performance)
+   * You cannot await this function, so use this when you do not need to have the database updated immediately
+   * For immediate updates, use the updateRoomStateForRooms function
+   * @example
+   * roomService.updateRoomStateForRoomsSubject.next({rooms: ['idroom1', 'idroom2'], newState: {brightness: 255, colors: ['#ff0000', '#00ff00', '#0000ff'], fftValue: 0, mode: 0, speed: 1000}});
+   */
+  public updateRoomStateForRoomsSubject = new Subject<{rooms: string[], newState: RoomState}>();
+
   constructor(
     @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
     private readonly deviceService: DeviceService) {
+    this.updateRoomStateForRoomsSubject.pipe(
+      debounceTime(150)
+    ).subscribe(({rooms, newState}) => {
+      this.updateRoomStateForRooms(rooms, newState).then();
+    });
   }
 
   async findAll(criteria?: FindManyOptions<Room>): Promise<Room[]> {
@@ -27,7 +42,7 @@ export class RoomService implements DAOService<Room> {
 
   async create(roomData: Partial<Room>): Promise<Room> {
     await this.validate(roomData);
-    const roomDefaults: IRoom = {connectedDevices: [], id: undefined, name: ''};
+    const roomDefaults: IRoom = {connectedDevices: [], id: undefined, name: '', state: INITIAL_ROOM_STATE};
     const room = this.roomRepository.create({...roomDefaults, ...roomData});
     return this.roomRepository.save(room);
   }
@@ -94,5 +109,31 @@ export class RoomService implements DAOService<Room> {
     // Add the device to the new room connectedDevices
     room.connectedDevices.push(device);
     return await this.roomRepository.save(room);
+  }
+
+  /**
+   * Get the ledstrip states for the specified rooms
+   * @param roomIds
+   */
+  async getRoomsState(roomIds: string[]): Promise<RoomsState> {
+    const rooms = await this.findAll({where: {id: In(roomIds)}});
+    const state: RoomsState = {};
+
+    for (const room of rooms) {
+      state[room.id] = room.state;
+    }
+
+    return state;
+  }
+
+  /**
+   * Stores a new ledstrip state in the database for all devices that are in one of the specified rooms
+   * You can also use the updateRoomStateForRoomsSubject to update the state but debounced.
+   * Use the debounced version when a lot of state changes are expected in a short time, and you do not need to have the database updated immediately (you cannot await)
+   * @param rooms
+   * @param newState
+   */
+  async updateRoomStateForRooms(rooms: string[], newState: RoomState) {
+    await this.update({id: In(rooms)}, {state: newState});
   }
 }

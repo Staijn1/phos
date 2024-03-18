@@ -1,4 +1,4 @@
-import { ClientSideLedstripState, INITIAL_LEDSTRIP_STATE } from "@angulon/interfaces";
+import { ClientSideRoomState, INITIAL_ROOM_STATE } from "@angulon/interfaces";
 import iro from "@jaames/iro";
 
 export class GlobalVars {
@@ -24,7 +24,7 @@ export const SPEED_MINIMUM_INTERVAL_MS = 200;
 export const MINIMUM_BRIGHTNESS = 10;
 export const MAXIMUM_BRIGHTNESS = 255;
 
-export const INITIAL_CLIENT_LEDSTRIP_STATE: ClientSideLedstripState = {
-  ...INITIAL_LEDSTRIP_STATE,
-  colors: INITIAL_LEDSTRIP_STATE.colors.map(color => new iro.Color(color))
+export const INITIAL_CLIENT_LEDSTRIP_STATE: ClientSideRoomState = {
+  ...INITIAL_ROOM_STATE,
+  colors: INITIAL_ROOM_STATE.colors.map(color => new iro.Color(color))
 };

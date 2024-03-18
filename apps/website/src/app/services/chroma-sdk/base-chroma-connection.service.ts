@@ -8,7 +8,7 @@ import {
   ChromaKeyboardEffectType,
   ChromaMouseEffectType,
 } from "./RazerChromaSDKResponse";
-import { ClientSideLedstripState } from "@angulon/interfaces";
+import { ClientSideRoomState } from "@angulon/interfaces";
 import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
 import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
 import { StaticChromaSDKEffect } from "./effects/StaticChromaSDKEffect";
@@ -27,7 +27,7 @@ export abstract class BaseChromaConnection {
   protected readonly messageService = inject(MessageService);
   protected readonly store: Store<{
     userPreferences: UserPreferences,
-    ledstripState: ClientSideLedstripState
+    roomState: ClientSideRoomState
   }> = inject(Store);
 
   protected readonly APPLICATION_DATA = {
@@ -63,11 +63,11 @@ export abstract class BaseChromaConnection {
         map(preferences => preferences.settings.chromaSupportEnabled),
         distinctUntilChanged()
       ),
-      this.store.select("ledstripState").pipe(
+      this.store.select("roomState").pipe(
         map(state => state.mode),
         distinctUntilChanged()
       ),
-      this.store.select("ledstripState").pipe(
+      this.store.select("roomState").pipe(
         map(state => state.colors),
         distinctUntilChanged(),
         debounceTime(20)
