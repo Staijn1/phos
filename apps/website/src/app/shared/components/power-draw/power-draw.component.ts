@@ -1,9 +1,10 @@
-import {Component, OnDestroy, OnInit} from '@angular/core';
+import {Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxEchartsDirective, provideEcharts} from 'ngx-echarts';
-import {EChartsOption, LineSeriesOption} from 'echarts';
+import {ECElementEvent, EChartsOption, LineSeriesOption} from 'echarts';
 import {WebsocketService} from '../../../services/websocketconnection/websocket.service';
 import {extractThemeColorsFromDOM} from '../../functions';
+import {OptionDataValue} from 'echarts/types/src/util/types';
 
 @Component({
   selector: 'app-power-draw',
@@ -15,7 +16,7 @@ import {extractThemeColorsFromDOM} from '../../functions';
     provideEcharts()
   ]
 })
-export class PowerDrawComponent implements OnInit, OnDestroy {
+export class PowerDrawComponent implements OnDestroy {
   chartOption: EChartsOption = {
     title: {
       text: 'Power Draw Estimate per Device (Watts)',
@@ -26,8 +27,12 @@ export class PowerDrawComponent implements OnInit, OnDestroy {
     },
     tooltip: {
       trigger: 'axis',
-      axisPointer: {
-        type: 'cross'
+      valueFormatter: (value: OptionDataValue | OptionDataValue[]) => {
+        if (Array.isArray(value) || typeof value !== 'number') {
+         return 'Value in tooltip value formatter is not of correct type. This should not happen, expecting a number';
+        }
+
+        return `${Math.round(value)}W`;
       }
     },
     xAxis: {
@@ -58,11 +63,6 @@ export class PowerDrawComponent implements OnInit, OnDestroy {
   private POLLING_INTERVAL_MS = 1000;
 
   constructor(private readonly websocketService: WebsocketService) {
-  }
-
-
-  ngOnInit() {
-    this.startPollingData();
   }
 
   public startPollingData() {
@@ -119,7 +119,6 @@ export class PowerDrawComponent implements OnInit, OnDestroy {
           name: deviceName,
           type: 'line',
           smooth: true,
-          symbol: 'none',
           data: [datapoint]
         });
 
@@ -138,6 +137,10 @@ export class PowerDrawComponent implements OnInit, OnDestroy {
   }
 
   ngOnDestroy() {
+    this.stopPollingData();
+  }
+
+  stopPollingData() {
     clearInterval(this.getDataInterval);
   }
 }
