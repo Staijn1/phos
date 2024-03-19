@@ -85,7 +85,7 @@ export class WebsocketService {
   async joinUserRoom(client: Socket) {
     client.join('user');
     // delete this device from the database because it is now a user
-    await this.deviceService.update({socketSessionId: client.id}, {isLedstrip: false});
+    await this.deviceService.updateOne({socketSessionId: client.id}, {isLedstrip: false});
     this.logger.log(`The client ${client.id} registered as a user`);
   }
 
@@ -118,7 +118,7 @@ export class WebsocketService {
 
     // If the device is already in the database, update the socketSessionId and isConnected fields. Also join the room if it is in one
     if (deviceInDb) {
-      await this.deviceService.update({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: ledCount ? parseInt(ledCount) : 0});
+      await this.deviceService.updateOne({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: ledCount ? parseInt(ledCount) : 0});
 
       if (deviceInDb.room) {
         client.join(deviceInDb.room.id);
@@ -150,7 +150,7 @@ export class WebsocketService {
    */
   onDisconnect(client: Socket, server: Server) {
     this.logger.log(`Client ${client.id} went offline`);
-    this.deviceService.update({socketSessionId: client.id}, {isConnected: false}).then();
+    this.deviceService.updateOne({socketSessionId: client.id}, {isConnected: false}).then();
     this.server = server;
   }
 

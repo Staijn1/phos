@@ -1,7 +1,7 @@
 import {Component, OnDestroy} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxEchartsDirective, provideEcharts} from 'ngx-echarts';
-import {ECElementEvent, EChartsOption, LineSeriesOption} from 'echarts';
+import {EChartsOption, LineSeriesOption} from 'echarts';
 import {WebsocketService} from '../../../services/websocketconnection/websocket.service';
 import {extractThemeColorsFromDOM} from '../../functions';
 import {OptionDataValue} from 'echarts/types/src/util/types';
@@ -61,11 +61,13 @@ export class PowerDrawComponent implements OnDestroy {
   private getDataInterval: NodeJS.Timeout | undefined;
   private MAXIMUM_DATA_POINTS = 30;
   private POLLING_INTERVAL_MS = 1000;
+  private echartsInstance: any;
 
   constructor(private readonly websocketService: WebsocketService) {
   }
 
   public startPollingData() {
+    this.echartsInstance.hideLoading();
     this.getDataInterval = setInterval(async () => {
       const powerEstimates = await this.websocketService.getPowerDrawEstimateData();
 
@@ -142,6 +144,11 @@ export class PowerDrawComponent implements OnDestroy {
 
   stopPollingData() {
     clearInterval(this.getDataInterval);
+  }
+
+  onChartInit(instance: any) {
+    this.echartsInstance = instance;
+    this.echartsInstance.showLoading();
   }
 }
 

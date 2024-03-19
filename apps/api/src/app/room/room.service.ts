@@ -1,12 +1,12 @@
 import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import { FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository } from 'typeorm';
+import {FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository} from 'typeorm';
 import {InjectRepository} from '@nestjs/typeorm';
 import {validate} from 'class-validator';
 import {DeviceService} from '../device/device.service';
-import { INITIAL_ROOM_STATE, IRoom, RoomsState, RoomState } from '@angulon/interfaces';
-import { debounceTime, Subject } from 'rxjs';
+import {INITIAL_ROOM_STATE, IRoom, RoomsState, RoomState} from '@angulon/interfaces';
+import {debounceTime, Subject} from 'rxjs';
 
 
 @Injectable()
@@ -20,7 +20,7 @@ export class RoomService implements DAOService<Room> {
    * @example
    * roomService.updateRoomStateForRoomsSubject.next({rooms: ['idroom1', 'idroom2'], newState: {brightness: 255, colors: ['#ff0000', '#00ff00', '#0000ff'], fftValue: 0, mode: 0, speed: 1000}});
    */
-  public updateRoomStateForRoomsSubject = new Subject<{rooms: string[], newState: RoomState}>();
+  public updateRoomStateForRoomsSubject = new Subject<{ rooms: string[], newState: RoomState }>();
 
   constructor(
     @InjectRepository(Room) private readonly roomRepository: Repository<Room>,
@@ -47,7 +47,7 @@ export class RoomService implements DAOService<Room> {
     return this.roomRepository.save(room);
   }
 
-  async update(criteria: FindOptionsWhere<Room>, RoomData: Partial<Room>): Promise<Room> {
+  async updateOne(criteria: FindOptionsWhere<Room>, RoomData: Partial<Room>): Promise<Room> {
     const existingRoom = await this.roomRepository.findOne({where: criteria});
     if (!existingRoom) return null;
 
@@ -55,6 +55,10 @@ export class RoomService implements DAOService<Room> {
     const updatedRoom = this.roomRepository.merge(existingRoom, RoomData);
     await this.validate(updatedRoom);
     return this.roomRepository.save(updatedRoom);
+  }
+
+  async updateMany(criteria: FindOptionsWhere<Room>, RoomData: Partial<Room>): Promise<void> {
+    await this.roomRepository.update(criteria, RoomData);
   }
 
   async remove(criteria: FindManyOptions<Room>): Promise<void> {
@@ -72,7 +76,7 @@ export class RoomService implements DAOService<Room> {
   async createOrUpdate(criteria: FindOneOptions<Room>, entity: Partial<Room>): Promise<Room> {
     const existingRoom = await this.findOne(criteria);
     if (existingRoom) {
-      await this.update(criteria.where as FindOptionsWhere<Room>, entity);
+      await this.updateOne(criteria.where as FindOptionsWhere<Room>, entity);
       return existingRoom;
     }
 
@@ -134,6 +138,6 @@ export class RoomService implements DAOService<Room> {
    * @param newState
    */
   async updateRoomStateForRooms(rooms: string[], newState: RoomState) {
-    await this.update({id: In(rooms)}, {state: newState});
+    await this.updateMany({id: In(rooms)}, {state: newState});
   }
 }

@@ -71,7 +71,7 @@
   }
 
   .roomselector {
-    @apply tw-h-[275px] md:tw-h-[175px];
+    @apply tw-h-[275px] md:tw-h-[175px] tw-overflow-y-auto;
   }
 
   .active {
