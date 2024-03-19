@@ -30,7 +30,7 @@ export class DeviceService implements DAOService<Device> {
     return this.deviceRepository.save(device);
   }
 
-  async update(criteria: FindOptionsWhere<Device>, deviceData: Partial<Device>): Promise<Device> {
+  async updateOne(criteria: FindOptionsWhere<Device>, deviceData: Partial<Device>): Promise<Device> {
     const existingDevice = await this.deviceRepository.findOne({ where: criteria });
     if (!existingDevice) return null;
 
@@ -55,7 +55,7 @@ export class DeviceService implements DAOService<Device> {
   async createOrUpdate(criteria: FindOneOptions<Device>, entity: Partial<Device>): Promise<Device> {
     const existingDevice = await this.findOne(criteria);
     if (existingDevice) {
-      await this.update(criteria.where as FindOptionsWhere<Device>, entity);
+      await this.updateOne(criteria.where as FindOptionsWhere<Device>, entity);
       return existingDevice;
     }
 
@@ -69,7 +69,7 @@ export class DeviceService implements DAOService<Device> {
    */
   async renameDevice(sessionId: string, payload: string) {
     this.logger.log(`Renaming device with session id ${sessionId} to ${payload}`);
-    await this.update({ socketSessionId: sessionId }, { name: payload });
+    await this.updateOne({ socketSessionId: sessionId }, { name: payload });
   }
 
   async estimatePowerDrawForAllOnlineLedstrips(): Promise<Record<string, number>> {
