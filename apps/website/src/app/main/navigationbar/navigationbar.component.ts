@@ -88,9 +88,9 @@ export class NavigationbarComponent {
   ) {
     store.select('roomState' ).subscribe(state => {
       this.minimumBrightnessReached = state.brightness === MINIMUM_BRIGHTNESS;
-      this.minimumSpeedReached = state.speed === SPEED_MINIMUM_INTERVAL_MS;
+      this.minimumSpeedReached = state.speed === SPEED_MAXIMUM_INTERVAL_MS;
       this.maximumBrightnessReached = state.brightness === MAXIMUM_BRIGHTNESS;
-      this.maximumSpeedReached = state.speed === SPEED_MAXIMUM_INTERVAL_MS;
+      this.maximumSpeedReached = state.speed === SPEED_MINIMUM_INTERVAL_MS;
     });
 
     // Subscribe to change in the networkstate.connectionstatus only when that property changes

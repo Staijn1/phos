@@ -92,6 +92,10 @@
   &:hover:not(.disabled) {
     @apply tw-bg-primary-focus tw-rounded-full;
   }
+
+  &.disabled {
+    @apply tw-opacity-50;
+  }
 }
 
 .centered {
