@@ -36,7 +36,7 @@ export const mapNumber = (value: number, start1: number, stop1: number, start2: 
  */
 export const calculateBGRInteger = (red: number, green: number, blue: number): number => {
   if (red === undefined || red === null || green === undefined || green === null || blue === undefined || blue === null) {
-    throw new Error("Invalid parameters!");
+    throw new Error('Invalid parameters!');
   }
   return 65536 * blue + 256 * green + red;
 };
@@ -230,10 +230,10 @@ export function random8(): number {
 export const getDeviceType = (): string | void => {
   const userAgent = navigator.userAgent;
   const devices: Map<string, boolean> = new Map([
-    ["iPad", /iPad/.test(userAgent)],
-    ["iPhone", /iPhone/.test(userAgent)],
-    ["Android", /Android/.test(userAgent)],
-    ["Windows", /Windows/.test(userAgent)]
+    ['iPad', /iPad/.test(userAgent)],
+    ['iPhone', /iPhone/.test(userAgent)],
+    ['Android', /Android/.test(userAgent)],
+    ['Windows', /Windows/.test(userAgent)]
   ]);
 
   for (const [key, value] of devices) {
@@ -265,15 +265,15 @@ export const prefixURLWithApi = () => {
   const currentUrl = window.location.href;
 
   // Split the URL into its parts
-  const urlParts = currentUrl.split("//");
+  const urlParts = currentUrl.split('//');
 
   // Check if we have the protocol and hostname
   if (urlParts.length === 2) {
     const [protocol, rest] = urlParts;
-    const [hostname] = rest.split("/");
+    const [hostname] = rest.split('/');
 
     // Add "api." to the hostname
-    const modifiedHostname = "api." + hostname;
+    const modifiedHostname = 'api.' + hostname;
 
     // Reconstruct the modified URL
     return `${protocol}//${modifiedHostname}`;
@@ -317,11 +317,13 @@ export interface ThemeColors {
  * If no rooms are selected we return null.
  * @param state
  */
-export const getStateOfSelectedRooms = (state: ClientNetworkState): RoomState | null => {
-    const selectedRoomIds = state.selectedRooms.map(room => room.id);
-    const selectedRooms = state.rooms.filter(room => selectedRoomIds.includes(room.id));
+export const getStateOfSelectedRooms = (state: ClientNetworkState | null | undefined): RoomState | null => {
+  if (!state) return null;
 
-    if (selectedRooms.length === 0) return null;
+  const selectedRoomIds = state.selectedRooms.map(room => room.id);
+  const selectedRooms = state.rooms.filter(room => selectedRoomIds.includes(room.id));
 
-    return selectedRooms[0].state;
+  if (selectedRooms.length === 0) return null;
+
+  return selectedRooms[0].state;
 };

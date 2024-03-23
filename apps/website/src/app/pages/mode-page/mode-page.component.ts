@@ -1,15 +1,17 @@
 import { Component, OnDestroy } from '@angular/core';
-import { RoomState, ModeInformation } from '@angulon/interfaces';
+import { ModeInformation } from '@angulon/interfaces';
 import { ChangeRoomMode } from '../../../redux/roomstate/roomstate.action';
 import { Store } from '@ngrx/store';
 import { combineLatest } from 'rxjs';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
+import { ClientNetworkState } from '../../../redux/networkstate/ClientNetworkState';
+import { getStateOfSelectedRooms } from '../../shared/functions';
 
 
 @Component({
-  selector: "app-mode",
-  templateUrl: "./mode-page.component.html",
-  styleUrls: ["./mode-page.component.scss"],
+  selector: 'app-mode',
+  templateUrl: './mode-page.component.html',
+  styleUrls: ['./mode-page.component.scss'],
   imports: [
     NgClass,
     NgForOf,
@@ -30,19 +32,25 @@ export class ModePageComponent implements OnDestroy {
   selectedMode = 0;
 
 
-  constructor(private readonly store: Store<{ modes: ModeInformation[], roomState: RoomState | undefined }>) {
+  constructor(private readonly store: Store<{
+    modes: ModeInformation[],
+    networkState: ClientNetworkState | undefined
+  }>) {
     this.store.select('modes').subscribe(modes => this.modes = modes);
 
-    combineLatest([this.store.select('roomState'), this.store.select('modes')]).subscribe(([roomState, modes]) => {
-      this.modes = modes;
-      if (!roomState) return;
+    combineLatest([this.store.select('networkState'), this.store.select('modes')])
+      .subscribe(([networkState, modes]) => {
+        const selectedState = getStateOfSelectedRooms(networkState);
 
-      // Find the mode with the same id that is currently active on the ledstrip
-      const mode = modes.find(mode => mode.mode === roomState.mode);
-      if (!mode) return;
+        this.modes = modes;
+        if (!selectedState) return;
 
-      this.selectedMode = modes.indexOf(mode);
-    });
+        // Find the mode with the same id that is currently active on the ledstrip
+        const mode = modes.find(mode => mode.mode === selectedState.mode);
+        if (!mode) return;
+
+        this.selectedMode = modes.indexOf(mode);
+      });
   }
 
   ngOnDestroy(): void {
