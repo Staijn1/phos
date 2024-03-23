@@ -3,8 +3,8 @@ import {CommonModule} from '@angular/common';
 import {NgxEchartsDirective, provideEcharts} from 'ngx-echarts';
 import {EChartsOption, LineSeriesOption} from 'echarts';
 import {WebsocketService} from '../../../services/websocketconnection/websocket.service';
-import {extractThemeColorsFromDOM} from '../../functions';
 import {OptionDataValue} from 'echarts/types/src/util/types';
+import {ThemeService} from '../../../services/theme/theme.service';
 
 @Component({
   selector: 'app-power-draw',
@@ -22,7 +22,7 @@ export class PowerDrawComponent implements OnDestroy {
       text: 'Power Draw Estimate per Device (Watts)',
       textStyle: {
         fontFamily: 'Comfortaa, sans-serif',
-        color: extractThemeColorsFromDOM()?.baseContent ?? 'black'
+        color: ThemeService.extractThemeColorsFromDOM()?.baseContent ?? 'black'
       }
     },
     tooltip: {
@@ -49,7 +49,7 @@ export class PowerDrawComponent implements OnDestroy {
     series: [],
     legend: {
       textStyle: {
-        color: extractThemeColorsFromDOM()?.baseContent ?? 'black'
+        color: ThemeService.extractThemeColorsFromDOM()?.baseContent ?? 'black'
       },
       bottom: 0,
     }
