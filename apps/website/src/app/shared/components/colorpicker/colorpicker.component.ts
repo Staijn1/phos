@@ -5,6 +5,7 @@ import {Store} from '@ngrx/store';
 import {ChangeRoomColors} from '../../../../redux/roomstate/roomstate.action';
 import {ClientNetworkState} from '../../../../redux/networkstate/ClientNetworkState';
 import {getStateOfSelectedRooms} from '../../functions';
+import {skip} from 'rxjs';
 
 
 export type ColorPickerOptions = Parameters<typeof iro.ColorPicker>[1];
@@ -30,6 +31,7 @@ export class ColorpickerComponent implements AfterViewInit {
     wheelAngle: 0,
     layout: this.getActiveColorPickerLayout(),
   };
+
   isEnabled = true;
 
   constructor(private store: Store<{ networkState: ClientNetworkState | undefined }>) {
@@ -39,7 +41,11 @@ export class ColorpickerComponent implements AfterViewInit {
     this.colorpickerOptions.layoutDirection = this.orientation;
     this.picker = iro.ColorPicker(`#${this.id}`, this.colorpickerOptions);
 
-    this.store.select('networkState').subscribe((state) => {
+    // Subscribe to the network state to automatically update the colorpicker to reflect the colors set in the currently selected rooms
+    // Skip the first value as it contains the initial state of the redux store but it won't contain the server-side state yet.
+    // We will receive that later, once the WS connection has been established
+    // This also fixes the Angular error "ExpressionChangedAfterItHasBeenCheckedError"
+    this.store.select('networkState').pipe(skip(1)).subscribe((state) => {
       if (!state) return;
 
       // Find the current state of the selected rooms by taking the first selected room
