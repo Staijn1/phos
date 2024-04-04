@@ -72,13 +72,6 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return this.websocketService.getNetworkState();
   }
 
-  @SubscribeMessage(WebsocketMessage.SetNetworkStateRaw)
-  async onSetNetworkStateRaw(client: Socket, body: WebsocketRequest<RoomState>): Promise<string> {
-    await this.websocketService.setStateRaw(body.rooms, body.payload);
-    // Return value does not matter but front-end expects a reply otherwise it thinks it's not connected.
-    return "OK";
-  }
-
   @SubscribeMessage(WebsocketMessage.SetFFTValue)
   onFFTCommand(client: Socket, body: WebsocketRequest<number>): string {
     this.websocketService.setFFTValue(body.rooms, body.payload);

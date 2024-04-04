@@ -1,6 +1,5 @@
 export enum WebsocketMessage {
   SetNetworkState = "setState",
-  SetNetworkStateRaw = "setNetworkStateRaw",
   GetModes = "getModes",
   GetGradients = "getGradients",
   RegisterAsUser = "joinUserRoom",

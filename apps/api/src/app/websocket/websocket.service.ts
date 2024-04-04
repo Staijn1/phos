@@ -32,21 +32,12 @@ export class WebsocketService {
    */
   async setState(rooms: string[], newState: RoomState, originClient: Socket) {
     this.roomService.updateRoomStateForRoomsSubject.next({ rooms: rooms, newState: newState });
-    await this.setStateRaw(rooms, newState);
-    this.emitEventToAllUsers(WebsocketMessage.StateChange, newState, originClient);
-  }
 
-  /**
-   * Set the received network state for the provided rooms, without updating the database.
-   * Called when the user-interface needs to send a new state that is not important to save in the database and saving performance.
-   * @param rooms
-   * @param newState
-   */
-  async setStateRaw(rooms: string[], newState: RoomState) {
     const roomsState: RoomsState = {};
     rooms.forEach(room => roomsState[room] = newState);
 
     await this.sendStateToRooms(rooms, false, roomsState);
+    this.emitEventToAllUsers(WebsocketMessage.StateChange, newState, originClient);
   }
 
   /**
