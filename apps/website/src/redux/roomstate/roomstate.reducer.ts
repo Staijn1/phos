@@ -9,6 +9,14 @@ import {
 } from "../../app/shared/constants";
 import iro from "@jaames/iro";
 
+/**
+ * Reducer used to update the room state on the server.
+ * We also receive a server state here, but it is the state of the room that was changed by the server.
+ * This is not necessarily the same as using the network state reducer to find the current state of selected rooms,
+ * as a room can be changed by another device, and the current device does not have the changed room selected
+ * @param state
+ * @param action
+ */
 export const roomStateReducer = (state: ClientSideRoomState = INITIAL_CLIENT_LEDSTRIP_STATE, action: any): ClientSideRoomState | undefined => {
   switch (action.type) {
     case RoomStateAction.RECEIVE_SERVER_STATE: {

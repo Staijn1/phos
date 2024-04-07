@@ -31,6 +31,7 @@ import {
 } from '../../shared/constants';
 import {ClientNetworkState, WebsocketConnectionStatus} from '../../../redux/networkstate/ClientNetworkState';
 import {distinctUntilChanged, map} from 'rxjs';
+import {getStateOfSelectedRooms} from '../../shared/functions';
 
 @Component({
   selector: 'app-navigationbar',
@@ -54,10 +55,10 @@ export class NavigationbarComponent {
   readonly speedDecreaseIcon = faWalking;
   readonly roomsSelectIcon = faObjectGroup;
 
-  minimumBrightnessReached = false;
-  minimumSpeedReached = false;
-  maximumBrightnessReached = false;
-  maximumSpeedReached = false;
+  disableDecreaseBrightnessAction = false;
+  disableDecreaseSpeedAction = false;
+  disableIncreaseBrightnessAction = false;
+  disableIncreaseSpeedAction = false;
 
   websocketConnectionStatus: WebsocketConnectionStatus | undefined;
   clearConnectionStatusTimeout: NodeJS.Timeout | undefined;
@@ -86,11 +87,23 @@ export class NavigationbarComponent {
       networkState: ClientNetworkState
     }>
   ) {
-    store.select('roomState' ).subscribe(state => {
-      this.minimumBrightnessReached = state.brightness === MINIMUM_BRIGHTNESS;
-      this.minimumSpeedReached = state.speed === SPEED_MINIMUM_INTERVAL_MS;
-      this.maximumBrightnessReached = state.brightness === MAXIMUM_BRIGHTNESS;
-      this.maximumSpeedReached = state.speed === SPEED_MAXIMUM_INTERVAL_MS;
+    store.select('networkState' ).subscribe(state => {
+      const selectedRoomState = getStateOfSelectedRooms(state);
+
+      // When no room is selected, disable all action buttons
+      if (!selectedRoomState){
+        this.disableDecreaseBrightnessAction = true;
+        this.disableDecreaseSpeedAction = true;
+        this.disableIncreaseBrightnessAction = true;
+        this.disableIncreaseSpeedAction = true;
+        return;
+      }
+
+      // Disable the action buttons when their minimum or maximum values are reached to indicate to the user that they can't go any further
+      this.disableDecreaseBrightnessAction = selectedRoomState.brightness === MINIMUM_BRIGHTNESS;
+      this.disableDecreaseSpeedAction = selectedRoomState.speed === SPEED_MAXIMUM_INTERVAL_MS;
+      this.disableIncreaseBrightnessAction = selectedRoomState.brightness === MAXIMUM_BRIGHTNESS;
+      this.disableIncreaseSpeedAction = selectedRoomState.speed === SPEED_MINIMUM_INTERVAL_MS;
     });
 
     // Subscribe to change in the networkstate.connectionstatus only when that property changes
