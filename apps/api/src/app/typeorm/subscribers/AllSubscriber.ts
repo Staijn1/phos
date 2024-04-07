@@ -1,5 +1,5 @@
 import {DataSource, EntitySubscriberInterface, EventSubscriber} from 'typeorm';
-import {InjectDataSource} from '@nestjs/typeorm/dist/common/typeorm.decorators';
+import {InjectDataSource} from '@nestjs/typeorm';
 import {EventEmitter2} from '@nestjs/event-emitter';
 
 /**
