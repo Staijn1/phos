@@ -1,4 +1,4 @@
-FROM node:lts-alpine3.15 AS builder
+FROM node:lts-alpine AS builder
 
 WORKDIR /app
 RUN apk add --update python3 make g++ && rm -rf /var/cache/apk/*
