@@ -4,7 +4,7 @@ WORKDIR /app/builder
 COPY . .
 RUN npx nx build website
 
-FROM nginx:1.19.2
+FROM nginx:1.25.4
 
 WORKDIR /usr/share/nginx/html
 
