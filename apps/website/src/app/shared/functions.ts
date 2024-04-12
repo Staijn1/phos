@@ -3,6 +3,8 @@ import {GlobalVars} from './constants';
 import {RGBObject} from './types/types';
 import {merge} from 'lodash';
 import {ClientNetworkState} from '../../redux/networkstate/ClientNetworkState';
+import iro from '@jaames/iro';
+
 
 /**
  * Map a number from one scale to another. This function is the same as the map() function from arduino.
@@ -61,6 +63,25 @@ export function color_wheel(pos: number): number {
     return ((pos * 3) << 16) | ((255 - pos * 3) << 8) | (0);
   }
 }
+
+/**
+ * Returns true if the two colors are similar
+ * @param color1
+ * @param color2
+ * @param threshold
+ */
+export const areColorsSimilar = (color1: iro.Color, color2: iro.Color, threshold = 100): boolean => {
+  const rgb1 = color1.rgb;
+  const rgb2 = color2.rgb;
+
+  const distance = Math.sqrt(
+    Math.pow(rgb1.r - rgb2.r, 2) +
+    Math.pow(rgb1.g - rgb2.g, 2) +
+    Math.pow(rgb1.b - rgb2.b, 2)
+  );
+
+  return distance < threshold;
+};
 
 /**
  * Seperate an RGB number into seperate red, green and blue values.

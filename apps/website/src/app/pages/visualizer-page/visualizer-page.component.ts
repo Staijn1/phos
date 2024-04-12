@@ -20,7 +20,7 @@ import { faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { Store } from "@ngrx/store";
 import { ChangeRoomColors, ChangeRoomMode } from "../../../redux/roomstate/roomstate.action";
 import { WebsocketService } from "../../services/websocketconnection/websocket.service";
-import { mapNumber } from "../../shared/functions";
+import { areColorsSimilar, mapNumber } from '../../shared/functions';
 import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
 import { combineLatest, distinctUntilChanged, map, skipWhile } from "rxjs";
 import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
@@ -261,7 +261,8 @@ export class VisualizerPageComponent implements OnDestroy {
           const primaryColor = new iro.Color(colors.Average.hex);
           let secondaryColor = new iro.Color(colors.Vibrant?.hex ?? "#000");
           // In case the difference in brightness between the primary and secondary color is too small, we will use black as the secondary color
-          if (Math.abs(primaryColor.value - secondaryColor.value) < 0.1) {
+          if (areColorsSimilar(primaryColor, secondaryColor, 100)) {
+            console.log("Average and vibrant color from the album are too similar, using black as secondary color", primaryColor.hexString, secondaryColor.hexString);
             secondaryColor = new iro.Color("#000");
           }
 
@@ -275,7 +276,6 @@ export class VisualizerPageComponent implements OnDestroy {
               pos: 0
             }
           ];
-
 
           const gradient: GradientOptions = {
             bgColor: "#000",
