@@ -1,4 +1,4 @@
-import {Component, OnDestroy} from '@angular/core';
+import {Component, EventEmitter, OnDestroy, Output} from '@angular/core';
 import {CommonModule} from '@angular/common';
 import {NgxEchartsDirective, provideEcharts} from 'ngx-echarts';
 import {EChartsOption, LineSeriesOption} from 'echarts';
@@ -17,6 +17,7 @@ import {ThemeService} from '../../../services/theme/theme.service';
   ]
 })
 export class PowerDrawComponent implements OnDestroy {
+  @Output() chartInitialized = new EventEmitter<void>();
   chartOption: EChartsOption = {
     title: {
       text: 'Power Draw Estimate per Device (Watts)',
@@ -70,7 +71,6 @@ export class PowerDrawComponent implements OnDestroy {
     this.echartsInstance.hideLoading();
     this.getDataInterval = setInterval(async () => {
       const powerEstimates = await this.websocketService.getPowerDrawEstimateData();
-
       this.updateChart(powerEstimates);
     }, this.POLLING_INTERVAL_MS);
   }
@@ -149,6 +149,7 @@ export class PowerDrawComponent implements OnDestroy {
   onChartInit(instance: any) {
     this.echartsInstance = instance;
     this.echartsInstance.showLoading();
+    this.chartInitialized.emit();
   }
 }
 

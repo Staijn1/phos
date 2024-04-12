@@ -30,6 +30,7 @@ import {distinctUntilChanged, map} from 'rxjs';
 export class HomePageComponent {
   @ViewChild(PowerDrawComponent) powerDrawComponent: PowerDrawComponent | undefined;
   networkState: ClientNetworkState | undefined;
+  private isChartInitialized = false;
 
   convertSpeedToPercentage(speed: number) {
     return speed / SPEED_MAXIMUM_INTERVAL_MS * 100;
@@ -42,14 +43,13 @@ export class HomePageComponent {
   constructor(private readonly store: Store<{ roomState: RoomState, networkState: ClientNetworkState }>) {
     this.store.select('networkState').subscribe((state) => {
       this.networkState = state;
-
     });
 
     this.store.select('networkState').pipe(
       map(s => s.connectionStatus),
       distinctUntilChanged()
     ).subscribe((connectionStatus) => {
-      if (connectionStatus === WebsocketConnectionStatus.CONNECTED) {
+      if (connectionStatus === WebsocketConnectionStatus.CONNECTED && this.isChartInitialized) {
         this.powerDrawComponent?.startPollingData();
       } else if (connectionStatus === WebsocketConnectionStatus.DISCONNECTED) {
         this.powerDrawComponent?.stopPollingData();
@@ -61,5 +61,12 @@ export class HomePageComponent {
 
   getOfflineDevicesCount(room: IRoom) {
     return room.connectedDevices.filter((device) => !device.isConnected).length;
+  }
+
+  onChartInit() {
+    this.isChartInitialized = true;
+    if (this.networkState?.connectionStatus === WebsocketConnectionStatus.CONNECTED) {
+      this.powerDrawComponent?.startPollingData();
+    }
   }
 }
