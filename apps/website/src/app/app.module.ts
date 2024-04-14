@@ -20,7 +20,7 @@ import {BaseChromaConnection} from './services/chroma-sdk/base-chroma-connection
 import {WebsocketChromaConnectionService} from './services/chroma-sdk/websocket-chroma-connection.service';
 import {RoomSelectComponent} from './shared/components/room-select/room-select.component';
 
-const StoreDevtools = StoreDevtoolsModule.instrument();
+const StoreDevtools = StoreDevtoolsModule.instrument({connectInZone: true});
 @NgModule({
   imports: [
     CommonModule,

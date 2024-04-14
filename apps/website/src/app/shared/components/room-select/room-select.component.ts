@@ -1,6 +1,6 @@
 import { Component } from '@angular/core';
 import { CommonModule } from '@angular/common';
-import {INetworkState, IRoom} from '@angulon/interfaces';
+import {IRoom} from '@angulon/interfaces';
 import {Store} from '@ngrx/store';
 import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
 import {faTriangleExclamation} from '@fortawesome/free-solid-svg-icons';

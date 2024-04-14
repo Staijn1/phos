@@ -65,7 +65,7 @@ export class NavigationbarComponent {
 
   get isDisconnected(): boolean {
     return this.websocketConnectionStatus === WebsocketConnectionStatus.DISCONNECTED;
-  };
+  }
 
   get isConnecting(): boolean {
     return this.websocketConnectionStatus === WebsocketConnectionStatus.CONNECTING;

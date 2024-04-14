@@ -120,7 +120,7 @@ export class ColorpickerComponent implements AfterViewInit {
 
   private getInactiveColorPickerLayout(): ColorPickerLayoutOptions {
     return [];
-  };
+  }
 
   private enableColorPicker() {
     this.picker.setOptions({layout: this.getActiveColorPickerLayout()});

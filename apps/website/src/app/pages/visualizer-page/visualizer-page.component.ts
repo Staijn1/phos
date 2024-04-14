@@ -15,7 +15,6 @@ import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas
 import * as slider from "ngx-slider-v2";
 import { NgxSliderModule } from "ngx-slider-v2";
 import { InformationService } from "../../services/information-service/information.service";
-import { visualizerModeId } from "../../shared/constants";
 import { faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { Store } from "@ngrx/store";
 import { ChangeRoomColors, ChangeRoomMode } from "../../../redux/roomstate/roomstate.action";
