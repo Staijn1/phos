@@ -12,8 +12,7 @@ import {
 import { VisualizerComponent } from "../../shared/components/visualizer/visualizer.component";
 import { GradientInformation, RoomState, ModeInformation } from "@angulon/interfaces";
 import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas.component";
-import * as slider from "ngx-slider-v2";
-import { NgxSliderModule } from "ngx-slider-v2";
+
 import { InformationService } from "../../services/information-service/information.service";
 import { faSpotify } from "@fortawesome/free-brands-svg-icons";
 import { Store } from "@ngrx/store";
@@ -32,6 +31,7 @@ import { RegisterGradientAction } from "../../../redux/gradients/gradients.actio
 import iro from "@jaames/iro";
 import { BaseChromaConnection } from "../../services/chroma-sdk/base-chroma-connection.service";
 import { ChromaEffectRegistery } from "../../services/chroma-sdk/chroma-effect-registery.service";
+import {NgxSliderModule, Options as SliderOptions} from '@angular-slider/ngx-slider';
 
 @Component({
   selector: "app-visualizer",
@@ -64,32 +64,32 @@ export class VisualizerPageComponent implements OnDestroy {
   settingsIcon = faWrench;
   fullscreenIcon = faExpand;
   modeIcon = faLightbulb;
-  smoothingSliderOptions: slider.Options = {
+  smoothingSliderOptions: SliderOptions = {
     floor: 0,
     ceil: 1,
     step: 0.05
   };
-  spinSpeedSliderOptions: slider.Options = {
+  spinSpeedSliderOptions: SliderOptions = {
     floor: 0,
     ceil: 20,
     step: 1
   };
-  lineWidthSliderOptions: slider.Options = {
+  lineWidthSliderOptions: SliderOptions = {
     floor: 0,
     ceil: 10
   };
-  fillAlphaSliderOptions: slider.Options = {
+  fillAlphaSliderOptions: SliderOptions = {
     floor: 0,
     ceil: 1,
     step: 0.1
   };
-  reflexSliderOptions: slider.Options = {
+  reflexSliderOptions: SliderOptions = {
     floor: 0,
     ceil: 1,
     step: 0.1,
     vertical: true
   };
-  linearBoostSliderOptions: slider.Options = {
+  linearBoostSliderOptions: SliderOptions = {
     floor: 1,
     ceil: 5,
     step: 0.1
