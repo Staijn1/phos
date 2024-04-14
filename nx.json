@@ -1,28 +1,21 @@
 {
   "$schema": "./node_modules/nx/schemas/nx-schema.json",
-  "npmScope": "angulon",
   "affected": {
     "defaultBase": "master"
-  },
-  "tasksRunnerOptions": {
-    "default": {
-      "runner": "nx-cloud",
-      "options": {
-        "cacheableOperations": ["build", "lint", "test"],
-        "accessToken": "YzhjNWQ0YWYtNDEyNS00MzRmLWFjMDctMGY2NGMwN2U3M2U4fHJlYWQtd3JpdGU="
-      }
-    }
   },
   "targetDefaults": {
     "build": {
       "dependsOn": ["^build"],
-      "inputs": ["production", "^production"]
+      "inputs": ["production", "^production"],
+      "cache": true
     },
     "test": {
-      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"]
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "cache": true
     },
     "lint": {
-      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"]
+      "inputs": ["default", "{workspaceRoot}/.eslintrc.json"],
+      "cache": true
     }
   },
   "namedInputs": {
@@ -55,5 +48,6 @@
       "style": "scss"
     }
   },
-  "defaultProject": "website"
+  "defaultProject": "website",
+  "nxCloudAccessToken": "YzhjNWQ0YWYtNDEyNS00MzRmLWFjMDctMGY2NGMwN2U3M2U4fHJlYWQtd3JpdGU="
 }
