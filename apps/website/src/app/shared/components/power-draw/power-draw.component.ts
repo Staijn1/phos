@@ -23,7 +23,7 @@ export class PowerDrawComponent implements OnDestroy {
       text: 'Power Draw Estimate per Device (Watts)',
       textStyle: {
         fontFamily: 'Comfortaa, sans-serif',
-        color: ThemeService.extractThemeColorsFromDOM()?.baseContent ?? 'black'
+        color: ThemeService.extractThemeColorsFromDOM()?.accent ?? 'black'
       }
     },
     tooltip: {
@@ -50,7 +50,7 @@ export class PowerDrawComponent implements OnDestroy {
     series: [],
     legend: {
       textStyle: {
-        color: ThemeService.extractThemeColorsFromDOM()?.baseContent ?? 'black'
+        color: ThemeService.extractThemeColorsFromDOM()?.accent ?? 'black'
       },
       bottom: 0,
     }

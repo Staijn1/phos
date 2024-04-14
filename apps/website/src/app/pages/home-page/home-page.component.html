@@ -5,7 +5,7 @@
         <h2 class='tw-card-title'>Room Status</h2>
         <ng-container *ngIf="networkState && networkState.rooms.length > 0; else noRoomsAvailable">
           <div *ngFor="let room of networkState.rooms">
-            <div class='tw-bg-base-300 tw-p-3 tw-rounded'>
+            <div class='tw-bg-base-300 tw-text-base-content tw-p-3 tw-rounded'>
               <div class='tw-divide-y tw-divide-accent'>
                 <p class='tw-text-center tw-font-bold'>{{ room.name }}</p>
                 <div class='tw-flex tw-justify-between tw-pt-2 tw-px-5'>
@@ -34,7 +34,7 @@
       </div>
     </div>
 
-    <div class='tw-card tw-bg-base-100 tw-shadow-xl'>
+    <div class='tw-card tw-shadow-xl'>
       <div class='tw-card-body'>
         <app-power-draw (chartInitialized)="onChartInit()"  class='tw-w-full tw-h-full'></app-power-draw>
       </div>
