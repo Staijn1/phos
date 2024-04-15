@@ -22,6 +22,10 @@
   @apply tw-justify-around tw-flex-1;
 }
 
+.tw-tab-active {
+  @apply tw-text-primary;
+}
+
 .tab-contents-container {
   @apply tw-mt-2 tw-h-full;
 

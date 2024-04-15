@@ -306,16 +306,12 @@ export const prefixURLWithApi = () => {
 
 export interface ThemeColors {
   primary: string;
-  primaryFocus: string;
   primaryContent: string;
   secondary: string;
-  secondaryFocus: string;
   secondaryContent: string;
   accent: string;
-  accentFocus: string;
   accentContent: string;
   neutral: string;
-  neutralFocus: string;
   neutralContent: string;
   base100: string;
   base200: string;

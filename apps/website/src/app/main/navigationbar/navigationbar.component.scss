@@ -90,7 +90,7 @@
   tw-p-4;
 
   &:hover:not(.disabled) {
-    @apply tw-bg-primary-focus tw-rounded-full;
+    @apply tw-bg-[color-mix(in_oklab,oklch(var(--p)),black_10%)] tw-rounded-full;
   }
 
   &.disabled {

@@ -33,17 +33,17 @@
   </div>
   <div body class="tw-mt-5 tw-h-full">
     <!--    Create the tabs-->
-    <div class="tw-tabs tw-w-full">
-      <div (click)="selectTab(0)" class="tw-tab tw-tab-bordered" [class.tw-tab-active]="activeTab === 0">
+    <div class="tw-tabs tw-w-full tw-tabs-bordered">
+      <div (click)="selectTab(0)" class="tw-tab" [class.tw-tab-active]="activeTab === 0">
         <fa-icon [icon]="listIcon"></fa-icon>
       </div>
-      <div (click)="selectTab(1)" class="tw-tab tw-tab-bordered" [class.tw-tab-active]="activeTab === 1">
+      <div (click)="selectTab(1)" class="tw-tab" [class.tw-tab-active]="activeTab === 1">
         <fa-icon [icon]="checkboxIcon"></fa-icon>
       </div>
-      <a (click)="selectTab(2)" class="tw-tab tw-tab-bordered" [class.tw-tab-active]="activeTab === 2">
+      <a (click)="selectTab(2)" class="tw-tab" [class.tw-tab-active]="activeTab === 2">
         <fa-icon [icon]="sliderIcon"></fa-icon>
       </a>
-      <a (click)="selectTab(3)" class="tw-tab tw-tab-bordered" [class.tw-tab-active]="activeTab === 3">
+      <a (click)="selectTab(3)" class="tw-tab" [class.tw-tab-active]="activeTab === 3">
         <fa-icon [icon]="spotifyIcon"></fa-icon>
       </a>
     </div>

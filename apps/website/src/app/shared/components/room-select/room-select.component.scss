@@ -9,7 +9,7 @@
   tw-transition-colors;
 
   &:hover, &.selected {
-    @apply tw-bg-neutral-focus;
+    @apply tw-bg-[color-mix(in_oklab,oklch(var(--n)),black_10%)];
   }
 }
 

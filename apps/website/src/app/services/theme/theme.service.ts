@@ -36,7 +36,7 @@ export class ThemeService {
     // Problem: The meta-tag does not support CSS variables
     // Solution: Get the value of the CSS variable and use it in the meta-tag to prevent usage of the var() function in the meta-tag
     const primaryColor = getComputedStyle(document.documentElement).getPropertyValue('--p');
-    metaTag?.setAttribute('content', `hsl(${primaryColor}`);
+    metaTag?.setAttribute('content', `oklch(${primaryColor}`);
 
     this._theme = theme;
   }
@@ -53,30 +53,26 @@ export class ThemeService {
 
     const computedStyles = getComputedStyle(root);
     return {
-      primary: `hsl(${computedStyles.getPropertyValue('--p')}`,
-      primaryFocus: `hsl(${computedStyles.getPropertyValue('--pf')}`,
-      primaryContent: `hsl(${computedStyles.getPropertyValue('--pc')}`,
-      secondary: `hsl(${computedStyles.getPropertyValue('--s')}`,
-      secondaryFocus: `hsl(${computedStyles.getPropertyValue('--sf')}`,
-      secondaryContent: `hsl(${computedStyles.getPropertyValue('--sc')}`,
-      accent: `hsl(${computedStyles.getPropertyValue('--a')}`,
-      accentFocus: `hsl(${computedStyles.getPropertyValue('--af')}`,
-      accentContent: `hsl(${computedStyles.getPropertyValue('--ac')}`,
-      neutral: `hsl(${computedStyles.getPropertyValue('--n')}`,
-      neutralFocus: `hsl(${computedStyles.getPropertyValue('--nf')}`,
-      neutralContent: `hsl(${computedStyles.getPropertyValue('--nc')}`,
-      base100: `hsl(${computedStyles.getPropertyValue('--b1')}`,
-      base200: `hsl(${computedStyles.getPropertyValue('--b2')}`,
-      base300: `hsl(${computedStyles.getPropertyValue('--b3')}`,
-      baseContent: `hsl(${computedStyles.getPropertyValue('--bc')}`,
-      info: `hsl(${computedStyles.getPropertyValue('--in')}`,
-      infoContent: `hsl(${computedStyles.getPropertyValue('--inc')}`,
-      success: `hsl(${computedStyles.getPropertyValue('--su')}`,
-      successContent: `hsl(${computedStyles.getPropertyValue('--suc')}`,
-      warning: `hsl(${computedStyles.getPropertyValue('--wa')}`,
-      warningContent: `hsl(${computedStyles.getPropertyValue('--wac')}`,
-      error: `hsl(${computedStyles.getPropertyValue('--er')}`,
-      errorContent: `hsl(${computedStyles.getPropertyValue('--erc')}`,
+      primary: `oklch(${computedStyles.getPropertyValue('--p')}`,
+      primaryContent: `oklch(${computedStyles.getPropertyValue('--pc')}`,
+      secondary: `oklch(${computedStyles.getPropertyValue('--s')}`,
+      secondaryContent: `oklch(${computedStyles.getPropertyValue('--sc')}`,
+      accent: `oklch(${computedStyles.getPropertyValue('--a')}`,
+      accentContent: `oklch(${computedStyles.getPropertyValue('--ac')}`,
+      neutral: `oklch(${computedStyles.getPropertyValue('--n')}`,
+      neutralContent: `oklch(${computedStyles.getPropertyValue('--nc')}`,
+      base100: `oklch(${computedStyles.getPropertyValue('--b1')}`,
+      base200: `oklch(${computedStyles.getPropertyValue('--b2')}`,
+      base300: `oklch(${computedStyles.getPropertyValue('--b3')}`,
+      baseContent: `oklch(${computedStyles.getPropertyValue('--bc')}`,
+      info: `oklch(${computedStyles.getPropertyValue('--in')}`,
+      infoContent: `oklch(${computedStyles.getPropertyValue('--inc')}`,
+      success: `oklch(${computedStyles.getPropertyValue('--su')}`,
+      successContent: `oklch(${computedStyles.getPropertyValue('--suc')}`,
+      warning: `oklch(${computedStyles.getPropertyValue('--wa')}`,
+      warningContent: `oklch(${computedStyles.getPropertyValue('--wac')}`,
+      error: `oklch(${computedStyles.getPropertyValue('--er')}`,
+      errorContent: `oklch(${computedStyles.getPropertyValue('--erc')}`,
     };
   };
 }
