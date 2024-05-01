@@ -197,7 +197,7 @@ export class WebsocketService {
 
   deleteDevice(device: IDevice) {
     if (device.isConnected) {
-      this.messageService.setMessage({ name: 'warn_delete_connected_device', message: 'Cannot delete a device that is connected', severity: 'warning' });
+      this.messageService.setMessage({ name: 'warn_delete_connected_device', message: `Cannot delete device: "${device.name}", because it is currently connected`, severity: 'warning' });
       return;
     }
 
