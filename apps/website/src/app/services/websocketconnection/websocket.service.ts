@@ -5,10 +5,11 @@ import { io, Socket } from 'socket.io-client';
 import {
   ClientSideRoomState,
   GradientInformation,
+  IDevice,
   INetworkState,
   IRoom,
-  RoomState,
   ModeInformation,
+  RoomState,
   WebsocketMessage
 } from '@angulon/interfaces';
 import { Store } from '@ngrx/store';
@@ -16,7 +17,7 @@ import { ChangeMultipleRoomProperties, ReceiveServerRoomState } from '../../../r
 import { LoadModesAction } from '../../../redux/modes/modes.action';
 import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
-import {LoadNetworkState, NetworkConnectionStatusChange} from '../../../redux/networkstate/networkstate.action';
+import { LoadNetworkState, NetworkConnectionStatusChange } from '../../../redux/networkstate/networkstate.action';
 import { UserPreferences } from '../../shared/types/types';
 import { first } from 'rxjs';
 import { ClientNetworkState, WebsocketConnectionStatus } from '../../../redux/networkstate/ClientNetworkState';
@@ -42,36 +43,36 @@ export class WebsocketService {
     this.store.select('userPreferences')
       .pipe(first())
       .subscribe((userPreferences) => {
-      this.socket = io(this.websocketUrl, {
-        transports: ['websocket'],
-        query: {
-          deviceName: userPreferences.settings.deviceName
-        }
-      });
-      this.socket.on('connect', () => {
-        console.log('Opened websocket at', this.websocketUrl);
+        this.socket = io(this.websocketUrl, {
+          transports: ['websocket'],
+          query: {
+            deviceName: userPreferences.settings.deviceName
+          }
+        });
+        this.socket.on('connect', () => {
+          console.log('Opened websocket at', this.websocketUrl);
 
-        this.promisifyEmit<void, null>(WebsocketMessage.RegisterAsUser).then();
-        this.loadModes();
-        this.loadGradients();
-        this.loadNetworkState().then();
-        this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTED));
-      });
+          this.promisifyEmit<void, null>(WebsocketMessage.RegisterAsUser).then();
+          this.loadModes();
+          this.loadGradients();
+          this.loadNetworkState().then();
+          this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTED));
+        });
 
-      this.socket.on('disconnect', () => {
-        console.log(`Disconnected from websocket at ${this.websocketUrl}`);
-        this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.DISCONNECTED));
-      });
+        this.socket.on('disconnect', () => {
+          console.log(`Disconnected from websocket at ${this.websocketUrl}`);
+          this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.DISCONNECTED));
+        });
 
-      this.socket.on('connect_error', (error: Error) => {
-        console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
-        messageService.setMessage(error);
-        this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTERROR));
-      });
+        this.socket.on('connect_error', (error: Error) => {
+          console.error(`Failed to connect to websocket at ${this.websocketUrl}`, error);
+          messageService.setMessage(error);
+          this.store.dispatch(new NetworkConnectionStatusChange(WebsocketConnectionStatus.CONNECTERROR));
+        });
 
-      this.socket.on(WebsocketMessage.StateChange, (state: RoomState) => this.updateAppState(state));
-      this.socket.on(WebsocketMessage.DatabaseChange, () => this.loadNetworkState().then());
-    });
+        this.socket.on(WebsocketMessage.StateChange, (state: RoomState) => this.updateAppState(state));
+        this.socket.on(WebsocketMessage.DatabaseChange, () => this.loadNetworkState().then());
+      });
 
     this.store.select('networkState').subscribe(networkState => {
       if (!networkState) return;
@@ -80,7 +81,7 @@ export class WebsocketService {
 
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
     this.store
-      .select('roomState' )
+      .select('roomState')
       .subscribe((state) => {
         if (!this.updateRoomState) {
           this.updateRoomState = true;
@@ -93,7 +94,7 @@ export class WebsocketService {
         }
 
         // Before sending the state to the server, we need to convert the iro.Colors to hex strings
-        const payload: RoomState = {...state, colors: state.colors.map(color => color.hexString)};
+        const payload: RoomState = { ...state, colors: state.colors.map(color => color.hexString) };
         this.promisifyEmit<INetworkState, RoomState>(WebsocketMessage.SetNetworkState, payload).then();
       });
   }
@@ -166,7 +167,7 @@ export class WebsocketService {
   }
 
   public async createRoom(roomName: string) {
-    await this.promisifyEmit<void, Partial<IRoom>>(WebsocketMessage.CreateRoom, {name: roomName});
+    await this.promisifyEmit<void, Partial<IRoom>>(WebsocketMessage.CreateRoom, { name: roomName });
     await this.loadNetworkState();
   }
 
@@ -180,7 +181,7 @@ export class WebsocketService {
   }
 
   async assignDeviceToRoom(deviceName: string, roomName: string) {
-    const payload = {deviceName: deviceName, roomName: roomName};
+    const payload = { deviceName: deviceName, roomName: roomName };
     await this.promisifyEmit(WebsocketMessage.AssignDeviceToRoom, payload);
   }
 
@@ -192,5 +193,14 @@ export class WebsocketService {
 
   async getPowerDrawEstimateData() {
     return await this.promisifyEmit<Record<string, number>, null>(WebsocketMessage.GetPowerDrawEstimate);
+  }
+
+  deleteDevice(device: IDevice) {
+    if (device.isConnected) {
+      this.messageService.setMessage({ name: 'warn_delete_connected_device', message: 'Cannot delete a device that is connected', severity: 'warning' });
+      return;
+    }
+
+    this.promisifyEmit(WebsocketMessage.DeleteDevice, device.id).then();
   }
 }

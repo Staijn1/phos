@@ -3,16 +3,16 @@
     <div class='tw-card tw-bg-base-100'>
       <div class='tw-card-body'>
         <h2 class='tw-card-title'>Room Status</h2>
-        <ng-container *ngIf="networkState && networkState.rooms.length > 0; else noRoomsAvailable">
-          <div *ngFor="let room of networkState.rooms">
+        <ng-container *ngIf='networkState && networkState.rooms.length > 0; else noRoomsAvailable'>
+          <div *ngFor='let room of networkState.rooms'>
             <div class='tw-bg-base-300 tw-text-base-content tw-p-3 tw-rounded'>
               <div class='tw-divide-y tw-divide-accent'>
                 <p class='tw-text-center tw-font-bold'>{{ room.name }}</p>
                 <div class='tw-flex tw-justify-between tw-pt-2 tw-px-5'>
                   <div>
                     <p>Assigned Devices: {{ room.connectedDevices.length }}</p>
-                    <p *ngIf="getOfflineDevicesCount(room) > 0">
-                      <fa-icon class="tw-text-warning" [icon]="offlineWarningIcon"></fa-icon>
+                    <p *ngIf='getOfflineDevicesCount(room) > 0'>
+                      <fa-icon class='tw-text-warning' [icon]='offlineWarningIcon'></fa-icon>
                       Offline devices: {{ getOfflineDevicesCount(room) }}
                     </p>
                   </div>
@@ -36,7 +36,7 @@
 
     <div class='tw-card tw-shadow-xl'>
       <div class='tw-card-body'>
-        <app-power-draw (chartInitialized)="onChartInit()"  class='tw-w-full tw-h-full'></app-power-draw>
+        <app-power-draw (chartInitialized)='onChartInit()' class='tw-w-full tw-h-full'></app-power-draw>
       </div>
     </div>
   </div>
@@ -47,7 +47,9 @@
 
       <ng-container *ngIf='networkState && networkState.devices;else noConnectedDevices'>
         <div class='tw-grid tw-gap-4 tw-grid-cols-1 lg:tw-grid-cols-4'>
-          <app-device [device]='device' *ngFor='let device of networkState.devices'></app-device>
+          <app-device
+            (contextmenu)='onContextMenuClick($event, device)'
+            [device]='device' *ngFor='let device of networkState.devices'></app-device>
         </div>
       </ng-container>
       <ng-template #noConnectedDevices>
@@ -55,4 +57,18 @@
       </ng-template>
     </div>
   </div>
+</div>
+
+<div
+  *ngIf='showContextMenu'
+  [style.left.px]='contextMenuX'
+  [style.top.px]='contextMenuY'
+  class='tw-menu tw-p-1 tw-border tw-rounded-lg tw-border-base-content tw-bg-base-100 tw-w-56 tw-absolute'
+>
+  <li>
+    <a (click)='deleteDevice()'>
+      <fa-icon [icon]='faTrash' class='tw-h-5 tw-w-5'></fa-icon>
+      Delete
+    </a>
+  </li>
 </div>

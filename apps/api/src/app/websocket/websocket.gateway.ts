@@ -100,6 +100,12 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return this.deviceService.estimatePowerDrawForAllOnlineLedstrips();
   }
 
+  @SubscribeMessage(WebsocketMessage.DeleteDevice)
+  async onDeleteDevice(client: Socket, body: WebsocketRequest<string>): Promise<StandardResponse> {
+    await this.deviceService.remove({ where: {id: body.payload }});
+    return {status: 200, message: 'Device removed'};
+  }
+
   /**
    * When a client connects, log its IP address.
    * Also set the server instance in the websocketService, so we make sure it is always up-to-date with the current server instance.
