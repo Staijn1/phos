@@ -21,6 +21,7 @@ import { LoadNetworkState, NetworkConnectionStatusChange } from '../../../redux/
 import { UserPreferences } from '../../shared/types/types';
 import { first } from 'rxjs';
 import { ClientNetworkState, WebsocketConnectionStatus } from '../../../redux/networkstate/ClientNetworkState';
+import { Message } from '../../shared/types/Message';
 
 @Injectable({
   providedIn: 'root'
@@ -197,7 +198,7 @@ export class WebsocketService {
 
   deleteDevice(device: IDevice) {
     if (device.isConnected) {
-      this.messageService.setMessage({ name: 'warn_delete_connected_device', message: `Cannot delete device: "${device.name}", because it is currently connected`, severity: 'warning' });
+      this.messageService.setMessage(new Message('warning',`Cannot delete device: "${device.name}", because it is currently connected`));
       return;
     }
 
