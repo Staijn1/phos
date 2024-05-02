@@ -39,13 +39,34 @@ export class SpotifyAuthenticationService implements OnDestroy {
       console.log("Starting refresh token interval");
       clearInterval(this.refreshAccesTokenInterval);
       this.refreshAccesTokenInterval = setInterval(() => {
-        this.refreshAccessToken().catch(e => this.messageService.setMessage(e));
-      }, 60000); // Refresh token every minute
+        this.ensureTokenValidity().catch(e => this.messageService.setMessage(e));
+      }, 600000); // Refresh token every 10 minutes
     }
   }
 
   ngOnDestroy() {
     clearInterval(this.refreshAccesTokenInterval);
+  }
+
+  /**
+   * Ensures the validity of the Spotify access token, refreshing it if necessary.
+   * @returns {Promise<void>}
+   */
+  async ensureTokenValidity(): Promise<void> {
+    const tokenSet = JSON.parse(sessionStorage.getItem("spotifyToken") as string);
+    if (!tokenSet) {
+      console.log("No Spotify token set found.");
+      return;
+    }
+
+    const now = new Date();
+    const expiresAt = new Date(tokenSet.expires_at);
+    if (now >= expiresAt) {
+      console.log("Spotify token has expired, refreshing...");
+      await this.refreshAccessToken();
+    } else {
+      console.log("Spotify token is still valid.");
+    }
   }
 
   /**
