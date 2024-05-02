@@ -15,8 +15,8 @@
 
 .tw-tab-active {
   transition: 300ms;
-  border-color: hsl(var(--p)) !important;
-  color: hsl(var(--p));
+  border-color: oklch(var(--p)) !important;
+  color: oklch(var(--p));
 }
 
 .tw-card {
@@ -28,10 +28,10 @@
 }
 
 .ngx-slider .ngx-slider-pointer {
-  background: hsl(var(--p)) !important;
+  background: oklch(var(--p)) !important;
 
   &:after {
-    background: hsl(var(--a)) !important;
+    background: oklch(var(--a)) !important;
   }
 }
 
