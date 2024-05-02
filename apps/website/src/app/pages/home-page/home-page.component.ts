@@ -85,8 +85,8 @@ export class HomePageComponent {
     event.preventDefault();
 
     this.contextMenuDevice = device;
-    this.contextMenuX = event.clientX;
-    this.contextMenuY = event.clientY;
+    this.contextMenuX = event.pageX;
+    this.contextMenuY = event.pageY;
     this.showContextMenu = true;
   }
 
