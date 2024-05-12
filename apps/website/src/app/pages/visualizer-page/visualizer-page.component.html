@@ -200,6 +200,14 @@
             </label>
           </div>
 
+          <div class="tw-form-control">
+            <label class="tw-label tw-cursor-pointer">
+              <span class="tw-label-text">Peak Fade</span>
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.fadePeaks" [disabled]="!visualizerOptions.showPeaks"
+                     class="tw-checkbox tw-checkbox-sm tw-checkbox-primary" type="checkbox" id="fadePeaks" />
+            </label>
+          </div>
+
           <!-- Checkbox for showing outline bars. Only works when mode is on of the octave bands-->
           <div class="tw-form-control">
             <label class="tw-label tw-cursor-pointer">
