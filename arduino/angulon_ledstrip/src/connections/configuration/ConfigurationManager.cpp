@@ -42,7 +42,7 @@ char angulon_index_html[]
             <input type='text' class='form-control' id='serverip' name='serverip' placeholder='IP or domain of API to connect to (without port)' value='{{serverip}}'>
         </div>
         <div class='form-group'>
-            <label for='serverport'>Server API Port</label>
+            <label for='serverport'>Server API Port (HTTPS ports not supported)</label>
             <input type='number' class='form-control' id='serverport' name='serverport' placeholder='Port of the API server to connect to' value='{{serverport}}'>
         </div>
         <div class='form-group'>
@@ -222,4 +222,14 @@ void ConfigurationManager::loadConfiguration() {
     config.serverport = preferences.getInt("serverport", -1);
     config.devicename = preferences.getString("devicename", defaultDeviceName);
     systemConfiguration = config;
+
+    // Log loaded configuration to serial
+    Logger::log("ConfigurationManager", "Loaded configuration:");
+    Logger::log("ConfigurationManager", "SSID: " + config.ssid);
+    Logger::log("ConfigurationManager", "Password: " + config.password);
+    Logger::log("ConfigurationManager", "Server IP: " + config.serverip);
+    Logger::log("ConfigurationManager", "LED Pin: " + String(config.ledpin));
+    Logger::log("ConfigurationManager", "LED Count: " + String(config.ledcount));
+    Logger::log("ConfigurationManager", "Server Port: " + String(config.serverport));
+    Logger::log("ConfigurationManager", "Device Name: " + config.devicename);
 }
