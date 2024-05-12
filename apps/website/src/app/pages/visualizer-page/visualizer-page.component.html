@@ -282,7 +282,7 @@
           <!--      Simple slider for smoothing-->
           <div>
             Smoothing
-            <ngx-slider (valueChange)="applySettings()" *ngIf="visualizerOptions.smoothing"
+            <ngx-slider (valueChange)="applySettings()" *ngIf="visualizerOptions.smoothing !== undefined"
                         [(value)]="visualizerOptions.smoothing"
                         [options]="smoothingSliderOptions"></ngx-slider>
           </div>
