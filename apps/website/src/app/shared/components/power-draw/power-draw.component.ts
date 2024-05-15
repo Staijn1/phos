@@ -47,9 +47,7 @@ export class PowerDrawComponent implements OnDestroy {
         show: false
       },
       axisLabel: {
-        formatter: function (value: number) {
-          return `${value} W`;
-        }
+        formatter: (value: number) => `${value} W`
       }
     },
     series: [],
