@@ -45,6 +45,11 @@ export class PowerDrawComponent implements OnDestroy {
       type: 'value',
       splitLine: {
         show: false
+      },
+      axisLabel: {
+        formatter: function (value: number) {
+          return `${value} W`;
+        }
       }
     },
     series: [],
