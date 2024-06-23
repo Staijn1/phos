@@ -41,7 +41,7 @@
     "audiomotion-analyzer": "^4.5.0",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.1",
-    "daisyui": "^4.10.1",
+    "daisyui": "^4.12.6",
     "echarts": "^5.5.0",
     "fast-average-color": "^9.4.0",
     "gsap": "^3.12.5",
