@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Injectable, OnDestroy } from '@angular/core';
 import { environment } from '../../../environments/environment';
 import { MessageService } from '../message-service/message.service';
 import { io, Socket } from 'socket.io-client';
@@ -19,18 +19,22 @@ import { LoadGradientsAction } from '../../../redux/gradients/gradients.action';
 import iro from '@jaames/iro';
 import { LoadNetworkState, NetworkConnectionStatusChange } from '../../../redux/networkstate/networkstate.action';
 import { UserPreferences } from '../../shared/types/types';
-import { first } from 'rxjs';
+import { first, Subscription } from 'rxjs';
 import { ClientNetworkState, WebsocketConnectionStatus } from '../../../redux/networkstate/ClientNetworkState';
 import { Message } from '../../shared/types/Message';
 
 @Injectable({
   providedIn: 'root'
 })
-export class WebsocketService {
+export class WebsocketService implements OnDestroy {
   private readonly websocketUrl = environment.url;
   private socket!: Socket;
   private updateRoomState = true;
   private selectedRooms: IRoom[] = [];
+  private startupSubscribe: Subscription;
+  private roomStateSubscription: Subscription;
+  private networkStateSubscription: Subscription;
+
 
   constructor(
     private messageService: MessageService,
@@ -41,7 +45,7 @@ export class WebsocketService {
       networkState: ClientNetworkState
     }>
   ) {
-    this.store.select('userPreferences')
+    this.startupSubscribe = this.store.select('userPreferences')
       .pipe(first())
       .subscribe((userPreferences) => {
         this.socket = io(this.websocketUrl, {
@@ -75,13 +79,13 @@ export class WebsocketService {
         this.socket.on(WebsocketMessage.DatabaseChange, () => this.loadNetworkState().then());
       });
 
-    this.store.select('networkState').subscribe(networkState => {
+    this.networkStateSubscription = this.store.select('networkState').subscribe(networkState => {
       if (!networkState) return;
       this.selectedRooms = networkState.selectedRooms;
     });
 
     // When the ledstrip state changes, and it was not this class that triggered the change, send the new state to the server
-    this.store
+    this.roomStateSubscription = this.store
       .select('roomState')
       .subscribe((state) => {
         if (!this.updateRoomState) {
@@ -98,6 +102,12 @@ export class WebsocketService {
         const payload: RoomState = { ...state, colors: state.colors.map(color => color.hexString) };
         this.promisifyEmit<INetworkState, RoomState>(WebsocketMessage.SetNetworkState, payload).then();
       });
+  }
+
+  ngOnDestroy() {
+    this.networkStateSubscription.unsubscribe();
+    this.roomStateSubscription.unsubscribe();
+    this.startupSubscribe.unsubscribe();
   }
 
   sendFFTValue(value: number) {
@@ -198,7 +208,7 @@ export class WebsocketService {
 
   deleteDevice(device: IDevice) {
     if (device.isConnected) {
-      this.messageService.setMessage(new Message('warning',`Cannot delete device: "${device.name}", because it is currently connected`));
+      this.messageService.setMessage(new Message('warning', `Cannot delete device: "${device.name}", because it is currently connected`));
       return;
     }
 
