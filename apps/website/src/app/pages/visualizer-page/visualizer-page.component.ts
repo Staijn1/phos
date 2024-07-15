@@ -15,7 +15,7 @@ import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas
 
 import { InformationService } from "../../services/information-service/information.service";
 import { faSpotify } from "@fortawesome/free-brands-svg-icons";
-import { Store } from "@ngrx/store";
+import { Store, Subscription } from "@ngrx/store";
 import { ChangeRoomColors, ChangeRoomMode } from "../../../redux/roomstate/roomstate.action";
 import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import { areColorsSimilar, mapNumber } from '../../shared/functions';
@@ -105,6 +105,9 @@ export class VisualizerPageComponent implements OnDestroy {
   private spotifyPlaybackState: Spotify.PlaybackState | undefined;
   private albumCoverHTMLElement: HTMLImageElement | undefined;
   public reactiveModes: ModeInformation[] = [];
+  private userPreferencesSubscription: Subscription;
+  private gradientsSubscription: Subscription;
+  private modesSubscription: Subscription;
 
 
   constructor(
@@ -120,6 +123,9 @@ export class VisualizerPageComponent implements OnDestroy {
       modes: ModeInformation[],
     }>
   ) {
+    this.userPreferencesSubscription = this.store.select("userPreferences").pipe(map(userPref => userPref.visualizerOptions)).subscribe();
+    this.gradientsSubscription = this.store.select("gradients").pipe(skipWhile(gradients => gradients.length === 0)).subscribe();
+    this.modesSubscription = this.store.select("modes").subscribe();
   }
 
   /**
@@ -171,6 +177,9 @@ export class VisualizerPageComponent implements OnDestroy {
     this.wakeLock?.release()
       .then()
       .catch((error: Error) => console.error("Failed to release wake lock", error));
+    this.userPreferencesSubscription.unsubscribe();
+    this.gradientsSubscription.unsubscribe();
+    this.modesSubscription.unsubscribe();
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
