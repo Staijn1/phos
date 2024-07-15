@@ -1,19 +1,19 @@
-import {Component, OnInit, ViewChild} from '@angular/core';
+import {Component, OnInit, ViewChild, OnDestroy} from '@angular/core';
 import {faTrash} from '@fortawesome/free-solid-svg-icons';
 import {GeneralSettings, UserPreferences} from '../../shared/types/types';
 import {themes} from '../../shared/constants';
-import {Store} from '@ngrx/store';
-import {ChangeGeneralSettings} from '../../../redux/user-preferences/user-preferences.action';
-import {FormsModule, NgForm} from '@angular/forms';
-import {debounceTime, skip} from 'rxjs';
-import {ThemeVisualizationComponent} from '../../shared/components/theme-visualization/theme-visualization.component';
-import {JsonPipe, NgForOf, NgIf} from '@angular/common';
-import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
-import {IDevice, INetworkState, IRoom} from '@angulon/interfaces';
-import {WebsocketService} from '../../services/websocketconnection/websocket.service';
-import {ActivatedRoute, Router} from '@angular/router';
-import {SharedModule} from '../../shared/shared.module';
-import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from '@angular/cdk/drag-drop';
+import {Store}from '@ngrx/store';
+import {ChangeGeneralSettings}from '../../../redux/user-preferences/user-preferences.action';
+import {FormsModule, NgForm}from '@angular/forms';
+import {debounceTime, skip, Subscription}from 'rxjs';
+import {ThemeVisualizationComponent}from '../../shared/components/theme-visualization/theme-visualization.component';
+import {JsonPipe, NgForOf, NgIf}from '@angular/common';
+import {FontAwesomeModule}from '@fortawesome/angular-fontawesome';
+import {IDevice, INetworkState, IRoom}from '@angulon/interfaces';
+import {WebsocketService}from '../../services/websocketconnection/websocket.service';
+import {ActivatedRoute, Router}from '@angular/router';
+import {SharedModule}from '../../shared/shared.module';
+import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup}from '@angular/cdk/drag-drop';
 
 @Component({
   selector: 'app-settings',
@@ -33,7 +33,7 @@ import {CdkDrag, CdkDragDrop, CdkDropList, CdkDropListGroup} from '@angular/cdk/
   ],
   standalone: true
 })
-export class SettingsPageComponent implements OnInit {
+export class SettingsPageComponent implements OnInit, OnDestroy {
   @ViewChild('form', {static: true}) form!: NgForm;
   settings: GeneralSettings | undefined;
   selectedTheme = 0;
@@ -42,6 +42,8 @@ export class SettingsPageComponent implements OnInit {
   activeMenu = 0;
   networkState: INetworkState | undefined;
   trashIcon = faTrash;
+  private userPreferencesSubscription: Subscription;
+  private networkStateSubscription: Subscription;
 
   constructor(
     private readonly router: Router,
@@ -51,14 +53,14 @@ export class SettingsPageComponent implements OnInit {
       userPreferences: UserPreferences,
       networkState: INetworkState,
     }>) {
-    this.store.select('userPreferences').subscribe(preferences => {
+    this.userPreferencesSubscription = this.store.select('userPreferences').subscribe(preferences => {
       if (this.skipFormUpdate) return;
 
       this.settings = structuredClone(preferences.settings);
       this.selectedTheme = this.availableThemes.findIndex(theme => theme === preferences.settings.theme);
     });
 
-    this.store.select('networkState').subscribe(networkState => {
+    this.networkStateSubscription = this.store.select('networkState').subscribe(networkState => {
       this.networkState = networkState;
     });
   }
@@ -77,6 +79,11 @@ export class SettingsPageComponent implements OnInit {
         this.activeMenu = parseInt(fragment);
       }
     });
+  }
+
+  ngOnDestroy(): void {
+    this.userPreferencesSubscription.unsubscribe();
+    this.networkStateSubscription.unsubscribe();
   }
 
   setTheme(theme: string): void {

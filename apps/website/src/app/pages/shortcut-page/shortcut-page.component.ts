@@ -1,9 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, OnDestroy } from '@angular/core';
 import { ActivatedRoute, Router, RouterLink } from "@angular/router";
 import { MessageService } from '../../services/message-service/message.service';
 import { Store } from '@ngrx/store';
 import { RoomState } from '@angulon/interfaces';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
 import {
   DecreaseRoomBrightness,
@@ -21,8 +21,9 @@ import {
   ],
   standalone: true
 })
-export class ShortcutPageComponent {
+export class ShortcutPageComponent implements OnDestroy {
   private static wasShortcutActivated = false;
+  private storeSubscription: Subscription;
 
   /**
    * From the query parameters we will read the shortcut to execute
@@ -32,12 +33,16 @@ export class ShortcutPageComponent {
               private connection: WebsocketService,
               private router: Router,
               private store: Store<{ networkState: RoomState | undefined }>) {
-    combineLatest([this.activatedRoute.queryParams, this.store.select('networkState')])
+    this.storeSubscription = combineLatest([this.activatedRoute.queryParams, this.store.select('networkState')])
       .subscribe(([params, state]) => {
         if (!state) return;
 
         this.executeShortcut(params['action']);
       });
+  }
+
+  ngOnDestroy(): void {
+    this.storeSubscription.unsubscribe();
   }
 
   private executeShortcut(param: string | undefined) {
