@@ -38,15 +38,9 @@ describe('MessageService', () => {
     await timeout(2500);
     expect(service.getMessages()).toContain(message1);
 
-    // todo: not working because Jest hits a timeout, but I'm on a plane without wifi and cannot google :(
     await timeout(2500);
     expect(service.getMessages()).toHaveLength(0);
-  });
-
-  it('should clear multiple messages in the correct order', () => {
-    // todo: repeat test above but with multiple messages which should clear one after the other.
-    // First message added is also the first message to go.
-  });
+  }, 6000);
 });
 
 
