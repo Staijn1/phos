@@ -1,8 +1,7 @@
-import {Injectable} from '@angular/core';
-import {Store} from '@ngrx/store';
-import {UserPreferences} from '../../shared/types/types';
-import {MessageService} from '../message-service/message.service';
-import {ThemeColors} from '../../shared/functions';
+import { Injectable } from '@angular/core';
+import { Store } from '@ngrx/store';
+import { UserPreferences } from '../../shared/types/types';
+import { ThemeColors } from '../../shared/functions';
 
 @Injectable({
   providedIn: 'root'
@@ -13,7 +12,7 @@ export class ThemeService {
     return this._theme;
   }
 
-  constructor(private readonly messageService: MessageService, private readonly store: Store<{
+  constructor(private readonly store: Store<{
     userPreferences: UserPreferences
   }>) {
   }

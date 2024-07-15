@@ -20,7 +20,7 @@ export class InformationService {
     const palette = await vibrant.getPalette();
     const average = await fac.getColorAsync(url, { algorithm: 'dominant', ignoredColor: [0, 0, 0, 255, 50] });
 
-// Return the color palette with the result from fac
+    // Return the color palette with the result from fac
     return { ...palette, Average: average } as Palette & { Average: FastAverageColorResult };
   }
 }
