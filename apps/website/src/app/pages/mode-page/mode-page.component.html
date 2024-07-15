@@ -268,6 +268,7 @@
       class="tw-input tw-input-bordered tw-my-3 tw-w-full md:tw-w-1/3 lg:tw-w-1/4"
       [(ngModel)]="searchTermMode"
       (input)="filterModes()"
+      data-aos="fade-up"
     />
     <div class='tw-grid tw-grid-cols-1 md:tw-grid-cols-3 lg:tw-grid-cols-4 tw-gap-4'>
       @if (modesThatMatchSearchCriteria.length > 0) {
