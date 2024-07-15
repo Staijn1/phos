@@ -31,7 +31,7 @@ export class ColorpickerComponent implements AfterViewInit, OnDestroy {
     wheelAngle: 0,
     layout: this.getActiveColorPickerLayout(),
   };
-  private networkStateSubscription: Subscription;
+  private networkStateSubscription!: Subscription;
 
   isEnabled = true;
 

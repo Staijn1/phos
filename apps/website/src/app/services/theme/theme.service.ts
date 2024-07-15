@@ -9,8 +9,8 @@ import { Subscription } from 'rxjs';
 })
 export class ThemeService implements OnDestroy {
   private _theme = '';
-  private userPreferencesSubscription: Subscription;
-  
+  private userPreferencesSubscription: Subscription | undefined;
+
   get theme(): string {
     return this._theme;
   }
@@ -44,7 +44,7 @@ export class ThemeService implements OnDestroy {
   }
 
   ngOnDestroy(): void {
-    this.userPreferencesSubscription.unsubscribe();
+    this.userPreferencesSubscription?.unsubscribe();
   }
 
   /**

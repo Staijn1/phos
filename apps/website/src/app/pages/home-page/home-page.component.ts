@@ -6,12 +6,12 @@ import {DecimalPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {RadialProgressComponent} from '../../shared/components/radialprogress/radial-progress.component';
 import {SharedModule}from '../../shared/shared.module';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
-import {FontAwesomeModule}from '@fortawesome/free-fontawesome';
 import {PowerDrawComponent}from '../../shared/components/power-draw/power-draw.component';
 import {ClientNetworkState, WebsocketConnectionStatus} from '../../../redux/networkstate/ClientNetworkState';
 import {distinctUntilChanged, map, Subscription} from 'rxjs';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
+import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-home',

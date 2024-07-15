@@ -24,7 +24,7 @@ export class AppComponent implements OnInit, OnDestroy {
   @ViewChild('mobileMenu') mobileMenu!: OffCanvasComponent;
   readonly timeline = gsap.timeline();
   private animationMode = 0;
-  private routerSubscription: Subscription;
+  private routerSubscription!: Subscription;
 
   mobileMenuIcon = OpenMobileMenuIcon;
 

@@ -15,12 +15,12 @@ import { OffCanvasComponent } from "../../shared/components/offcanvas/off-canvas
 
 import { InformationService } from "../../services/information-service/information.service";
 import { faSpotify } from "@fortawesome/free-brands-svg-icons";
-import { Store, Subscription } from "@ngrx/store";
+import { Store } from "@ngrx/store";
 import { ChangeRoomColors, ChangeRoomMode } from "../../../redux/roomstate/roomstate.action";
 import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import { areColorsSimilar, mapNumber } from '../../shared/functions';
 import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
-import { combineLatest, distinctUntilChanged, map, skipWhile } from "rxjs";
+import { combineLatest, distinctUntilChanged, map, skipWhile, Subscription } from 'rxjs';
 import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
