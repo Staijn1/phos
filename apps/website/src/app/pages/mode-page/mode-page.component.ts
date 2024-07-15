@@ -2,7 +2,7 @@ import { Component, OnDestroy } from '@angular/core';
 import { ModeInformation } from '@angulon/interfaces';
 import { ChangeRoomMode } from '../../../redux/roomstate/roomstate.action';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
+import { combineLatest, Subscription } from 'rxjs';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { ClientNetworkState } from '../../../redux/networkstate/ClientNetworkState';
 import { getStateOfSelectedRooms } from '../../shared/functions';
@@ -34,13 +34,14 @@ export class ModePageComponent implements OnDestroy {
   ];
   selectedMode = 0;
   searchTermMode: string | null = null;
+  private subscription: Subscription;
 
 
   constructor(private readonly store: Store<{
     modes: ModeInformation[],
     networkState: ClientNetworkState | undefined
   }>) {
-    combineLatest([this.store.select('networkState'), this.store.select('modes')])
+    this.subscription = combineLatest([this.store.select('networkState'), this.store.select('modes')])
       .subscribe(([networkState, modes]) => {
         const selectedState = getStateOfSelectedRooms(networkState);
 
@@ -59,6 +60,7 @@ export class ModePageComponent implements OnDestroy {
   ngOnDestroy(): void {
     this.modes = [];
     this.modesThatMatchSearchCriteria = [];
+    this.subscription.unsubscribe();
   }
 
   /**
