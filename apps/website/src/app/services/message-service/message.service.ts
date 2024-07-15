@@ -7,12 +7,14 @@ import { Message } from '../../shared/types/Message';
 export class MessageService {
   private _messages: Message[] = [];
 
+  private readonly _clearMessageAfterMs = 5000;
+
   public setMessage(error: Error | Message) {
     const mappedError = this.mapError(error);
     this._messages.push(mappedError);
     setTimeout(() => {
       this._messages.shift();
-    }, 5000);
+    }, this._clearMessageAfterMs);
   }
 
   public getMessages(): Message[] {
