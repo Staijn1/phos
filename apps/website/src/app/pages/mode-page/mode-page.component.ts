@@ -6,6 +6,7 @@ import { combineLatest } from 'rxjs';
 import { NgClass, NgForOf, NgIf } from '@angular/common';
 import { ClientNetworkState } from '../../../redux/networkstate/ClientNetworkState';
 import { getStateOfSelectedRooms } from '../../shared/functions';
+import { FormsModule } from '@angular/forms';
 
 
 @Component({
@@ -15,34 +16,36 @@ import { getStateOfSelectedRooms } from '../../shared/functions';
   imports: [
     NgClass,
     NgForOf,
-    NgIf
+    NgIf,
+    FormsModule
   ],
   standalone: true
 })
 export class ModePageComponent implements OnDestroy {
-  modes: ModeInformation[] = [];
+  private modes: ModeInformation[] = [];
+  modesThatMatchSearchCriteria: ModeInformation[] = [];
   iconBoxColors = [
     'primary',
     'secondary',
     'accent',
     'warning',
     'error',
-    'success',
+    'success'
   ];
   selectedMode = 0;
+  searchTermMode: string | null = null;
 
 
   constructor(private readonly store: Store<{
     modes: ModeInformation[],
     networkState: ClientNetworkState | undefined
   }>) {
-    this.store.select('modes').subscribe(modes => this.modes = modes);
-
     combineLatest([this.store.select('networkState'), this.store.select('modes')])
       .subscribe(([networkState, modes]) => {
         const selectedState = getStateOfSelectedRooms(networkState);
 
         this.modes = modes;
+        this.modesThatMatchSearchCriteria = this.modes;
         if (!selectedState) return;
 
         // Find the mode with the same id that is currently active on the ledstrip
@@ -55,6 +58,7 @@ export class ModePageComponent implements OnDestroy {
 
   ngOnDestroy(): void {
     this.modes = [];
+    this.modesThatMatchSearchCriteria = [];
   }
 
   /**
@@ -66,5 +70,17 @@ export class ModePageComponent implements OnDestroy {
     this.selectedMode = id;
 
     this.store.dispatch(new ChangeRoomMode(id));
+  }
+
+  filterModes() {
+    if (!this.searchTermMode) {
+      this.modesThatMatchSearchCriteria = this.modes;
+      return;
+    }
+
+
+    this.modesThatMatchSearchCriteria = this.modes.filter(mode => {
+      return mode.name?.toUpperCase().includes(this.searchTermMode!.toUpperCase());
+    });
   }
 }
