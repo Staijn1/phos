@@ -1,11 +1,11 @@
-import {AfterViewInit, Component, Input} from '@angular/core';
+import {AfterViewInit, Component, Input, OnDestroy} from '@angular/core';
 import iro from '@jaames/iro';
 import {IroColorPicker} from '@jaames/iro/dist/ColorPicker';
-import {Store} from '@ngrx/store';
-import {ChangeRoomColors} from '../../../../redux/roomstate/roomstate.action';
-import {ClientNetworkState} from '../../../../redux/networkstate/ClientNetworkState';
-import {getStateOfSelectedRooms} from '../../functions';
-import {skip} from 'rxjs';
+import {Store}from '@ngrx/store';
+import {ChangeRoomColors}from '../../../../redux/roomstate/roomstate.action';
+import {ClientNetworkState}from '../../../../redux/networkstate/ClientNetworkState';
+import {getStateOfSelectedRooms}from '../../functions';
+import {skip, Subscription}from 'rxjs';
 
 
 export type ColorPickerOptions = Parameters<typeof iro.ColorPicker>[1];
@@ -17,7 +17,7 @@ export type ColorPickerLayoutOptions = ColorPickerOptions['layout'];
   templateUrl: './colorpicker.component.html',
   styleUrls: ['./colorpicker.component.scss']
 })
-export class ColorpickerComponent implements AfterViewInit {
+export class ColorpickerComponent implements AfterViewInit, OnDestroy {
   @Input() orientation: 'horizontal' | 'vertical' = 'horizontal';
   protected id = this.generateElementId();
   private picker!: IroColorPicker;
@@ -31,6 +31,7 @@ export class ColorpickerComponent implements AfterViewInit {
     wheelAngle: 0,
     layout: this.getActiveColorPickerLayout(),
   };
+  private networkStateSubscription!: Subscription;
 
   isEnabled = true;
 
@@ -45,7 +46,7 @@ export class ColorpickerComponent implements AfterViewInit {
     // Skip the first value as it contains the initial state of the redux store but it won't contain the server-side state yet.
     // We will receive that later, once the WS connection has been established
     // This also fixes the Angular error "ExpressionChangedAfterItHasBeenCheckedError"
-    this.store.select('networkState').pipe(skip(1)).subscribe((state) => {
+    this.networkStateSubscription = this.store.select('networkState').pipe(skip(1)).subscribe((state) => {
       if (!state) return;
 
       // Find the current state of the selected rooms by taking the first selected room
@@ -76,6 +77,10 @@ export class ColorpickerComponent implements AfterViewInit {
       this.skipSettingColors = true;
       this.store.dispatch(new ChangeRoomColors(colors));
     });
+  }
+
+  ngOnDestroy(): void {
+    this.networkStateSubscription.unsubscribe();
   }
 
   /**
