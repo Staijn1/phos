@@ -15,6 +15,7 @@ void Ledstrip::setup() {
     Ledstrip::strip->init();
     Ledstrip::strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
     Ledstrip::strip->setCustomMode(F("VuMeter Brightness"), Ledstrip::vuMeterBrightness);
+    Ledstrip::strip->setCustomMode(F("Double VuMeter"), Ledstrip::doubleVuMeter);
     // Todo make State set initial ledstrip state
     Ledstrip::strip->setMode(FX_MODE_CUSTOM_2);
     Ledstrip::strip->setSpeed(1000);
@@ -152,6 +153,22 @@ uint16_t Ledstrip::vuMeterBrightness() {
 
     for (int i = 0; i < ConfigurationManager::systemConfiguration.ledcount; i++) {
         strip->setPixelColor(i, newColor);
+    }
+
+    return seg->speed;
+}
+
+uint16_t Ledstrip::doubleVuMeter() {
+    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
+    const int ledcount = ConfigurationManager::systemConfiguration.ledcount;
+    const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledcount / 2);
+
+    for (int index = 0; index < ledcount; index++) {
+        if (index <= amountOfLedsToShow || index >= ledcount - amountOfLedsToShow) {
+            Ledstrip::strip->setPixelColor(index, seg->colors[0]);
+        } else {
+            Ledstrip::strip->setPixelColor(index, seg->colors[1]);
+        }
     }
 
     return seg->speed;
