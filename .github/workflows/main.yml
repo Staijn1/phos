@@ -127,3 +127,7 @@ jobs:
         run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -f ./apps/api/Dockerfile -t ${{ secrets.USERNAME }}/angulon:api -t ${{secrets.USERNAME}}/angulon:api-${{env.GitVersion_SemVer}} --push .
       - name: Build and push Website image
         run: docker buildx build --platform=linux/arm64/v8,linux/amd64 -f ./apps/website/Dockerfile -t ${{ secrets.USERNAME }}/angulon:website -t ${{secrets.USERNAME}}/angulon:website-${{env.GitVersion_SemVer}} --push .
+      - uses: dkershner6/post-api-call-action@v2
+        name: Update Portainer Stack
+        with:
+          url: ${{ secrets.PORTAINER_WEBHOOK_URL }}
