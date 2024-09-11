@@ -30,7 +30,7 @@ void Ledstrip::run() {
     Ledstrip::strip->service();
 }
 
-void Ledstrip::setColors(int segment, uint32_t *colors) {
+void Ledstrip::setColors(int segment, uint32_t* colors) {
     Ledstrip::strip->setColors(segment, colors);
     Logger::log("Ledstrip", "Setting colors");
 }
@@ -39,7 +39,7 @@ void Ledstrip::setColors(int segment, const char *color_0, const char *color_1, 
     this->colorsHexString[0] = color_0;
     this->colorsHexString[1] = color_1;
     this->colorsHexString[2] = color_2;
-    const uint32_t convertedColors[MAX_NUM_COLORS] = {
+    uint32_t convertedColors[MAX_NUM_COLORS] = {
             this->hexStringToInt(color_0),
             this->hexStringToInt(color_1),
             this->hexStringToInt(color_2)};

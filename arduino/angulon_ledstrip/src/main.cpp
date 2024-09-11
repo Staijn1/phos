@@ -1,7 +1,7 @@
 #include <Arduino.h>
 #include "Angulon.h"
 
-const Angulon angulon;
+Angulon angulon;
 
 void setup() {
     angulon.setup();

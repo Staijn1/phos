@@ -1,8 +1,8 @@
 #include "Angulon.h"
 #include "utils/state/State.h"
 
-Ledstrip * const Angulon::ledstrip = new Ledstrip();
-Led * const Angulon::led = new Led(BUILTIN_LED);
+Ledstrip* Angulon::ledstrip = new Ledstrip();
+Led* Angulon::led = new Led(BUILTIN_LED);
 
 void Angulon::setup() {
     Logger::setup();

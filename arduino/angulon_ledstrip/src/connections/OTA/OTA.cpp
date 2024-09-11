@@ -6,12 +6,13 @@
 void OTA::setup() {
     ArduinoOTA
             .onStart([]() {
-                const String type;
-                if (ArduinoOTA.getCommand() == U_FLASH)
+                String type;
+                if (ArduinoOTA.getCommand() == U_FLASH) {
                     type = "sketch";
-                else // U_SPIFFS
-                    type = "filesystem";
-
+                } else {
+                    // U_SPIFFS
+                  type = "filesystem";
+                }
                 // NOTE: if updating SPIFFS this would be the place to unmount SPIFFS using SPIFFS.end()
                 Logger::log("OTA", "Received new files, starting update. Update type: " + type);
             })
