@@ -126,6 +126,16 @@ uint16_t Ledstrip::vuMeter() {
     return seg->speed;
 }
 
+/**
+ * This function calculates the new brightness value by reducing the primary color brightness linearly based on FFT values.
+ * 
+ * The primary color is represented as a 32-bit integer in the format 0xRRGGBB, where RR, GG, and BB are the red, green, and blue components, respectively.
+ * The function extracts the red, green, and blue components from the primary color using bitwise operations.
+ * It then calculates a brightness factor by mapping the FFT value from 0-255 to a range of 0-1.
+ * The red, green, and blue components are multiplied by the brightness factor to reduce their brightness linearly based on the FFT value.
+ * The new color is constructed by combining the modified red, green, and blue components using bitwise operations.
+ * The new color is set for each LED in the strip using the setPixelColor function.
+ */
 uint16_t Ledstrip::vuMeterBrightness() {
     WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
     uint32_t primaryColor = seg->colors[0];
@@ -133,7 +143,7 @@ uint16_t Ledstrip::vuMeterBrightness() {
     uint8_t g = (primaryColor >> 8) & 0xFF;
     uint8_t b = primaryColor & 0xFF;
 
-    float brightnessFactor = Ledstrip::getFFTValue() / 255.0;
+    float brightnessFactor = map(Ledstrip::getFFTValue(), 0, 255, 0, 1);
     r = static_cast<uint8_t>(r * brightnessFactor);
     g = static_cast<uint8_t>(g * brightnessFactor);
     b = static_cast<uint8_t>(b * brightnessFactor);
