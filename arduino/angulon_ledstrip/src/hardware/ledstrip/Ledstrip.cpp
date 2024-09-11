@@ -15,7 +15,6 @@ void Ledstrip::setup() {
     Ledstrip::strip->init();
     Ledstrip::strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
     Ledstrip::strip->setCustomMode(F("VuMeter Brightness"), Ledstrip::vuMeterBrightness);
-    Ledstrip::strip->setCustomMode(F("Static"), Ledstrip::staticMode);
     // Todo make State set initial ledstrip state
     Ledstrip::strip->setMode(FX_MODE_CUSTOM_2);
     Ledstrip::strip->setSpeed(1000);
@@ -55,7 +54,7 @@ void Ledstrip::setMode(int mode, boolean force) {
     // Do not set the mode if the new mode is the same as the current mode except if it is a custom mode
     // By setting the same mode the animation restarts which looks strange when setting brightness/speed or color
 
-    if (mode == FX_MODE_CUSTOM   || mode == FX_MODE_CUSTOM_1 || mode == FX_MODE_CUSTOM_2) {
+    if (mode == FX_MODE_CUSTOM   || mode == FX_MODE_CUSTOM_1 || mode == FX_MODE_STATIC) {
         Logger::log("Ledstrip", "Received a custom mode, setting segment");
         Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getSegment()->colors, 0, NO_OPTIONS);
     } else {
@@ -155,14 +154,6 @@ uint16_t Ledstrip::vuMeterBrightness() {
         strip->setPixelColor(i, newColor);
     }
 
-    return seg->speed;
-}
-
-uint16_t Ledstrip::staticMode() {
-    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
-    for (int i = 0; i < ConfigurationManager::systemConfiguration.ledcount; i++) {
-        Ledstrip::strip->setPixelColor(i, seg->colors[0]);
-    }
     return seg->speed;
 }
 
