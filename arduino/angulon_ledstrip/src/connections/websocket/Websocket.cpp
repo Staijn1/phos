@@ -88,7 +88,7 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
 
     // Handle the different events
     if (*event == '!') {
-        Serial.printf("[Websocket] get state: %s\n", payload);
+        Serial.printf("[Websocket] setting received state: %s\n", payload);
         State::setState(object);
     } else if (*event == '/') {
         Serial.printf("[Websocket] get state segments event: %s\n", payload);
