@@ -35,6 +35,3 @@ export class ChromaEffectRegistery {
     });
   }
 }
-
-// Register the new custom VuMeter effect
-ChromaEffectRegistery.registerEffect(74, new DoubleVuMeterChromaSDKEffect());

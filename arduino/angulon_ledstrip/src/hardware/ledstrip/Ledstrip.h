@@ -57,7 +57,7 @@ public:
 
     static uint16_t vuMeterBrightness();
 
-    static uint16_t staticMode();
+    static uint16_t doubleVuMeter();
 
     void setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mode, uint16_t speed, const char *color_0, const char *color_1, const char *color_2);
 };
