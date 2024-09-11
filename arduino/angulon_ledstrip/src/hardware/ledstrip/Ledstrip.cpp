@@ -1,7 +1,3 @@
-//
-// Created by stein on 6-12-2022.
-//
-
 #include "Ledstrip.h"
 #include "utils/logger/Logger.h"
 #include "../../../.pio/libdeps/esp32dev/Adafruit NeoPixel/Adafruit_NeoPixel.h"
@@ -132,8 +128,22 @@ uint16_t Ledstrip::vuMeter() {
 
 uint16_t Ledstrip::vuMeterBrightness() {
     WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
-    Ledstrip::strip->fill(seg->colors[0]);
-    Ledstrip::strip->setBrightness(Ledstrip::getFFTValue());
+    uint32_t primaryColor = seg->colors[0];
+    uint8_t r = (primaryColor >> 16) & 0xFF;
+    uint8_t g = (primaryColor >> 8) & 0xFF;
+    uint8_t b = primaryColor & 0xFF;
+
+    float brightnessFactor = Ledstrip::getFFTValue() / 255.0;
+    r = static_cast<uint8_t>(r * brightnessFactor);
+    g = static_cast<uint8_t>(g * brightnessFactor);
+    b = static_cast<uint8_t>(b * brightnessFactor);
+
+    uint32_t newColor = (r << 16) | (g << 8) | b;
+
+    for (int i = 0; i < ConfigurationManager::systemConfiguration.ledcount; i++) {
+        Ledstrip::strip->setPixelColor(i, newColor);
+    }
+
     return seg->speed;
 }
 
