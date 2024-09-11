@@ -158,6 +158,14 @@ uint16_t Ledstrip::vuMeterBrightness() {
     return seg->speed;
 }
 
+uint16_t Ledstrip::staticMode() {
+    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
+    for (int i = 0; i < ConfigurationManager::systemConfiguration.ledcount; i++) {
+        Ledstrip::strip->setPixelColor(i, seg->colors[0]);
+    }
+    return seg->speed;
+}
+
 uint8_t Ledstrip::getModeCount() {
     return Ledstrip::strip->getModeCount();
 }
@@ -175,10 +183,3 @@ Ledstrip::setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mod
     Ledstrip::strip->setSegment(segment, start, stop, mode, convertedColors, speed);
 }
 
-uint16_t Ledstrip::staticMode() {
-    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
-    for (int i = 0; i < ConfigurationManager::systemConfiguration.ledcount; i++) {
-        Ledstrip::strip->setPixelColor(i, seg->colors[0]);
-    }
-    return seg->speed;
-}

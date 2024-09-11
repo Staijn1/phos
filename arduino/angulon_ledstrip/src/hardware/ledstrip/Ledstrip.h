@@ -50,13 +50,14 @@ public:
 
     static int getFFTValue();
 
-
     uint8_t getModeCount();
 
     // Custom effects
     static uint16_t vuMeter();
 
     static uint16_t vuMeterBrightness();
+
+    static uint16_t staticMode();
 
     void setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mode, uint16_t speed, const char *color_0, const char *color_1, const char *color_2);
 };
