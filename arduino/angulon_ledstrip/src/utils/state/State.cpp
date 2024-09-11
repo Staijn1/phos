@@ -5,13 +5,13 @@
 void State::setState(const JsonObject object) {
     Logger::log("State", "Updating state");
 
-    boolean forceState = object["force"];
+    const boolean forceState = object["force"];
 
-    int mode = object["mode"]; // 0
-    int speed = object["speed"]; // 1000
-    int brightness = object["brightness"]; // 196
+    const int mode = object["mode"]; // 0
+    const int speed = object["speed"]; // 1000
+    const int brightness = object["brightness"]; // 196
 
-    JsonArray colors = object["colors"];
+    const JsonArray colors = object["colors"];
     const char *color_0 = colors[0]; // "#ff0000"
     const char *color_1 = colors[1]; // "#00ff00"
     const char *color_2 = colors[2]; // "#0000ff"
@@ -25,19 +25,19 @@ void State::setState(const JsonObject object) {
 void State::setStateSegments(const JsonObject object) {
     Logger::log("State", "Updating state with segments");
 
-    String brightness = object["brightness"]; // new brightness for the ledstrip
+    const String brightness = object["brightness"]; // new brightness for the ledstrip
     Serial.println(brightness);
 //    Angulon::ledstrip->setBrightness(brightness);
 
-    JsonArray segments = object["segments"];
+    const JsonArray segments = object["segments"];
     for (JsonVariant segment: segments) {
-        int segmentNumber = segment["segment"];
-        int start = segment["start"];
-        int stop = segment["stop"];
-        int mode = segment["mode"];
-        int speed = segment["speed"];
+        const int segmentNumber = segment["segment"];
+        const int start = segment["start"];
+        const int stop = segment["stop"];
+        const int mode = segment["mode"];
+        const int speed = segment["speed"];
 
-        JsonArray colors = segment["colors"];
+        const JsonArray colors = segment["colors"];
         const char *color_0 = colors[0]; // "#ff0000"
         const char *color_1 = colors[1]; // "#00ff00"
         const char *color_2 = colors[2]; // "#0000ff"

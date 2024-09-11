@@ -1,7 +1,3 @@
-//
-// Created by stein on 2-12-2022.
-//
-
 #include <Arduino.h>
 #include "Logger.h"
 

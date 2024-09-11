@@ -7,7 +7,7 @@ int Ledstrip::FFTValue = 0;
 
 void Ledstrip::setup() {
     Logger::log("Ledstrip", "Setting up ledstrip");
-    SystemConfiguration config = configurationManager.getConfig();
+    const SystemConfiguration config = configurationManager.getConfig();
     this->ledcount = ConfigurationManager::systemConfiguration.ledcount;
     Ledstrip::strip = new WS2812FX(this->ledcount, config.ledpin, NEO_GRB + NEO_KHZ800);
 
@@ -39,7 +39,7 @@ void Ledstrip::setColors(int segment, const char *color_0, const char *color_1, 
     this->colorsHexString[0] = color_0;
     this->colorsHexString[1] = color_1;
     this->colorsHexString[2] = color_2;
-    uint32_t convertedColors[MAX_NUM_COLORS] = {
+    const uint32_t convertedColors[MAX_NUM_COLORS] = {
             this->hexStringToInt(color_0),
             this->hexStringToInt(color_1),
             this->hexStringToInt(color_2)};
@@ -167,10 +167,9 @@ Ledstrip::setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mod
     this->colorsHexString[0] = color_0;
     this->colorsHexString[1] = color_1;
     this->colorsHexString[2] = color_2;
-    uint32_t convertedColors[MAX_NUM_COLORS] = {
+    const uint32_t convertedColors[MAX_NUM_COLORS] = {
             this->hexStringToInt(color_0),
             this->hexStringToInt(color_1),
             this->hexStringToInt(color_2)};
     Ledstrip::strip->setSegment(segment, start, stop, mode, convertedColors, speed);
 }
-

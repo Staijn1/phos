@@ -1,7 +1,3 @@
-//
-// Created by stein on 5-12-2022.
-//
-
 #include <map>
 #include "Websocket.h"
 #include "utils/state/State.h"
@@ -60,11 +56,11 @@ void Websocket::webSocketClientEvent(socketIOmessageType_t type, uint8_t *payloa
         case sIOtype_ACK:
         case sIOtype_BINARY_ACK:
             // Use the typeToStringMap to convert the type variable to a string
-            std::string typeString = typeToStringMap[type];
+            const std::string typeString = typeToStringMap[type];
             // Use the std::string::c_str method to convert the typeString variable to a const char *
             const char *typeStringPtr = typeString.c_str();
             // Use the std::string class to concatenate the "Unhandled event on websocket" string and the typeStringPtr together
-            std::string logMessage = "Unhandled event on websocket " + std::string(typeStringPtr);
+            const std::string logMessage = "Unhandled event on websocket " + std::string(typeStringPtr);
             // Use the c_str method again to convert the logMessage string to a const char *
             const char *logMessagePtr = logMessage.c_str();
             Logger::log("Websocket", logMessagePtr);

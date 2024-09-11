@@ -1,12 +1,8 @@
-//
-// Created by stein on 2-12-2022.
-//
-
 #include <WiFi.h>
 #include "ConfigurationManager.h"
 #include "utils/logger/Logger.h"
 
-char angulon_index_html[]
+const char angulon_index_html[]
         PROGMEM = R"=====(
 <!doctype html>
 <html lang='en' dir='ltr'>
@@ -58,7 +54,7 @@ char angulon_index_html[]
 
 SystemConfiguration ConfigurationManager::systemConfiguration;
 
-#define NETWORK_TIMEOUT 10000
+const unsigned long NETWORK_TIMEOUT = 10000;
 void ConfigurationManager::setup() {
     Logger::log("ConfigurationManager", "Checking configuration...");
     preferences.begin("configuration", false);
@@ -91,13 +87,13 @@ void ConfigurationManager::startConfigurationMode() {
 void ConfigurationManager::setupWebserver() {
     server->on("/", [this]() {
         SystemConfiguration configuration = ConfigurationManager::getConfig();
-        String ssid = configuration.ssid;
-        String password = configuration.password;
-        String deviceName = configuration.devicename;
-        String ledpin = configuration.ledpin == (uint8_t) -1 ? "" : String(configuration.ledpin);
-        String ledcount = configuration.ledcount == (uint8_t) -1 ? "" : String(configuration.ledcount);
-        String serverip = configuration.serverip;
-        String serverport = configuration.serverport == -1 ? "" : String(configuration.serverport);
+        const String ssid = configuration.ssid;
+        const String password = configuration.password;
+        const String deviceName = configuration.devicename;
+        const String ledpin = configuration.ledpin == (uint8_t) -1 ? "" : String(configuration.ledpin);
+        const String ledcount = configuration.ledcount == (uint8_t) -1 ? "" : String(configuration.ledcount);
+        const String serverip = configuration.serverip;
+        const String serverport = configuration.serverport == -1 ? "" : String(configuration.serverport);
 
         String html = angulon_index_html;
         html.replace("{{ssid}}", ssid);
@@ -213,7 +209,7 @@ SystemConfiguration ConfigurationManager::getConfig() {
 void ConfigurationManager::loadConfiguration() {
     SystemConfiguration config{};
     // Generate a default device name based on the MAC address
-    String defaultDeviceName = "ESP32 - " + WiFi.macAddress();
+    const String defaultDeviceName = "ESP32 - " + WiFi.macAddress();
     config.ssid = preferences.getString("ssid", "");
     config.password = preferences.getString("password", "");
     config.serverip = preferences.getString("serverip", "");
