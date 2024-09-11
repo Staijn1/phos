@@ -137,21 +137,21 @@ uint16_t Ledstrip::vuMeter() {
  * The new color is set for each LED in the strip using the setPixelColor function.
  */
 uint16_t Ledstrip::vuMeterBrightness() {
-    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
-    uint32_t primaryColor = seg->colors[0];
+    const WS2812FX::Segment *seg = strip->getSegment();
+    const uint32_t primaryColor = seg->colors[0];
     uint8_t r = (primaryColor >> 16) & 0xFF;
     uint8_t g = (primaryColor >> 8) & 0xFF;
     uint8_t b = primaryColor & 0xFF;
 
-    float brightnessFactor = map(Ledstrip::getFFTValue(), 0, 255, 0, 1);
+    const double brightnessFactor = getFFTValue() / 255.0;
     r = static_cast<uint8_t>(r * brightnessFactor);
     g = static_cast<uint8_t>(g * brightnessFactor);
     b = static_cast<uint8_t>(b * brightnessFactor);
 
-    uint32_t newColor = (r << 16) | (g << 8) | b;
+    const uint32_t newColor = (r << 16) | (g << 8) | b;
 
     for (int i = 0; i < ConfigurationManager::systemConfiguration.ledcount; i++) {
-        Ledstrip::strip->setPixelColor(i, newColor);
+        strip->setPixelColor(i, newColor);
     }
 
     return seg->speed;
