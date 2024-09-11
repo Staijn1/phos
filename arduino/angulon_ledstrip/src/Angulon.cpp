@@ -1,12 +1,8 @@
-//
-// Created by stein on 2-12-2022.
-//
-
 #include "Angulon.h"
 #include "utils/state/State.h"
 
-Ledstrip *Angulon::ledstrip = new Ledstrip();
-Led *Angulon::led = new Led(BUILTIN_LED);
+Ledstrip* Angulon::ledstrip = new Ledstrip();
+Led* Angulon::led = new Led(BUILTIN_LED);
 
 void Angulon::setup() {
     Logger::setup();
@@ -31,4 +27,3 @@ void Angulon::loop() {
         ota.run();
     }
 }
-

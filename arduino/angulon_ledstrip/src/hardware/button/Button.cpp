@@ -1,7 +1,3 @@
-//
-// Created by stein on 2-12-2022.
-//
-
 #include "Button.h"
 #include "Arduino.h"
 
