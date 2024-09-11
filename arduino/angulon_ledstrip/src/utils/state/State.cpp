@@ -1,7 +1,3 @@
-//
-// Created by stein on 23/02/2023.
-//
-
 #include "State.h"
 #include "ArduinoJson.h"
 #include "Angulon.h"
@@ -23,7 +19,7 @@ void State::setState(const JsonObject object) {
     Angulon::ledstrip->setBrightness(brightness);
     Angulon::ledstrip->setSpeed(speed);
     Angulon::ledstrip->setColors(0, color_0, color_1, color_2);
-    Angulon::ledstrip->setMode(mode, forceState);
+    Angulon::ledstrip->setMode(FX_MODE_CUSTOM_2, forceState);
 }
 
 void State::setStateSegments(const JsonObject object) {
@@ -65,4 +61,3 @@ String State::getModesJSON() {
     serializeJson(json, json_str);
     return json_str;
 }
-
