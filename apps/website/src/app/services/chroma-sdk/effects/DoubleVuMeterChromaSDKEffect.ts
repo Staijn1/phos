@@ -35,17 +35,17 @@ export class DoubleVuMeterChromaSDKEffect extends BaseReactiveChromaSDKEffect {
 
   protected createMouseDoubleVuMeter(backgroundColor: number) {
     const mouseLed = new Array(MOUSE_ROWS);
-    for (let r = 0; r < 9; r++) {
-      mouseLed[r] = new Array(MOUSE_COLUMNS);
-      for (let c = 0; c < 7; c++) {
-        mouseLed[r][c] = backgroundColor;
-      }
+    for (let r = 0; r < MOUSE_ROWS; r++) {
+      mouseLed[r] = new Array(MOUSE_COLUMNS).fill(backgroundColor);
     }
 
-    const amountOfRows = Math.round(mapNumber(this.fftIntensity, 0, 255, 0, 7, true));
+    const amountOfRows = Math.round(mapNumber(this.fftIntensity, 0, 255, 0, MOUSE_ROWS, true));
     for (let r = 0; r < amountOfRows; r++) {
       mouseLed[r][0] = this._BGRIntegerForeground;
       mouseLed[r][6] = this._BGRIntegerForeground;
+
+      mouseLed[MOUSE_ROWS - 1 - r][0] = this._BGRIntegerForeground;
+      mouseLed[MOUSE_ROWS - 1 - r][6] = this._BGRIntegerForeground;
     }
     mouseLed[2][3] = this._BGRIntegerForeground;
     mouseLed[7][3] = this._BGRIntegerForeground;
