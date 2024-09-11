@@ -54,14 +54,14 @@ export class DoubleVuMeterChromaSDKEffect extends BaseReactiveChromaSDKEffect {
   }
 
   protected createKeyboardDoubleVuMeter(backgroundColor: number) {
-    const amountOfColumns = Math.round(mapNumber(this.fftIntensity, 255, 0, KEYBOARD_COLUMNS, 0, true));
+    const amountOfColumns = Math.round(mapNumber(this.fftIntensity, 0, 255, 0, Math.floor(KEYBOARD_COLUMNS / 2), true));
 
     const key = new Array(KEYBOARD_ROWS).fill(new Array(KEYBOARD_COLUMNS).fill(backgroundColor));
 
     for (let row = 0; row < KEYBOARD_ROWS; row++) {
       for (let column = 0; column < KEYBOARD_COLUMNS; column++) {
         let color = this._BGRIntegerForeground;
-        if (column > amountOfColumns) color = backgroundColor;
+        if (column > amountOfColumns && column < KEYBOARD_COLUMNS - amountOfColumns) color = backgroundColor;
 
         key[row][column] = color;
       }
