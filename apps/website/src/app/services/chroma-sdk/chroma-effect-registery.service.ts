@@ -1,6 +1,5 @@
-import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
-import { BaseReactiveChromaSDKEffect } from "./effects/BaseReactiveChromaSDKEffect";
-import { DoubleVuMeterChromaSDKEffect } from "./effects/DoubleVuMeterChromaSDKEffect";
+import { BaseChromaSDKEffect } from './effects/BaseChromaSDKEffect';
+import { BaseReactiveChromaSDKEffect } from './effects/BaseReactiveChromaSDKEffect';
 
 /**
  * This class is used to link a chroma effect with a ledstrip mode.
