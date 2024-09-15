@@ -108,6 +108,7 @@ export class VisualizerPageComponent implements OnDestroy {
   private userPreferencesSubscription: Subscription;
   private gradientsSubscription: Subscription;
   private modesSubscription: Subscription;
+  private userPreferences: UserPreferences;
 
 
   constructor(
@@ -126,6 +127,9 @@ export class VisualizerPageComponent implements OnDestroy {
     this.userPreferencesSubscription = this.store.select("userPreferences").pipe(map(userPref => userPref.visualizerOptions)).subscribe();
     this.gradientsSubscription = this.store.select("gradients").pipe(skipWhile(gradients => gradients.length === 0)).subscribe();
     this.modesSubscription = this.store.select("modes").subscribe();
+    this.userPreferencesSubscription = this.store.select("userPreferences").subscribe(userPreferences => {
+      this.userPreferences = userPreferences;
+    });
   }
 
   /**
@@ -286,16 +290,22 @@ export class VisualizerPageComponent implements OnDestroy {
           ];
 
           const gradient: GradientOptions = {
-            bgColor: "#000",
-            colorStops: colorsStops
+            name: "spotify",
+            id: 999,
+            colors: colorsStops
           };
 
-          this.store.dispatch(new ChangeRoomColors([new iro.Color(primaryColor), new iro.Color(secondaryColor)]));
           this.store.dispatch(new RegisterGradientAction({ ...gradient, name: "spotify", id: 999 }));
 
           this.visualizerOptions.gradientLeft = "spotify";
           this.visualizerOptions.gradientRight = "spotify";
           this.applySettings();
+
+          const roomColors = [new iro.Color(primaryColor)];
+          if (!this.userPreferences.settings.disableSecondaryColorSpotify) {
+            roomColors.push(new iro.Color(secondaryColor));
+          }
+          this.store.dispatch(new ChangeRoomColors(roomColors));
         });
       }
     }

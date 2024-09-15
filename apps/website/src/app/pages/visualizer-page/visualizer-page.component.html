@@ -350,6 +350,12 @@
             <p class="tw-mt-5">To get started, log in first. Then, in the Spotify app select "Phos" under the list of
               devices. Then let the magic happen!</p>
           </div>
+          <div class="tw-form-control tw-w-full tw-max-w-xs tw-mt-5">
+            <label class="tw-label">
+              <span class="tw-label-text">Disable Secondary Color</span>
+              <input type="checkbox" class="tw-toggle tw-toggle-primary" [(ngModel)]="userPreferences.disableSecondaryColorSpotify" (change)="applySettings()">
+            </label>
+          </div>
         </div>
       </div>
     </div>

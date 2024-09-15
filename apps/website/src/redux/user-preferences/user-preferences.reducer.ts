@@ -7,7 +7,8 @@ const defaultUserPreferences: UserPreferences = {
     chromaSupportEnabled: false,
     theme: "dark",
     // A random device name
-    deviceName: Math.random().toString(36).substring(7)
+    deviceName: Math.random().toString(36).substring(7),
+    disableSecondaryColorSpotify: false // P5817
   },
   visualizerOptions: {
     barSpace: 0.1,

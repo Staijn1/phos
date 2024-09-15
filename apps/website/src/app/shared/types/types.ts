@@ -10,6 +10,7 @@ export type GeneralSettings = {
   chromaSupportEnabled: boolean;
   theme: string;
   deviceName: string;
+  disableSecondaryColorSpotify: boolean; // This setting disables the secondary color based on the album cover colors when using Spotify Integration
 };
 
 export type RGBObject = {
@@ -18,8 +19,7 @@ export type RGBObject = {
   b?: number;
 }
 
-
 export type UserPreferences = {
   settings: GeneralSettings,
-  visualizerOptions: AngulonVisualizerOptions
+  visualizerOptions: AngulonVisualizerOptions,
 }
