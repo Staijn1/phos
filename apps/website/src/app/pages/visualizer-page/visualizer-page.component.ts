@@ -130,6 +130,9 @@ export class VisualizerPageComponent implements OnDestroy {
     this.userPreferencesSubscription = this.store.select("userPreferences").subscribe(userPreferences => {
       this.userPreferences = userPreferences;
     });
+    this.userPreferencesSubscription = this.store.select("userPreferences").subscribe(userPreferences => {
+      this.userPreferences = userPreferences;
+    });
   }
 
   /**
