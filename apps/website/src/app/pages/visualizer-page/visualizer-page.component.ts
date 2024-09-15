@@ -21,7 +21,10 @@ import { WebsocketService } from "../../services/websocketconnection/websocket.s
 import { areColorsSimilar, mapNumber } from '../../shared/functions';
 import { AngulonVisualizerOptions, GeneralSettings, UserPreferences } from '../../shared/types/types';
 import { combineLatest, distinctUntilChanged, map, skipWhile, Subscription } from 'rxjs';
-import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
+import {
+  ChangeGeneralSettings,
+  ChangeVisualizerOptions
+} from '../../../redux/user-preferences/user-preferences.action';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
@@ -106,7 +109,7 @@ export class VisualizerPageComponent implements OnDestroy {
   private albumCoverHTMLElement: HTMLImageElement | undefined;
   public reactiveModes: ModeInformation[] = [];
   private settingsSubcription!: Subscription;
-  private settings!: GeneralSettings;
+  protected settings!: GeneralSettings;
   private modesSubscription!: Subscription;
 
 
@@ -145,7 +148,7 @@ export class VisualizerPageComponent implements OnDestroy {
     });
 
     this.settingsSubcription = this.store.select("userPreferences").pipe(map(x => x.settings)).subscribe(settings => {
-      this.settings = settings;
+      this.settings = structuredClone(settings);
     });
 
     combineLatest([
@@ -241,6 +244,10 @@ export class VisualizerPageComponent implements OnDestroy {
 
   applySettings() {
     this.store.dispatch(new ChangeVisualizerOptions(this.visualizerOptions));
+  }
+
+  onSecondaryColorSpotifySettingChange():void {
+    this.store.dispatch(new ChangeGeneralSettings(this.settings));
   }
 
   closeOffcanvas() {

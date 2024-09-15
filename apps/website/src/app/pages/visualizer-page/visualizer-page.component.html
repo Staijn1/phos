@@ -10,10 +10,13 @@
           <fa-icon [icon]="fullscreenIcon"></fa-icon>
         </button>
         <div class="tw-dropdown">
-          <label tabindex="0" class="tw-btn tw-btn-primary  tw-join-item"><fa-icon [icon]="modeIcon"></fa-icon></label>
-          <ul tabindex="0" class="tw-dropdown-content z-[1] tw-menu tw-p-2 tw-shadow tw-bg-base-100 tw-rounded-box tw-w-52">
+          <label tabindex="0" class="tw-btn tw-btn-primary  tw-join-item">
+            <fa-icon [icon]="modeIcon"></fa-icon>
+          </label>
+          <ul tabindex="0"
+              class="tw-dropdown-content z-[1] tw-menu tw-p-2 tw-shadow tw-bg-base-100 tw-rounded-box tw-w-52">
             <li *ngFor="let mode of reactiveModes">
-              <a (click)="setMode(mode.mode)">{{mode.name}}</a>
+              <a (click)="setMode(mode.mode)">{{ mode.name }}</a>
             </li>
           </ul>
         </div>
@@ -59,7 +62,7 @@
             </label>
             <select (change)="applySettings()" [(ngModel)]="visualizerOptions.gradientLeft"
                     class="tw-select focus:tw-select-primary tw-select-bordered">
-              <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
+              <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{ gradient.name }}</option>
             </select>
           </div>
 
@@ -70,7 +73,7 @@
             </label>
             <select (change)="applySettings()" [(ngModel)]="visualizerOptions.gradientRight"
                     class="tw-select focus:tw-select-primary tw-select-bordered">
-              <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{gradient.name}}</option>
+              <option *ngFor="let gradient of gradients" [ngValue]="gradient.name">{{ gradient.name }}</option>
             </select>
           </div>
 
@@ -81,7 +84,7 @@
             </label>
             <select (change)="applySettings()" [(ngModel)]="visualizerOptions.mode"
                     class="tw-select focus:tw-select-primary tw-select-bordered">
-              <option *ngFor="let mode of visualizerModes" [ngValue]="mode.value">{{mode.text}}</option>
+              <option *ngFor="let mode of visualizerModes" [ngValue]="mode.value">{{ mode.text }}</option>
             </select>
           </div>
 
@@ -203,7 +206,8 @@
           <div class="tw-form-control">
             <label class="tw-label tw-cursor-pointer">
               <span class="tw-label-text">Peak Fade</span>
-              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.fadePeaks" [disabled]="!visualizerOptions.showPeaks"
+              <input (change)="applySettings()" [(ngModel)]="visualizerOptions.fadePeaks"
+                     [disabled]="!visualizerOptions.showPeaks"
                      class="tw-checkbox tw-checkbox-sm tw-checkbox-primary" type="checkbox" id="fadePeaks" />
             </label>
           </div>
@@ -339,23 +343,25 @@
 
       </div>
       <div class="tab-content" [class.active-tab]="activeTab === 3">
-        <div>
-          <app-spotify-player (playbackChanged)="onSpotifyStateChanged($event)"></app-spotify-player>
+        @if (settings && spotifyAuth.isLoggedIn()) {
+            <div class="tw-form-control tw-w-full tw-max-w-xs tw-mt-5">
+              <label class="tw-label">
+                <span class="tw-label-text">Disable Secondary Color</span>
+                <input type="checkbox" class="tw-toggle tw-toggle-primary"
+                       [(ngModel)]="settings.disableSecondaryColorSpotify"
+                       (change)="onSecondaryColorSpotifySettingChange()">
+              </label>
+            </div>
+        }
+        <app-spotify-player (playbackChanged)="onSpotifyStateChanged($event)"></app-spotify-player>
 
-          <div class="tw-mt-5" *ngIf="!spotifyAuth.isLoggedIn()">
-            <p>
-              With the Spotify Integration, the visualizer and ledstrip(s) will automatically adjust to the dominant
-              colors in the album-cover of the song you are currently listening.
-            </p>
-            <p class="tw-mt-5">To get started, log in first. Then, in the Spotify app select "Phos" under the list of
-              devices. Then let the magic happen!</p>
-          </div>
-          <div class="tw-form-control tw-w-full tw-max-w-xs tw-mt-5">
-            <label class="tw-label">
-              <span class="tw-label-text">Disable Secondary Color</span>
-              <input type="checkbox" class="tw-toggle tw-toggle-primary" [(ngModel)]="userPreferences.disableSecondaryColorSpotify" (change)="applySettings()">
-            </label>
-          </div>
+        <div class="tw-mt-5" *ngIf="!spotifyAuth.isLoggedIn()">
+          <p>
+            With the Spotify Integration, the visualizer and ledstrip(s) will automatically adjust to the dominant
+            colors in the album-cover of the song you are currently listening.
+          </p>
+          <p class="tw-mt-5">To get started, log in first. Then, in the Spotify app select "Phos" under the list of
+            devices. Then let the magic happen!</p>
         </div>
       </div>
     </div>
