@@ -1,16 +1,16 @@
-import {Injectable, Logger, OnModuleDestroy} from '@nestjs/common';
+import {Injectable, Logger} from '@nestjs/common';
 import {DAOService} from '../interfaces/DAOService';
 import {Room} from './Room.model';
-import {FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository}from 'typeorm';
-import {InjectRepository}from '@nestjs/typeorm';
-import {validate}from 'class-validator';
-import {DeviceService}from '../device/device.service';
-import {INITIAL_ROOM_STATE, IRoom, RoomsState, RoomState}from '@angulon/interfaces';
-import {debounceTime, Subject}from 'rxjs';
+import {FindManyOptions, FindOneOptions, FindOptionsWhere, In, Repository} from 'typeorm';
+import {InjectRepository} from '@nestjs/typeorm';
+import {validate} from 'class-validator';
+import {DeviceService} from '../device/device.service';
+import {INITIAL_ROOM_STATE, IRoom, RoomsState, RoomState} from '@angulon/interfaces';
+import {debounceTime, Subject} from 'rxjs';
 
 
 @Injectable()
-export class RoomService implements DAOService<Room>, OnModuleDestroy {
+export class RoomService implements DAOService<Room> {
   private readonly logger = new Logger(RoomService.name);
 
   /**
@@ -139,9 +139,5 @@ export class RoomService implements DAOService<Room>, OnModuleDestroy {
    */
   async updateRoomStateForRooms(rooms: string[], newState: RoomState) {
     await this.updateMany({id: In(rooms)}, {state: newState});
-  }
-
-  onModuleDestroy() {
-    this.updateRoomStateForRoomsSubject.unsubscribe();
   }
 }

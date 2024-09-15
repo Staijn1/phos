@@ -1,17 +1,17 @@
-import { Component, HostListener, ViewChild, OnDestroy } from '@angular/core';
+import { Component, HostListener, ViewChild } from '@angular/core';
 import { IDevice, IRoom, RoomState } from '@angulon/interfaces';
 import {Store} from '@ngrx/store';
 import {MAXIMUM_BRIGHTNESS, SPEED_MAXIMUM_INTERVAL_MS} from '../../shared/constants';
 import {DecimalPipe, NgClass, NgForOf, NgIf} from '@angular/common';
 import {RadialProgressComponent} from '../../shared/components/radialprogress/radial-progress.component';
-import {SharedModule}from '../../shared/shared.module';
+import {SharedModule} from '../../shared/shared.module';
 import { faTriangleExclamation } from '@fortawesome/free-solid-svg-icons';
-import {PowerDrawComponent}from '../../shared/components/power-draw/power-draw.component';
+import {FontAwesomeModule} from '@fortawesome/angular-fontawesome';
+import {PowerDrawComponent} from '../../shared/components/power-draw/power-draw.component';
 import {ClientNetworkState, WebsocketConnectionStatus} from '../../../redux/networkstate/ClientNetworkState';
-import {distinctUntilChanged, map, Subscription} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs';
 import { faTrashAlt } from '@fortawesome/free-regular-svg-icons';
 import { WebsocketService } from '../../services/websocketconnection/websocket.service';
-import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
 
 @Component({
   selector: 'app-home',
@@ -29,7 +29,7 @@ import { FontAwesomeModule } from '@fortawesome/angular-fontawesome';
   ],
   standalone: true
 })
-export class HomePageComponent implements OnDestroy {
+export class HomePageComponent {
   @ViewChild(PowerDrawComponent) powerDrawComponent: PowerDrawComponent | undefined;
   protected readonly faTrash = faTrashAlt;
   protected readonly offlineWarningIcon = faTriangleExclamation;
@@ -39,12 +39,13 @@ export class HomePageComponent implements OnDestroy {
   private isChartInitialized = false;
   networkState: ClientNetworkState | undefined;
   private contextMenuDevice: IDevice | undefined;
-  private networkStateSubscription: Subscription;
+
+
 
   constructor(
     private readonly store: Store<{ roomState: RoomState, networkState: ClientNetworkState }>,
     private readonly connection: WebsocketService) {
-    this.networkStateSubscription = this.store.select('networkState').subscribe((state) => {
+    this.store.select('networkState').subscribe((state) => {
       this.networkState = state;
     });
 
@@ -60,9 +61,6 @@ export class HomePageComponent implements OnDestroy {
     });
   }
 
-  ngOnDestroy(): void {
-    this.networkStateSubscription.unsubscribe();
-  }
 
   convertSpeedToPercentage(speed: number) {
     return speed / SPEED_MAXIMUM_INTERVAL_MS * 100;

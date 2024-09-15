@@ -20,7 +20,7 @@ import { ChangeRoomColors, ChangeRoomMode } from "../../../redux/roomstate/rooms
 import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import { areColorsSimilar, mapNumber } from '../../shared/functions';
 import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
-import { combineLatest, distinctUntilChanged, map, skipWhile, Subscription } from 'rxjs';
+import { combineLatest, distinctUntilChanged, map, skipWhile } from "rxjs";
 import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -105,10 +105,6 @@ export class VisualizerPageComponent implements OnDestroy {
   private spotifyPlaybackState: Spotify.PlaybackState | undefined;
   private albumCoverHTMLElement: HTMLImageElement | undefined;
   public reactiveModes: ModeInformation[] = [];
-  private userPreferencesSubscription: Subscription;
-  private gradientsSubscription: Subscription;
-  private modesSubscription: Subscription;
-  private userPreferences: UserPreferences;
 
 
   constructor(
@@ -124,12 +120,6 @@ export class VisualizerPageComponent implements OnDestroy {
       modes: ModeInformation[],
     }>
   ) {
-    this.userPreferencesSubscription = this.store.select("userPreferences").pipe(map(userPref => userPref.visualizerOptions)).subscribe();
-    this.gradientsSubscription = this.store.select("gradients").pipe(skipWhile(gradients => gradients.length === 0)).subscribe();
-    this.modesSubscription = this.store.select("modes").subscribe();
-    this.userPreferencesSubscription = this.store.select("userPreferences").subscribe(userPreferences => {
-      this.userPreferences = userPreferences;
-    });
   }
 
   /**
@@ -181,9 +171,6 @@ export class VisualizerPageComponent implements OnDestroy {
     this.wakeLock?.release()
       .then()
       .catch((error: Error) => console.error("Failed to release wake lock", error));
-    this.userPreferencesSubscription.unsubscribe();
-    this.gradientsSubscription.unsubscribe();
-    this.modesSubscription.unsubscribe();
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
@@ -289,10 +276,11 @@ export class VisualizerPageComponent implements OnDestroy {
             }
           ];
 
-          const gradient: GradientOptions = {
+          const gradient: GradientInformation = {
             name: "spotify",
             id: 999,
-            colors: colorsStops
+            bgColor: "#000",
+            colorStops: colorsStops
           };
 
           this.store.dispatch(new RegisterGradientAction({ ...gradient, name: "spotify", id: 999 }));

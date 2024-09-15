@@ -1,4 +1,4 @@
-import {Component, Input, ViewChild, OnDestroy} from '@angular/core';
+import {Component, Input, ViewChild} from '@angular/core';
 import {
   faChartBar,
   faCog,
@@ -30,7 +30,7 @@ import {
   SPEED_MINIMUM_INTERVAL_MS
 } from '../../shared/constants';
 import {ClientNetworkState, WebsocketConnectionStatus} from '../../../redux/networkstate/ClientNetworkState';
-import {distinctUntilChanged, map, Subscription} from 'rxjs';
+import {distinctUntilChanged, map} from 'rxjs';
 import {getStateOfSelectedRooms} from '../../shared/functions';
 
 @Component({
@@ -38,7 +38,7 @@ import {getStateOfSelectedRooms} from '../../shared/functions';
   templateUrl: './navigationbar.component.html',
   styleUrls: ['./navigationbar.component.scss']
 })
-export class NavigationbarComponent implements OnDestroy {
+export class NavigationbarComponent {
   @ViewChild(ColorpickerComponent) colorpicker!: ColorpickerComponent;
   @Input() colorPickerOrientation: 'horizontal' | 'vertical' = 'horizontal';
 
@@ -62,8 +62,6 @@ export class NavigationbarComponent implements OnDestroy {
 
   websocketConnectionStatus: WebsocketConnectionStatus | undefined;
   clearConnectionStatusTimeout: NodeJS.Timeout | undefined;
-
-  private networkStateSubscription: Subscription;
 
   get isDisconnected(): boolean {
     return this.websocketConnectionStatus === WebsocketConnectionStatus.DISCONNECTED;
@@ -89,7 +87,7 @@ export class NavigationbarComponent implements OnDestroy {
       networkState: ClientNetworkState
     }>
   ) {
-    this.networkStateSubscription = store.select('networkState' ).subscribe(state => {
+    store.select('networkState' ).subscribe(state => {
       const selectedRoomState = getStateOfSelectedRooms(state);
 
       // When no room is selected, disable all action buttons
@@ -126,10 +124,6 @@ export class NavigationbarComponent implements OnDestroy {
           this.clearConnectionStatusTimeout = setTimeout(() => this.websocketConnectionStatus = undefined, 5000);
         }
       });
-  }
-
-  ngOnDestroy(): void {
-    this.networkStateSubscription.unsubscribe();
   }
 
   turnOff(): void {
