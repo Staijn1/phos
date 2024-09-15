@@ -19,9 +19,12 @@ import { Store } from "@ngrx/store";
 import { ChangeRoomColors, ChangeRoomMode } from "../../../redux/roomstate/roomstate.action";
 import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import { areColorsSimilar, mapNumber } from '../../shared/functions';
-import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
+import { AngulonVisualizerOptions, GeneralSettings, UserPreferences } from '../../shared/types/types';
 import { combineLatest, distinctUntilChanged, map, skipWhile, Subscription } from 'rxjs';
-import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
+import {
+  ChangeGeneralSettings,
+  ChangeVisualizerOptions
+} from '../../../redux/user-preferences/user-preferences.action';
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
 import { FontAwesomeModule } from "@fortawesome/angular-fontawesome";
@@ -105,9 +108,9 @@ export class VisualizerPageComponent implements OnDestroy {
   private spotifyPlaybackState: Spotify.PlaybackState | undefined;
   private albumCoverHTMLElement: HTMLImageElement | undefined;
   public reactiveModes: ModeInformation[] = [];
-  private userPreferencesSubscription: Subscription;
-  private gradientsSubscription: Subscription;
-  private modesSubscription: Subscription;
+  private settingsSubcription!: Subscription;
+  protected settings!: GeneralSettings;
+  private modesSubscription!: Subscription;
 
 
   constructor(
@@ -123,9 +126,6 @@ export class VisualizerPageComponent implements OnDestroy {
       modes: ModeInformation[],
     }>
   ) {
-    this.userPreferencesSubscription = this.store.select("userPreferences").pipe(map(userPref => userPref.visualizerOptions)).subscribe();
-    this.gradientsSubscription = this.store.select("gradients").pipe(skipWhile(gradients => gradients.length === 0)).subscribe();
-    this.modesSubscription = this.store.select("modes").subscribe();
   }
 
   /**
@@ -141,10 +141,14 @@ export class VisualizerPageComponent implements OnDestroy {
   init(): void {
     this.store.dispatch(new ChangeVisualizerOptions({ onCanvasDraw: this.drawCallback.bind(this) }));
 
-    this.store.select("modes").subscribe(modes => {
+    this.modesSubscription = this.store.select("modes").subscribe(modes => {
       const reactiveModesById = ChromaEffectRegistery.getAllReactiveModeIds();
       // For each id find the corresponding mode object
       this.reactiveModes = modes.filter(mode => reactiveModesById.includes(mode.mode));
+    });
+
+    this.settingsSubcription = this.store.select("userPreferences").pipe(map(x => x.settings)).subscribe(settings => {
+      this.settings = structuredClone(settings);
     });
 
     combineLatest([
@@ -177,8 +181,8 @@ export class VisualizerPageComponent implements OnDestroy {
     this.wakeLock?.release()
       .then()
       .catch((error: Error) => console.error("Failed to release wake lock", error));
-    this.userPreferencesSubscription.unsubscribe();
-    this.gradientsSubscription.unsubscribe();
+
+    this.settingsSubcription.unsubscribe();
     this.modesSubscription.unsubscribe();
   }
 
@@ -242,6 +246,10 @@ export class VisualizerPageComponent implements OnDestroy {
     this.store.dispatch(new ChangeVisualizerOptions(this.visualizerOptions));
   }
 
+  onSecondaryColorSpotifySettingChange():void {
+    this.store.dispatch(new ChangeGeneralSettings(this.settings));
+  }
+
   closeOffcanvas() {
     this.offcanvas.close();
   }
@@ -285,17 +293,24 @@ export class VisualizerPageComponent implements OnDestroy {
             }
           ];
 
-          const gradient: GradientOptions = {
+          const gradient: GradientInformation = {
+            name: "spotify",
+            id: 999,
             bgColor: "#000",
             colorStops: colorsStops
           };
 
-          this.store.dispatch(new ChangeRoomColors([new iro.Color(primaryColor), new iro.Color(secondaryColor)]));
           this.store.dispatch(new RegisterGradientAction({ ...gradient, name: "spotify", id: 999 }));
 
           this.visualizerOptions.gradientLeft = "spotify";
           this.visualizerOptions.gradientRight = "spotify";
           this.applySettings();
+
+          const roomColors = [new iro.Color(primaryColor)];
+          if (!this.settings.disableSecondaryColorSpotify) {
+            roomColors.push(new iro.Color(secondaryColor));
+          }
+          this.store.dispatch(new ChangeRoomColors(roomColors));
         });
       }
     }

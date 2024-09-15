@@ -1,16 +1,13 @@
-import { Injectable, OnDestroy } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { UserPreferences } from '../../shared/types/types';
 import { ThemeColors } from '../../shared/functions';
-import { Subscription } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ThemeService implements OnDestroy {
+export class ThemeService {
   private _theme = '';
-  private userPreferencesSubscription: Subscription | undefined;
-
   get theme(): string {
     return this._theme;
   }
@@ -21,7 +18,7 @@ export class ThemeService implements OnDestroy {
   }
 
   initialize(): void {
-    this.userPreferencesSubscription = this.store.select('userPreferences').subscribe(userPreferences => {
+    this.store.select('userPreferences').subscribe(userPreferences => {
       this.applyTheme(userPreferences.settings.theme);
     });
   }
@@ -41,10 +38,6 @@ export class ThemeService implements OnDestroy {
     metaTag?.setAttribute('content', `oklch(${primaryColor}`);
 
     this._theme = theme;
-  }
-
-  ngOnDestroy(): void {
-    this.userPreferencesSubscription?.unsubscribe();
   }
 
   /**
