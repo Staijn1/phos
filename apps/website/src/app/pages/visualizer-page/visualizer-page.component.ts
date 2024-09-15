@@ -19,8 +19,8 @@ import { Store } from "@ngrx/store";
 import { ChangeRoomColors, ChangeRoomMode } from "../../../redux/roomstate/roomstate.action";
 import { WebsocketService } from "../../services/websocketconnection/websocket.service";
 import { areColorsSimilar, mapNumber } from '../../shared/functions';
-import { AngulonVisualizerOptions, UserPreferences } from "../../shared/types/types";
-import { combineLatest, distinctUntilChanged, map, skipWhile } from "rxjs";
+import { AngulonVisualizerOptions, GeneralSettings, UserPreferences } from '../../shared/types/types';
+import { combineLatest, distinctUntilChanged, map, skipWhile, Subscription } from 'rxjs';
 import { ChangeVisualizerOptions } from "../../../redux/user-preferences/user-preferences.action";
 import { CommonModule } from "@angular/common";
 import { FormsModule } from "@angular/forms";
@@ -105,6 +105,9 @@ export class VisualizerPageComponent implements OnDestroy {
   private spotifyPlaybackState: Spotify.PlaybackState | undefined;
   private albumCoverHTMLElement: HTMLImageElement | undefined;
   public reactiveModes: ModeInformation[] = [];
+  private settingsSubcription!: Subscription;
+  private settings!: GeneralSettings;
+  private modesSubscription!: Subscription;
 
 
   constructor(
@@ -135,10 +138,14 @@ export class VisualizerPageComponent implements OnDestroy {
   init(): void {
     this.store.dispatch(new ChangeVisualizerOptions({ onCanvasDraw: this.drawCallback.bind(this) }));
 
-    this.store.select("modes").subscribe(modes => {
+    this.modesSubscription = this.store.select("modes").subscribe(modes => {
       const reactiveModesById = ChromaEffectRegistery.getAllReactiveModeIds();
       // For each id find the corresponding mode object
       this.reactiveModes = modes.filter(mode => reactiveModesById.includes(mode.mode));
+    });
+
+    this.settingsSubcription = this.store.select("userPreferences").pipe(map(x => x.settings)).subscribe(settings => {
+      this.settings = settings;
     });
 
     combineLatest([
@@ -171,6 +178,9 @@ export class VisualizerPageComponent implements OnDestroy {
     this.wakeLock?.release()
       .then()
       .catch((error: Error) => console.error("Failed to release wake lock", error));
+
+    this.settingsSubcription.unsubscribe();
+    this.modesSubscription.unsubscribe();
   }
 
   drawCallback(instance: AudioMotionAnalyzer): void {
@@ -290,7 +300,7 @@ export class VisualizerPageComponent implements OnDestroy {
           this.applySettings();
 
           const roomColors = [new iro.Color(primaryColor)];
-          if (!this.userPreferences.settings.disableSecondaryColorSpotify) {
+          if (!this.settings.disableSecondaryColorSpotify) {
             roomColors.push(new iro.Color(secondaryColor));
           }
           this.store.dispatch(new ChangeRoomColors(roomColors));
