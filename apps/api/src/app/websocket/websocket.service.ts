@@ -182,7 +182,7 @@ export class WebsocketService {
    */
   private sendEventToAllLedstripsInRoom(room: string, event: WebsocketMessage, payload: unknown) {
     this.server.to(room).emit(event, payload);
-  }
+  } 
 
   /**
    * Moves a client with a given deviceName to a new websocket room (with the given room Id)
