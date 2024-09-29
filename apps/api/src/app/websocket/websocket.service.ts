@@ -5,6 +5,7 @@ import {DeviceService} from '../device/device.service';
 import {RoomService} from '../room/room.service';
 import {OnEvent} from '@nestjs/event-emitter';
 import {first} from 'rxjs';
+import { calculateAverageColor, hexToRgb, rgbToHex } from '../utils/ColorUtils';
 
 
 @Injectable()
@@ -203,6 +204,45 @@ export class WebsocketService {
 
         await this.setState([roomId], deviceInDb.room.state, client);
         this.logger.log(`Sent state to room ${roomId} after moving client ${deviceInDb.name}(${deviceInDb.socketSessionId})`);
+      }
+    }
+  }
+
+  /**
+   * Map the payload to the correct length for each device in the selected room
+   * @param payload The payload to map
+   * @param ledCount The number of LEDs in the ledstrip
+   * @returns The mapped payload
+   */
+  private mapPayloadToLedCount(payload: string[], ledCount: number): string[] {
+    const mappedPayload: string[] = [];
+    const ratio = Math.ceil(payload.length / ledCount);
+
+    for (let i = 0; i < ledCount; i++) {
+      const start = i * ratio;
+      const end = start + ratio;
+      const segment = payload.slice(start, end);
+
+      // Calculate the average color for the segment
+      const avgColor = calculateAverageColor(segment);
+      mappedPayload.push(avgColor);
+    }
+
+    return mappedPayload;
+  }
+
+  /**
+   * Send the mapped payload to each device in the room
+   * @param rooms The rooms to send the payload to
+   * @param payload The payload to send
+   */
+  async individualLedControl(rooms: string[], payload: string[]): Promise<void> {
+    for (const room of rooms) {
+      const devices = await this.deviceService.findAll({ where: { room: { id: room } } });
+
+      for (const device of devices) {
+        const mappedPayload = this.mapPayloadToLedCount(payload, device.ledCount);
+        this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.IndividualLedControl, mappedPayload);
       }
     }
   }

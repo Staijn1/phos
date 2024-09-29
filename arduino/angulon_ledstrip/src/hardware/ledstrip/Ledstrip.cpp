@@ -16,7 +16,7 @@ void Ledstrip::setup() {
     Ledstrip::strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
     Ledstrip::strip->setCustomMode(F("VuMeter Brightness"), Ledstrip::vuMeterBrightness);
     Ledstrip::strip->setCustomMode(F("Double VuMeter"), Ledstrip::doubleVuMeter);
-    Ledstrip::strip->setCustomMode(F("Inverse Double VuMeter"), Ledstrip::inverseDoubleVuMeter);
+    Ledstrip::strip->setCustomMode(F("Inverse DoubleVuMeter"), Ledstrip::inverseDoubleVuMeter);
     // Todo make State set initial ledstrip state
     Ledstrip::strip->setMode(FX_MODE_CUSTOM_2);
     Ledstrip::strip->setSpeed(1000);
@@ -206,4 +206,12 @@ Ledstrip::setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mod
             this->hexStringToInt(color_1),
             this->hexStringToInt(color_2)};
     Ledstrip::strip->setSegment(segment, start, stop, mode, convertedColors, speed);
+}
+
+void Ledstrip::setIndividualColors(JsonArray colors) {
+    for (int i = 0; i < colors.size(); i++) {
+        const char* color = colors[i];
+        uint32_t convertedColor = this->hexStringToInt(color);
+        Ledstrip::strip->setPixelColor(i, convertedColor);
+    }
 }

@@ -106,6 +106,11 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
     return {status: 200, message: 'Device removed'};
   }
 
+  @SubscribeMessage(WebsocketMessage.IndividualLedControl)
+  async onIndividualLedControl(client: Socket, body: WebsocketRequest<string[]>): Promise<void> {
+    await this.websocketService.individualLedControl(body.rooms, body.payload);
+  }
+
   /**
    * When a client connects, log its IP address.
    * Also set the server instance in the websocketService, so we make sure it is always up-to-date with the current server instance.

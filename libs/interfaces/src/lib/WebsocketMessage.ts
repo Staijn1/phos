@@ -15,4 +15,5 @@ export enum WebsocketMessage {
   AssignDeviceToRoom = "assignDeviceToRoom",
   GetPowerDrawEstimate = "getPowerDrawEstimate",
   DeleteDevice = "deleteDevice",
+  IndividualLedControl = "individualLedControl",
 }

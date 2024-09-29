@@ -91,6 +91,8 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
         State::setStateSegments(object);
     } else if (*event == '.') {
         handleDotEvent(payload, doc);
+    } else if (*event == 'I') {
+        handleIndividualLedControlEvent(payload, doc);
     } else {
         // Handle invalid or unknown event
         handleUnknownEvent(payload, doc);
@@ -99,6 +101,11 @@ void Websocket::handleEvent(uint8_t *payload, size_t length) {
 
 void Websocket::handleDotEvent(uint8_t *payload, const JsonDocument &_doc) {
     Angulon::ledstrip->setFFTValue(constrain(_doc[1], 0, 255));
+}
+
+void Websocket::handleIndividualLedControlEvent(uint8_t *payload, const JsonDocument &_doc) {
+    JsonArray colors = _doc[1].as<JsonArray>();
+    Angulon::ledstrip->setIndividualColors(colors);
 }
 
 void Websocket::handleUnknownEvent(uint8_t *payload, const JsonDocument &_doc) {
