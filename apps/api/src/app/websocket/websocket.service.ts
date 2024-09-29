@@ -274,7 +274,7 @@ export class WebsocketService {
       const devices = this.devicesInRoomCache.get(room);
       for (const device of devices) {
         const mappedPayload = this.mapPayloadToLedCount(payload, device.ledCount);
-        this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.IndividualLedControl, mappedPayload);
+        this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.LedstripIndividualControl, mappedPayload);
       }
     }
   }

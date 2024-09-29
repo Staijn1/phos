@@ -16,4 +16,5 @@ export enum WebsocketMessage {
   GetPowerDrawEstimate = "getPowerDrawEstimate",
   DeleteDevice = "deleteDevice",
   IndividualLedControl = "individualLedControl",
+  LedstripIndividualControl = 'I'
 }
