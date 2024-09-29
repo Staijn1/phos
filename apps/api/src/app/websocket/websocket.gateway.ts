@@ -107,8 +107,9 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.IndividualLedControl)
-  async onIndividualLedControl(client: Socket, body: WebsocketRequest<string[]>): Promise<void> {
+  async onIndividualLedControl(client: Socket, body: WebsocketRequest<string[]>): Promise<StandardResponse> {
     await this.websocketService.individualLedControl(body.rooms, body.payload);
+    return {status: 200, message: 'Individual led control sent'};
   }
 
   /**
