@@ -16,6 +16,7 @@ void Ledstrip::setup() {
     Ledstrip::strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
     Ledstrip::strip->setCustomMode(F("VuMeter Brightness"), Ledstrip::vuMeterBrightness);
     Ledstrip::strip->setCustomMode(F("Double VuMeter"), Ledstrip::doubleVuMeter);
+    Ledstrip::strip->setCustomMode(F("Inverse Double VuMeter"), Ledstrip::inverseDoubleVuMeter);
     // Todo make State set initial ledstrip state
     Ledstrip::strip->setMode(FX_MODE_CUSTOM_2);
     Ledstrip::strip->setSpeed(1000);
@@ -55,7 +56,7 @@ void Ledstrip::setMode(int mode, boolean force) {
     // Do not set the mode if the new mode is the same as the current mode except if it is a custom mode
     // By setting the same mode the animation restarts which looks strange when setting brightness/speed or color
 
-    if (mode == FX_MODE_CUSTOM   || mode == FX_MODE_CUSTOM_1 || mode == FX_MODE_STATIC) {
+    if ((mode >= FX_MODE_CUSTOM && mode <= FX_MODE_CUSTOM_7) || mode == FX_MODE_STATIC ) {
         Logger::log("Ledstrip", "Received a custom mode, setting segment");
         Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getSegment()->colors, 0, NO_OPTIONS);
     } else {
@@ -129,7 +130,7 @@ uint16_t Ledstrip::vuMeter() {
 
 /**
  * This function calculates the new brightness value by reducing the primary color brightness linearly based on FFT values.
- * 
+ *
  * The primary color is represented as a 32-bit integer in the format 0xRRGGBB, where RR, GG, and BB are the red, green, and blue components, respectively.
  * The function extracts the red, green, and blue components from the primary color using bitwise operations.
  * It then calculates a brightness factor by mapping the FFT value from 0-255 to a range of 0-1.
@@ -165,6 +166,22 @@ uint16_t Ledstrip::doubleVuMeter() {
 
     for (int index = 0; index < ledcount; index++) {
         if (index <= amountOfLedsToShow || index >= ledcount - amountOfLedsToShow) {
+            Ledstrip::strip->setPixelColor(index, seg->colors[0]);
+        } else {
+            Ledstrip::strip->setPixelColor(index, seg->colors[1]);
+        }
+    }
+
+    return seg->speed;
+}
+
+uint16_t Ledstrip::inverseDoubleVuMeter() {
+    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
+    const int ledcount = ConfigurationManager::systemConfiguration.ledcount;
+    const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledcount / 2);
+
+    for (int index = 0; index < ledcount; index++) {
+        if (index >= (ledcount / 2) - amountOfLedsToShow && index <= (ledcount / 2) + amountOfLedsToShow) {
             Ledstrip::strip->setPixelColor(index, seg->colors[0]);
         } else {
             Ledstrip::strip->setPixelColor(index, seg->colors[1]);

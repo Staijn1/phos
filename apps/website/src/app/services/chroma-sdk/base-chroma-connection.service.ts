@@ -1,8 +1,8 @@
-import { inject, Injectable, OnDestroy } from "@angular/core";
+import { inject, Injectable } from "@angular/core";
 import { MessageService } from "../message-service/message.service";
 import { Store } from "@ngrx/store";
 import { UserPreferences } from "../../shared/types/types";
-import { combineLatest, debounceTime, distinctUntilChanged, map, Subscription } from "rxjs";
+import { combineLatest, debounceTime, distinctUntilChanged, map } from "rxjs";
 import {
   ChromaHeadsetEffectType,
   ChromaKeyboardEffectType,
@@ -17,6 +17,7 @@ import { VisualizerChromaSDKEffect } from "./effects/VisualizerChromaSDKEffect";
 import { FX_CUSTOM_0, FX_CUSTOM_1, FX_CUSTOM_2 } from '../../shared/constants';
 import { VisualizerBrightnessChromaSDKEffect } from "./effects/VisualizerBrightnessChromaSDKEffect";
 import { DoubleVuMeterChromaSDKEffect } from './effects/DoubleVuMeterChromaSDKEffect';
+import { InverseDoubleVuMeterChromaSDKEffect } from './effects/InverseDoubleVuMeterChromaSDKEffect';
 
 /**
  * Base class for Razer Chroma SDK integrations. With this integration, we can control the RGB lights on Razer peripherals.
@@ -24,7 +25,7 @@ import { DoubleVuMeterChromaSDKEffect } from './effects/DoubleVuMeterChromaSDKEf
  * To abstract away the connection type, this class provides a common interface for both types of connections, with some common methods already implemented.
  */
 @Injectable({ providedIn: "root" })
-export abstract class BaseChromaConnection implements OnDestroy {
+export abstract class BaseChromaConnection {
   protected readonly messageService = inject(MessageService);
   protected readonly store: Store<{
     userPreferences: UserPreferences,
@@ -45,7 +46,6 @@ export abstract class BaseChromaConnection implements OnDestroy {
   };
   protected isInitialized = false;
   protected activeEffect: BaseChromaSDKEffect | undefined;
-  private chromaSupportSubscription: Subscription;
 
   set intensity(value: number) {
     if (
@@ -60,7 +60,7 @@ export abstract class BaseChromaConnection implements OnDestroy {
     // Also subscribes to changes in the LED strip state to receive changes in the mode.
     // That way we can initialize/uninitialize the Chroma SDK when the setting is changed,
     // and also look up the associated effect for the selected mode and activate it immediately.
-    this.chromaSupportSubscription = combineLatest([
+    combineLatest([
       this.store.select("userPreferences").pipe(
         map(preferences => preferences.settings.chromaSupportEnabled),
         distinctUntilChanged()
@@ -93,10 +93,6 @@ export abstract class BaseChromaConnection implements OnDestroy {
     this.registerEffects();
   }
 
-  ngOnDestroy(): void {
-    this.chromaSupportSubscription.unsubscribe();
-  }
-
   /**
    * Registers all effects with the {@link ChromaEffectRegistery}
    * @private
@@ -106,6 +102,7 @@ export abstract class BaseChromaConnection implements OnDestroy {
     ChromaEffectRegistery.registerEffect(FX_CUSTOM_0, new VisualizerChromaSDKEffect(this));
     ChromaEffectRegistery.registerEffect(FX_CUSTOM_1, new VisualizerBrightnessChromaSDKEffect(this));
     ChromaEffectRegistery.registerEffect(FX_CUSTOM_2, new DoubleVuMeterChromaSDKEffect(this));
+    ChromaEffectRegistery.registerEffect(FX_CUSTOM_3, new InverseDoubleVuMeterChromaSDKEffect(this));
   }
 
   /**

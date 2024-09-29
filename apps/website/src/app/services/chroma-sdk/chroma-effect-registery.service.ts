@@ -1,5 +1,5 @@
-import { BaseChromaSDKEffect } from "./effects/BaseChromaSDKEffect";
-import { BaseReactiveChromaSDKEffect } from "./effects/BaseReactiveChromaSDKEffect";
+import { BaseChromaSDKEffect } from './effects/BaseChromaSDKEffect';
+import { BaseReactiveChromaSDKEffect } from './effects/BaseReactiveChromaSDKEffect';
 import { DoubleVuMeterChromaSDKEffect } from "./effects/DoubleVuMeterChromaSDKEffect";
 
 /**

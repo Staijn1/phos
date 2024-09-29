@@ -1,18 +1,17 @@
-import {Component, HostListener, OnInit, ViewChild, OnDestroy} from '@angular/core';
+import {Component, HostListener, OnInit, ViewChild} from '@angular/core';
 import {SwUpdate} from '@angular/service-worker';
 import {MessageService} from '../../services/message-service/message.service';
-import {ThemeService}from '../../services/theme/theme.service';
-import {Message}from '../../shared/types/Message';
-import {swipeRight}from '@angulon/ui';
+import {ThemeService} from '../../services/theme/theme.service';
+import {Message} from '../../shared/types/Message';
+import {swipeRight} from '@angulon/ui';
 import * as AOS from 'aos';
-import {UserPreferences}from '../../shared/types/types';
-import {Store}from '@ngrx/store';
-import {BaseChromaConnection}from '../../services/chroma-sdk/base-chroma-connection.service';
-import {NavigationEnd, NavigationStart, Router}from '@angular/router';
-import {gsap}from 'gsap';
-import {OffCanvasComponent}from '../../shared/components/offcanvas/off-canvas.component';
-import {faBars as OpenMobileMenuIcon, faTimes as CloseMobileMenuIcon}from '@fortawesome/free-solid-svg-icons';
-import { Subscription } from 'rxjs';
+import {UserPreferences} from '../../shared/types/types';
+import {Store} from '@ngrx/store';
+import {BaseChromaConnection} from '../../services/chroma-sdk/base-chroma-connection.service';
+import {NavigationEnd, NavigationStart, Router} from '@angular/router';
+import {gsap} from 'gsap';
+import {OffCanvasComponent} from '../../shared/components/offcanvas/off-canvas.component';
+import {faBars as OpenMobileMenuIcon, faTimes as CloseMobileMenuIcon} from '@fortawesome/free-solid-svg-icons';
 
 @Component({
   selector: 'app-root',
@@ -20,11 +19,10 @@ import { Subscription } from 'rxjs';
   templateUrl: './app.component.html',
   styleUrls: ['./app.component.scss']
 })
-export class AppComponent implements OnInit, OnDestroy {
+export class AppComponent implements OnInit {
   @ViewChild('mobileMenu') mobileMenu!: OffCanvasComponent;
   readonly timeline = gsap.timeline();
   private animationMode = 0;
-  private routerSubscription!: Subscription;
 
   mobileMenuIcon = OpenMobileMenuIcon;
 
@@ -80,7 +78,7 @@ export class AppComponent implements OnInit, OnDestroy {
     AOS.init();
 
     // Subscribe to router events so we can display a page transition animation each time the user navigates to a new page.
-    this.routerSubscription = this.router.events.subscribe((val) => {
+    this.router.events.subscribe((val) => {
       // When the user starts to navigate to a new page, immediately show the cover again otherwise content will already be visible.
       if (val instanceof NavigationStart) {
         gsap.set('#cover', { autoAlpha: 1, duration: 0.3 });
@@ -90,10 +88,6 @@ export class AppComponent implements OnInit, OnDestroy {
         this.mobileMenu.close();
       }
     });
-  }
-
-  ngOnDestroy(): void {
-    this.routerSubscription.unsubscribe();
   }
 
   private animationFromLeft(): void {
