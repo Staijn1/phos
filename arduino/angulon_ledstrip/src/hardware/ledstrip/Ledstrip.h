@@ -7,6 +7,7 @@
 
 
 #include "../../../.pio/libdeps/esp32dev/WS2812FX/src/WS2812FX.h"
+#include "ArduinoJson.h"
 #include "connections/configuration/ConfigurationManager.h"
 
 class Ledstrip {
@@ -60,6 +61,9 @@ public:
     static uint16_t doubleVuMeter();
 
     static uint16_t inverseDoubleVuMeter();
+
+    void setIndividualColors(JsonArrayConst colors);
+
     void setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mode, uint16_t speed, const char *color_0, const char *color_1, const char *color_2);
 };
 
