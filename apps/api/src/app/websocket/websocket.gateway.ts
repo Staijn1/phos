@@ -16,6 +16,7 @@ import {WebsocketService} from './websocket.service';
 import {RoomService} from '../room/room.service';
 import {Room} from '../room/Room.model';
 import {DeviceService} from '../device/device.service';
+import { ColorRGBA } from '../interfaces/ColorRGBA';
 
 @WebSocketGateway(undefined, {cors: true, pingInterval: 5000})
 export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnect, OnGatewayInit {
@@ -107,7 +108,7 @@ export class WebsocketGateway implements OnGatewayConnection, OnGatewayDisconnec
   }
 
   @SubscribeMessage(WebsocketMessage.IndividualLedControl)
-  async onIndividualLedControl(client: Socket, body: WebsocketRequest<string[]>): Promise<StandardResponse> {
+  async onIndividualLedControl(client: Socket, body: WebsocketRequest<ColorRGBA[]>): Promise<StandardResponse> {
     await this.websocketService.individualLedControl(body.rooms, body.payload);
     return {status: 200, message: 'Individual led control sent'};
   }

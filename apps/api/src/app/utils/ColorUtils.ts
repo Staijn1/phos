@@ -1,3 +1,5 @@
+import { ColorRGBA } from '../interfaces/ColorRGBA';
+
 /**
  * Convert Hex string to RGB array
  * @param hex
@@ -28,14 +30,13 @@ export const rgbToHex = (r: number, g: number, b: number): string => {
  * @param segment The segment of the payload
  * @returns The average color
  */
-export const calculateAverageColor = (segment: string[]): string => {
+export const calculateAverageColor = (segment: ColorRGBA[]): string => {
   let r = 0, g = 0, b = 0;
 
   for (const color of segment) {
-    const rgb = hexToRgb(color);
-    r += rgb[0];
-    g += rgb[1];
-    b += rgb[2];
+    r += color.R;
+    g += color.G;
+    b += color.B;
   }
 
   r = Math.round(r / segment.length);
