@@ -14,10 +14,10 @@ import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
 import { StaticChromaSDKEffect } from "./effects/StaticChromaSDKEffect";
 import { BaseReactiveChromaSDKEffect } from "./effects/BaseReactiveChromaSDKEffect";
 import { VisualizerChromaSDKEffect } from "./effects/VisualizerChromaSDKEffect";
-import { FX_CUSTOM_0, FX_CUSTOM_1, FX_CUSTOM_2 } from '../../shared/constants';
+import { FX_CUSTOM_0, FX_CUSTOM_1, FX_CUSTOM_2, FX_CUSTOM_3 } from '../../shared/constants';
 import { VisualizerBrightnessChromaSDKEffect } from "./effects/VisualizerBrightnessChromaSDKEffect";
 import { DoubleVuMeterChromaSDKEffect } from './effects/DoubleVuMeterChromaSDKEffect';
-import { InverseDoubleVuMeterChromaSDKEffect } from "./effects/InverseDoubleVuMeterChromaSDKEffect";
+import { InverseDoubleVuMeterChromaSDKEffect } from './effects/InverseDoubleVuMeterChromaSDKEffect';
 
 /**
  * Base class for Razer Chroma SDK integrations. With this integration, we can control the RGB lights on Razer peripherals.
@@ -102,7 +102,7 @@ export abstract class BaseChromaConnection {
     ChromaEffectRegistery.registerEffect(FX_CUSTOM_0, new VisualizerChromaSDKEffect(this));
     ChromaEffectRegistery.registerEffect(FX_CUSTOM_1, new VisualizerBrightnessChromaSDKEffect(this));
     ChromaEffectRegistery.registerEffect(FX_CUSTOM_2, new DoubleVuMeterChromaSDKEffect(this));
-    ChromaEffectRegistery.registerEffect(75, new InverseDoubleVuMeterChromaSDKEffect(this));
+    ChromaEffectRegistery.registerEffect(FX_CUSTOM_3, new InverseDoubleVuMeterChromaSDKEffect(this));
   }
 
   /**

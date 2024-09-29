@@ -130,7 +130,7 @@ uint16_t Ledstrip::vuMeter() {
 
 /**
  * This function calculates the new brightness value by reducing the primary color brightness linearly based on FFT values.
- * 
+ *
  * The primary color is represented as a 32-bit integer in the format 0xRRGGBB, where RR, GG, and BB are the red, green, and blue components, respectively.
  * The function extracts the red, green, and blue components from the primary color using bitwise operations.
  * It then calculates a brightness factor by mapping the FFT value from 0-255 to a range of 0-1.

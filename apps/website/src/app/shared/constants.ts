@@ -20,7 +20,7 @@ export const themes: Theme[] = [
 export const FX_CUSTOM_0 = 72;
 export const FX_CUSTOM_1 = 73;
 export const FX_CUSTOM_2 = 74;
-
+export const FX_CUSTOM_3 = 75;
 
 export const SPEED_MAXIMUM_INTERVAL_MS = 10000;
 export const SPEED_MINIMUM_INTERVAL_MS = 200;
