@@ -9,31 +9,31 @@ void Ledstrip::setup() {
     Logger::log("Ledstrip", "Setting up ledstrip");
     const SystemConfiguration config = configurationManager.getConfig();
     this->ledcount = ConfigurationManager::systemConfiguration.ledcount;
-    Ledstrip::strip = new WS2812FX(this->ledcount, config.ledpin, NEO_GRB + NEO_KHZ800);
+    strip = new WS2812FX(this->ledcount, config.ledpin, NEO_GRB + NEO_KHZ800);
 
     Logger::log("Ledstrip", "Registering VUMeter effect");
-    Ledstrip::strip->init();
-    Ledstrip::strip->setCustomMode(F("VuMeter"), Ledstrip::vuMeter);
-    Ledstrip::strip->setCustomMode(F("VuMeter Brightness"), Ledstrip::vuMeterBrightness);
-    Ledstrip::strip->setCustomMode(F("Double VuMeter"), Ledstrip::doubleVuMeter);
-    Ledstrip::strip->setCustomMode(F("Inverse DoubleVuMeter"), Ledstrip::inverseDoubleVuMeter);
+    strip->init();
+    strip->setCustomMode(F("VuMeter"), vuMeter);
+    strip->setCustomMode(F("VuMeter Brightness"), vuMeterBrightness);
+    strip->setCustomMode(F("Double VuMeter"), doubleVuMeter);
+    strip->setCustomMode(F("Inverse DoubleVuMeter"), inverseDoubleVuMeter);
     // Todo make State set initial ledstrip state
-    Ledstrip::strip->setMode(FX_MODE_CUSTOM_2);
-    Ledstrip::strip->setSpeed(1000);
-    Ledstrip::strip->setBrightness(brightness);
-    Ledstrip::strip->setColor(0x000000);
+    strip->setMode(FX_MODE_CUSTOM_2);
+    strip->setSpeed(1000);
+    strip->setBrightness(brightness);
+    strip->setColor(0x000000);
 
-    Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, FX_MODE_CUSTOM_2, Ledstrip::strip->getColor(), 0, NO_OPTIONS);
+    strip->setSegment(0, 0, this->ledcount - 1, FX_MODE_CUSTOM_2, strip->getColor(), 0, NO_OPTIONS);
 
-    Ledstrip::strip->start();
+    strip->start();
 }
 
 void Ledstrip::run() {
-    Ledstrip::strip->service();
+    strip->service();
 }
 
 void Ledstrip::setColors(int segment, uint32_t* colors) {
-    Ledstrip::strip->setColors(segment, colors);
+    strip->setColors(segment, colors);
     Logger::log("Ledstrip", "Setting colors");
 }
 
@@ -49,7 +49,7 @@ void Ledstrip::setColors(int segment, const char *color_0, const char *color_1, 
 }
 
 uint8_t Ledstrip::getMode() {
-    return Ledstrip::strip->getMode();
+    return strip->getMode();
 }
 
 void Ledstrip::setMode(int mode, boolean force) {
@@ -58,27 +58,27 @@ void Ledstrip::setMode(int mode, boolean force) {
 
     if ((mode >= FX_MODE_CUSTOM && mode <= FX_MODE_CUSTOM_7) || mode == FX_MODE_STATIC ) {
         Logger::log("Ledstrip", "Received a custom mode, setting segment");
-        Ledstrip::strip->setSegment(0, 0, this->ledcount - 1, mode, Ledstrip::strip->getSegment()->colors, 0, NO_OPTIONS);
+        strip->setSegment(0, 0, this->ledcount - 1, mode, strip->getSegment()->colors, 0, NO_OPTIONS);
     } else {
-        const int currentMode = Ledstrip::strip->getMode();
+        const int currentMode = strip->getMode();
         if(currentMode == mode && force == false) return;
-        Ledstrip::strip->setMode(mode);
+        strip->setMode(mode);
     }
     Logger::log("Ledstrip", "Set mode to: " + String(mode));
 }
 
 
 String Ledstrip::getModeName(uint8_t mode) {
-    return Ledstrip::strip->getModeName(mode);
+    return strip->getModeName(mode);
 }
 
 
 int Ledstrip::getSpeed() {
-    return Ledstrip::strip->getSpeed();
+    return strip->getSpeed();
 }
 
 void Ledstrip::setSpeed(int speed) {
-    Ledstrip::strip->setSpeed(speed);
+    strip->setSpeed(speed);
     Logger::log("Ledstrip", "Set speed to: " + String(speed));
 }
 
@@ -104,24 +104,24 @@ uint32_t Ledstrip::hexStringToInt(const char *color) {
 }
 
 void Ledstrip::setFFTValue(int value) {
-    Ledstrip::FFTValue = value;
+    FFTValue = value;
 }
 
 int Ledstrip::getFFTValue() {
-    return Ledstrip::FFTValue;
+    return FFTValue;
 }
 
 
 uint16_t Ledstrip::vuMeter() {
-    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
+    WS2812FX::Segment *seg = strip->getSegment();
     const int ledcount = ConfigurationManager::systemConfiguration.ledcount;
     const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledcount);
 
     for (int index = 0; index < ledcount; index++) {
         if (index <= amountOfLedsToShow) {
-            Ledstrip::strip->setPixelColor(index, seg->colors[0]);
+            strip->setPixelColor(index, seg->colors[0]);
         } else {
-            Ledstrip::strip->setPixelColor(index, seg->colors[1]);
+            strip->setPixelColor(index, seg->colors[1]);
         }
     }
 
@@ -160,15 +160,15 @@ uint16_t Ledstrip::vuMeterBrightness() {
 }
 
 uint16_t Ledstrip::doubleVuMeter() {
-    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
+    WS2812FX::Segment *seg = strip->getSegment();
     const int ledcount = ConfigurationManager::systemConfiguration.ledcount;
     const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledcount / 2);
 
     for (int index = 0; index < ledcount; index++) {
         if (index <= amountOfLedsToShow || index >= ledcount - amountOfLedsToShow) {
-            Ledstrip::strip->setPixelColor(index, seg->colors[0]);
+            strip->setPixelColor(index, seg->colors[0]);
         } else {
-            Ledstrip::strip->setPixelColor(index, seg->colors[1]);
+            strip->setPixelColor(index, seg->colors[1]);
         }
     }
 
@@ -176,15 +176,15 @@ uint16_t Ledstrip::doubleVuMeter() {
 }
 
 uint16_t Ledstrip::inverseDoubleVuMeter() {
-    WS2812FX::Segment *seg = Ledstrip::strip->getSegment();
+    WS2812FX::Segment *seg = strip->getSegment();
     const int ledcount = ConfigurationManager::systemConfiguration.ledcount;
     const int amountOfLedsToShow = map(Ledstrip::getFFTValue(), 0, 255, 0, ledcount / 2);
 
     for (int index = 0; index < ledcount; index++) {
         if (index >= (ledcount / 2) - amountOfLedsToShow && index <= (ledcount / 2) + amountOfLedsToShow) {
-            Ledstrip::strip->setPixelColor(index, seg->colors[0]);
+            strip->setPixelColor(index, seg->colors[0]);
         } else {
-            Ledstrip::strip->setPixelColor(index, seg->colors[1]);
+            strip->setPixelColor(index, seg->colors[1]);
         }
     }
 
@@ -195,8 +195,7 @@ uint8_t Ledstrip::getModeCount() {
     return Ledstrip::strip->getModeCount();
 }
 
-void
-Ledstrip::setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mode, uint16_t speed, const char *color_0,
+void Ledstrip::setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mode, uint16_t speed, const char *color_0,
                      const char *color_1, const char *color_2) {
     this->colorsHexString[0] = color_0;
     this->colorsHexString[1] = color_1;
@@ -205,13 +204,13 @@ Ledstrip::setSegment(uint8_t segment, uint16_t start, uint16_t stop, uint8_t mod
             this->hexStringToInt(color_0),
             this->hexStringToInt(color_1),
             this->hexStringToInt(color_2)};
-    Ledstrip::strip->setSegment(segment, start, stop, mode, convertedColors, speed);
+    strip->setSegment(segment, start, stop, mode, convertedColors, speed);
 }
 
-void Ledstrip::setIndividualColors(JsonArray colors) {
+void Ledstrip::setIndividualColors(JsonArrayConst colors) {
     for (int i = 0; i < colors.size(); i++) {
         const char* color = colors[i];
         uint32_t convertedColor = this->hexStringToInt(color);
-        Ledstrip::strip->setPixelColor(i, convertedColor);
+        strip->setPixelColor(i, convertedColor);
     }
 }

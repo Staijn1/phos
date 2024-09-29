@@ -2,7 +2,6 @@
 #define ANGULON_LEDSTRIP_WEBSOCKET_H
 
 #include "../../../.pio/libdeps/esp32dev/WebSockets/src/SocketIOclient.h"
-#include "hardware/led/Led.h"
 #include "hardware/ledstrip/Ledstrip.h"
 #include <ArduinoJson.h>
 

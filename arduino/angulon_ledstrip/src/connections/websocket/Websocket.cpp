@@ -104,7 +104,7 @@ void Websocket::handleDotEvent(uint8_t *payload, const JsonDocument &_doc) {
 }
 
 void Websocket::handleIndividualLedControlEvent(uint8_t *payload, const JsonDocument &_doc) {
-    JsonArray colors = _doc[1].as<JsonArray>();
+    JsonArrayConst colors = _doc[1].as<JsonArrayConst>();
     Angulon::ledstrip->setIndividualColors(colors);
 }
 
