@@ -14,7 +14,7 @@ import { ChromaEffectRegistery } from "./chroma-effect-registery.service";
 import { StaticChromaSDKEffect } from "./effects/StaticChromaSDKEffect";
 import { BaseReactiveChromaSDKEffect } from "./effects/BaseReactiveChromaSDKEffect";
 import { VisualizerChromaSDKEffect } from "./effects/VisualizerChromaSDKEffect";
-import { FX_CUSTOM_0, FX_CUSTOM_1, FX_CUSTOM_2 } from '../../shared/constants';
+import { FX_CUSTOM_0, FX_CUSTOM_1, FX_CUSTOM_2, FX_CUSTOM_3 } from '../../shared/constants';
 import { VisualizerBrightnessChromaSDKEffect } from "./effects/VisualizerBrightnessChromaSDKEffect";
 import { DoubleVuMeterChromaSDKEffect } from './effects/DoubleVuMeterChromaSDKEffect';
 import { InverseDoubleVuMeterChromaSDKEffect } from './effects/InverseDoubleVuMeterChromaSDKEffect';
