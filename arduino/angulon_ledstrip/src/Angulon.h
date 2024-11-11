@@ -6,7 +6,7 @@
 #define ANGULON_LEDSTRIP_ANGULON_H
 
 
-#include "utils/logger/Logger.h"
+#include <hardware/led/Led.h>
 #include "connections/configuration/ConfigurationManager.h"
 #include "connections/websocket/Websocket.h"
 #include "connections/OTA/OTA.h"
