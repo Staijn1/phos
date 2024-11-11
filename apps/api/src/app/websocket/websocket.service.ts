@@ -249,11 +249,10 @@ export class WebsocketService {
    */
   private mapPayloadToLedCount(payload: ColorRGBA[], ledCount: number): string[] {
     const mappedPayload: string[] = [];
-    const ratio = Math.ceil(payload.length / ledCount);
-
+    const payloadToLedRatio = Math.ceil(payload.length / ledCount);
     for (let i = 0; i < ledCount; i++) {
-      const start = i * ratio;
-      const end = start + ratio;
+      const start = i * payloadToLedRatio;
+      const end = start + payloadToLedRatio;
       const segment = payload.slice(start, end);
 
       // Calculate the average color for the segment
@@ -274,8 +273,15 @@ export class WebsocketService {
       const devices = this.devicesInRoomCache.get(room);
       for (const device of devices) {
         const mappedPayload = this.mapPayloadToLedCount(payload, device.ledCount);
-        this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.LedstripIndividualControl, mappedPayload);
+        await this.sendEventToDevice(device, WebsocketMessage.LedstripIndividualControl, mappedPayload);
       }
+    }
+  }
+
+  private async sendEventToDevice(device: Device, event: WebsocketMessage, payload: unknown) {
+    const client = this.server?.sockets.sockets.get(device.socketSessionId);
+    if (client) {
+      client.emit(event, payload);
     }
   }
 }
