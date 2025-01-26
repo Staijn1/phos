@@ -24,10 +24,9 @@ private:
     Preferences preferences;
     Button *bootButton = new Button(0);
 
-    const char *hotspotPassword = "ESP32-Configure";
     const char *hotspotName = "ESP32-Access-Point";
-    const char *ssid;
-    const char *networkPassword;
+    const char *ssid = "<<empty>>";
+    const char *networkPassword = "<<empty>>";
 
     unsigned long lastTimeConnected = 0L;
     int countButtonPressed = 0;

@@ -72,13 +72,12 @@ void ConfigurationManager::setup() {
 void ConfigurationManager::startConfigurationMode() {
     Logger::log("ConfigurationManager", "Starting access point for configuration...");
 
-    WiFi.softAP(hotspotName, hotspotPassword);
+    WiFi.softAP(hotspotName);
     IPAddress IP = WiFi.softAPIP();
 
     Logger::log("ConfigurationManager", "Access point started");
     Logger::log("ConfigurationManager", "Connect to the hotspot with the following credentials:");
     Logger::log("ConfigurationManager", hotspotName);
-    Logger::log("ConfigurationManager", hotspotPassword);
     Logger::log("ConfigurationManager", "After connecting, navigate to:");
     Logger::log("ConfigurationManager", IP.toString().c_str());
 
