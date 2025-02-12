@@ -31,8 +31,8 @@
     "@nestjs/config": "^3.1.1",
     "@nestjs/core": "10.4.3",
     "@nestjs/event-emitter": "^2.0.4",
-    "@nestjs/platform-express": "10.4.3",
-    "@nestjs/platform-socket.io": "^10.3.7",
+    "@nestjs/platform-express": "10.4.15",
+    "@nestjs/platform-socket.io": "^10.4.15",
     "@nestjs/typeorm": "^10.0.0",
     "@nestjs/websockets": "^10.0.2",
     "@ngrx/store": "17.0.1",
@@ -50,7 +50,7 @@
     "mysql2": "^3.11.3",
     "ngx-echarts": "^17.1.0",
     "@angular-slider/ngx-slider": "^17.0.2",
-    "node-vibrant": "^3.1.6",
+    "node-vibrant": "^4.0.3",
     "reflect-metadata": "^0.1.13",
     "rxjs": "7.8.1",
     "socket.io-client": "^4.7.5",
@@ -59,7 +59,7 @@
     "zone.js": "0.14.4"
   },
   "devDependencies": {
-    "@angular-devkit/build-angular": "17.3.9",
+    "@angular-devkit/build-angular": "19.1.6",
     "@angular-devkit/core": "17.3.4",
     "@angular-devkit/schematics": "17.3.4",
     "@angular-eslint/eslint-plugin": "17.3.0",
