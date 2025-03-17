@@ -1,4 +1,7 @@
 #include "Angulon.h"
+
+#include <utils/logger/Logger.h>
+
 #include "utils/state/State.h"
 
 Ledstrip* Angulon::ledstrip = new Ledstrip();

@@ -1,4 +1,7 @@
 #include "State.h"
+
+#include <utils/logger/Logger.h>
+
 #include "ArduinoJson.h"
 #include "Angulon.h"
 

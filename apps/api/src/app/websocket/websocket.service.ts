@@ -1,10 +1,12 @@
-import {Injectable, Logger} from '@nestjs/common';
-import {Server, Socket} from 'socket.io';
-import {INetworkState, RoomsState, RoomState, WebsocketMessage} from '@angulon/interfaces';
-import {DeviceService} from '../device/device.service';
-import {RoomService} from '../room/room.service';
-import {OnEvent} from '@nestjs/event-emitter';
-import {first} from 'rxjs';
+import { Injectable, Logger } from '@nestjs/common';
+import { Server, Socket } from 'socket.io';
+import { INetworkState, RoomsState, RoomState, WebsocketMessage } from '@angulon/interfaces';
+import { DeviceService } from '../device/device.service';
+import { RoomService } from '../room/room.service';
+import { OnEvent } from '@nestjs/event-emitter';
+import { calculateAverageColor } from '../utils/ColorUtils';
+import { ColorRGBA } from '../interfaces/ColorRGBA';
+import { Device } from '../device/Device.model';
 
 
 @Injectable()
@@ -14,15 +16,36 @@ export class WebsocketService {
    * This variable is the primary state, which will be sent to all ledstrips and users
    */
   private logger: Logger = new Logger(WebsocketService.name);
+  private devicesInRoomCache = new Map<string, Device[]>();
 
   constructor(private readonly deviceService: DeviceService, private readonly roomService: RoomService) {
   }
 
   @OnEvent('database-change')
   onDatabaseChange() {
-    this.logger.log('Database changed. Updating all user clients')
-    this.emitEventToAllUsers(WebsocketMessage.DatabaseChange, null)
+    this.logger.log('Database changed. Updating all user clients');
+    this.emitEventToAllUsers(WebsocketMessage.DatabaseChange, null);
   }
+
+
+  private async updateDevicesInRoomCache() {
+    const devices = await this.deviceService.findAll({ relations: ['room'] });
+    this.devicesInRoomCache.clear();
+
+    for (const device of devices) {
+      if (!device.room) {
+        continue;
+      }
+
+      if (!this.devicesInRoomCache.has(device.room.id)) {
+        this.devicesInRoomCache.set(device.room.id, []);
+      }
+      this.devicesInRoomCache.get(device.room.id)?.push(device);
+    }
+
+    this.logger.log('Updated devices in room cache');
+  }
+
 
   /**
    * Set the received state on the server and send it to all ledstrips
@@ -44,11 +67,11 @@ export class WebsocketService {
    * Get the state of the network containing all rooms and devices
    */
   async getNetworkState(): Promise<INetworkState> {
-    const rooms = await this.roomService.findAll({order: {name: 'ASC'}});
+    const rooms = await this.roomService.findAll({ order: { name: 'ASC' } });
     return {
       rooms: rooms,
-      devices: await this.deviceService.findAll({where: {room: null}, relations: ['room'], order: {name: 'ASC'}})
-    }
+      devices: await this.deviceService.findAll({ where: { room: null }, relations: ['room'], order: { name: 'ASC' } })
+    };
   }
 
   /**
@@ -74,7 +97,7 @@ export class WebsocketService {
 
     for (const room of rooms) {
       this.logger.log(`Sending state to all ledstrips in room ${room}. Force: ${force}. State: ${JSON.stringify(state[room])}`);
-      this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.LedstripSetState, {...state[room], force: force});
+      this.sendEventToAllLedstripsInRoom(room, WebsocketMessage.LedstripSetState, { ...state[room], force: force });
     }
   }
 
@@ -85,7 +108,7 @@ export class WebsocketService {
   async joinUserRoom(client: Socket) {
     client.join('user');
     // delete this device from the database because it is now a user
-    await this.deviceService.updateOne({socketSessionId: client.id}, {isLedstrip: false});
+    await this.deviceService.updateOne({ socketSessionId: client.id }, { isLedstrip: false });
     this.logger.log(`The client ${client.id} registered as a user`);
   }
 
@@ -102,23 +125,27 @@ export class WebsocketService {
     const ledCount = client.handshake.query.ledCount as string | undefined;
     // If no device name was provided, disconnect the client
     if (!deviceName || typeof deviceName !== 'string' || Array.isArray(deviceName)) {
-      this.logger.warn(`Client with session ${client.id} provided an invalid device name. Received: ${deviceName}. Disconnecting...`)
+      this.logger.warn(`Client with session ${client.id} provided an invalid device name. Received: ${deviceName}. Disconnecting...`);
       client.disconnect(true);
       return;
     }
 
     // If the received ledcount is not a number, disconnect the client
     if (ledCount && isNaN(parseInt(ledCount))) {
-      this.logger.warn(`Client with session ${client.id} provided an invalid ledCount. Received: ${ledCount}. Disconnecting...`)
+      this.logger.warn(`Client with session ${client.id} provided an invalid ledCount. Received: ${ledCount}. Disconnecting...`);
       client.disconnect(true);
       return;
     }
 
-    const deviceInDb = await this.deviceService.findOne({where: {name: deviceName}, relations: ['room']});
+    const deviceInDb = await this.deviceService.findOne({ where: { name: deviceName }, relations: ['room'] });
 
     // If the device is already in the database, update the socketSessionId and isConnected fields. Also join the room if it is in one
     if (deviceInDb) {
-      await this.deviceService.updateOne({name: deviceName}, {socketSessionId: client.id, isConnected: true, ledCount: ledCount ? parseInt(ledCount) : 0});
+      await this.deviceService.updateOne({ name: deviceName }, {
+        socketSessionId: client.id,
+        isConnected: true,
+        ledCount: ledCount ? parseInt(ledCount) : 0
+      });
 
       if (deviceInDb.room) {
         client.join(deviceInDb.room.id);
@@ -126,6 +153,7 @@ export class WebsocketService {
 
       }
 
+      await this.updateDevicesInRoomCache();
       this.logger.log(`Client ${client.id} finished reconnecting successfully with name ${deviceName}`);
       return;
     }
@@ -139,7 +167,9 @@ export class WebsocketService {
       isLedstrip: true
     });
 
+    await this.updateDevicesInRoomCache();
     this.logger.log(`Client ${client.id} finished connecting successfully with name ${deviceName}`);
+
   }
 
 
@@ -150,8 +180,9 @@ export class WebsocketService {
    */
   onDisconnect(client: Socket, server: Server) {
     this.logger.log(`Client ${client.id} went offline`);
-    this.deviceService.updateOne({socketSessionId: client.id}, {isConnected: false}).then();
+    this.deviceService.updateOne({ socketSessionId: client.id }, { isConnected: false }).then();
     this.server = server;
+    this.updateDevicesInRoomCache().then();
   }
 
   /**
@@ -192,7 +223,7 @@ export class WebsocketService {
    * @param roomId
    */
   async moveDeviceToRoom(deviceName: string, roomId: string) {
-    const deviceInDb = await this.deviceService.findOne({where: {name: deviceName}, relations: ['room']});
+    const deviceInDb = await this.deviceService.findOne({ where: { name: deviceName }, relations: ['room'] });
 
     if (deviceInDb.room) {
       const client = this.server?.sockets.sockets.get(deviceInDb.socketSessionId);
@@ -202,8 +233,55 @@ export class WebsocketService {
         this.logger.log(`Client ${deviceInDb.name}(${deviceInDb.socketSessionId}) moved to room ${deviceInDb.room.name}(${roomId})`);
 
         await this.setState([roomId], deviceInDb.room.state, client);
+
         this.logger.log(`Sent state to room ${roomId} after moving client ${deviceInDb.name}(${deviceInDb.socketSessionId})`);
       }
+    }
+
+    await this.updateDevicesInRoomCache();
+  }
+
+  /**
+   * Map the payload to the correct length for each device in the selected room
+   * @param payload The payload to map
+   * @param ledCount The number of LEDs in the ledstrip
+   * @returns The mapped payload
+   */
+  private mapPayloadToLedCount(payload: ColorRGBA[], ledCount: number): string[] {
+    const mappedPayload: string[] = [];
+    const payloadToLedRatio = Math.ceil(payload.length / ledCount);
+    for (let i = 0; i < ledCount; i++) {
+      const start = i * payloadToLedRatio;
+      const end = start + payloadToLedRatio;
+      const segment = payload.slice(start, end);
+
+      // Calculate the average color for the segment
+      const avgColor = calculateAverageColor(segment);
+      mappedPayload.push(avgColor);
+    }
+
+    return mappedPayload;
+  }
+
+  /**
+   * Send the mapped payload to each device in the room
+   * @param rooms The rooms to send the payload to
+   * @param payload The payload to send
+   */
+  async individualLedControl(rooms: string[], payload: ColorRGBA[]): Promise<void> {
+    for (const room of rooms) {
+      const devices = this.devicesInRoomCache.get(room);
+      for (const device of devices) {
+        const mappedPayload = this.mapPayloadToLedCount(payload, device.ledCount);
+        await this.sendEventToDevice(device, WebsocketMessage.LedstripIndividualControl, mappedPayload);
+      }
+    }
+  }
+
+  private async sendEventToDevice(device: Device, event: WebsocketMessage, payload: unknown) {
+    const client = this.server?.sockets.sockets.get(device.socketSessionId);
+    if (client) {
+      client.emit(event, payload);
     }
   }
 }
