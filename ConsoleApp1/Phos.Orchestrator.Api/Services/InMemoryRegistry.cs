@@ -1,4 +1,5 @@
-﻿using Phos.Orchestrator.Core;
+﻿using System.Text.Json;
+using Phos.Orchestrator.Core;
 using Phos.Orchestrator.Core.Contracts;
 
 namespace Phos.Orchestrator.Api.Services;
@@ -11,17 +12,37 @@ public sealed class InMemoryRegistry : IDeviceRegistry
 {
   private readonly object _lock = new();
   private readonly Dictionary<string, (DeviceSnapshot snap, int misses)> _map = new();
+  private readonly string _snapshotPath;
+
+  private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
+  {
+    WriteIndented = false
+  };
+
+  public InMemoryRegistry(IHostEnvironment env)
+  {
+    var dir = Path.Combine(env.ContentRootPath, "data");
+    Directory.CreateDirectory(dir);
+    _snapshotPath = Path.Combine(dir, "devices.json");
+  }
+
 
   /// <summary>Return a copy-on-read list of device snapshots.</summary>
   public IReadOnlyList<DeviceSnapshot> All()
   {
-    lock (_lock) return _map.Values.Select(v => v.snap).ToList();
+    lock (_lock)
+    {
+      return _map.Values.Select(v => v.snap).ToList();
+    }
   }
 
   /// <summary>Return a device snapshot by id or null.</summary>
   public DeviceSnapshot? Get(string id)
   {
-    lock (_lock) return _map.TryGetValue(id, out var v) ? v.snap : null;
+    lock (_lock)
+    {
+      return _map.TryGetValue(id, out var v) ? v.snap : null;
+    }
   }
 
   /// <summary>
@@ -47,8 +68,12 @@ public sealed class InMemoryRegistry : IDeviceRegistry
   public void SetIp(string id, string ip, int port)
   {
     lock (_lock)
+    {
       if (_map.TryGetValue(id, out var v))
+      {
         _map[id] = (v.snap with { Ip = ip, Port = port }, v.misses);
+      }
+    }
   }
 
   /// <summary>
@@ -57,13 +82,49 @@ public sealed class InMemoryRegistry : IDeviceRegistry
   /// </summary>
   public void SaveSnapshot()
   {
-    // TODO: serialize All() to JSON and write atomically.
+    // Take a stable snapshot under lock, then serialize outside the lock.
+    List<DeviceSnapshot> data;
+    lock (_lock) data = _map.Values.Select(v => v.snap).ToList();
+
+    var tmp = _snapshotPath + ".tmp";
+    var bak = _snapshotPath + ".bak";
+
+    // Write temp file with write-through and fsync to reduce crash risk.
+    using (var fs = new FileStream(tmp, FileMode.Create, FileAccess.Write, FileShare.None,
+             bufferSize: 64 * 1024, FileOptions.WriteThrough))
+    {
+      JsonSerializer.Serialize(fs, data, Json);
+      fs.Flush(true);
+    }
+
+    try
+    {
+      if (OperatingSystem.IsWindows())
+      {
+        // Atomic replace on NTFS; keep a rolling backup.
+        File.Replace(tmp, _snapshotPath, bak, ignoreMetadataErrors: true);
+      }
+      else
+      {
+        // POSIX rename is atomic on same filesystem.
+        File.Move(tmp, _snapshotPath, overwrite: true);
+      }
+    }
+    finally
+    {
+      if (File.Exists(tmp)) File.Delete(tmp);
+    }
   }
+
 
   private void UpdateState(string id, DeviceOnlineState st)
   {
     lock (_lock)
+    {
       if (_map.TryGetValue(id, out var v))
+      {
         _map[id] = (v.snap with { State = st }, v.misses);
+      }
+    }
   }
 }

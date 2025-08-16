@@ -1,7 +1,4 @@
-﻿// Orchestrator.Api/MdnsBrowser.cs
-
-using System.Net.NetworkInformation;
-using System.Threading.Channels;
+﻿using System.Threading.Channels;
 using Zeroconf;
 
 /// <summary>
@@ -13,7 +10,13 @@ public sealed class MdnsBrowser : BackgroundService
   /// <summary>Probe work queue: (ip, tcp port, TXT kv map).</summary>
   private readonly Channel<(string ip, int port, IReadOnlyDictionary<string, string> txt)> _probeQ;
 
-  public MdnsBrowser(Channel<(string, int, IReadOnlyDictionary<string, string>)> probeQ) => _probeQ = probeQ;
+  private readonly ILogger<MdnsBrowser> _logger;
+
+  public MdnsBrowser(Channel<(string, int, IReadOnlyDictionary<string, string>)> probeQ, ILogger<MdnsBrowser> logger)
+  {
+    _probeQ = probeQ;
+    _logger = logger;
+  }
 
   /// <summary>
   /// Resolve _wled._tcp.local, then enqueue one probe per {host,service}.
@@ -21,6 +24,7 @@ public sealed class MdnsBrowser : BackgroundService
   /// </summary>
   protected override async Task ExecuteAsync(CancellationToken ct)
   {
+    _logger.LogInformation("MdnsBrowser started");
     while (!ct.IsCancellationRequested)
     {
       var hosts = await ZeroconfResolver.ResolveAsync(
@@ -29,6 +33,8 @@ public sealed class MdnsBrowser : BackgroundService
         retries: 2,
         retryDelayMilliseconds: 200,
         cancellationToken: ct);
+
+      _logger.LogDebug("mDNS scan found {Count} host(s)", hosts.Count);
 
       foreach (var h in hosts)
       {
@@ -39,6 +45,7 @@ public sealed class MdnsBrowser : BackgroundService
         foreach (var svc in h.Services.Values)
         {
           var txt = FlattenProperties(svc.Properties);
+          _logger.LogDebug("Enqueue probe {Ip}:{Port}", ip, svc.Port);
           await _probeQ.Writer.WriteAsync((ip, svc.Port, txt), ct);
         }
       }

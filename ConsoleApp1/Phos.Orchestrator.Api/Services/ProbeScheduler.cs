@@ -12,7 +12,8 @@ public sealed class ProbeScheduler : BackgroundService
 {
   private readonly Channel<(string ip, int port, IReadOnlyDictionary<string, string> txt)> _probeQ;
   private readonly IDeviceProber _prober;
-  private readonly IDeviceRegistry _reg;
+  private readonly IDeviceRegistry _registry;
+  private readonly ILogger<ProbeScheduler> _logger;
 
   /// <summary>
   /// Global concurrency limit for ad-hoc probes. Prevents bursts that could
@@ -23,11 +24,13 @@ public sealed class ProbeScheduler : BackgroundService
   public ProbeScheduler(
     Channel<(string, int, IReadOnlyDictionary<string, string>)> probeQ,
     IDeviceProber prober,
-    IDeviceRegistry reg)
+    IDeviceRegistry registry,
+    ILogger<ProbeScheduler> logger)
   {
     _probeQ = probeQ;
     _prober = prober;
-    _reg = reg;
+    _registry = registry;
+    _logger = logger;
   }
 
   /// <summary>
@@ -64,7 +67,7 @@ public sealed class ProbeScheduler : BackgroundService
     var rnd = new Random();
     while (!ct.IsCancellationRequested)
     {
-      foreach (var d in _reg.All())
+      foreach (var d in _registry.All())
       {
         var jitter = TimeSpan.FromMilliseconds(rnd.Next(-1500, 1500));
         var delay = d.State switch

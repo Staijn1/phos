@@ -1,8 +1,7 @@
 ﻿using Phos.Orchestrator.Core;
 using Phos.Orchestrator.Core.Contracts;
 
-
-namespace Phos.Orchestrator.Api;
+namespace Phos.Orchestrator.Api.Services;
 
 /// <summary>
 /// HTTP client that probes a WLED device at /json/info and /json/state,
@@ -13,12 +12,14 @@ public sealed class WledProber : IDeviceProber
   private readonly HttpClient _http;
   private readonly IDeviceRegistry _reg;
   private readonly IDeviceEventBus _bus;
+  private readonly ILogger<WledProber> _logger;
 
-  public WledProber(HttpClient http, IDeviceRegistry reg, IDeviceEventBus bus)
+  public WledProber(HttpClient http, IDeviceRegistry reg, IDeviceEventBus bus, ILogger<WledProber> logger)
   {
     _http = http;
     _reg = reg;
     _bus = bus;
+    _logger = logger;
   }
 
   /// <summary>
@@ -27,6 +28,7 @@ public sealed class WledProber : IDeviceProber
   /// </summary>
   public async Task ProbeAsync(string ip, int port, IReadOnlyDictionary<string, string> txt, CancellationToken ct)
   {
+    _logger.LogDebug("Probing WLED {Ip}:{Port}", ip, port);
     var baseUrl = $"http://{ip}:{port}";
     var info = await _http.GetFromJsonAsync<WledInfo>($"{baseUrl}/json/info", ct);
     if (info is null) return;
