@@ -5,3 +5,9 @@
       context: .
       dockerfile: ConsoleApp1/Dockerfile
 
+  phos.orchestrator.api:
+    image: phos.orchestrator.api
+    build:
+      context: .
+      dockerfile: Phos.Orchestrator.Api/Dockerfile
+
