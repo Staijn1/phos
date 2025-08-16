@@ -134,3 +134,7 @@ Front-End/release-builds
 /**/*/cmake-build-*/
 
 .nx
+
+
+bin
+obj
