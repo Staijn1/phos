@@ -33,6 +33,9 @@ public interface IDeviceRegistry
 
   /// <summary>Persist the current registry to disk atomically.</summary>
   void SaveSnapshot();
+
+  void NoteProbeMissById(string deviceId);
+  void NoteProbeMissByIp(string ip);
 }
 
 /// <summary>Event types emitted when registry entries change.</summary>

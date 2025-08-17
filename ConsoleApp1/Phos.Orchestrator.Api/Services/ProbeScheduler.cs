@@ -37,28 +37,31 @@ public sealed class ProbeScheduler : BackgroundService
   /// Main loop: drains the probe queue and schedules periodic polls.
   /// Periodic polls are fire-and-forget tasks with randomized delay.
   /// </summary>
-  protected override async Task ExecuteAsync(CancellationToken ct)
+  protected override async Task ExecuteAsync(CancellationToken cancellationToken)
   {
-    _ = RunPeriodicPolls(ct); // background poller
-    while (await _probeQ.Reader.WaitToReadAsync(ct))
-    while (_probeQ.Reader.TryRead(out var item))
+    _ = RunPeriodicPolls(cancellationToken);
+
+    while (await _probeQ.Reader.WaitToReadAsync(cancellationToken))
+    while (_probeQ.Reader.TryRead(out var workItem))
     {
-      await _concurrency.WaitAsync(ct);
+      await _concurrency.WaitAsync(cancellationToken);
       _ = Task.Run(async () =>
       {
         try
         {
-          await _prober.ProbeAsync(item.ip, item.port, item.txt, ct);
+          _logger.LogDebug("Ad-hoc probe for {Ip}:{Port}", workItem.ip, workItem.port);
+          await _prober.ProbeAsync(workItem.ip, workItem.port, workItem.txt, cancellationToken);
         }
-        catch (Exception ex)
+        catch (Exception exception)
         {
-          _logger.LogError(ex, "Probe failed for {Ip}:{Port}", item.ip, item.port);
+          _logger.LogError(exception, "Ad-hoc probe failed for {Ip}:{Port}", workItem.ip, workItem.port);
+          _registry.NoteProbeMissByIp(workItem.ip);
         }
         finally
         {
           _concurrency.Release();
         }
-      }, ct);
+      }, cancellationToken);
     }
   }
 
@@ -66,35 +69,38 @@ public sealed class ProbeScheduler : BackgroundService
   /// Periodically probes all known devices with cadence based on state:
   /// Online=10s, Suspect=20s, Offline=40s plus ±15% jitter.
   /// </summary>
-  private async Task RunPeriodicPolls(CancellationToken ct)
+  private async Task RunPeriodicPolls(CancellationToken cancellationToken)
   {
-    var rnd = new Random();
-    while (!ct.IsCancellationRequested)
+    var random = new Random();
+
+    while (!cancellationToken.IsCancellationRequested)
     {
-      foreach (var d in _registry.All())
+      foreach (var device in _registry.All())
       {
-        var jitter = TimeSpan.FromMilliseconds(rnd.Next(-1500, 1500));
-        var delay = d.State switch
+        var jitter = TimeSpan.FromMilliseconds(random.Next(-1500, 1500));
+        var delay = device.State switch
         {
-          DeviceOnlineState.Online => TimeSpan.FromSeconds(10),
-          DeviceOnlineState.Suspect => TimeSpan.FromSeconds(20),
-          _ => TimeSpan.FromSeconds(40),
+          DeviceOnlineState.Online  => TimeSpan.FromSeconds(15),
+          DeviceOnlineState.Suspect => TimeSpan.FromSeconds(30),
+          _                         => TimeSpan.FromSeconds(45),
         } + jitter;
 
-        _ = Task.Delay(delay, ct).ContinueWith(async _ =>
+        _ = Task.Delay(delay, cancellationToken).ContinueWith(async _ =>
         {
           try
           {
-            await _prober.ProbeAsync(d.Ip, d.Port, new Dictionary<string, string>(), ct);
+            _logger.LogDebug("Periodic probe for {DeviceId} {Ip}:{Port}", device.DeviceId, device.Ip, device.Port);
+            await _prober.ProbeAsync(device.Ip, device.Port, new Dictionary<string, string>(), cancellationToken);
           }
-          catch
+          catch (Exception exception)
           {
-            /* miss counters handled by registry in your implementation */
+            _logger.LogDebug(exception, "Periodic probe failed for {DeviceId} {Ip}:{Port}", device.DeviceId, device.Ip, device.Port);
+            _registry.NoteProbeMissById(device.DeviceId);
           }
-        }, ct);
+        }, cancellationToken);
       }
 
-      await Task.Delay(TimeSpan.FromSeconds(5), ct);
+      await Task.Delay(TimeSpan.FromSeconds(15), cancellationToken);
     }
   }
 }

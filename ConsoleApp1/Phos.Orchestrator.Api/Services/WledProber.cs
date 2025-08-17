@@ -12,14 +12,12 @@ public sealed class WledProber : IDeviceProber
   private readonly HttpClient _http;
   private readonly IDeviceRegistry _registry;
   private readonly IDeviceEventBus _bus;
-  private readonly ILogger<WledProber> _logger;
 
   public WledProber(HttpClient http, IDeviceRegistry registry, IDeviceEventBus bus, ILogger<WledProber> logger)
   {
     _http = http;
     _registry = registry;
     _bus = bus;
-    _logger = logger;
   }
 
   /// <summary>
@@ -28,7 +26,6 @@ public sealed class WledProber : IDeviceProber
   /// </summary>
   public async Task ProbeAsync(string ip, int port, IReadOnlyDictionary<string, string> txt, CancellationToken ct)
   {
-    _logger.LogDebug("Probing WLED {Ip}:{Port}", ip, port);
     var baseUrl = $"http://{ip}:{port}";
     var info = await _http.GetFromJsonAsync<WledInfo>($"{baseUrl}/json/info", ct);
     if (info is null) return;

@@ -5,109 +5,255 @@ using Phos.Orchestrator.Core.Contracts;
 namespace Phos.Orchestrator.Api.Services;
 
 /// <summary>
-/// Simple in-memory registry keyed by DeviceId (MAC). Includes basic state transitions
-/// and a SaveSnapshot hook. Suitable as a starting point; replace with durable storage later.
+/// In-memory device registry with state machine (Online → Suspect → Offline) and atomic snapshots.
 /// </summary>
 public sealed class InMemoryRegistry : IDeviceRegistry
 {
-  private readonly object _lock = new();
+  // Thresholds: after K misses -> Suspect, after M misses -> Offline.
+  private const int MissesToSuspect = 2;
+  private const int MissesToOffline = 6;
+
+  private readonly object _mapLock = new();
   private readonly object _saveLock = new();
-  private readonly Dictionary<string, (DeviceSnapshot snap, int misses)> _map = new();
+
+  private readonly Dictionary<string, (DeviceSnapshot snapshot, int misses)> _deviceMap = new();
   private readonly string _snapshotPath;
 
-  private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
+  private readonly IDeviceEventBus _eventBus;
+  private readonly ILogger<InMemoryRegistry> _logger;
+
+  private static readonly JsonSerializerOptions JsonOptions = new(JsonSerializerDefaults.Web)
   {
-    // true when development, false in production
-    WriteIndented = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development",
+    WriteIndented = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development"
   };
 
-  public InMemoryRegistry(IHostEnvironment env)
+  public InMemoryRegistry(IHostEnvironment hostEnvironment, IDeviceEventBus eventBus, ILogger<InMemoryRegistry> logger)
   {
-    var dir = Path.Combine(env.ContentRootPath, "data");
-    Directory.CreateDirectory(dir);
-    _snapshotPath = Path.Combine(dir, "devices.json");
+    _eventBus = eventBus;
+    _logger = logger;
 
-    foreach (var f in Directory.EnumerateFiles(dir, "devices.json.*.tmp"))
+    string directory = Path.Combine(hostEnvironment.ContentRootPath, "data");
+    Directory.CreateDirectory(directory);
+    _snapshotPath = Path.Combine(directory, "devices.json");
+
+    foreach (string tempFile in Directory.EnumerateFiles(directory, "devices.json.*.tmp"))
     {
-      try { File.Delete(f); } catch { /* ignore */ }
+      try { File.Delete(tempFile); } catch { /* ignore */ }
     }
   }
 
-
-  /// <summary>Return a copy-on-read list of device snapshots.</summary>
   public IReadOnlyList<DeviceSnapshot> All()
   {
-    lock (_lock)
+    lock (_mapLock)
     {
-      return _map.Values.Select(v => v.snap).ToList();
+      return _deviceMap.Values.Select(v => v.snapshot).ToList();
     }
   }
 
-  /// <summary>Return a device snapshot by id or null.</summary>
-  public DeviceSnapshot? Get(string id)
+  public DeviceSnapshot? Get(string deviceId)
   {
-    lock (_lock)
+    lock (_mapLock)
     {
-      return _map.TryGetValue(id, out var v) ? v.snap : null;
+      return _deviceMap.TryGetValue(deviceId, out var value) ? value.snapshot : null;
     }
   }
 
   /// <summary>
-  /// Upsert device and reset miss counters. Sets state to Online and updates LastSeen.
+  /// Successful probe: upsert snapshot, set Online, reset misses, update LastSeen, emit Added/Updated.
   /// </summary>
-  public void Upsert(DeviceSnapshot s)
+  public void Upsert(DeviceSnapshot snapshot)
   {
-    lock (_lock)
+    DeviceEventType eventType;
+
+    lock (_mapLock)
     {
-      _map[s.DeviceId] = (s with { LastSeen = DateTimeOffset.UtcNow, State = DeviceOnlineState.Online }, 0);
+      bool isNew = !_deviceMap.ContainsKey(snapshot.DeviceId);
+      eventType = isNew ? DeviceEventType.Added : DeviceEventType.Updated;
+
+      _deviceMap[snapshot.DeviceId] =
+        (snapshot with { LastSeen = DateTimeOffset.UtcNow, State = DeviceOnlineState.Online }, 0);
     }
 
-    SaveSnapshot();
+    _eventBus.Publish(new DeviceEvent(eventType, snapshot));
+    TrySaveSnapshot();
   }
 
-  /// <summary>Mark a device as Suspect. No-op if unknown.</summary>
-  public void MarkSuspect(string id) => UpdateState(id, DeviceOnlineState.Suspect);
-
-  /// <summary>Mark a device as Offline. No-op if unknown.</summary>
-  public void MarkOffline(string id) => UpdateState(id, DeviceOnlineState.Offline);
-
-  /// <summary>Update last known IP/port without touching other fields.</summary>
-  public void SetIp(string id, string ip, int port)
+  public void MarkSuspect(string deviceId)
   {
-    lock (_lock)
+    UpdateState(deviceId, DeviceOnlineState.Suspect, emitOffline: false);
+  }
+
+  public void MarkOffline(string deviceId)
+  {
+    UpdateState(deviceId, DeviceOnlineState.Offline, emitOffline: true);
+  }
+
+  public void SetIp(string deviceId, string ip, int port)
+  {
+    lock (_mapLock)
     {
-      if (_map.TryGetValue(id, out var v))
+      if (_deviceMap.TryGetValue(deviceId, out var value))
       {
-        _map[id] = (v.snap with { Ip = ip, Port = port }, v.misses);
+        _deviceMap[deviceId] = (value.snapshot with { Ip = ip, Port = port }, value.misses);
       }
     }
+    TrySaveSnapshot();
   }
 
   /// <summary>
-  /// Persist the registry to disk atomically.
-  /// Implement with temp-file + move to avoid partial writes.
+  /// Record a probe miss for a known device by id. Advances Online→Suspect→Offline at thresholds.
   /// </summary>
+  public void NoteProbeMissById(string deviceId)
+  {
+    DeviceEventType? eventType = null;
+    DeviceSnapshot? newSnapshot = null;
+
+    lock (_mapLock)
+    {
+      if (!_deviceMap.TryGetValue(deviceId, out var value))
+      {
+        return;
+      }
+
+      value.misses++;
+      (eventType, newSnapshot) = ApplyMissTransitions(value);
+      _deviceMap[deviceId] = (newSnapshot!, value.misses);
+    }
+
+    if (eventType.HasValue && newSnapshot is not null)
+    {
+      _eventBus.Publish(new DeviceEvent(eventType.Value, newSnapshot));
+      TrySaveSnapshot();
+    }
+  }
+
+  /// <summary>
+  /// Record a probe miss by IP when the deviceId is unknown to the caller.
+  /// </summary>
+  public void NoteProbeMissByIp(string ip)
+  {
+    List<(string id, DeviceSnapshot snap, int misses)> affected;
+
+    lock (_mapLock)
+    {
+      affected = _deviceMap
+        .Where(kv => kv.Value.snapshot.Ip == ip)
+        .Select(kv => (kv.Key, kv.Value.snapshot, kv.Value.misses + 1))
+        .ToList();
+
+      foreach (var entry in affected)
+      {
+        var trans = ApplyMissTransitions((entry.snap, entry.misses));
+        _deviceMap[entry.id] = (trans.newSnapshot!, entry.misses);
+      }
+    }
+
+    foreach (var entry in affected)
+    {
+      var trans = ApplyMissTransitions((entry.snap, entry.misses));
+      if (trans.eventType.HasValue && trans.newSnapshot is not null)
+      {
+        _eventBus.Publish(new DeviceEvent(trans.eventType.Value, trans.newSnapshot));
+      }
+    }
+
+    if (affected.Count > 0)
+    {
+      TrySaveSnapshot();
+    }
+  }
+
+  /// <summary>
+  /// Apply state transitions based on miss count. Returns event type and updated snapshot.
+  /// </summary>
+  private static (DeviceEventType? eventType, DeviceSnapshot? newSnapshot) ApplyMissTransitions((DeviceSnapshot snap, int misses) entry)
+  {
+    var snapshot = entry.snap;
+    var misses = entry.misses;
+
+    if (misses >= MissesToOffline && snapshot.State != DeviceOnlineState.Offline)
+    {
+      var offline = snapshot with { State = DeviceOnlineState.Offline };
+      return (DeviceEventType.Offline, offline);
+    }
+
+    if (misses >= MissesToSuspect && snapshot.State == DeviceOnlineState.Online)
+    {
+      var suspect = snapshot with { State = DeviceOnlineState.Suspect };
+      return (DeviceEventType.Updated, suspect);
+    }
+
+    return (null, snapshot);
+  }
+
+  private void UpdateState(string deviceId, DeviceOnlineState newState, bool emitOffline)
+  {
+    DeviceSnapshot? updated = null;
+    DeviceEventType? eventType = null;
+
+    lock (_mapLock)
+    {
+      if (_deviceMap.TryGetValue(deviceId, out var value))
+      {
+        updated = value.snapshot with { State = newState };
+        _deviceMap[deviceId] = (updated, value.misses);
+
+        eventType = newState switch
+        {
+          DeviceOnlineState.Offline => DeviceEventType.Offline,
+          _ => DeviceEventType.Updated
+        };
+      }
+    }
+
+    if (updated is null || !eventType.HasValue)
+    {
+      return;
+    }
+
+    _eventBus.Publish(new DeviceEvent(eventType.Value, updated));
+    TrySaveSnapshot();
+  }
+
+  private void TrySaveSnapshot()
+  {
+    try
+    {
+      SaveSnapshot();
+    }
+    catch (Exception exception)
+    {
+      _logger.LogWarning(exception, "SaveSnapshot failed");
+    }
+  }
+
+  /// <summary>Atomic snapshot write with unique temp and backup.</summary>
   public void SaveSnapshot()
   {
-    // 1) Take an in-memory copy under the map lock
     List<DeviceSnapshot> data;
-    lock (_lock) data = _map.Values.Select(v => v.snap).ToList();
 
-    // 2) Serialize to a unique temp, then atomically move/replace
-    lock (_saveLock) // serialize file IO across threads
+    lock (_mapLock)
     {
-      var dir = Path.GetDirectoryName(_snapshotPath)!;
-      Directory.CreateDirectory(dir);
+      data = _deviceMap.Values.Select(v => v.snapshot).ToList();
+    }
 
-      var tmp = _snapshotPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
-      var bak = _snapshotPath + ".bak";
+    lock (_saveLock)
+    {
+      var directory = Path.GetDirectoryName(_snapshotPath);
+      if (!string.IsNullOrEmpty(directory))
+      {
+        Directory.CreateDirectory(directory);
+      }
 
-      using (var fs = new FileStream(
-               tmp, FileMode.CreateNew, FileAccess.Write, FileShare.None,
+      var tempPath = _snapshotPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+      var backupPath = _snapshotPath + ".bak";
+
+      using (var fileStream = new FileStream(
+               tempPath, FileMode.CreateNew, FileAccess.Write, FileShare.None,
                bufferSize: 64 * 1024, FileOptions.WriteThrough))
       {
-        JsonSerializer.Serialize(fs, data, Json);
-        fs.Flush(true);
+        JsonSerializer.Serialize(fileStream, data, JsonOptions);
+        fileStream.Flush(true);
       }
 
       try
@@ -115,30 +261,25 @@ public sealed class InMemoryRegistry : IDeviceRegistry
         if (OperatingSystem.IsWindows())
         {
           if (File.Exists(_snapshotPath))
-            File.Replace(tmp, _snapshotPath, bak, ignoreMetadataErrors: true);
+          {
+            File.Replace(tempPath, _snapshotPath, backupPath, ignoreMetadataErrors: true);
+          }
           else
-            File.Move(tmp, _snapshotPath, overwrite: false);
+          {
+            File.Move(tempPath, _snapshotPath, overwrite: false);
+          }
         }
         else
         {
-          File.Move(tmp, _snapshotPath, overwrite: true); // POSIX atomic rename
+          File.Move(tempPath, _snapshotPath, overwrite: true);
         }
       }
       finally
       {
-        if (File.Exists(tmp)) File.Delete(tmp);
-      }
-    }
-  }
-
-
-  private void UpdateState(string id, DeviceOnlineState st)
-  {
-    lock (_lock)
-    {
-      if (_map.TryGetValue(id, out var v))
-      {
-        _map[id] = (v.snap with { State = st }, v.misses);
+        if (File.Exists(tempPath))
+        {
+          File.Delete(tempPath);
+        }
       }
     }
   }
