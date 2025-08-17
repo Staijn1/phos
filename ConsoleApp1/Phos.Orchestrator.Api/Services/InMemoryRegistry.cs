@@ -17,7 +17,8 @@ public sealed class InMemoryRegistry : IDeviceRegistry
 
   private static readonly JsonSerializerOptions Json = new(JsonSerializerDefaults.Web)
   {
-    WriteIndented = false
+    // true when development, false in production
+    WriteIndented = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT") == "Development",
   };
 
   public InMemoryRegistry(IHostEnvironment env)
