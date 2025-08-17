@@ -28,8 +28,7 @@ public class Program
     builder.Services.AddSingleton<IDeviceEventBus, InMemoryEventBus>();
 
     // Shared probe queue (mDNS -> HTTP probe)
-    builder.Services.AddSingleton(Channel
-      .CreateUnbounded<(string ip, int port, IReadOnlyDictionary<string, string> txt)>());
+    builder.Services.AddSingleton(Channel.CreateUnbounded<(string ip, int port, IReadOnlyDictionary<string, string> txt)>());
 
     // HTTP prober (short timeouts)
     builder.Services.AddHttpClient<IDeviceProber, WledProber>(c => { c.Timeout = TimeSpan.FromSeconds(2); });
@@ -49,7 +48,7 @@ public class Program
     }
 
     // Optional; keep only if you’ve set up HTTPS certs
-    app.UseHttpsRedirection();
+    // app.UseHttpsRedirection();
 
     app.UseRouting();
     app.UseAuthorization();

@@ -11,6 +11,7 @@ namespace Phos.Orchestrator.Api.Services;
 public sealed class InMemoryRegistry : IDeviceRegistry
 {
   private readonly object _lock = new();
+  private readonly object _saveLock = new();
   private readonly Dictionary<string, (DeviceSnapshot snap, int misses)> _map = new();
   private readonly string _snapshotPath;
 
@@ -24,6 +25,11 @@ public sealed class InMemoryRegistry : IDeviceRegistry
     var dir = Path.Combine(env.ContentRootPath, "data");
     Directory.CreateDirectory(dir);
     _snapshotPath = Path.Combine(dir, "devices.json");
+
+    foreach (var f in Directory.EnumerateFiles(dir, "devices.json.*.tmp"))
+    {
+      try { File.Delete(f); } catch { /* ignore */ }
+    }
   }
 
 
@@ -82,37 +88,45 @@ public sealed class InMemoryRegistry : IDeviceRegistry
   /// </summary>
   public void SaveSnapshot()
   {
-    // Take a stable snapshot under lock, then serialize outside the lock.
+    // 1) Take an in-memory copy under the map lock
     List<DeviceSnapshot> data;
     lock (_lock) data = _map.Values.Select(v => v.snap).ToList();
 
-    var tmp = _snapshotPath + ".tmp";
-    var bak = _snapshotPath + ".bak";
+    // 2) Serialize to a unique temp, then atomically move/replace
+    lock (_saveLock) // serialize file IO across threads
+    {
+      var dir = Path.GetDirectoryName(_snapshotPath)!;
+      Directory.CreateDirectory(dir);
 
-    // Write temp file with write-through and fsync to reduce crash risk.
-    using (var fs = new FileStream(tmp, FileMode.Create, FileAccess.Write, FileShare.None,
-             bufferSize: 64 * 1024, FileOptions.WriteThrough))
-    {
-      JsonSerializer.Serialize(fs, data, Json);
-      fs.Flush(true);
-    }
+      var tmp = _snapshotPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+      var bak = _snapshotPath + ".bak";
 
-    try
-    {
-      if (OperatingSystem.IsWindows())
+      using (var fs = new FileStream(
+               tmp, FileMode.CreateNew, FileAccess.Write, FileShare.None,
+               bufferSize: 64 * 1024, FileOptions.WriteThrough))
       {
-        // Atomic replace on NTFS; keep a rolling backup.
-        File.Replace(tmp, _snapshotPath, bak, ignoreMetadataErrors: true);
+        JsonSerializer.Serialize(fs, data, Json);
+        fs.Flush(true);
       }
-      else
+
+      try
       {
-        // POSIX rename is atomic on same filesystem.
-        File.Move(tmp, _snapshotPath, overwrite: true);
+        if (OperatingSystem.IsWindows())
+        {
+          if (File.Exists(_snapshotPath))
+            File.Replace(tmp, _snapshotPath, bak, ignoreMetadataErrors: true);
+          else
+            File.Move(tmp, _snapshotPath, overwrite: false);
+        }
+        else
+        {
+          File.Move(tmp, _snapshotPath, overwrite: true); // POSIX atomic rename
+        }
       }
-    }
-    finally
-    {
-      if (File.Exists(tmp)) File.Delete(tmp);
+      finally
+      {
+        if (File.Exists(tmp)) File.Delete(tmp);
+      }
     }
   }
 

@@ -10,14 +10,14 @@ namespace Phos.Orchestrator.Api.Services;
 public sealed class WledProber : IDeviceProber
 {
   private readonly HttpClient _http;
-  private readonly IDeviceRegistry _reg;
+  private readonly IDeviceRegistry _registry;
   private readonly IDeviceEventBus _bus;
   private readonly ILogger<WledProber> _logger;
 
-  public WledProber(HttpClient http, IDeviceRegistry reg, IDeviceEventBus bus, ILogger<WledProber> logger)
+  public WledProber(HttpClient http, IDeviceRegistry registry, IDeviceEventBus bus, ILogger<WledProber> logger)
   {
     _http = http;
-    _reg = reg;
+    _registry = registry;
     _bus = bus;
     _logger = logger;
   }
@@ -34,8 +34,11 @@ public sealed class WledProber : IDeviceProber
     if (info is null) return;
 
     var state = await _http.GetFromJsonAsync<WledState>($"{baseUrl}/json/state", ct) ?? new WledState(new());
-    string mac = NormalizeMac(info.mac ?? txt.GetValueOrDefault("mac") ?? txt.GetValueOrDefault("id"));
-    if (string.IsNullOrEmpty(mac)) return; // cannot generate stable id
+    var mac = NormalizeMac(info.mac ?? txt.GetValueOrDefault("mac") ?? txt.GetValueOrDefault("id"));
+    if (string.IsNullOrEmpty(mac))
+    {
+      return;  // cannot generate stable id
+    }
 
     var segs = state.seg?.Select(s => new SegmentDescription(s.id, s.start, s.len, s.rev)).ToList() ?? new();
     var snap = new DeviceSnapshot(
@@ -51,7 +54,7 @@ public sealed class WledProber : IDeviceProber
       LastSeen: DateTimeOffset.UtcNow,
       State: DeviceOnlineState.Online);
 
-    _reg.Upsert(snap);
+    _registry.Upsert(snap);
     _bus.Publish(new DeviceEvent(DeviceEventType.Updated, snap));
   }
 
@@ -71,7 +74,11 @@ public sealed class WledProber : IDeviceProber
   /// Choose a human-friendly device name from /json/info or TXT. Spaces are replaced with dashes.
   /// </summary>
   private static string PickName(string? name, IReadOnlyDictionary<string, string> txt)
-    => (name ?? txt.GetValueOrDefault("name") ?? "wled").Trim().Replace("", "-");
+  {
+    var candidate = name ?? txt.GetValueOrDefault("name");
+    return string.IsNullOrWhiteSpace(candidate) ? "wled" : candidate.Trim().Replace(" ", "-");
+  }
+
 }
 
 /// <summary>

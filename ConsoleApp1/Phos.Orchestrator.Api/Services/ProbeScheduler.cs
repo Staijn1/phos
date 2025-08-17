@@ -50,6 +50,10 @@ public sealed class ProbeScheduler : BackgroundService
         {
           await _prober.ProbeAsync(item.ip, item.port, item.txt, ct);
         }
+        catch (Exception ex)
+        {
+          _logger.LogError(ex, "Probe failed for {Ip}:{Port}", item.ip, item.port);
+        }
         finally
         {
           _concurrency.Release();
