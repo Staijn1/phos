@@ -1,0 +1,54 @@
+[
+  {
+    "deviceId": "7c:9e:bd:37:da:4c",
+    "name": "WLED",
+    "ip": "10.10.10.4",
+    "port": 80,
+    "firmware": "0.15.1",
+    "ledCount": 150,
+    "fpsCap": 60,
+    "segments": [
+      {
+        "id": 0,
+        "start": 0,
+        "len": 150,
+        "rev": false
+      }
+    ],
+    "capabilities": {
+      "jsonWs": true,
+      "realtime": [
+        "DDP",
+        "E1.31"
+      ]
+    },
+    "lastSeen": "2025-08-17T11:37:48.7092607+00:00",
+    "state": 0
+  },
+  {
+    "deviceId": "3c:61:05:13:53:b8",
+    "name": "WLED",
+    "ip": "10.10.10.3",
+    "port": 80,
+    "firmware": "0.15.1",
+    "ledCount": 60,
+    "fpsCap": 60,
+    "segments": [
+      {
+        "id": 0,
+        "start": 0,
+        "len": 60,
+        "rev": false
+      }
+    ],
+    "capabilities": {
+      "jsonWs": true,
+      "realtime": [
+        "DDP",
+        "E1.31"
+      ]
+    },
+    "lastSeen": "2025-08-17T11:37:35.4976635+00:00",
+    "state": 0
+  }
+]

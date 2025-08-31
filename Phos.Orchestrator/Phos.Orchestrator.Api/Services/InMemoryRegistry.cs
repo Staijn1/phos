@@ -32,11 +32,11 @@ public sealed class InMemoryRegistry : IDeviceRegistry
     _eventBus = eventBus;
     _logger = logger;
 
-    string directory = Path.Combine(hostEnvironment.ContentRootPath, "data");
+    var directory = Path.Combine(hostEnvironment.ContentRootPath, "data");
     Directory.CreateDirectory(directory);
     _snapshotPath = Path.Combine(directory, "devices.json");
 
-    foreach (string tempFile in Directory.EnumerateFiles(directory, "devices.json.*.tmp"))
+    foreach (var tempFile in Directory.EnumerateFiles(directory, "devices.json.*.tmp"))
     {
       try { File.Delete(tempFile); } catch { /* ignore */ }
     }
@@ -67,7 +67,7 @@ public sealed class InMemoryRegistry : IDeviceRegistry
 
     lock (_mapLock)
     {
-      bool isNew = !_deviceMap.ContainsKey(snapshot.DeviceId);
+      var isNew = !_deviceMap.ContainsKey(snapshot.DeviceId);
       eventType = isNew ? DeviceEventType.Added : DeviceEventType.Updated;
 
       _deviceMap[snapshot.DeviceId] =

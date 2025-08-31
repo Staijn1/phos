@@ -1,7 +1,9 @@
 using System.Threading.Channels;
+using Microsoft.Extensions.Options;
 using Phos.Orchestrator.Api.Controllers;
 using Phos.Orchestrator.Api.Services;
 using Phos.Orchestrator.Core;
+using Phos.Orchestrator.Core.Config;
 using Serilog;
 
 namespace Phos.Orchestrator.Api;
@@ -26,6 +28,11 @@ public class Program
     // Core services
     builder.Services.AddSingleton<IDeviceRegistry, InMemoryRegistry>();
     builder.Services.AddSingleton<IDeviceEventBus, InMemoryEventBus>();
+    builder.Services.Configure<LightingConfig>(builder.Configuration.GetSection("Lighting"));
+    builder.Services.AddSingleton<ILightingConfigValidator, LightingConfigValidator>();
+    builder.Services.AddSingleton<IValidateOptions<LightingConfig>, LightingConfigValidator>();
+    builder.Services.AddSingleton<LightingViewBuilder>();
+    builder.Services.AddSingleton<ILightingViewProvider, LightingViewCache>();
 
     // Shared probe queue (mDNS -> HTTP probe)
     builder.Services.AddSingleton(Channel.CreateUnbounded<(string ip, int port, IReadOnlyDictionary<string, string> txt)>());
